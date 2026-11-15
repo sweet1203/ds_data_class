@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>관계형 데이터베이스와 데이터 통합</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202c; --muted:#5b6776; --paper:#f3efe7; --card:#fff; --line:#e3ddd2;
+    --navy:#0f2742; --amber:#f2a516; --red:#d64535; --mint:#1f9d74;
+    --acc:#2f6fd0; --acc-soft:#e6eefb;
+    --shadow:0 18px 50px rgba(15,39,66,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.65;
+    background-image:radial-gradient(rgba(15,39,66,.07) 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column}
+  .top{position:sticky;top:0;z-index:10;background:rgba(15,39,66,.97);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+  .brand{font-family:"Black Han Sans",sans-serif;font-size:1.15rem;letter-spacing:.01em;white-space:nowrap;color:inherit;text-decoration:none}
+  .steps{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps button{flex:0 0 auto;border:0;background:transparent;color:#9fb3cc;font:inherit;font-size:.82rem;padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .steps button.on{background:var(--amber);color:var(--navy);font-weight:900}
+  .steps button.done::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fd3a5;margin-left:5px;vertical-align:middle}
+  .score{font-size:.85rem;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .progress{height:4px;background:rgba(15,39,66,.12)}
+  .progress i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+  main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:26px 20px 30px}
+  .page{display:none}
+  .page.on{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1) both}
+  .page.on.back{animation-name:enterBack}
+  @keyframes enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes enterBack{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  .head{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .num{font-family:"Black Han Sans",sans-serif;font-size:4.2rem;line-height:.85;color:var(--acc);opacity:.9}
+  .head h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:2.1rem;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .head p{margin:4px 0 0;color:var(--muted)}
+  .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;border:1px solid rgba(0,0,0,.04)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .grid2.even{grid-template-columns:1fr 1fr}
+  @media (max-width:860px){.grid2,.grid2.even{grid-template-columns:1fr}.num{font-size:3rem}.head h2{font-size:1.6rem}}
+  h3{margin:0 0 8px;font-size:1.1rem}
+  h4{margin:0 0 4px}
+  p{margin:6px 0}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .book{display:inline-block;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:center}
+  th{color:var(--muted);font-weight:700;font-size:.85rem}
+  td.l,th.l{text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .chip.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .btn{border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;transition:transform .1s, box-shadow .2s;box-shadow:0 6px 16px rgba(15,39,66,.18)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+  .btn.sm{padding:5px 12px;font-size:.88rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctrl{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:4px 10px;margin:4px 0}
+  .ctrl label{font-weight:900;font-size:.95rem}
+  .ctrl output{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  input[type=text],input[type=number]{font:inherit;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px;background:#fff;color:var(--ink)}
+  .big{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+  .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
+  .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
+  .cx>h3{margin:0 0 4px;font-size:1.15rem}
+  .cx>.lead2{color:var(--muted);margin:0 0 12px}
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media (max-width:860px){.qa{grid-template-columns:1fr}}
+  .qa>div{background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .qa b.q{display:block;color:var(--acc);margin-bottom:3px}
+  .vsteps{list-style:none;margin:0;padding:0;counter-reset:v}
+  .vsteps>li{position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line)}
+  .vsteps>li:first-child{border-top:0}
+  .vsteps>li::before{counter-increment:v;content:counter(v);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.9rem}
+  .vsteps p{margin:2px 0 0;font-size:.93rem}
+  .case{background:#fff8e6;border:2px solid #f6d58a;border-radius:16px;padding:16px 20px;margin-bottom:18px}
+  .case>h3{margin:0 0 8px;font-size:1.05rem;color:#8a5a00}
+  /* 퀴즈 */
+  .quiz{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:16px;padding:20px 22px;margin-top:6px;box-shadow:var(--shadow)}
+  .quiz .qh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .quiz .qh b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.25rem;color:var(--amber)}
+  .quiz .qh span{font-size:.85rem;color:#a9bbd2}
+  .qi{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;margin-top:10px}
+  .qi .qq{font-weight:700;margin-bottom:8px}
+  .qi .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .qi .opts button{font:inherit;font-size:.93rem;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .qi .opts button:hover:not(:disabled){border-color:var(--amber)}
+  .qi .opts button.right{background:var(--mint);border-color:var(--mint);font-weight:700}
+  .qi .opts button.wrong{background:var(--red);border-color:var(--red);text-decoration:line-through}
+  .qi .opts button:disabled{cursor:default}
+  .qi .why{margin-top:8px;font-size:.9rem;color:#d7e3f2;display:none}
+  .qi.answered .why{display:block}
+  .qi.answered.correct{box-shadow:inset 4px 0 0 var(--mint)}
+  .qi.answered.incorrect{box-shadow:inset 4px 0 0 var(--red)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(243,239,231,.94);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+  .foot .btn{min-width:110px}
+  .foot .pg{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  /* 표지 */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 20% 0%,#24507f 0%,#0f2742 55%,#0a1a2e 100%);color:#fff;min-height:520px;padding:46px 44px;box-shadow:var(--shadow)}
+  .cover canvas{position:absolute;right:0;top:0;height:100%;width:62%;image-rendering:pixelated;opacity:.95}
+  .cover .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0f2742 34%,rgba(15,39,66,.75) 50%,rgba(15,39,66,0) 70%)}
+  .cover .in{position:relative;max-width:560px}
+  .cover .tag{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.85rem;padding:4px 12px;border-radius:999px}
+  .cover h1{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:3.1rem;line-height:1.15;margin:16px 0 10px}
+  .cover p{color:#c8d6e8;font-size:1.05rem}
+  .cover ol{margin:18px 0 26px;padding-left:20px;color:#e1e9f4;columns:2;column-gap:28px;font-size:.95rem}
+  @media (max-width:700px){.cover{padding:30px 22px}.cover h1{font-size:2.2rem}.cover ol{columns:1}.cover canvas{width:100%;opacity:.3}.cover .fade{display:none}}
+  .today{margin-top:26px}
+  .kicker{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:1.15rem;color:var(--navy);margin-bottom:6px;border-bottom:4px solid var(--amber);line-height:1.2}
+  .today-lead{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+  .today-lead p{font-size:1.12rem;margin:6px 0 0}
+  .why3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  @media (max-width:900px){.why3{grid-template-columns:1fr}}
+  .why{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 22px}
+  .why ul{margin:6px 0 0;padding-left:18px;font-size:.95rem}
+  .why li{margin:6px 0}
+  .why ul.can{list-style:none;padding:0}
+  .why ul.can li{padding-left:28px;position:relative}
+  .why ul.can li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .why ul.uses{list-style:none;padding:0}
+  .why ul.uses li{border-left:3px solid var(--amber);padding-left:10px}
+  .glossary-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .glossary-head .muted{font-size:.88rem}
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.glossary{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.glossary{grid-template-columns:1fr}}
+  .gcard{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:#fff;border-radius:14px;padding:16px 16px 12px;box-shadow:var(--shadow);border-top:6px solid var(--g);position:relative;transition:transform .18s, box-shadow .18s}
+  .gcard:hover,.gcard:focus-visible{transform:translateY(-4px);box-shadow:0 22px 50px rgba(15,39,66,.16)}
+  .gcard:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+  .gcard i{position:absolute;right:14px;top:8px;font-style:normal;font-family:"Black Han Sans",sans-serif;font-size:1.9rem;color:var(--g);opacity:.25}
+  .gcard h4{margin:0 0 6px;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;color:var(--g)}
+  .gcard dl{margin:0;font-size:.88rem;line-height:1.45}
+  .gcard dt{font-weight:900;margin-top:7px}
+  .gcard dd{margin:1px 0 0;color:#3c4654}
+  .prob{display:grid;grid-template-columns:60px 1fr 46px;gap:6px;align-items:center;font-size:.88rem;min-width:200px}
+  .prob i{display:block;height:12px;border-radius:6px;background:var(--acc)}
+  .apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:860px){.apps{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:2rem;display:block}
+  .apps button b{display:block}
+  .appd{display:none}
+  .appd.on{display:block;animation:enter .35s both}
+  .ex2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:640px){.ex2{grid-template-columns:1fr}}
+  .ex2>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem;border-left:4px solid var(--acc)}
+  .try{margin-top:12px;background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+  .try ol{margin:4px 0 0;padding-left:20px}
+  /* 3단원 공통 */
+  .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
+  .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
+  .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
+  .route .st i{font-style:normal;font-size:1.6rem}
+  .route .st b{display:block;font-size:1.02rem}
+  .route .st small{color:#c8d6e8;font-size:.82rem}
+  .route .ar{color:var(--amber);text-align:center;font-weight:900;opacity:0;animation:rin .5s forwards}
+  @keyframes rin{to{opacity:1;transform:none}}
+  @media (max-width:1080px){.route{position:relative;right:auto;top:auto;width:100%;margin-top:22px}}
+  .story{background:rgba(255,255,255,.08);border-left:4px solid var(--amber);border-radius:10px;padding:10px 14px;margin:14px 0;color:#e1e9f4;font-size:.95rem}
+  .story b{color:#fff}
+  /* 카드 묶음 */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:900px){.cards3,.cards4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards3,.cards2,.cards4{grid-template-columns:1fr}}
+  .kc{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:14px 16px;border-top:6px solid var(--k,var(--acc))}
+  .kc h4{color:var(--k,var(--acc));font-size:1.05rem;margin:0 0 4px}
+  .kc p{font-size:.92rem;margin:4px 0 0}
+  .kc .ic{font-size:1.7rem;line-height:1}
+  .kc small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+  .tagt{display:inline-block;font-size:.76rem;font-weight:900;border-radius:999px;padding:1px 9px;background:color-mix(in srgb,var(--k,var(--acc)) 14%,white);color:var(--k,var(--acc));margin:6px 4px 0 0}
+  /* 연표 */
+  .tl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tl button{flex:1;min-width:92px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;font:inherit;font-weight:900;cursor:pointer;color:var(--ink)}
+  .tl button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.tlv{grid-template-columns:1fr}}
+  .tlv>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--k)}
+  .tlv h4{color:var(--k)}
+  .tlv .it{margin:6px 0 0;font-size:.93rem}
+  .tlv .it b{display:block}
+  /* 분류 게임 */
+  .sit{background:#fbfaf7;border:2px dashed var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-height:170px}
+  .sit .cnt{font-size:.82rem;color:var(--muted)}
+  .sit .sq{font-size:1.08rem;font-weight:900;margin:6px 0 12px;min-height:52px}
+  .sit .ic{font-size:2rem}
+  .sit .row{justify-content:center}
+  .sit .fb{min-height:24px;margin-top:8px;font-size:.93rem}
+  .sit .cat{border:2px solid var(--k);color:var(--k);background:#fff;font-weight:900}
+  .sit .cat:hover{background:color-mix(in srgb,var(--k) 12%,white)}
+  .board{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;margin-top:12px}
+  @media (max-width:760px){.board{grid-template-columns:1fr 1fr}}
+  .board>div{background:#fff;border-radius:12px;border-top:5px solid var(--k);padding:8px 10px;font-size:.84rem;min-height:70px}
+  .board>div b{display:block;color:var(--k);font-size:.92rem}
+  .board>div span{display:block;border-top:1px dashed var(--line);padding:3px 0}
+  .board>div span.x{color:var(--red)}
+  /* 뒤집는 카드 */
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .tcard{perspective:900px;height:172px;cursor:pointer}
+  .tcard .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .tcard.flip .in{transform:rotateY(180deg)}
+  .tcard .f,.tcard .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:12px 14px;box-shadow:0 6px 16px rgba(15,39,66,.09);overflow:auto}
+  .tcard .f{background:#fff;border-top:6px solid var(--acc);display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .tcard .f i{font-style:normal;font-size:2rem;line-height:1.1}
+  .tcard .f b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;line-height:1.25;margin-top:4px}
+  .tcard .f small{color:var(--muted);font-size:.78rem;margin-top:6px}
+  .tcard .b{background:var(--acc);color:#fff;transform:rotateY(180deg);font-size:.9rem;line-height:1.5}
+  .tcard .b .x{margin-top:6px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px;font-size:.84rem}
+  /* 사례 탭 */
+  .apps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .apps.a6{grid-template-columns:repeat(6,1fr)}
+  @media (max-width:860px){.apps,.apps.a6{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.apps,.apps.a6{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:12px 8px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s;font-size:.92rem}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:1.8rem;display:block}
+  .apps button b{display:block}
+  .cview{margin-top:14px}
+  .pr{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+  @media (max-width:760px){.pr{grid-template-columns:1fr}}
+  .pr>div{border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .pr .p{background:#fdecea;border-left:5px solid var(--red)}
+  .pr .s{background:#e7f6ef;border-left:5px solid var(--mint)}
+  .pr h4{font-size:.95rem}
+  .pr .p h4{color:#9b2c20}.pr .s h4{color:#13684d}
+  .dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:10px;background:#fbfaf7;border-radius:10px;padding:10px 12px}
+  .dl b{color:var(--acc)}
+  /* 메모 */
+  .memo{margin-top:10px}
+  .memo label{display:block;font-weight:700;font-size:.93rem;margin:10px 0 4px}
+  .memo label small{font-weight:400;color:var(--muted)}
+  .memo input[type=text]{width:100%}
+  textarea{font:inherit;width:100%;min-height:64px;padding:8px 10px;border:1px solid #c5ccd5;border-radius:8px;resize:vertical;color:var(--ink);background:#fff}
+  .saved{font-size:.8rem;color:var(--mint);min-height:1em}
+  /* 투표 */
+  .vote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:560px){.vote{grid-template-columns:1fr}}
+  .vote button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center;font-weight:900}
+  .vote button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .vote button small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+  .reveal{display:none;margin-top:12px}
+  .reveal.on{display:block;animation:fadein .4s both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .pct{display:grid;grid-template-columns:120px 1fr 50px;gap:8px;align-items:center;margin:6px 0;font-size:.93rem}
+  .pct i{display:block;height:16px;border-radius:8px;background:var(--acc);width:0;transition:width .8s}
+  /* 질문폼 연결 */
+  .formgo{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-top:18px}
+  .formgo .kicker{color:#fff;border-bottom-color:var(--amber)}
+  .formgo h3{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;margin:4px 0 8px}
+  .formgo ol{margin:6px 0 12px;padding-left:22px;color:#e1e9f4}
+  .formgo ol li{margin:6px 0}
+  .formgo p{color:#c8d6e8;font-size:.92rem}
+  .formgo .go{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:1.1rem;text-decoration:none;border-radius:12px;padding:12px 22px;margin-top:6px}
+  .formgo .go:hover{filter:brightness(1.05)}
+  .msum{background:#fff;border-radius:14px;padding:12px 16px;margin-top:12px;color:var(--ink);font-size:.9rem}
+  .msum h4{color:var(--navy)}
+  .msum dl{margin:6px 0 0}
+  .msum dt{font-weight:700;margin-top:8px;color:var(--muted);font-size:.84rem}
+  .msum dd{margin:2px 0 0;white-space:pre-wrap}
+  .msum dd.e{color:#aab2bd}
+  .key3{display:grid;gap:10px;margin-bottom:18px}
+  .key3 div{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--k);font-size:1.02rem}
+  .note{font-size:.84rem;color:var(--muted);margin-top:8px}
+  .flow2{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .flow2>div{flex:1;min-width:140px;background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .flow2>div b{display:block}
+  .flow2>div span{font-size:.88rem}
+  .flow2>.ar{flex:0 0 auto;min-width:0;background:none;border:0;align-self:center;font-weight:900;color:var(--muted);padding:0}
+  @media (max-width:640px){.flow2>.ar{flex-basis:100%;text-align:center;transform:rotate(90deg)}}
+  .chk{display:flex;flex-wrap:wrap;gap:8px}
+  .chk button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .chk button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .tbl td,.tbl th{padding:8px 10px;vertical-align:top}
+  .tbl td{text-align:left;font-size:.92rem}
+  .mx{min-width:560px}
+  .mx th{background:#fbfaf7}
+  .mx td{border:1px solid var(--line);height:74px;width:30%;font-size:.86rem;cursor:pointer;background:#fff;transition:background .2s}
+  .mx td:hover{background:var(--acc-soft)}
+  .mx td.fill{background:#e7f6ef;cursor:default}
+  .mx td.bad{background:#fdecea}
+  .mx th.r{white-space:nowrap}
+  #mxPool button{border-radius:12px;text-align:left;max-width:100%}
+  /* 4단원 */
+  .sdg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media (max-width:760px){.sdg{grid-template-columns:repeat(3,1fr)}}
+  .sdg button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;padding:8px 6px;color:#fff;background:var(--c);min-height:74px;font-size:.78rem;line-height:1.3;font-weight:700;display:flex;flex-direction:column;gap:2px;transition:transform .15s}
+  .sdg button b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.3rem;line-height:1}
+  .sdg button:hover,.sdg button.on{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .sdg button.on{outline:3px solid var(--navy)}
+  .sdgv{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:6px solid var(--c,#0f2742);min-height:60px}
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.five{grid-template-columns:1fr}}
+  .five>div{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:12px 12px;border-top:6px solid var(--k)}
+  .five b.n{font-family:"Black Han Sans",sans-serif;color:var(--k);font-size:1.2rem}
+  .five h4{margin:2px 0 4px;font-size:.98rem}
+  .five p{font-size:.86rem;margin:4px 0}
+  .five .ml{margin-top:8px;background:color-mix(in srgb,var(--k) 10%,white);border-radius:8px;padding:6px 8px;font-size:.82rem}
+  .quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:6px;margin-top:8px}
+  .quad .ax{font-size:.78rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .quad .ax.v{writing-mode:vertical-rl}
+  .quad .cell{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 8px;font-size:.84rem;cursor:pointer}
+  .quad .cell.best{border-color:var(--mint);background:#e7f6ef}
+  .quad .cell small{display:block;color:var(--muted);font-size:.74rem}
+  .quad .cell span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin:2px 2px 0 0}
+  .qbuild{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:1.08rem;font-weight:700;background:#fff8e6;border:2px solid #f6d58a;border-radius:12px;padding:12px 14px}
+  .qbuild input{flex:1;min-width:200px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px}
+  .plan{width:100%}
+  .plan td:first-child{width:150px;font-weight:700;font-size:.9rem;background:#fbfaf7}
+  .plan input{width:100%;font:inherit;padding:5px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 시뮬레이터 */
+  .sim{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.sim{grid-template-columns:1fr}}
+  .sim .cls{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .sim .cls h4{color:var(--k);display:flex;justify-content:space-between}
+  .sim .cls ul{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+  .sim .cls li.new{color:var(--k);font-weight:700}
+  .cand{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cand button{border:2px dashed var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--ink)}
+  .cand button.on{border-style:solid;background:color-mix(in srgb,var(--k) 15%,white);font-weight:700}
+  .tt td,.tt th{padding:6px 8px;font-size:.88rem}
+  .tt td.r{color:var(--mint);font-weight:900}.tt td.w{color:var(--red);font-weight:900}
+  .score2{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .score2 div{flex:1;min-width:140px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px 12px;text-align:center}
+  .score2 b{display:block;font-family:"Black Han Sans",sans-serif;font-size:1.8rem;color:var(--acc)}
+  /* 스크래치 블록 */
+  .blocks{font-family:ui-sans-serif,system-ui;font-size:.86rem;display:inline-block}
+  .blk{display:block;border-radius:6px;padding:5px 10px;margin:3px 0;color:#fff;width:max-content;max-width:100%}
+  .blk.ev{background:#ffbf00;color:#333;border-radius:14px 14px 6px 6px}
+  .blk.ctl{background:#ffab19;color:#333}
+  .blk.ml{background:#4c97ff}
+  .blk.lk{background:#9966ff}
+  .blk.in{margin-left:22px}
+  .blk i{font-style:normal;background:rgba(255,255,255,.9);color:#333;border-radius:10px;padding:0 6px;margin:0 2px}
+  .penguin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:560px){.penguin{grid-template-columns:1fr}}
+  .penguin div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .dist td,.dist th{padding:6px 8px;font-size:.88rem;text-align:center}
+  .dist tr.near{background:#fff4d6;font-weight:900}
+  .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.roles{grid-template-columns:1fr 1fr}}
+  .roles div{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px;text-align:center;font-size:.84rem}
+  .roles div i{font-style:normal;font-size:1.6rem;display:block}
+  .roles div b{display:block;font-size:.92rem}
+  .roles div em{display:block;font-style:normal;margin-top:6px;background:#e6eefb;border-radius:8px;padding:4px 6px;color:#1b3d66}
+  .types div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .types div b{display:block}
+  .types div small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+
+  /* 카드 격자 칸이 안의 긴 코드·표 때문에 늘어나지 않게 */
+  .cards2>*,.cards3>*,.cards4>*,.grid2>*{min-width:0}
+  /* 진도 보내기 */
+  .tr-gate{position:fixed;inset:0;z-index:200;background:rgba(15,39,66,.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .tr-card{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px 22px 16px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  .tr-card h2{margin:0;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+  .tr-sub{margin:-4px 0 4px;color:var(--muted);font-size:.92rem}
+  .tr-cls{display:flex;gap:8px}
+  .tr-cls label{flex:1;cursor:pointer}
+  .tr-cls input{position:absolute;opacity:0;pointer-events:none}
+  .tr-cls span{display:block;text-align:center;padding:10px 0;border:2px solid var(--line);border-radius:12px;font-weight:900;font-size:1.05rem}
+  .tr-cls input:checked+span{border-color:var(--navy);background:var(--navy);color:#fff}
+  .tr-cls input:focus-visible+span{outline:3px solid var(--amber)}
+  .tr-f{display:flex;align-items:center;gap:10px}
+  .tr-f span{width:40px;font-weight:700}
+  .tr-f input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:9px 12px;border:1px solid #c5ccd5;border-radius:10px}
+  .tr-err{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em}
+  .tr-card .btn{padding:12px;font-size:1.05rem;background:var(--navy)}
+  .tr-note{margin:2px 0 0;color:var(--muted);font-size:.8rem;line-height:1.5;text-align:center}
+  .tr-who,.tr-badge{display:flex;align-items:center;gap:6px;font-size:.82rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px 4px 3px 12px;white-space:nowrap}
+  .tr-badge{padding:3px 12px;background:var(--amber);color:#111;font-weight:700}
+  .tr-who button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px}
+  .tr-who button:hover{background:rgba(255,255,255,.3)}
+  .tr-cls[hidden]{display:none}
+  .tr-badge button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(0,0,0,.14);border-radius:999px;padding:2px 9px;margin-left:6px}
+  /* page-guard: 글자 선택·복사 막기 (입력 칸은 편집 가능) */
+  body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
+  .pg-toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0f2742;color:#fff;padding:9px 16px;border-radius:999px;font-size:.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+  .pg-toast.on{opacity:1}
+
+  /* u1-relational 전용 (rd-) */
+  .btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+  .rd-scroll{overflow-x:auto;max-width:100%}
+  .rd-tbl{min-width:0}
+  .rd-tbl td,.rd-tbl th{border:1px solid var(--line);font-size:.88rem;padding:5px 8px}
+  .rd-tbl th{background:#fbfaf7;color:var(--ink)}
+  .rd-ul{margin:4px 0 0;padding-left:18px;font-size:.92rem}
+  .rd-ul li{margin:3px 0}
+  .rd-more{margin-top:10px}
+  .rd-more summary{cursor:pointer;font-weight:900;font-size:.92rem;color:var(--acc)}
+  .rd-cap{margin-top:8px;font-size:.92rem;background:#fbfaf7;border-radius:10px;padding:8px 12px;min-height:38px}
+  /* 01 영화 테이블 */
+  .rd-mode{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .rd-mode button{font:inherit;font-weight:700;border:2px solid var(--line);background:#fff;border-radius:10px;padding:5px 12px;cursor:pointer}
+  .rd-mode button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .rd-tblchip{font:inherit;font-size:.82rem;font-weight:900;border:2px dashed #9b4fc4;color:#9b4fc4;background:#fff;border-radius:999px;padding:2px 12px;cursor:pointer;margin-bottom:6px}
+  .rd-tblchip.on{background:#9b4fc4;color:#fff}
+  .rd-dupcnt{font-size:.9rem;margin-bottom:6px}
+  .rd-mv{min-width:560px}
+  .rd-mv td,.rd-mv th{cursor:pointer}
+  .rd-mv td:hover,.rd-mv th:hover{background:#eef3fc}
+  .rd-mv th.col,.rd-mv td.col{background:#dbe7fa;box-shadow:inset 2px 0 0 #2f6fd0,inset -2px 0 0 #2f6fd0}
+  .rd-mv td.rec{background:#fde8d8;box-shadow:inset 0 2px 0 #e0702b,inset 0 -2px 0 #e0702b}
+  .rd-mv td.tblon,.rd-mv.look:has(td.tblon) th{background:#f1e6f8}
+  .rd-mv td.dup{background:#fde3e0;color:#a52b1d;font-weight:900}
+  .rd-mv td.uniq{background:#e6f5ee}
+  /* 02 말풍선 · 외래키 */
+  .rd-bubbles{display:flex;flex-wrap:wrap;gap:10px}
+  .rd-bubbles span{position:relative;background:#fff;border:2px solid var(--ink);border-radius:16px;padding:6px 12px;font-size:.9rem;font-weight:700}
+  .rd-fk{display:grid;gap:10px;background:#f6f9f7;border-radius:14px;padding:12px}
+  .rd-fk-top{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:700px){.rd-fk-top{grid-template-columns:1fr}}
+  .rd-fkt{background:#fff;border-radius:12px;padding:8px 10px;box-shadow:0 4px 12px rgba(15,39,66,.06)}
+  .rd-fkt>b{display:block;font-size:.9rem;margin-bottom:4px}
+  .rd-fkt table{margin:0}
+  .rd-fkt td.pk{font-family:ui-monospace,Menlo,monospace;color:#b4530f;font-weight:900}
+  .rd-fkt tr.hit td{background:#fff4d6;box-shadow:inset 0 2px 0 var(--amber),inset 0 -2px 0 var(--amber);font-weight:900}
+  .rd-mov{border:2px solid #d64535}
+  .rd-mov td.go{cursor:pointer;font-family:ui-monospace,Menlo,monospace;font-weight:700}
+  .rd-mov td.fk{color:#2f6fd0;text-decoration:underline dotted}
+  .rd-mov td.pk{color:#b4530f}
+  .rd-mov td.go:hover{background:#eef3fc}
+  .rd-mov td.on{background:#fff4d6}
+  .rd-line{margin-top:8px;min-width:520px}
+  .rd-line td{background:#e6f5ee;font-weight:700}
+  .rd-add{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:10px 12px;font-size:.92rem}
+  .rd-add label{font-size:.88rem}
+  .rd-in{font:inherit;padding:4px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 03 VLOOKUP */
+  .rd-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.rd-two{grid-template-columns:1fr}}
+  .rd-sh{overflow-x:auto}
+  .rd-sh-n{display:inline-block;background:#1f7a46;color:#fff;font-weight:900;font-size:.82rem;border-radius:8px 8px 0 0;padding:3px 10px}
+  .rd-sh-n small{font-weight:400;opacity:.85}
+  .rd-wide{margin-top:12px}
+  .rd-xl{margin:0;min-width:300px;font-family:ui-monospace,Menlo,monospace}
+  .rd-xl th{background:#eef0f2;color:var(--muted);font-weight:400;font-size:.76rem;padding:2px 6px;border:1px solid #d5d9de}
+  .rd-xl td{border:1px solid #d5d9de;font-size:.86rem;padding:4px 8px;text-align:right}
+  .rd-xl td.hd{text-align:center;font-family:inherit;font-weight:700;background:#f7f8f9}
+  .rd-xl td.hd.wx{background:#eaf2fd}
+  .rd-xl td.key{background:#fff4d6;box-shadow:inset 0 0 0 2px var(--amber);font-weight:900}
+  .rd-xl td.row{background:#fffbea}
+  .rd-xl td.got{background:#1f9d74;color:#fff;font-weight:900}
+  .rd-xl td.emp{background:#fffdf0;box-shadow:inset 0 0 0 1px #f6d58a;cursor:pointer;min-width:48px}
+  .rd-xl td.emp:hover{background:#fff4d6}
+  .rd-xl td.filled{background:#e6f5ee;cursor:pointer;font-weight:700}
+  .rd-xl td.sel{box-shadow:inset 0 0 0 3px #1f7a46}
+  .rd-fx{display:flex;align-items:stretch;border:1px solid #d5d9de;border-radius:6px;margin-top:12px;background:#fff;font-size:.9rem;overflow-x:auto}
+  .rd-fx>span{padding:5px 10px;white-space:nowrap}
+  .rd-fx-c{min-width:44px;border-right:1px solid #d5d9de;font-weight:700;text-align:center}
+  .rd-fx-f{border-right:1px solid #d5d9de;color:var(--muted);font-style:italic}
+  .rd-fx-v{background:none}
+  .rd-fx .q{color:var(--red)}
+  .rd-ask{margin-top:10px;background:#fff4d6;border-radius:10px;padding:8px 12px;font-size:.93rem}
+  .rd-ask .btn{margin:4px 4px 0 0}
+  .rd-stat{font-size:.86rem;color:var(--muted);margin-top:6px}
+  .rd-cmp{margin-top:10px;background:#fbfaf7;border-radius:12px;padding:10px 12px}
+  .rd-cmp p{font-size:.92rem;margin:8px 0 0}
+  .rd-cmp tr.bad td{background:#fde8e6}
+  /* 04 SQL */
+  .rd-opt .btn{margin-left:6px}
+  .rd-sqlk{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:1000px){.rd-sqlk{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.rd-sqlk{grid-template-columns:1fr}}
+  .rd-sqlk>div{background:#fbfaf7;border-top:5px solid var(--k);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+  .rd-sqlk b{color:var(--k);font-size:.95rem}
+  .rd-sqlk small{color:var(--muted);font-size:.78rem}
+  .rd-sqlk span{font-size:.84rem}
+  .rd-sqlk code,.rd-code{font-family:ui-monospace,Menlo,monospace}
+  .rd-sqlk code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:0 5px;font-weight:700}
+  .rd-sqst{font-size:.9rem;background:#f3eef9;border-radius:10px;padding:7px 12px;margin-bottom:8px}
+  .rd-sqst.bad{background:#fde8e6}
+  .rd-steps{display:flex;flex-wrap:wrap;gap:6px}
+  .rd-steps button{font:inherit;font-size:.86rem;font-weight:700;border:2px solid var(--line);background:#fff;border-radius:10px;padding:4px 10px;cursor:pointer}
+  .rd-steps button:hover{border-color:var(--acc)}
+  .rd-steps button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .rd-steps button.done::after{content:" ✓";color:var(--mint)}
+  .rd-sqd{font-size:.9rem;margin:8px 0;min-height:22px}
+  .rd-code{width:100%;font-size:.88rem;line-height:1.5;padding:8px 10px;border:2px solid #c5ccd5;border-radius:10px;background:#1b2330;color:#e8edf3;resize:vertical;box-sizing:border-box}
+  .rd-code:focus{outline:none;border-color:var(--acc)}
+  .rd-cnt{font-size:.86rem;margin-left:auto}
+  .rd-out{margin-top:10px}
+  .rd-ok{font-size:.92rem;background:#e6f5ee;border-radius:10px;padding:7px 12px;margin-bottom:6px}
+  .rd-err{font-size:.92rem;background:#fde8e6;border-radius:10px;padding:7px 12px}
+  .rd-res{min-width:520px;margin:4px 0}
+  .rd-fold>summary{cursor:pointer;list-style:none}
+  .rd-fold>summary::-webkit-details-marker{display:none}
+  .rd-fold>summary h3{display:inline;margin:0}
+  .rd-fold>summary::before{content:"▸ ";color:var(--acc);font-weight:900}
+  .rd-fold[open]>summary::before{content:"▾ "}
+  .rd-fold[open]>summary{margin-bottom:10px}
+  .rd-order{margin:0 0 10px;padding:8px 12px 8px 32px;background:#fff4d6;border-radius:10px;font-size:.92rem}
+  .rd-order li{margin:3px 0}
+  .rd-fxn{margin:4px 0 0}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">데이터 과학</span>
+  <nav class="steps" id="steps"></nav>
+  <div class="score" id="score"></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+
+<main id="main">
+
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 2. 데이터의 저장과 활용</span>
+      <h1>같은 값이 반복되는 표,<br>어떻게 정리할까?</h1>
+      <div class="story"><b>영화 「메멘토」의 레너드</b><br>10분 이상 기억을 이어 가지 못하는 레너드는 폴라로이드 사진과 메모, 몸에 새긴 글씨에 기대어 결론을 내리려 해요. 그런데 시간이 지나며 자신의 기록이 바뀌고 있다는 것을 알아차리지 못하지요. 아무리 많이 기록해도, <b>믿을 수 없거나 제대로 관리하지 못한 데이터</b>는 혼란과 왜곡을 낳을 수 있어요.</div>
+      <p>오늘은 데이터를 <b>중복 없이 저장</b>하는 관계형 데이터베이스의 구조와, 여러 곳에 흩어진 데이터를 하나로 모으는 <b>데이터 통합</b>을 배워요.</p>
+      <ol>
+        <li>관계형 데이터베이스</li><li>관계형 데이터베이스 구조</li><li>데이터 통합</li>
+        <li>(선택) SQL 명령어</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘의 질문 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🎬</i><div><b>한 표에 모두 넣으면</b><small>같은 값이 줄마다 반복돼요</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✂️</i><div><b>주제별 테이블로 나누기</b><small>기본키와 외래키로 이어요</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🔗</i><div><b>흩어진 데이터 통합</b><small>날짜를 기준으로 찾아 붙여요</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>💬</i><div><b>(선택) SQL</b><small>명령으로 만들고, 넣고, 찾아요</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">지난 시간에 이어서</span>
+      <p>다산의 표가 하나가 아니라 <b>여러 개로 늘어난다면</b> 어떻게 될까요? 표마다 같은 데이터가 <b>반복해서</b> 들어가겠지요. 그렇다고 모든 정보를 표 하나에 넣으면 <b>칼럼 수가 지나치게 많아지는</b> 문제가 생겨요. 관계형 데이터베이스는 이 문제를 어떻게 풀까요?</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">읽을거리 · 데이터 기록의 중요성 (44쪽)</span>
+        <p style="margin:0;font-size:.92rem">우리는 인터넷에 쌓인 데이터를 바탕으로 판단하고, 우리가 모은 데이터도 다른 사람의 판단 근거가 돼요. 그런데 데이터가 부정확하거나 왜곡되었다면 잘못된 결론으로 이어질 수 있어요. 데이터는 기록하는 것으로 끝나지 않고, <b>신뢰성 확보와 체계적인 관리</b>가 꼭 필요해요.</p>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>중단원</b> · 데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까?</li>
+          <li><b>오늘의 질문 ①</b> · 관계형 데이터베이스의 개념과 구조는 무엇일까?</li>
+          <li><b>오늘의 질문 ②</b> · 데이터 통합은 왜 필요할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터베이스에 데이터가 저장되는 구조를 설명할 수 있다.</li>
+          <li>서로 다른 데이터셋을 데이터 분석이 가능한 형태로 통합할 수 있다.</li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">주요 용어: 테이블(관계) · 칼럼 · 레코드 · 기본키 · 외래키 · 데이터 통합 · SQL</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📝 학습 계획 세우기</h3>
+      <div class="memo"><label>같은 정보가 여러 줄에 반복해서 적힌 표가 있어요. 그 정보가 바뀌어 표를 고쳐야 한다면 어떤 일이 생길 수 있을까요? 지금 생각을 적어 보세요. <small>02에서 「중복의 문제점」과 비교해요.</small></label><textarea data-memo="planRel" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 관계형 데이터베이스부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 관계형 데이터베이스 -->
+<section class="page" data-name="관계형 데이터베이스" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>관계형 데이터베이스란 무엇일까?</h2><p>교과서 40쪽 · 관계형 데이터베이스, 테이블(관계), 칼럼, 레코드</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>관계형 데이터베이스는 데이터를 <b>표(테이블)</b>로 저장하고, 표와 표 사이의 <b>관계</b>로 데이터를 엮어 관리하는 방식이에요. 표의 <b>세로줄은 칼럼</b>, <b>가로줄은 레코드</b>라고 불러요.</span></div>
+
+  <div class="card">
+    <h3>🧩 관계형 데이터베이스(RDB: Relational Database)</h3>
+    <p style="margin-top:0">데이터를 <b>테이블의 형태로 저장</b>하고, 이러한 <b>테이블 간의 관계</b>를 통해 데이터를 구성하고 관리하는 방식이에요. 데이터의 중복을 최대한 없애고 데이터 사이의 관계를 잘 정의해서, 데이터의 생성·수정·삭제가 효율적으로 이루어지도록 설계한 모델을 <b>관계형 모델</b>이라고 해요. <span class="muted">(관계형 데이터베이스는 E. F. Codd 박사가 1970년대에 처음 제시했어요.)</span></p>
+    <p class="muted" style="margin-bottom:0">관계형 데이터베이스 시스템은 관계형 데이터베이스를 처리·유지·관리하며, 사용자가 데이터를 효율적으로 쓸 수 있도록 지원해요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎬 영화 상영 정보 테이블 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅰ-8을 다시 그림 · 가상의 영화 데이터)</span></h3>
+    <div class="rd-mode" id="mvMode"></div>
+    <div id="mvBox"></div>
+    <div class="cards2" style="margin-top:12px">
+      <div class="kc" style="--k:#2f6fd0"><h4>칼럼</h4><p>테이블 안에 <b>세로로 묶인 값들</b>. 영화 제목, 감독 이름 같은 칼럼이 있어요.</p><small>다른 말로 열, 필드, 속성이라고도 하고, 인공지능 분야에서는 특성이라고도 해요.</small></div>
+      <div class="kc" style="--k:#e0702b"><h4>레코드</h4><p>각 칼럼의 값들을 <b>가로로 묶은 것</b>. 영화 한 편의 상영 정보 한 줄이에요.</p><small>행(row) 또는 튜플이라고도 불러요.</small></div>
+    </div>
+    <div class="callout" style="margin-bottom:0">표 형식으로 된 전체 데이터는 <b>테이블</b> 또는 <b>관계(relation)</b>라고 불러요. 이 테이블은 잘 저장된 것처럼 보이지만, 자세히 보면 전체 칼럼에 <b>중복</b>이 많아요. 레코드가 5개 정도면 큰 문제가 없어 보여도, 데이터가 많아지면 중복 때문에 처리와 관리가 어려워져요.</div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 관계형 데이터베이스 구조 -->
+<section class="page" data-name="기본키와 외래키" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>관계형 데이터베이스는 어떤 구조일까?</h2><p>교과서 41쪽 · 중복의 문제점, 기본키, 외래키</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>모든 것을 한 표에 넣는 대신 <b>주제별로 표를 나누고</b>, 표마다 행을 하나씩 구분하는 번호(<b>기본키</b>)를 붙여요. 그리고 다른 표의 번호를 적어 두는 칸(<b>외래키</b>)으로 표와 표를 이어요.</span></div>
+
+  <div class="card">
+    <h3>➕ 칼럼을 계속 추가하면?</h3>
+    <p style="margin-top:0">그림 Ⅰ-8 테이블에 영화 제작 국가 정보가 필요하다면 칼럼을 추가하면 돼요. 그런데 필요할 때마다 칼럼을 추가하다 보면 테이블이 엄청나게 커지고 중복도 많아질 수 있어요.</p>
+    <div class="rd-bubbles"><span>「상영관 좌석 수도 추가해 줘.」</span><span>「상영 시간 칼럼도 추가해 줘.」</span><span>「영화 제작 국가 칼럼도 추가해 줘.」</span></div>
+    <div class="grid2 even" style="margin-top:12px">
+      <div class="kc" style="--k:#d64535"><h4>중복의 문제점</h4>
+        <ul class="rd-ul"><li>데이터 일관성 문제</li><li>데이터 품질(신뢰성) 및 성능 저하</li><li>저장 공간 낭비</li><li>데이터 관리 비용 증가</li><li>데이터 복구 및 백업 시간 증가</li></ul></div>
+      <div class="kc" style="--k:#1f9d74"><h4>관계형 데이터베이스는</h4><p><b>중복을 제거한 테이블</b>로 데이터를 저장하고, 각 테이블은 <b>특정 주제나 개체</b>에 대한 정보만 담아요. 또 테이블을 <b>연결</b>해 새로운 정보를 만들고 효율적으로 관리해요.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔗 외래키 따라가기 <span class="muted" style="font-weight:400;font-size:.88rem">(41쪽 관계형 데이터베이스 예시)</span></h3>
+    <p class="muted" style="margin-top:0">가운데 <b>영화 테이블</b>에서 외래키 칸(감독 ID, 배우 ID, 장르 ID, 상영관 ID)을 누르면 그 값이 가리키는 테이블의 행으로 따라가요. <b>영화 ID</b>를 누르면 네 개의 외래키를 한꺼번에 따라가 상영 정보 한 줄을 다시 만들어요.</p>
+    <div id="fkSim"></div>
+    <div class="cards2" style="margin-top:12px">
+      <div class="kc" style="--k:#e0702b"><h4>🔑 기본키</h4><p>각 테이블 안에서 데이터를 <b>고유하게 식별</b>하는 키예요. <b>중복되는 값이 없어야</b> 해요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>🧷 외래키</h4><p><b>다른 테이블의 키를 참조</b>하는 키로, 테이블 간의 관계를 연결해요. 영화 테이블의 감독 ID·배우 ID·장르 ID·상영관 ID는 각 테이블의 기본키를 참조하는 외래키예요.</p></div>
+    </div>
+    <div class="memo" style="margin-top:12px"><label>영화 ID 02의 상영 정보를 외래키를 따라가며 다시 읽어 보세요. 어떤 테이블을 어떤 순서로 찾아갔는지, 다시 만든 상영 정보 한 줄은 무엇인지 적어요.</label><textarea data-memo="fkNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <p class="note">이런 방식으로 중복 문제를 해결하면 데이터의 중복을 최소화하고 데이터 관리의 효율성을 높일 수 있어요.</p>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 데이터 통합 -->
+<section class="page" data-name="데이터 통합" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>데이터 통합은 왜 필요할까?</h2><p>교과서 42~43쪽 · 데이터 통합의 필요성과 방법, VLOOKUP</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>문제를 풀려고 여러 곳에서 모은 데이터는 대개 <b>따로따로</b> 있어요. 날씨는 날씨대로, 교통사고는 교통사고대로요. 이것을 <b>공통된 기준(예: 날짜)</b>으로 한곳에 모아야 함께 분석할 수 있어요. 이것이 <b>데이터 통합</b>이에요.</span></div>
+
+  <div class="card">
+    <h3>🔗 데이터 통합</h3>
+    <p style="margin-top:0"><b>데이터 통합</b>은 다양한 소스의 데이터를 한곳에 모아 사용자가 효율적으로 분석하고 활용할 수 있게 하는 과정이에요. 데이터는 파일이나 데이터베이스 관리 시스템으로 잘 관리되지만, 새로운 문제를 해결하거나 인공지능 시스템을 만들 때 필요한 데이터가 한곳에 모여 있지 않을 가능성이 높아요.</p>
+    <div class="flow2">
+      <div style="--k:#2f6fd0"><b>🌦️ 날씨 정보</b><span>‘기상청 기상자료개방포털’에서 날짜별 날씨를 찾아요.</span></div>
+      <div class="ar">+</div>
+      <div style="--k:#d64535"><b>🚗 교통사고 정보</b><span>‘공공데이터포털’에서 도로교통공단 사망 교통사고 정보를 따로 찾아요.</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#1f9d74"><b>🧹 전처리 · 통합</b><span>원하는 형태로 다듬어 날짜별 날씨와 사상자 수를 한 데이터셋으로 모아요.</span></div>
+    </div>
+    <p class="note">예: 날씨에 따른 교통사고 사상자 수를 분석하거나 예측하는 인공지능 시스템을 만들려면 두 정보가 함께 담긴 데이터셋이 필요하지만, 이런 데이터셋을 한꺼번에 구하기는 쉽지 않아요.</p>
+  </div>
+
+  <div class="card">
+    <h3>📗 스스로 해결하기 · VLOOKUP으로 두 시트 통합하기 <span class="muted" style="font-weight:400;font-size:.88rem">(43쪽 · 탐구 · 실습)</span></h3>
+    <p style="margin-top:0">서로 다른 곳에서 모은 가상의 두 데이터셋이 스프레드시트의 <b>교통사고 시트</b>와 <b>날씨 시트</b>에 있어요. <b>교통사고 시트를 기준</b>으로 날씨 정보를 붙여 <b>데이터 통합 시트</b>를 만들어요.</p>
+    <ol class="rd-order"><li><b>한 줄(3칸) 직접 채우기</b> — 통합 시트의 노란 빈칸을 누르고, 날씨 시트에서 <b>몇 번째 열</b>을 가져올지 골라요.</li><li><b>날씨 시트 행 섞기</b> — 이미 채운 값이 그대로 맞는지 봐요.</li><li><b>순서대로 붙여넣기와 비교</b> — 날짜로 찾지 않으면 어떻게 되는지 봐요. 그다음 <b>남은 칸 모두 채우기</b>로 마무리해요.</li></ol>
+    <p class="note" style="margin-top:0">VLOOKUP 함수: 지정한 값을 표의 왼쪽 열에서 찾은 뒤, 같은 행에 있는 다른 열의 값을 가져오는 함수예요.</p>
+    <div id="vlook"></div>
+    <div class="memo" style="margin-top:12px"><label>통합 시트를 다 채운 뒤 적어요. ① 날짜를 기준으로 찾아 붙이는 방법이 <b>순서대로 붙여넣기</b>보다 나은 까닭 ② 통합한 데이터로 답해 보고 싶은 질문 하나</label><textarea data-memo="vlookNote" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+
+  <details class="card rd-fold">
+    <summary><h3>🧭 데이터 통합의 이점과 통합하는 방법 <span class="muted" style="font-weight:400;font-size:.88rem">(42~43쪽 · 눌러서 펼쳐 보기)</span></h3></summary>
+    <p style="margin:0 0 4px"><b>데이터 통합의 이점</b></p>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><h4>종합적인 시야</h4><p>하나의 통합된 시스템에서 다양한 데이터를 분석해 <b>더 나은 의사 결정</b>을 더 빨리 내릴 수 있어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><h4>비용 절감 · 효율성 향상</h4><p>수동 작업을 자동화해 <b>시간과 노동 비용</b>을 크게 아낄 수 있어요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>데이터 접근성 증가</h4><p>모든 구성원이 필요한 데이터에 쉽게 접근해 <b>공평하게</b> 데이터를 활용할 수 있어요.</p></div>
+    </div>
+    <p style="margin:14px 0 4px"><b>데이터를 통합하는 방법</b></p>
+    <div class="cards3">
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🗄️</div><h4>한 데이터베이스에 모으기</h4><p>데이터베이스 관리 시스템으로, 다양한 경로로 모은 데이터를 <b>하나의 데이터베이스에 집중</b>해 통합해요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🌐</div><h4>나눠 저장하고 필요한 것만 모으기</h4><p>데이터를 <b>물리적으로 서로 다른 위치에 분산</b>해 저장하면서, 필요한 통합 정보만 모아 써요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">📗</div><h4>스프레드시트로 통합하기</h4><p>데이터 양이 아주 크지 않다면 <b>스프레드시트</b>로 간단하게 통합할 수 있어요.</p></div>
+    </div>
+    <div class="callout" style="margin-bottom:0"><b>통합할 때 생각할 점</b> 데이터 크기가 커져 처리에 부담이 될 수 있고, 통합 과정에서 오류가 생길 수 있어 주의해야 해요. 상황에 맞게, <b>데이터 양</b>과 <b>데이터 내용이 바뀌는 빈도</b>에 따라 알맞은 통합 방식을 골라요.</div>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) SQL -->
+<section class="page" data-name="(선택) SQL 명령어" data-acc="#9b4fc4">
+  <div class="head"><div class="num">04</div><div><h2>(선택) SQL 명령어로 데이터베이스 다루기</h2><p>교과서 45~47쪽 · SQL, DDL, DML, DCL, TCL, CREATE, INSERT, SELECT, WHERE</p></div></div>
+  <div class="callout rd-opt"><b>선택 화면이에요.</b> 시간이 남거나 더 해 보고 싶을 때 해요. 질문폼은 다음 화면(마무리)에 있어요. <button class="btn sm" onclick="go(5)">마무리로 가기 →</button></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>SQL은 관계형 데이터베이스에게 <b>「표를 만들어」, 「이 값을 넣어」, 「이런 것만 보여 줘」</b>라고 말하는 언어예요. 명령 한 줄을 실행하면 데이터베이스가 바로 답해요.</span></div>
+
+  <div class="card">
+    <h3>💬 SQL(Structured Query Language)</h3>
+    <p style="margin-top:0">관계형 데이터베이스 관리 시스템(RDBMS)에서 데이터를 관리하고 조작하는 데 가장 널리 쓰이는 <b>표준 언어</b>예요. 데이터를 검색·삽입·수정·삭제하고, 테이블 간의 관계를 정의하고 처리할 수 있어요. 각 테이블은 행(레코드)과 열(필드)로 이루어지고, SQL로 여러 테이블을 연결하고 데이터를 조작해요.</p>
+    <div class="rd-sqlk">
+      <div style="--k:#2f6fd0"><b>데이터 정의 언어(DDL)</b><small>데이터를 저장하려고 데이터베이스 구조, 테이블 등을 정의할 때</small><span><code>CREATE</code> 새 테이블 또는 데이터베이스를 생성</span><span><code>ALTER</code> 기존 테이블의 구조를 변경</span><span><code>DROP</code> 테이블이나 데이터베이스를 삭제</span></div>
+      <div style="--k:#1f9d74"><b>데이터 조작 언어(DML)</b><small>효율적인 관리를 위해 테이블의 데이터를 다룰 때</small><span><code>SELECT</code> 데이터를 조회</span><span><code>INSERT</code> 새 데이터를 삽입</span><span><code>UPDATE</code> 기존 데이터를 수정</span><span><code>DELETE</code> 데이터를 삭제</span></div>
+      <div style="--k:#e0702b"><b>데이터 제어 언어(DCL)</b><small>무결성을 위해 사용자 권한을 관리할 때</small><span><code>GRANT</code> 사용자에게 특정 권한을 부여</span><span><code>REVOKE</code> 사용자 권한을 취소</span></div>
+      <div style="--k:#9b4fc4"><b>트랜잭션 제어 언어(TCL)</b><small>일관성을 위해 트랜잭션을 관리할 때</small><span><code>COMMIT</code> 트랜잭션을 확정해 영구적으로 적용</span><span><code>ROLLBACK</code> 트랜잭션을 취소해 원래 상태로 되돌림</span></div>
+    </div>
+    <p class="note">SQL은 국제 표준(ISO/IEC)으로 정해져 있어 MySQL, PostgreSQL, Oracle, SQL Server 등에서 쓸 수 있지만, 데이터베이스마다 고유한 <b>확장 SQL</b>을 제공하기도 해요. 이 화면의 실습기는 SQLite라는 데이터베이스를 브라우저 안에서 돌려요.</p>
+    <p class="note">ℹ️ 데이터 제어 언어(GRANT·REVOKE)와 트랜잭션 제어 언어(COMMIT·ROLLBACK)는 <b>이 실습기(SQLite)에서는 지원하지 않는 명령이에요.</b> 아래에서는 CREATE, INSERT, SELECT, UPDATE, DELETE를 실습해요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🧪 SQL 실습 · BoxOffice 테이블 <span class="muted" style="font-weight:400;font-size:.88rem">(46~47쪽)</span></h3>
+    <p class="muted" style="margin-top:0">① → ⑦ 순서로 단추를 눌러 명령을 불러오고 <b>실행 ▶</b>을 눌러요. 명령을 직접 고쳐 써서 실행해도 돼요. <span class="mono">Ctrl</span>+<span class="mono">Enter</span>로도 실행돼요.</p>
+    <div id="sqlLab"></div>
+    <details class="rd-more"><summary>교과서 코드와 달라진 점</summary>
+      <ul class="rd-ul">
+        <li>교과서 46~47쪽의 일부 따옴표가 굽은 따옴표(‘ ’)로 인쇄되어 그대로 실행하면 오류가 나요. 실습기에서는 곧은 따옴표(')로 고쳤어요.</li>
+        <li>칼럼 이름 「주연 배우_이름」은 띄어쓰기가 있어 그대로 쓰면 오류가 나거나 다른 이름이 되기 때문에 「주연_배우_이름」으로 붙여 썼어요.</li>
+        <li>상영관 이름 「옷데 시청」은 「롯데 시청」으로, 배우 이름은 40·41쪽 표기(매듀 매커니히)로 맞췄어요.</li>
+        <li>타이타닉의 장르는 46쪽처럼 「액션」으로 넣고, 47쪽 ⑥ UPDATE에서 40쪽 표와 같은 「로맨스」로 고쳐요.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0"><b>관계형 데이터베이스</b>는 데이터를 테이블(관계)로 저장하고 테이블 사이의 관계로 데이터를 관리한다. 세로로 묶인 값은 <b>칼럼</b>, 가로로 묶인 값은 <b>레코드</b>다.</div>
+    <div style="--k:#1f9d74">한 테이블에 모든 정보를 담으면 중복이 늘어난다. 그래서 주제별 테이블로 나누고, 행을 고유하게 구분하는 <b>기본키</b>와 다른 테이블의 키를 참조하는 <b>외래키</b>로 테이블을 잇는다.</div>
+    <div style="--k:#e0702b"><b>데이터 통합</b>은 여러 곳에서 모은 데이터를 공통된 기준으로 한곳에 모아 분석할 수 있게 하는 과정이다. 스프레드시트에서는 VLOOKUP으로 기준 값을 찾아 같은 행의 값을 가져올 수 있다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 다시 답하기</h3>
+    <p class="muted" style="margin-top:0">처음에 적은 생각과 비교하며, 오늘 배운 낱말(테이블, 칼럼, 레코드, 기본키, 외래키, 데이터 통합 등)을 넣어 내 말로 답해 보세요.</p>
+    <b style="font-size:.93rem">관계형 데이터베이스는 데이터를 어떤 구조로 저장할까? 그리고 데이터 통합은 왜 필요할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <p class="muted" style="margin-top:0;font-size:.88rem">04 SQL 화면은 선택이라, 풀지 않았으면 「아직 안 풂」으로 보여요.</p>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>영화 상영 정보 테이블(그림 Ⅰ-8)에서 <b>중복</b>을 찾아보았습니다. 같은 값이 반복되는 테이블에 정보를 계속 추가하거나 값을 고칠 때 생길 수 있는 문제를 쓰고, 관계형 데이터베이스가 이 문제를 어떻게 줄이는지 설명하세요.</li>
+      <li>「외래키 따라가기」에서 영화 테이블의 ID를 눌러 다른 테이블의 값을 찾아보았습니다. <b>기본키</b>와 <b>외래키</b>가 무엇인지 예를 들어 설명하고, 나뉘어 있는 테이블에서 영화 한 편의 상영 정보를 어떻게 다시 읽을 수 있는지 쓰세요.</li>
+      <li>VLOOKUP으로 교통사고 시트에 날씨 정보를 통합해 보았습니다. <b>날짜를 기준으로 값을 찾아 붙이는 과정</b>을 자기 말로 설명하고, 순서대로 붙여넣을 때와 비교해 어떤 점이 나은지, 통합한 데이터로 답할 수 있는 질문 하나를 쓰세요.</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="../forms/data-u1-relational.html" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="foot">
+  <button class="btn ghost" id="prev">← 이전</button>
+  <span class="pg" id="pg"></span>
+  <button class="btn" id="next">다음 →</button>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toLocaleString('ko-KR');
+
+
+
+const LESSON='u1-relational', PEP='';
+
+/* 진도 보내기 ①: 누가 쓰는지 확인 (반·학번마다 퀴즈·메모를 따로 저장) */
+const WHO=(function(){
+  if(!PEP) return {off:true,sfx:''};
+  if(/[?&]preview(=|&|$)/.test(location.search)) return {preview:true,sfx:'@preview'};
+  let w=null; try{w=JSON.parse(sessionStorage.getItem('aiw-who')||'null');}catch(e){}
+  if(w&&w.teacher) return {preview:true,teacher:true,sfx:'@preview'};
+  if(!w||!/^\d{5}$/.test(w.no||'')) return {need:true,sfx:'@none'};
+  return {cls:w.cls,no:w.no,name:w.name,sfx:'@'+w.no};
+})();
+/* 퀴즈 */
+const QUIZ={
+ 1:[{q:'관계형 데이터베이스에서 표 형식으로 된 전체 데이터를 부르는 말은?',o:['칼럼','레코드','테이블(관계)'],a:2,w:'표 전체는 테이블 또는 관계(relation)라고 해요. 그 안의 세로 묶음과 가로 묶음에는 따로 이름이 있어요.'},
+    {q:'그림 Ⅰ-8에서 「어벤져스 엔드게임 · 조 루소 · 로버트 다우니 주니어 · 액션 · DGV 강남1관」처럼 한 줄로 묶인 값은?',o:['칼럼','레코드','데이터셋'],a:1,w:'각 칼럼의 값을 가로로 묶은 것이 레코드예요. 행 또는 튜플이라고도 해요.'},
+    {q:'그림 Ⅰ-8처럼 영화 한 편을 상영관마다 한 줄씩 적으면, 데이터가 많아질수록 커지는 문제는?',o:['중복','보안','백업'],a:0,w:'영화 제목·감독·배우·장르 같은 값이 줄마다 되풀이되어 처리와 관리가 어려워져요.'}],
+ 2:[{q:'영화 테이블의 영화 ID처럼, 테이블 안에서 각 레코드를 하나씩 구분해 주는 키는?',o:['기본키','외래키','칼럼 이름'],a:0,w:'기본키는 각 테이블 안에서 데이터를 고유하게 식별하는 키예요.'},
+    {q:'영화 테이블의 감독 ID처럼, 다른 테이블의 키를 참조해 두 테이블을 연결하는 키는?',o:['레코드','외래키','데이터셋'],a:1,w:'외래키는 다른 테이블의 키를 참조해 테이블 간의 관계를 이어요.'},
+    {q:'영화 테이블에서 타이타닉의 상영관 ID는 C3이다. 상영관 테이블을 따라가면 알 수 있는 상영관 이름은?',o:['DGV 강남1관','롯데 시청1관','영화박스 신촌1관'],a:2,w:'상영관 테이블에서 상영관 ID가 C3인 행을 찾으면 그 행의 상영관 이름을 읽을 수 있어요.'}],
+ 3:[{q:'급식 만족도 설문 결과와 급식 메뉴표를 날짜로 맞춰 한 표로 모은 뒤, 어떤 메뉴가 나온 날 만족도가 높았는지 살펴보려 한다. 표를 모으는 이 일은?',o:['백업','데이터 통합','데이터베이스 보안'],a:1,w:'따로 모은 두 데이터를 날짜라는 공통된 기준으로 한곳에 모아야 함께 분석할 수 있어요.'},
+    {q:'교통사고 시트 A3에 날짜 20240921이 있다. =VLOOKUP(A3, 날씨!A:D, 3, FALSE)가 가져오는 값은?',o:['9','11','25'],a:0,w:'날씨 시트 왼쪽 열에서 20240921을 찾아 같은 행의 3번째 열(강수량) 값을 가져와요. 25는 기온, 11은 바람이에요.'},
+    {q:'날씨 시트의 행 순서가 교통사고 시트와 다를 때, 날씨 열을 순서대로 복사해 붙이면 생기는 일은?',o:['아무 문제 없다','교통사고 값이 사라진다','다른 날짜의 날씨가 붙는다'],a:2,w:'붙여넣기는 날짜를 확인하지 않아 줄이 어긋나요. 날짜를 기준으로 찾아 붙여야 같은 날의 날씨가 붙어요.'}],
+ 4:[{q:'CREATE, ALTER, DROP처럼 데이터베이스 구조와 테이블을 정의하는 명령어 묶음은?',o:['DDL','DML','DCL'],a:0,w:'데이터 정의 언어(DDL)예요. SELECT·INSERT·UPDATE·DELETE는 데이터 조작 언어(DML), GRANT·REVOKE는 데이터 제어 언어(DCL)예요.'},
+    {q:'BoxOffice 테이블에서 장르가 SF인 레코드만 조회하려고 할 때 SELECT 문에 덧붙이는 것은?',o:['SET','WHERE','VALUES'],a:1,w:'WHERE 뒤에 조건을 쓰면 조건에 맞는 레코드만 골라 보여 줘요. SET은 UPDATE에서 바꿀 값을, VALUES는 INSERT에서 넣을 값을 쓸 때 써요.'}],
+ 5:[{q:'영화 테이블의 감독 ID 칸에 감독 이름 대신 01, 02 같은 값을 적는 까닭은?',o:['감독 이름을 숨기려고','칸을 숫자로 채우려고','감독 테이블의 행과 연결하려고'],a:2,w:'감독 이름은 감독 테이블에 한 번만 적고, 영화 테이블은 그 행의 기본키를 가리켜 연결해요.'},
+    {q:'감독 테이블에 감독 ID 02가 이미 있는데, 새 감독을 02로 또 넣으면 어긋나는 규칙은?',o:['칼럼은 세로로 묶은 값이다','기본키는 중복되면 안 된다','외래키는 여러 번 쓸 수 있다'],a:1,w:'같은 ID가 두 사람에게 붙으면 영화 테이블의 외래키가 누구를 가리키는지 알 수 없어요.'},
+    {q:'날씨 정보와 교통사고 정보를 날짜로 통합하면 새로 할 수 있게 되는 일은?',o:['사상자와 날씨 비교','사고 기록을 지우는 일','내일 날씨 예보를 바꾸는 일'],a:0,w:'두 데이터가 한 줄에 모이면 기온·강수량·바람과 사상자 수를 함께 놓고 살펴볼 수 있어요.'}],
+};
+
+const QK='ds-u1-relational-quiz'+WHO.sfx;
+const MK='ds-u1-relational-memo'+WHO.sfx;
+let QS={}; try{QS=JSON.parse(localStorage.getItem(QK)||'{}')||{};}catch(e){QS={};}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(QS));}catch(e){}}
+const TOTALQ=Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+function qperm(n,key){ let h=2166136261; for(const c of key){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}
+  const p=[...Array(n).keys()]; for(let i=n-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0; h=(h+0x6D2B79F5)>>>0; const j=h%(i+1); [p[i],p[j]]=[p[j],p[i]];} return p; }
+function renderQuiz(box){
+  const k=box.dataset.quiz; box.innerHTML=`<div class="qh"><b>개념 퀴즈</b><span>${QUIZ[k].length}문제 · 고르면 바로 채점</span></div>`;
+  QUIZ[k].forEach((it,i)=>{
+    const id=k+'-'+i, d=document.createElement('div'); d.className='qi';
+    /* 보기 순서는 학생마다 섞되(새로 고쳐도 같은 순서), 저장·채점은 원래 번호로 */
+    const perm=qperm(it.o.length, QK+'|'+id);
+    d.innerHTML=`<div class="qq">${i+1}. ${it.q}</div><div class="opts">${perm.map(j=>`<button data-j="${j}">${it.o[j]}</button>`).join('')}</div><div class="why"></div>`;
+    const btn=j=>d.querySelector(`button[data-j="${j}"]`);
+    const mark=(j,anim)=>{
+      const bs=d.querySelectorAll('button'); bs.forEach(b=>b.disabled=true);
+      btn(it.a).classList.add('right'); if(j!==it.a){btn(j).classList.add('wrong'); if(anim) d.classList.add('shake');}
+      d.classList.add('answered', j===it.a?'correct':'incorrect');
+      d.querySelector('.why').textContent=(j===it.a?'정답. ':'정답은 「'+it.o[it.a]+'」. ')+it.w;
+    };
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;QS[id]=j;saveQ();mark(j,true);updScore();});
+    if(QS[id]!=null && QS[id]<it.o.length) mark(QS[id],false);
+    box.appendChild(d);
+  });
+}
+
+/* 페이지 이동 */
+const pages=[...document.querySelectorAll('.page')];
+const stepBtns=pages.map((p,i)=>{const b=document.createElement('button');b.textContent=i?`${i}. ${p.dataset.name}`:'시작';b.onclick=()=>go(i);$('steps').appendChild(b);return b;});
+function updScore(){
+  let ok=0; for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{if(QS[k+'-'+i]===it.a) ok++;});
+  $('score').textContent=`퀴즈 ${ok} / ${TOTALQ}`;
+  pages.forEach((p,i)=>{const q=p.querySelector('[data-quiz]'); if(!q) return; const k=q.dataset.quiz; stepBtns[i].classList.toggle('done',QUIZ[k].every((_,j)=>QS[k+'-'+j]!=null));});
+  let h='<tr><th class="l">개념</th><th>맞힌 문제</th></tr>';
+  for(const k in QUIZ){const n=QUIZ[k].length, c=QUIZ[k].filter((it,i)=>QS[k+'-'+i]===it.a).length, a=QUIZ[k].filter((_,i)=>QS[k+'-'+i]!=null).length;
+    h+=`<tr><td class="l">${k}. ${pages[k].dataset.name}</td><td>${a?`<b class="${c===n?'ok':''}">${c} / ${n}</b>`:'<span class="muted">아직 안 풂</span>'}</td></tr>`;}
+  h+=`<tr><td class="l"><b>합계</b></td><td><b>${ok} / ${TOTALQ}</b></td></tr>`;
+  $('result').innerHTML=h;
+}
+let cur=-1;
+const onShow={};
+function go(i){
+  i=Math.max(0,Math.min(pages.length-1,i)); if(i===cur) return;
+  const back=i<cur; if(cur>=0) pages[cur].classList.remove('on','back');
+  pages[i].classList.add('on'); pages[i].classList.toggle('back',back);
+  document.documentElement.style.setProperty('--acc',pages[i].dataset.acc);
+  document.documentElement.style.setProperty('--acc-soft',pages[i].dataset.acc+'1a');
+  stepBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sb=$('steps'), btn=stepBtns[i]; sb.scrollLeft=btn.offsetLeft-sb.clientWidth/2+btn.clientWidth/2;
+  $('prog').style.width=(i/(pages.length-1)*100)+'%';
+  $('pg').textContent=`${i} / ${pages.length-1}`;
+  $('prev').style.visibility=i?'visible':'hidden'; $('next').style.visibility=i<pages.length-1?'visible':'hidden';
+  cur=i; try{history.replaceState(null,'','#p'+i);}catch(e){} window.scrollTo(0,0);
+  if(onShow[i]) onShow[i]();
+}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.defaultPrevented)return; if(e.target.matches&&e.target.matches('input,select,textarea'))return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+document.querySelectorAll('.gcard').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.click();}}));
+document.querySelectorAll('[data-quiz]').forEach(renderQuiz);
+$('quizReset').onclick=()=>{QS={};saveQ();document.querySelectorAll('[data-quiz]').forEach(renderQuiz);updScore();};
+
+
+/* 공용 부품: 메모·카드·분류 게임·탭·투표·칩 */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* 메모: data-memo가 있는 입력칸은 이 기기에 저장 */
+let MEMO=store.get(MK,{});
+function bindMemos(){
+  document.querySelectorAll('[data-memo]').forEach(t=>{
+    const k=t.dataset.memo; if(MEMO[k]!=null) t.value=MEMO[k];
+    let tm; t.addEventListener('input',()=>{MEMO[k]=t.value; clearTimeout(tm); tm=setTimeout(()=>{store.set(MK,MEMO); const s=t.parentElement.querySelector('.saved'); if(s){s.textContent='이 기기에 저장됨'; setTimeout(()=>s.textContent='',1400);} t.dispatchEvent(new Event('memo'));},300);});
+  });
+}
+function memoSummary(box,list){
+  const h=list.map(([k,label])=>{const v=(MEMO[k]||'').trim(); return `<dt>${esc(label)}</dt><dd class="${v?'':'e'}">${v?esc(v):'(아직 안 씀)'}</dd>`;}).join('');
+  $(box).innerHTML=`<h4>오늘 화면에 적어 둔 내 메모</h4><dl>${h}</dl>`;
+}
+
+/* 뒤집는 카드 */
+function flipCards(box,items){
+  $(box).innerHTML=items.map(c=>`<div class="tcard" tabindex="0"><div class="in"><div class="f"><i>${c.ic||''}</i><b>${c.f}</b>${c.s?`<small>${c.s}</small>`:''}</div><div class="b">${c.b}${c.x?`<div class="x">${c.x}</div>`:''}</div></div></div>`).join('');
+  $(box).querySelectorAll('.tcard').forEach(t=>{const f=()=>t.classList.toggle('flip'); t.onclick=f; t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+}
+
+/* 분류 게임: 문장을 보고 알맞은 묶음 고르기 */
+function sorter(box,cfg){
+  const B=$(box);
+  function start(){
+    const order=shuffle(cfg.items.map((_,i)=>i)); let pos=0, ok=0; const placed=cfg.cats.map(()=>[]);
+    B.innerHTML=`<div class="sit"><div class="cnt"></div><div class="ic"></div><div class="sq"></div><div class="row btns">${cfg.cats.map((c,j)=>`<button class="btn sm cat" style="--k:${c.k}" data-j="${j}">${c.n}</button>`).join('')}</div><div class="fb"></div><div class="row nx" style="margin-top:8px"></div></div><div class="board" style="--n:${cfg.cats.length}">${cfg.cats.map(c=>`<div style="--k:${c.k}"><b>${c.n}</b></div>`).join('')}</div>`;
+    const sq=B.querySelector('.sq'), ic=B.querySelector('.ic'), cnt=B.querySelector('.cnt'), fb=B.querySelector('.fb'), nx=B.querySelector('.nx'), btns=[...B.querySelectorAll('.cat')], cols=[...B.querySelectorAll('.board>div')];
+    function show(){
+      if(pos>=order.length){cnt.textContent=''; ic.textContent='🎉'; sq.innerHTML=`${order.length}개 중 <b>${ok}개</b>를 바로 맞혔어요.`; fb.innerHTML=cfg.end||''; btns.forEach(b=>b.style.display='none'); nx.innerHTML='<button class="btn ghost sm">처음부터 다시</button>'; nx.firstChild.onclick=start; return;}
+      const it=cfg.items[order[pos]]; cnt.textContent=`${pos+1} / ${order.length}`; ic.textContent=it.ic||''; sq.innerHTML=it.t; fb.textContent=''; nx.innerHTML=''; btns.forEach(b=>{b.disabled=false;b.style.display='';});
+    }
+    btns.forEach(b=>b.onclick=()=>{
+      const it=cfg.items[order[pos]], j=+b.dataset.j, right=j===it.c; if(right) ok++;
+      btns.forEach(x=>x.disabled=true);
+      fb.innerHTML=(right?'<span class="ok">맞아요!</span> ':`<span class="ng">아쉬워요.</span> 정답은 <b>${cfg.cats[it.c].n}</b>. `)+(it.w||'');
+      const s=document.createElement('span'); s.innerHTML=it.short||it.t; if(!right) s.className='x'; cols[it.c].appendChild(s);
+      nx.innerHTML='<button class="btn sm">다음 →</button>'; nx.firstChild.onclick=()=>{pos++;show();}; nx.firstChild.focus();
+    });
+    show();
+  }
+  start();
+}
+
+/* 탭 보기: 버튼을 누르면 내용 바꾸기 */
+function tabs(btnBox,viewBox,items,render){
+  $(btnBox).innerHTML=items.map((it,i)=>`<button data-i="${i}"><span class="e">${it.ic||''}</span><b>${it.n}</b></button>`).join('');
+  const bs=[...$(btnBox).querySelectorAll('button')];
+  const pick=i=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); $(viewBox).innerHTML=render(items[i],i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i)); pick(0);
+}
+
+/* 투표: 고르면 결과 보이기 (이 기기에만 저장) */
+function vote(box,key,opts,onPick){
+  const B=$(box); B.innerHTML=opts.map((o,i)=>`<button data-i="${i}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')];
+  const pick=(i,save)=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); if(save){MEMO[key]=opts[i][0]; store.set(MK,MEMO);} onPick&&onPick(i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i,true));
+  const prev=opts.findIndex(o=>o[0]===MEMO[key]); if(prev>=0) pick(prev,false);
+}
+function chips(box,key,opts,multi){
+  const B=$(box); B.classList.add('chk'); B.innerHTML=opts.map(o=>`<button>${o}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')]; let sel=(MEMO[key]||'').split(' · ').filter(Boolean);
+  const draw=()=>bs.forEach(b=>b.classList.toggle('on',sel.includes(b.textContent)));
+  bs.forEach(b=>b.onclick=()=>{const t=b.textContent; if(multi) sel=sel.includes(t)?sel.filter(x=>x!==t):[...sel,t]; else sel=sel.includes(t)?[]:[t]; MEMO[key]=sel.join(' · '); store.set(MK,MEMO); draw(); B.dispatchEvent(new Event('memo'));});
+  draw();
+}
+/* 01 그림 Ⅰ-8 영화 상영 정보: 칼럼·레코드 살펴보기 / 중복 찾기 */
+(function(){
+  const COLS=['영화 제목','감독 이름','주연 배우 이름','장르','상영관'];
+  const ROWS=[['어벤져스 엔드게임','조 루소','로버트 다우니 주니어','액션','DGV 강남1관'],
+    ['어벤져스 엔드게임','조 루소','로버트 다우니 주니어','액션','DGV 강남2관'],
+    ['인터스텔라','크리스토퍼 놀란','매듀 매커니히','SF','롯데 시청1관'],
+    ['인터스텔라','크리스토퍼 놀란','매듀 매커니히','SF','롯데 시청2관'],
+    ['타이타닉','제임스 카메룬','케이트 윈슬렛','로맨스','영화박스 신촌1관']];
+  const times=(c,v)=>ROWS.filter(r=>r[c]===v).length;
+  const DUP=[]; ROWS.forEach((r,i)=>r.forEach((v,c)=>{if(times(c,v)>1) DUP.push(i+'-'+c);}));
+  const CELLS=ROWS.length*COLS.length;
+  let mode='look', hl=null, found=new Set(), miss=null, msg='';
+  function draw(){
+    $('mvMode').innerHTML=`<button data-m="look" class="${mode==='look'?'on':''}">🔍 칼럼·레코드 살펴보기</button><button data-m="dup" class="${mode==='dup'?'on':''}">🔁 중복 찾기</button>`;
+    $('mvMode').querySelectorAll('button').forEach(b=>b.onclick=()=>{mode=b.dataset.m; hl=null; miss=null;
+      msg=mode==='dup'?'같은 칼럼 안에서 <b>같은 값이 두 번 이상</b> 나오는 칸을 찾아 눌러 보세요.':''; draw();});
+    const cls=(i,c)=>{const k=i+'-'+c; let s='';
+      if(mode==='look'&&hl){ if(hl.t==='col'&&hl.c===c) s+=' col'; if(hl.t==='row'&&hl.r===i) s+=' rec'; if(hl.t==='tbl') s+=' tblon'; }
+      if(mode==='dup'){ if(found.has(k)) s+=' dup'; if(miss===k) s+=' uniq'; }
+      return s;};
+    $('mvBox').innerHTML=`${mode==='look'?`<button class="rd-tblchip ${hl&&hl.t==='tbl'?'on':''}" data-tbl="1">테이블 = 관계(relation)</button>`:`<div class="rd-dupcnt">찾은 중복 칸 <b>${found.size}</b> / ${DUP.length}</div>`}
+      <div class="rd-scroll"><table class="rd-tbl rd-mv ${mode}">
+        <tr>${COLS.map((h,c)=>`<th data-c="${c}" class="${mode==='look'&&hl&&hl.t==='col'&&hl.c===c?'col':''}">${h}</th>`).join('')}</tr>
+        ${ROWS.map((r,i)=>`<tr>${r.map((v,c)=>`<td data-r="${i}" data-c="${c}" class="${cls(i,c)}">${v}</td>`).join('')}</tr>`).join('')}
+      </table></div>
+      <div class="rd-cap">${msg||(mode==='look'?'칼럼 이름(맨 윗줄)을 누르면 <b>칼럼</b>, 아래 칸을 누르면 그 칸이 속한 <b>레코드</b>가 표시돼요.':'')}</div>
+      ${mode==='dup'?`<div class="row" style="margin-top:6px"><button class="btn ghost sm" data-k="all">중복 칸 모두 보기</button><button class="btn ghost sm" data-k="re">다시 찾기</button></div>`:''}`;
+    const B=$('mvBox');
+    if(mode==='look'){
+      B.querySelector('[data-tbl]').onclick=()=>{hl={t:'tbl'}; msg='표 형식으로 되어 있는 <b>전체 데이터</b>를 <b>테이블</b> 또는 <b>관계</b>라고 불러요.'; draw();};
+      B.querySelectorAll('th').forEach(th=>th.onclick=()=>{const c=+th.dataset.c; hl={t:'col',c};
+        msg=`<b>칼럼</b> 「${COLS[c]}」: 테이블 안에 <b>세로로</b> 묶인 값 ${ROWS.length}개예요. 열·필드·속성이라고도 해요.`; draw();});
+      B.querySelectorAll('td').forEach(td=>td.onclick=()=>{const r=+td.dataset.r; hl={t:'row',r};
+        msg=`<b>레코드</b> ${r+1}번째 줄: 「${ROWS[r].join(' · ')}」처럼 각 칼럼의 값을 <b>가로로</b> 묶은 것이에요. 행 또는 튜플이라고도 해요.`; draw();});
+    } else {
+      B.querySelectorAll('td').forEach(td=>td.onclick=()=>{const r=+td.dataset.r, c=+td.dataset.c, k=r+'-'+c, v=ROWS[r][c], n=times(c,v);
+        if(n>1){ROWS.forEach((row,i)=>{if(row[c]===v) found.add(i+'-'+c);}); miss=null;
+          msg=`<span class="ok">중복!</span> 「${v}」 값은 「${COLS[c]}」 칼럼에 <b>${n}번</b> 나와요.`;}
+        else{miss=k; msg=`「${v}」 값은 「${COLS[c]}」 칼럼에서 한 번만 나와요. 중복이 아니에요.`;}
+        if(found.size===DUP.length) msg+=` <b>다 찾았어요!</b> ${CELLS}칸 가운데 <b>${DUP.length}칸</b>이 같은 값의 반복이에요. 상영관 칼럼만 값이 모두 달라요. 영화 한 편을 상영관마다 한 줄씩 적다 보니, 영화 제목·감독·배우·장르가 줄마다 되풀이돼요.`;
+        draw();});
+      B.querySelector('[data-k=all]').onclick=()=>{DUP.forEach(k=>found.add(k)); miss=null;
+        msg=`${CELLS}칸 가운데 <b>${DUP.length}칸</b>이 같은 값의 반복이에요. 영화 한 편을 상영관마다 한 줄씩 적다 보니, 영화 제목·감독·배우·장르가 줄마다 되풀이돼요.`; draw();};
+      B.querySelector('[data-k=re]').onclick=()=>{found=new Set(); miss=null; msg='같은 칼럼 안에서 <b>같은 값이 두 번 이상</b> 나오는 칸을 찾아 눌러 보세요.'; draw();};
+    }
+  }
+  draw();
+})();
+
+/* 02 외래키 따라가기 (41쪽 관계형 데이터베이스 예시) */
+(function(){
+  const BASE={
+    dir:{n:'감독 테이블',h:['감독 ID','감독 이름'],rows:[['01','조 루소'],['02','크리스토퍼 놀란'],['03','제임스 카메룬']]},
+    act:{n:'배우 테이블',h:['배우 ID','배우 이름'],rows:[['A1','로버트 다우니 주니어'],['A2','매듀 매커니히'],['A3','케이트 윈슬렛']]},
+    gen:{n:'장르 테이블',h:['장르 ID','장르 이름'],rows:[['G1','액션'],['G2','SF'],['G3','로맨스']]},
+    the:{n:'상영관 테이블',h:['상영관 ID','상영관 이름'],rows:[['C1','DGV 강남1관'],['C2','롯데 시청1관'],['C3','영화박스 신촌1관']]},
+  };
+  const FK=['dir','act','gen','the'];
+  const MOV={n:'영화 테이블',h:['영화 ID','영화 제목','감독 ID','배우 ID','장르 ID','상영관 ID'],rows:[['01','어벤져스 엔드게임','01','A1','G1','C1'],['02','인터스텔라','02','A2','G2','C2'],['03','타이타닉','03','A3','G3','C3']]};
+  const B=$('fkSim'); let T, hit, msg, line, seen, iv={id:'',nm:''};
+  function reset(){T=JSON.parse(JSON.stringify(BASE)); hit=null; line=null; seen=new Set(); iv={id:'',nm:''};
+    msg='영화 테이블의 <b>외래키 칸</b>이나 <b>영화 ID</b>를 눌러 보세요.'; draw();}
+  const look=(t,id)=>T[t].rows.findIndex(r=>r[0]===id);
+  function small(key){const t=T[key];
+    return `<div class="rd-fkt" data-t="${key}"><b>${t.n}</b><table class="rd-tbl"><tr><th>🔑 ${t.h[0]}</th><th>${t.h[1]}</th></tr>
+      ${t.rows.map((r,i)=>`<tr class="${hit&&hit.some(h=>h[0]===key&&h[1]===i)?'hit':''}"><td class="pk">${esc(r[0])}</td><td>${esc(r[1])}${r[2]?' <small class="muted">(예시)</small>':''}</td></tr>`).join('')}</table><small class="muted">기본키: ${t.h[0]}</small></div>`;}
+  function draw(){
+    B.innerHTML=`<div class="rd-fk">
+      <div class="rd-fk-top">${small('dir')}${small('act')}</div>
+      <div class="rd-fkt rd-mov"><b>${MOV.n} <small class="muted">· 영화 상영 정보</small></b><div class="rd-scroll"><table class="rd-tbl">
+        <tr>${MOV.h.map((h,c)=>`<th>${c===0?'🔑 ':c>1?'🧷 ':''}${h}</th>`).join('')}</tr>
+        ${MOV.rows.map((r,i)=>`<tr>${r.map((v,c)=>`<td data-r="${i}" data-c="${c}" class="${c===0?'pk go':c>1?'fk go':''} ${hit&&hit.src&&hit.src.some(s=>s[0]===i&&s[1]===c)?'on':''}">${v}</td>`).join('')}</tr>`).join('')}
+      </table></div><small class="muted">기본키: 영화 ID · 외래키: 감독 ID, 배우 ID, 장르 ID, 상영관 ID</small></div>
+      <div class="rd-fk-top">${small('gen')}${small('the')}</div>
+    </div>
+    <div class="rd-cap">${msg}</div>
+    ${line?`<div class="rd-scroll"><table class="rd-tbl rd-line"><tr><th>영화 제목</th><th>감독 이름</th><th>주연 배우 이름</th><th>장르</th><th>상영관</th></tr><tr>${line.map(v=>`<td>${v}</td>`).join('')}</tr></table></div>`:''}
+    <div class="rd-add"><b>🔑 기본키 지키기</b> <span class="muted">(선택)</span> 감독 테이블에 새 감독을 넣어 보세요. 이미 있는 감독 ID를 넣으면 어떻게 될까요?
+      <div class="row" style="margin-top:6px"><label>감독 ID <input class="rd-in" data-i="id" size="4" placeholder="예: 04" value="${esc(iv.id)}"></label><label>감독 이름 <input class="rd-in" data-i="nm" size="12" placeholder="예: 알폰소 쿠아론" value="${esc(iv.nm)}"></label><button class="btn sm" data-k="add">넣기</button><button class="btn ghost sm" data-k="re">처음부터 다시</button></div></div>`;
+    B.querySelectorAll('td.go').forEach(td=>td.onclick=()=>{const r=+td.dataset.r, c=+td.dataset.c, m=MOV.rows[r]; seen.add(r);
+      if(c===0){hit=FK.map((t,j)=>[t,look(t,m[j+2])]); hit.src=[2,3,4,5].map(x=>[r,x]).concat([[r,0]]);
+        line=[m[1],...FK.map((t,j)=>T[t].rows[look(t,m[j+2])][1])];
+        msg=`영화 ID <b>${m[0]}</b>(${m[1]})의 외래키 네 개를 따라가 상영 정보 한 줄을 다시 만들었어요. 그림 Ⅰ-8의 레코드와 같은 내용이에요.${seen.size>=3?' 세 영화를 모두 따라가 보았어요.':''}`;}
+      else{const t=FK[c-2], i=look(t,m[c]); hit=[[t,i]]; hit.src=[[r,c]]; line=null;
+        msg=`영화 테이블의 ${MOV.h[c]} <b>${m[c]}</b> → ${T[t].n}에서 기본키가 <b>${m[c]}</b>인 행 → <b>${T[t].rows[i][1]}</b>. 외래키는 다른 테이블의 기본키를 가리켜요.`;}
+      draw();});
+    B.querySelectorAll('[data-i]').forEach(x=>x.oninput=()=>{iv[x.dataset.i]=x.value;});
+    B.querySelector('[data-k=add]').onclick=()=>{const id=iv.id.trim(), nm=iv.nm.trim();
+      if(!id||!nm){msg='감독 ID와 감독 이름을 모두 적어요.'; draw(); return;}
+      const j=look('dir',id);
+      if(j>=0){hit=[['dir',j]]; hit.src=[]; line=null;
+        msg=`<span class="ng">넣을 수 없어요.</span> 감독 ID <b>${esc(id)}</b>는 이미 「${esc(T.dir.rows[j][1])}」의 기본키예요. 기본키는 <b>중복되는 값이 없어야</b> 해요. 같은 ID가 두 사람에게 붙으면 영화 테이블의 외래키가 누구를 가리키는지 알 수 없어요.`;}
+      else{T.dir.rows.push([id,nm,1]); iv={id:'',nm:''}; hit=[['dir',T.dir.rows.length-1]]; hit.src=[]; line=null;
+        msg=`<span class="ok">들어갔어요.</span> 감독 테이블에 새 행(${esc(id)} · ${esc(nm)})이 생겼어요. 이 감독의 영화를 영화 테이블에 넣는다면 감독 ID 칸에 <b>${esc(id)}</b>를 적어 연결해요.`;}
+      draw();};
+    B.querySelector('[data-k=re]').onclick=reset;
+  }
+  reset();
+})();
+
+/* 03 스스로 해결하기 · VLOOKUP (43쪽, 바람 열은 출판사 정오표 반영) */
+(function(){
+  const ACC=[[20240920,1,1,2],[20240921,0,1,3],[20240922,1,0,4],[20240923,1,1,1],[20240924,2,0,1]];
+  const WX=[[20240920,24,10,10],[20240921,25,9,11],[20240922,25,9,8],[20240923,26,11,11],[20240924,27,9,7]];
+  const AH=['날짜','사망자','중상자','경상자'], WH=['날짜','기온','강수량','바람'], LT='ABCDEFG';
+  const B=$('vlook'); let ord, fill, sel, hl, miss, cmp, msg;
+  function reset(){ord=[0,1,2,3,4]; fill=ACC.map(()=>[null,null,null]); sel=null; hl=null; miss=0; cmp=false;
+    msg='데이터 통합 시트의 <b>노란 빈칸</b>(E~G열) 하나를 눌러 시작해요.'; draw();}
+  const pos=d=>ord.findIndex(i=>WX[i][0]===d);
+  const left=()=>fill.flat().filter(v=>v==null).length;
+  function sheet(name,head,rows,cls){return `<div class="rd-sh"><div class="rd-sh-n">${name}</div><table class="rd-xl"><tr><th></th>${head.map((_,c)=>`<th>${LT[c]}</th>`).join('')}</tr>
+    <tr><th>1</th>${head.map(h=>`<td class="hd">${h}</td>`).join('')}</tr>${rows.map((r,i)=>`<tr><th>${i+2}</th>${r.map((v,c)=>`<td class="${cls(i,c)}">${v}</td>`).join('')}</tr>`).join('')}</table></div>`;}
+  function draw(){
+    const L=left();
+    const accSheet=sheet('교통사고 시트',AH,ACC,(i,c)=>hl&&hl.r===i&&c===0?'key':'');
+    const wxSheet=sheet('날씨 시트',WH,ord.map(i=>WX[i]),(p,c)=>!hl||hl.p!==p?'':(c===0?'key':c===hl.n-1?'got':'row'));
+    const merged=`<div class="rd-sh rd-wide"><div class="rd-sh-n">데이터 통합 시트 <small>(교통사고 시트 기준)</small></div><table class="rd-xl"><tr><th></th>${[...LT].map(c=>`<th>${c}</th>`).join('')}</tr>
+      <tr><th>1</th>${[...AH,...WH.slice(1)].map((h,c)=>`<td class="hd${c>3?' wx':''}">${h}</td>`).join('')}</tr>
+      ${ACC.map((r,i)=>`<tr><th>${i+2}</th>${r.map((v,c)=>`<td class="${hl&&hl.r===i&&c===0?'key':''}">${v}</td>`).join('')}${[0,1,2].map(k=>{const v=fill[i][k], s=sel&&sel.r===i&&sel.k===k;
+        return `<td class="${v==null?'emp':'filled'} ${s?'sel':''}" data-r="${i}" data-k="${k}">${v==null?'':v}</td>`;}).join('')}</tr>`).join('')}</table></div>`;
+    const cell=sel?`${LT[4+sel.k]}${sel.r+2}`:'';
+    const fx=sel?`=VLOOKUP(A${sel.r+2}, 날씨!A:D, ${fill[sel.r][sel.k]!=null?sel.k+2:'<b class="q">?</b>'}, FALSE)`:'';
+    let cmpH='';
+    if(cmp){let bad=0; const rows=ACC.map((r,i)=>{const w=WX[ord[i]], ok=w[0]===r[0]; if(!ok) bad++;
+        return `<tr class="${ok?'':'bad'}"><td>${r[0]}</td><td>${WX.find(x=>x[0]===r[0])[1]}</td><td>${w[1]} <small class="muted">(${w[0]}의 기온)</small></td><td>${ok?'✅':'❌'}</td></tr>`;}).join('');
+      cmpH=`<div class="rd-cmp"><b>순서대로 붙여넣기와 비교하기 · 기온 열</b>
+        <div class="rd-scroll"><table class="rd-tbl"><tr><th>교통사고 날짜</th><th>VLOOKUP(날짜로 찾기)</th><th>날씨 시트를 순서대로 붙였다면</th><th>맞음?</th></tr>${rows}</table></div>
+        <p>${bad?`날씨 시트의 행 순서가 달라서 <b>${bad}줄</b>에 다른 날짜의 날씨가 붙었어요. 순서대로 붙여넣으면 이런 오류가 생기지만, VLOOKUP은 <b>날짜로 찾아서</b> 가져오기 때문에 순서와 상관없이 맞아요.`:'지금은 두 시트의 날짜 순서가 같아서 순서대로 붙여도 우연히 맞아요. <b>날씨 시트 행 섞기</b>를 누른 뒤 다시 비교해 보세요.'}</p></div>`;}
+    B.innerHTML=`<div class="rd-two">${accSheet}${wxSheet}</div>
+      <div class="rd-fx"><span class="rd-fx-c">${cell||'&nbsp;'}</span><span class="rd-fx-f">fx</span><span class="rd-fx-v mono">${fx||'<span class="muted">빈칸을 누르면 여기에 함수가 보여요</span>'}</span></div>
+      <p class="note rd-fxn">수식 읽기: <b>A2</b> 찾을 값 · <b>날씨!A:D</b> 찾을 표(왼쪽 열에서 찾음) · <b>2</b> 가져올 열 번호 · <b>FALSE</b> 정확히 일치하는 값을 찾아요.</p>
+      ${merged}
+      ${sel&&fill[sel.r][sel.k]==null?`<div class="rd-ask">통합 시트 <b>${cell}</b>(${WH[sel.k+1]})에는 날씨 시트의 <b>몇 번째 열</b>을 가져와야 할까요? <span class="row" style="display:inline-flex">${[2,3,4].map(n=>`<button class="btn sm ghost" data-n="${n}">${n}번째 열 (${LT[n-1]}열)</button>`).join('')}</span></div>`:''}
+      <div class="rd-cap">${msg}</div>
+      <div class="rd-stat">채운 칸 <b>${15-L}</b> / 15 · 열 번호를 잘못 고른 횟수 <b class="${miss?'ng':''}">${miss}</b></div>
+      <div class="row" style="margin-top:6px"><button class="btn ghost sm" data-k="all" ${L?'':'disabled'}>남은 칸 모두 채우기</button><button class="btn ghost sm" data-k="mix">날씨 시트 행 섞기</button><button class="btn ghost sm" data-k="cmp">${cmp?'비교 닫기':'순서대로 붙여넣기와 비교'}</button><button class="btn ghost sm" data-k="re">처음부터 다시</button></div>
+      ${cmpH}
+      <p class="note">값: 교과서 43쪽 ❶의 두 시트. ❷ 그림의 바람 열은 출판사 정오표에 따라 날씨 시트와 같은 값(10·11·8·11·7)이 되도록 고쳤어요.</p>`;
+    B.querySelectorAll('td[data-r]').forEach(td=>td.onclick=()=>{const r=+td.dataset.r, k=+td.dataset.k; sel={r,k};
+      if(fill[r][k]!=null){const p=pos(ACC[r][0]); hl={r,p,n:k+2}; msg=`이미 채운 칸이에요. A${r+2}의 날짜 ${ACC[r][0]}을 날씨 시트 ${p+2}행에서 찾아 ${k+2}번째 열(${WH[k+1]}) 값을 가져왔어요.`;}
+      else{hl=null; msg=`<b>${LT[4+k]}${r+2}</b>를 골랐어요. 찾을 값은 교통사고 시트 <b>A${r+2}</b>의 날짜 <b>${ACC[r][0]}</b>예요. 날씨 시트 머리글을 보고 열 번호를 골라요.`;}
+      draw();});
+    B.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{const n=+b.dataset.n, {r,k}=sel;
+      if(n!==k+2){miss++; msg=`<span class="ng">다시 골라요.</span> 날씨 시트의 ${n}번째 열(${LT[n-1]}열)은 「${WH[n-1]}」이에요. 지금 채우는 칸은 「${WH[k+1]}」이에요.`; draw(); return;}
+      const p=pos(ACC[r][0]), v=WX[ord[p]][n-1]; fill[r][k]=v; hl={r,p,n};
+      msg=`<span class="ok">채웠어요.</span> ① 찾을 값: A${r+2}의 <b>${ACC[r][0]}</b> → ② 날씨 시트 <b>왼쪽 열(A열)</b>에서 같은 날짜를 찾았어요: <b>${p+2}행</b> → ③ 그 행의 <b>${n}번째 열(${WH[n-1]})</b> 값 <b>${v}</b>를 가져왔어요.`
+        +(left()?'':' <b>통합 완료!</b> 이제 한 줄에서 날짜별 사상자 수와 날씨를 함께 볼 수 있어요.');
+      draw();});
+    B.querySelector('[data-k=all]').onclick=()=>{ACC.forEach((r,i)=>[0,1,2].forEach(k=>{if(fill[i][k]==null) fill[i][k]=WX[ord[pos(r[0])]][k+1];})); sel=null; hl=null;
+      msg='남은 칸을 VLOOKUP으로 모두 채웠어요. 실제 스프레드시트에서는 E2:G2에 함수를 넣고 아래로 끌어 복사하면 한 번에 채워져요. <b>통합 완료!</b>'; draw();};
+    B.querySelector('[data-k=mix]').onclick=()=>{let o; do{o=shuffle(ord);}while(o.every((v,i)=>v===ord[i])); ord=o; hl=null;
+      msg='날씨 시트의 행 순서를 섞었어요(날짜 순서가 바뀌었어요). 이미 채운 값은 그대로 맞을까요? VLOOKUP은 <b>날짜로 찾아서</b> 가져오기 때문에 순서가 바뀌어도 같은 값을 가져와요. 빈칸을 더 채워 보며 몇 행에서 찾는지 확인해 보세요.'; draw();};
+    B.querySelector('[data-k=cmp]').onclick=()=>{cmp=!cmp; draw();};
+    B.querySelector('[data-k=re]').onclick=reset;
+  }
+  reset();
+})();
+
+/* 04 (선택) SQL 실습 · sql.js(SQLite, MIT)를 이 화면에 들어올 때 불러옴 */
+(function(){
+  const INS=(a)=>`INSERT INTO BoxOffice VALUES('${a[0]}', '${a[1]}',\n  '${a[2]}', '${a[3]}',\n  '${a[4]}');`;
+  const STEPS=[
+    {t:'① 테이블 만들기',d:'<b>CREATE TABLE</b>(데이터 정의 언어)로 BoxOffice 테이블의 칼럼 이름과 데이터 유형을 정의해요. <b>VARCHAR(255)</b>는 최대 255글자까지 저장하는 가변 길이 문자열이고, <b>NOT NULL</b>은 비워 둘 수 없다는 뜻이에요.',
+     sql:'CREATE TABLE BoxOffice(\n  영화_제목 VARCHAR(255) NOT NULL,\n  감독_이름 VARCHAR(255),\n  주연_배우_이름 VARCHAR(255),\n  장르 VARCHAR(100),\n  상영관 VARCHAR(255)\n);'},
+    {t:'② 데이터 삽입',d:'<b>INSERT INTO … VALUES</b>(데이터 조작 언어)로 레코드 5개를 넣어요. 글자 값은 작은따옴표로 감싸요. 타이타닉의 장르는 교과서 46쪽처럼 <b>\'액션\'</b>으로 넣어요. ⑥에서 고쳐요.',
+     sql:[['어벤져스 엔드게임','조 루소','로버트 다우니 주니어','액션','DGV 강남1관'],['어벤져스 엔드게임','조 루소','로버트 다우니 주니어','액션','DGV 강남2관'],['인터스텔라','크리스토퍼 놀란','매듀 매커니히','SF','롯데 시청1관'],['인터스텔라','크리스토퍼 놀란','매듀 매커니히','SF','롯데 시청2관'],['타이타닉','제임스 카메룬','케이트 윈슬렛','액션','영화박스 신촌1관']].map(INS).join('\n')},
+    {t:'③ 출력하기',d:'<b>SELECT * FROM</b>으로 테이블의 모든 칼럼(*)을 출력해요. 데이터가 잘 삽입되었는지 확인해요.',sql:'SELECT * FROM BoxOffice;'},
+    {t:'④ 데이터 추가',d:'그래비티 레코드를 추가한 뒤 결과를 출력해요. 명령 두 개를 한 번에 실행해요.',sql:INS(['그래비티','알폰소 쿠아론','산드라 블록','로맨스','우리극장 1관'])+'\nSELECT * FROM BoxOffice;'},
+    {t:'⑤ 조건으로 조회',d:'<b>WHERE</b> 뒤에 조건을 써서 장르가 SF인 레코드만 조회해요.',sql:"SELECT * FROM BoxOffice WHERE 장르 = 'SF';"},
+    {t:'⑥ 데이터 수정',d:'<b>UPDATE … SET … WHERE</b>로 영화 제목이 타이타닉인 레코드의 장르를 40쪽 표와 같은 \'로맨스\'로 고쳐요. 실행한 뒤 <b>SELECT * 넣기</b>로 확인해요.',sql:"UPDATE BoxOffice SET 장르 = '로맨스'\nWHERE 영화_제목 = '타이타닉';"},
+    {t:'⑦ 데이터 삭제',d:'<b>DELETE FROM … WHERE</b>로 상영관이 DGV 강남2관인 레코드를 삭제해요. 실행한 뒤 <b>SELECT * 넣기</b>로 확인해요.',sql:"DELETE FROM BoxOffice WHERE 상영관 = 'DGV 강남2관';"},
+  ];
+  const B=$('sqlLab'); let SQL=null, db=null, loading=null, cur=-1, done=new Set(), again=false;
+  B.innerHTML=`<div class="rd-sqst"></div>
+    <div class="rd-steps">${STEPS.map((s,i)=>`<button data-s="${i}">${s.t}</button>`).join('')}</div>
+    <div class="rd-sqd muted">단추를 눌러 명령을 불러오거나, 아래 칸에 직접 써요.</div>
+    <textarea class="rd-code" spellcheck="false" autocapitalize="off" autocomplete="off" rows="7" aria-label="SQL 명령"></textarea>
+    <div class="row" style="margin-top:6px"><button class="btn sm" data-k="run">실행 ▶</button><button class="btn ghost sm" data-k="sel">SELECT * 넣기</button><button class="btn ghost sm" data-k="re">처음부터 다시</button><span class="rd-cnt muted"></span></div>
+    <div class="rd-out"></div>
+    <p class="note">💭 생각해 보기(47쪽): BoxOffice 테이블의 <b>모든 데이터</b>를 삭제하려면 어떻게 해야 할까요? 직접 써서 실행해 보고, <b>처음부터 다시</b>로 되돌려요.</p>`;
+  const ta=B.querySelector('.rd-code'), out=B.querySelector('.rd-out'), st=B.querySelector('.rd-sqst'), cnt=B.querySelector('.rd-cnt');
+  function status(h,bad){st.innerHTML=h; st.className='rd-sqst'+(bad?' bad':'');}
+  function count(){if(!db){cnt.textContent='';return;}
+    try{const r=db.exec('SELECT COUNT(*) FROM BoxOffice'); cnt.textContent=`지금 BoxOffice 레코드 ${r[0].values[0][0]}개`;}catch(e){cnt.textContent='아직 BoxOffice 테이블이 없어요';}}
+  function marks(){B.querySelectorAll('[data-s]').forEach(b=>{const i=+b.dataset.s; b.classList.toggle('done',done.has(i)); b.classList.toggle('on',i===cur);});}
+  function load(){
+    if(db||loading) return;
+    status('⏳ SQL 실행기를 불러오는 중이에요…');
+    loading=new Promise((ok,bad)=>{ if(window.initSqlJs) return ok();
+        const s=document.createElement('script'); s.src='sql-wasm.js'; s.onload=ok; s.onerror=()=>bad(new Error('script')); document.head.appendChild(s);})
+      .then(()=>initSqlJs({locateFile:f=>f}))
+      .then(S=>{SQL=S; db=new S.Database(); status('✅ SQL 실행기가 준비됐어요. <b>① 테이블 만들기</b>부터 시작해요.'); count();})
+      .catch(()=>{loading=null; const web=/^https?:$/.test(location.protocol);
+        status((web?'⚠️ SQL 실행기를 불러오지 못했어요. 네트워크가 잠시 불안정했을 수 있어요. 다시 불러와 보고, 그래도 안 되면 선생님께 알려 주세요.':'⚠️ 이 화면은 <b>수업 사이트 주소로 열어야</b> SQL 실습기가 떠요. 파일을 직접 열었거나 미리 보기 화면이라 실행기를 불러올 수 없어요. 선생님께 알려 주세요.')+' <button class="btn ghost sm" data-k="retry">다시 불러오기</button><br><small>명령과 결과는 교과서 46~47쪽에서 볼 수 있어요.</small>',true);
+        const r=st.querySelector('[data-k=retry]'); if(r) r.onclick=load;});
+  }
+  function friendly(m){
+    let x='';
+    if(/no such table/i.test(m)) x='아직 그런 테이블이 없어요. <b>① 테이블 만들기</b>를 먼저 실행했는지, 테이블 이름(BoxOffice)의 철자를 확인해요.';
+    else if(/already exists/i.test(m)) x='이미 같은 이름의 테이블이 있어요. 새로 만들고 싶으면 <b>처음부터 다시</b>를 눌러요.';
+    else if(/no such column/i.test(m)) x='그런 칼럼이 없어요. 칼럼 이름(영화_제목, 감독_이름, 주연_배우_이름, 장르, 상영관)의 철자와 밑줄(_)을 확인해요. 글자 값이라면 작은따옴표(\' \')로 감싸야 해요.';
+    else if(/NOT NULL/i.test(m)) x='영화_제목 칸은 비워 둘 수 없어요(NOT NULL로 정했어요).';
+    else if(/values for \d+ columns|has \d+ columns but \d+ values|\d+ values for \d+ columns/i.test(m)) x='칼럼 수와 넣은 값의 수가 달라요. 값 다섯 개를 쉼표로 구분해 넣었는지 확인해요.';
+    else if(/unrecognized token/i.test(m)) x='알 수 없는 글자가 있어요. 따옴표가 짝이 맞는지, 굽은 따옴표(‘ ’)를 쓰지 않았는지 확인해요.';
+    else if(/incomplete input/i.test(m)) x='명령이 끝나지 않았어요. 괄호와 따옴표를 닫았는지 확인해요.';
+    else if(/syntax error/i.test(m)){const n=(m.match(/near "([^"]*)"/)||[])[1]; x=`명령의 짜임이 맞지 않아요${n?`(「${esc(n)}」 근처)`:''}. 낱말 철자, 쉼표, 괄호, 따옴표를 확인해요.`;}
+    else x='실행하지 못했어요. 명령을 다시 확인해요.';
+    return `<div class="rd-err">⚠️ ${x}<br><small class="muted">원래 메시지: ${esc(m)}</small></div>`;
+  }
+  function table(r){return `<div class="rd-scroll"><table class="rd-tbl rd-res"><tr>${r.columns.map(c=>`<th>${esc(c)}</th>`).join('')}</tr>${r.values.map(v=>`<tr>${v.map(x=>`<td>${x==null?'<span class="muted">NULL</span>':esc(x)}</td>`).join('')}</tr>`).join('')}</table></div><small class="muted">${r.values.length}개 레코드</small>`;}
+  function run(){
+    const sql=ta.value.trim();
+    if(!sql){out.innerHTML='<div class="rd-err">실행할 명령을 먼저 써요.</div>'; return;}
+    if(!db){out.innerHTML='<div class="rd-err">SQL 실행기가 아직 준비되지 않았어요. 위의 안내를 확인해요.</div>'; load(); return;}
+    if(/주연\s+배우_이름/.test(sql)){out.innerHTML='<div class="rd-err">⚠️ 칼럼 이름 「주연 배우_이름」에 띄어쓰기가 있어요. SQL에서 띄어 쓰면 다른 낱말로 읽혀요. 이 실습기에서는 「주연_배우_이름」으로 붙여 써요. <button class="btn ghost sm" data-k="fixs">붙여 쓰기로 바꾸기</button></div>';
+      out.querySelector('[data-k=fixs]').onclick=()=>{ta.value=ta.value.replace(/주연\s+배우_이름/g,'주연_배우_이름'); out.innerHTML='<div class="rd-ok">바꿨어요. 다시 <b>실행 ▶</b>을 눌러요.</div>';}; return;}
+    const un=sql.match(/(^|;)\s*(GRANT|REVOKE|COMMIT|ROLLBACK|TRUNCATE)\b/i);
+    if(un){out.innerHTML=`<div class="rd-err">ℹ️ <b>${un[2].toUpperCase()}</b>는 교과서에 나오는 명령이지만, <b>이 실습기(SQLite)에서는 지원하지 않는 명령이에요.</b> 여기서는 CREATE, INSERT, SELECT, UPDATE, DELETE를 실습해요.</div>`; return;}
+    if((cur===1||cur===3) && done.has(cur) && ta.value===STEPS[cur].sql && !again){out.innerHTML='<div class="rd-err">ℹ️ 이 단계는 <b>이미 넣었어요.</b> 한 번 더 넣으면 같은 레코드가 또 생겨요. <button class="btn ghost sm" data-k="again">그래도 실행</button></div>';
+      out.querySelector('[data-k=again]').onclick=()=>{again=true; run(); again=false;}; return;}
+    if(/[‘’“”]/.test(sql)){out.innerHTML='<div class="rd-err">⚠️ 굽은 따옴표(‘ ’ “ ”)가 있어요. SQL에서는 곧은 작은따옴표(\')를 써야 해요. <button class="btn ghost sm" data-k="fixq">곧은 따옴표로 바꾸기</button></div>';
+      out.querySelector('[data-k=fixq]').onclick=()=>{ta.value=ta.value.replace(/[‘’]/g,"'").replace(/[“”]/g,'"'); out.innerHTML='<div class="rd-ok">바꿨어요. 다시 <b>실행 ▶</b>을 눌러요.</div>';}; return;}
+    try{
+      const tc=()=>db.exec('SELECT total_changes()')[0].values[0][0];
+      const b0=tc(), res=db.exec(sql), ch=tc()-b0;
+      let h=`<div class="rd-ok">✅ 실행했어요.${ch?` 바뀐 레코드 <b>${ch}개</b>.`:''}${/^\s*(UPDATE|DELETE)/i.test(sql)&&!res.length?' <b>SELECT * 넣기</b>로 결과를 확인해 보세요.':''}</div>`;
+      h+=res.map(table).join('');
+      out.innerHTML=h; if(cur>=0 && ta.value===STEPS[cur].sql) done.add(cur); marks();
+    }catch(e){out.innerHTML=friendly(String(e.message||e));}
+    count();
+  }
+  B.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{cur=+b.dataset.s; ta.value=STEPS[cur].sql; B.querySelector('.rd-sqd').innerHTML=STEPS[cur].d; B.querySelector('.rd-sqd').classList.remove('muted'); out.innerHTML=''; marks();});
+  ta.addEventListener('input',()=>{if(cur>=0 && ta.value!==STEPS[cur].sql){cur=-1; marks();}});
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault(); run();}});
+  B.querySelector('[data-k=run]').onclick=run;
+  B.querySelector('[data-k=sel]').onclick=()=>{ta.value='SELECT * FROM BoxOffice;'; cur=-1; marks(); ta.focus();};
+  B.querySelector('[data-k=re]').onclick=()=>{done=new Set(); cur=-1; ta.value='';
+    if(SQL){try{db.close();}catch(e){} db=new SQL.Database(); out.innerHTML='<div class="rd-ok">데이터베이스를 새로 만들었어요. <b>① 테이블 만들기</b>부터 다시 해요.</div>';}
+    else{out.innerHTML='<div class="rd-err">아직 SQL 실행기를 불러오지 못해서 새로 만들 데이터베이스가 없어요. 위의 안내를 확인해요.</div>'; load();} B.querySelector('.rd-sqd').innerHTML='단추를 눌러 명령을 불러오거나, 아래 칸에 직접 써요.'; marks(); count();};
+  status('이 화면에서 SQL 실행기를 불러와요.');
+  onShow[4]=load;
+})();
+
+/* 05 마무리 */
+const MEMOLIST=[['planRel','처음 생각 · 반복해서 적힌 정보를 고칠 때'],['fkNote','외래키 따라가기 · 영화 ID 02의 상영 정보'],['vlookNote','VLOOKUP 통합 · 날짜로 찾는 까닭과 질문'],['keyQ','오늘의 질문에 대한 내 답']];
+onShow[5]=()=>memoSummary('msum',MEMOLIST);
+
+/* 진도 보내기 ②: 화면 이동·퀴즈·메모·창 이탈을 선생님 시트로 */
+(function(){
+  if(WHO.off) return;
+  const box=document.createElement('div');
+  if(WHO.preview){
+    box.className='tr-badge';
+    box.innerHTML=WHO.teacher?'교사 모드 · 전송 안 함 <button type="button">끝내기</button>':'미리보기 · 진도 전송 안 함';
+    (document.querySelector('.top')||document.body).appendChild(box);
+    const b=box.querySelector('button'); if(b) b.onclick=()=>{ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); };
+    return;
+  }
+
+  if(WHO.need){
+    let last={}; try{last=JSON.parse(localStorage.getItem('aiw-last')||'{}')||{};}catch(e){}
+    box.className='tr-gate';
+    box.innerHTML=`<form class="tr-card" autocomplete="off">
+      <h2>수업 시작 전에</h2>
+      <p class="tr-sub">학번과 이름을 써 주세요.</p>
+      <label class="tr-f"><span>학번</span><input name="no" inputmode="numeric" maxlength="5" placeholder="예: 20101" value="${esc(last.no||'')}"></label>
+      <label class="tr-f"><span>이름</span><input name="name" maxlength="10" placeholder="이름" value="${esc(last.name||'')}"></label>
+      <div class="tr-cls" hidden>${[].map(c=>`<label><input type="radio" name="cls" value="${c}"><span>${c}</span></label>`).join('')}</div>
+      <div class="tr-err"></div>
+      <button class="btn" type="submit">시작하기 →</button>
+      <p class="tr-note">어느 화면까지 왔는지, 퀴즈와 메모가 선생님께 전달돼요.<br>다른 친구 이름으로 들어가지 마세요.</p>
+    </form>`;
+    document.body.appendChild(box);
+    const f=box.querySelector('form'), err=box.querySelector('.tr-err'), go2=f.querySelector('button[type=submit]'), clsBox=box.querySelector('.tr-cls');
+    f.no.addEventListener('input',()=>{f.no.value=f.no.value.replace(/\D/g,'').slice(0,5);});
+    const TEACH=t=>{let h=2166136261;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return h.toString(36);}, TEACH_H='853zuh';
+    const enter=w=>{ try{sessionStorage.setItem('aiw-who',JSON.stringify(w)); if(!w.teacher) localStorage.setItem('aiw-last',JSON.stringify({no:w.no,name:w.name}));}catch(e){} location.reload(); };
+    const busy=on=>{ go2.disabled=on; go2.textContent=on?'명단에서 확인하는 중…':'시작하기 →'; };
+    f.onsubmit=async e=>{
+      e.preventDefault(); err.textContent='';
+      const no=f.no.value.trim(), name=f.name.value.replace(/\s+/g,'').trim();
+      if(TEACH(no+'|'+name)===TEACH_H) return enter({teacher:true});
+      if(!/^\d{5}$/.test(no)){err.textContent='학번 다섯 자리를 숫자로 써 주세요.';f.no.focus();return;}
+      if(name.length<2){err.textContent='이름을 써 주세요.';f.name.focus();return;}
+      /* 명단에서 확인이 안 될 때만 반을 직접 고른다 */
+      if(!clsBox.hidden){
+        const cls=(f.querySelector('input[name=cls]:checked')||{}).value;
+        if(!cls){err.textContent='반을 골라 주세요.';return;}
+        return enter({cls,no,name});
+      }
+      busy(true);
+      try{
+        const r=await fetch(PEP,{method:'POST',body:JSON.stringify({op:'who',no,name})});
+        const d=await r.json();
+        if(d.ok) return enter({cls:d.cls,no,name});
+        busy(false);
+        if(d.err==='notfound'){ err.textContent='명단에서 찾지 못했어요. 학번과 이름을 다시 확인해 주세요. 계속 안 되면 선생님께 말해 주세요.'; return; }
+        throw new Error(d.err);
+      }catch(x){
+        busy(false);
+        if(clsBox.hidden){ clsBox.hidden=false; err.textContent='명단을 확인하지 못했어요. 내 반을 골라 주세요.'; }
+      }
+    };
+    setTimeout(()=>{ (f.no.value?(f.name.value?go2:f.name):f.no).focus(); },50);
+    return;
+  }
+
+  /* 이름 표시 + 바꾸기 */
+  box.className='tr-who';
+  box.innerHTML=`<span>${esc(WHO.cls)} ${esc(WHO.no)} <b>${esc(WHO.name)}</b></span><button type="button" title="다른 학생으로 바꾸기">바꾸기</button>`;
+  (document.querySelector('.top')||document.body).appendChild(box);
+  box.querySelector('button').onclick=()=>{ if(confirm('다른 학생으로 바꿀까요? (지금까지 한 것은 이 학번으로 저장돼 있어요)')){ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); } };
+
+  const SK=QK+'-seen', AK=QK+'-away';
+  const seen=new Set(store.get(SK,[]));
+  const A=store.get(AK,{n:0,s:0});
+  let awayAt=null, lastAct=Date.now(), sent=0, lastSent=0, tmr=null, dirty=false;
+
+  function snap(){
+    let ok=0, done=0;
+    for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{const v=QS[k+'-'+i]; if(v!=null){done++; if(v===it.a) ok++;}});
+    const ML=(typeof MEMOLIST!=='undefined')?MEMOLIST:[];
+    return {op:'put',lesson:LESSON,title:document.title,cls:WHO.cls,no:WHO.no,name:WHO.name,
+      scr:cur,names:pages.map((p,i)=>i?p.dataset.name:'시작'),seen:[...seen].sort((a,b)=>a-b),
+      qOk:ok,qDone:done,qTot:TOTALQ,
+      memo:ML.map(([k,l])=>[l,String(MEMO[k]==null?'':MEMO[k]).slice(0,1500)]),
+      away:awayAt?1:0,leaves:A.n,awaySec:Math.round(A.s+(awayAt?(Date.now()-awayAt)/1000:0)),idle:Math.round((Date.now()-lastAct)/1000),n:++sent};
+  }
+  function flush(){
+    if(!dirty) return; dirty=false; lastSent=Date.now();
+    const body=JSON.stringify(snap());
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(PEP,new Blob([body],{type:'text/plain'}))) return; }catch(e){}
+    try{ fetch(PEP,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  /* 너무 자주 보내지 않기: 보통 15초, 창 이탈·복귀는 3초 간격 */
+  function send(urgent){
+    dirty=true; clearTimeout(tmr);
+    const gap=urgent?3000:15000, wait=Math.max(0,gap-(Date.now()-lastSent));
+    tmr=setTimeout(flush,wait);
+  }
+
+  const _go=go; go=function(i){ _go(i); if(!seen.has(cur)){seen.add(cur); store.set(SK,[...seen]);} send(true); };
+  const _upd=updScore; updScore=function(){ _upd(); send(); };
+  const _set=store.set; store.set=function(k,v){ _set(k,v); if(k===MK) send(); };
+
+  function leave(){ if(awayAt) return; awayAt=Date.now(); A.n++; _set(AK,A); send(true); }
+  function back(){ if(!awayAt) return; A.s+=(Date.now()-awayAt)/1000; awayAt=null; _set(AK,A); send(true); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?leave():(document.hasFocus()&&back()); });
+  window.addEventListener('blur',()=>setTimeout(()=>{ if(!document.hasFocus()) leave(); },300));
+  window.addEventListener('focus',back);
+  window.addEventListener('pagehide',()=>{ dirty=true; flush(); });
+  ['pointerdown','keydown','input','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now();},{capture:true,passive:true}));
+  /* 화면에 머물러 있으면 2분마다 한 번 신호 */
+  setInterval(()=>{ if(!document.hidden) send(); },120000);
+})();
+
+/* 시작 */
+bindMemos();
+updScore();
+const h0=parseInt((location.hash.match(/^#p(\d+)$/)||[])[1],10);
+go(isNaN(h0)?0:h0);
+</script>
+<script>
+/* page-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 (복사 버튼은 그대로 동작) */
+(function(){
+  var t=null, tm=null, MSG='수업 자료는 복사할 수 없어요. 내 말로 정리해 보세요.';
+  function say(){ if(!t){t=document.createElement('div');t.className='pg-toast';document.body.appendChild(t);} t.textContent=MSG; t.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){t.classList.remove('on');},1800); }
+  function inField(e){ return e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'); }
+  ['copy','cut'].forEach(function(type){ document.addEventListener(type,function(e){ e.preventDefault(); say(); },true); });
+  document.addEventListener('contextmenu',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('selectstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('keydown',function(e){ var k=(e.key||'').toLowerCase(); if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x')){ e.preventDefault(); say(); } if((e.ctrlKey||e.metaKey)&&k==='a'&&!inField(e)) e.preventDefault(); },true);
+})();
+</script>
+</body>
+</html>

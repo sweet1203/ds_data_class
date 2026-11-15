@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터 속성과 속성 간의 관계 · 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202c; --muted:#5b6776; --paper:#f3efe7; --card:#fff; --line:#e3ddd2;
+    --navy:#0f2742; --amber:#f2a516; --red:#d64535; --mint:#1f9d74;
+    --acc:#2f6fd0; --acc-soft:#e6eefb;
+    --shadow:0 18px 50px rgba(15,39,66,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.65;
+    background-image:radial-gradient(rgba(15,39,66,.07) 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column}
+  .top{position:sticky;top:0;z-index:10;background:rgba(15,39,66,.97);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+  .brand{font-family:"Black Han Sans",sans-serif;font-size:1.15rem;letter-spacing:.01em;white-space:nowrap;color:inherit;text-decoration:none}
+  .steps{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps button{flex:0 0 auto;border:0;background:transparent;color:#9fb3cc;font:inherit;font-size:.82rem;padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .steps button.on{background:var(--amber);color:var(--navy);font-weight:900}
+  .steps button.done::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fd3a5;margin-left:5px;vertical-align:middle}
+  .score{font-size:.85rem;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .progress{height:4px;background:rgba(15,39,66,.12)}
+  .progress i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+  main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:26px 20px 30px}
+  .page{display:none}
+  .page.on{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1) both}
+  .page.on.back{animation-name:enterBack}
+  @keyframes enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes enterBack{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  .head{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .num{font-family:"Black Han Sans",sans-serif;font-size:4.2rem;line-height:.85;color:var(--acc);opacity:.9}
+  .head h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:2.1rem;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .head p{margin:4px 0 0;color:var(--muted)}
+  .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;border:1px solid rgba(0,0,0,.04)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .grid2.even{grid-template-columns:1fr 1fr}
+  @media (max-width:860px){.grid2,.grid2.even{grid-template-columns:1fr}.num{font-size:3rem}.head h2{font-size:1.6rem}}
+  h3{margin:0 0 8px;font-size:1.1rem}
+  h4{margin:0 0 4px}
+  p{margin:6px 0}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .book{display:inline-block;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:center}
+  th{color:var(--muted);font-weight:700;font-size:.85rem}
+  td.l,th.l{text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .chip.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .btn{border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;transition:transform .1s, box-shadow .2s;box-shadow:0 6px 16px rgba(15,39,66,.18)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+  .btn.sm{padding:5px 12px;font-size:.88rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctrl{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:4px 10px;margin:4px 0}
+  .ctrl label{font-weight:900;font-size:.95rem}
+  .ctrl output{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  input[type=text],input[type=number]{font:inherit;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px;background:#fff;color:var(--ink)}
+  .big{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+  .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
+  .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
+  .cx>h3{margin:0 0 4px;font-size:1.15rem}
+  .cx>.lead2{color:var(--muted);margin:0 0 12px}
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media (max-width:860px){.qa{grid-template-columns:1fr}}
+  .qa>div{background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .qa b.q{display:block;color:var(--acc);margin-bottom:3px}
+  .vsteps{list-style:none;margin:0;padding:0;counter-reset:v}
+  .vsteps>li{position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line)}
+  .vsteps>li:first-child{border-top:0}
+  .vsteps>li::before{counter-increment:v;content:counter(v);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.9rem}
+  .vsteps p{margin:2px 0 0;font-size:.93rem}
+  .case{background:#fff8e6;border:2px solid #f6d58a;border-radius:16px;padding:16px 20px;margin-bottom:18px}
+  .case>h3{margin:0 0 8px;font-size:1.05rem;color:#8a5a00}
+  /* 퀴즈 */
+  .quiz{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:16px;padding:20px 22px;margin-top:6px;box-shadow:var(--shadow)}
+  .quiz .qh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .quiz .qh b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.25rem;color:var(--amber)}
+  .quiz .qh span{font-size:.85rem;color:#a9bbd2}
+  .qi{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;margin-top:10px}
+  .qi .qq{font-weight:700;margin-bottom:8px}
+  .qi .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .qi .opts button{font:inherit;font-size:.93rem;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .qi .opts button:hover:not(:disabled){border-color:var(--amber)}
+  .qi .opts button.right{background:var(--mint);border-color:var(--mint);font-weight:700}
+  .qi .opts button.wrong{background:var(--red);border-color:var(--red);text-decoration:line-through}
+  .qi .opts button:disabled{cursor:default}
+  .qi .why{margin-top:8px;font-size:.9rem;color:#d7e3f2;display:none}
+  .qi.answered .why{display:block}
+  .qi.answered.correct{box-shadow:inset 4px 0 0 var(--mint)}
+  .qi.answered.incorrect{box-shadow:inset 4px 0 0 var(--red)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(243,239,231,.94);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+  .foot .btn{min-width:110px}
+  .foot .pg{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  /* 표지 */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 20% 0%,#24507f 0%,#0f2742 55%,#0a1a2e 100%);color:#fff;min-height:520px;padding:46px 44px;box-shadow:var(--shadow)}
+  .cover canvas{position:absolute;right:0;top:0;height:100%;width:62%;image-rendering:pixelated;opacity:.95}
+  .cover .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0f2742 34%,rgba(15,39,66,.75) 50%,rgba(15,39,66,0) 70%)}
+  .cover .in{position:relative;max-width:560px}
+  .cover .tag{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.85rem;padding:4px 12px;border-radius:999px}
+  .cover h1{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:3.1rem;line-height:1.15;margin:16px 0 10px}
+  .cover p{color:#c8d6e8;font-size:1.05rem}
+  .cover ol{margin:18px 0 26px;padding-left:20px;color:#e1e9f4;columns:2;column-gap:28px;font-size:.95rem}
+  @media (max-width:700px){.cover{padding:30px 22px}.cover h1{font-size:2.2rem}.cover ol{columns:1}.cover canvas{width:100%;opacity:.3}.cover .fade{display:none}}
+  .today{margin-top:26px}
+  .kicker{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:1.15rem;color:var(--navy);margin-bottom:6px;border-bottom:4px solid var(--amber);line-height:1.2}
+  .today-lead{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+  .today-lead p{font-size:1.12rem;margin:6px 0 0}
+  .why3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  @media (max-width:900px){.why3{grid-template-columns:1fr}}
+  .why{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 22px}
+  .why ul{margin:6px 0 0;padding-left:18px;font-size:.95rem}
+  .why li{margin:6px 0}
+  .why ul.can{list-style:none;padding:0}
+  .why ul.can li{padding-left:28px;position:relative}
+  .why ul.can li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .why ul.uses{list-style:none;padding:0}
+  .why ul.uses li{border-left:3px solid var(--amber);padding-left:10px}
+  .glossary-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .glossary-head .muted{font-size:.88rem}
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.glossary{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.glossary{grid-template-columns:1fr}}
+  .gcard{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:#fff;border-radius:14px;padding:16px 16px 12px;box-shadow:var(--shadow);border-top:6px solid var(--g);position:relative;transition:transform .18s, box-shadow .18s}
+  .gcard:hover,.gcard:focus-visible{transform:translateY(-4px);box-shadow:0 22px 50px rgba(15,39,66,.16)}
+  .gcard:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+  .gcard i{position:absolute;right:14px;top:8px;font-style:normal;font-family:"Black Han Sans",sans-serif;font-size:1.9rem;color:var(--g);opacity:.25}
+  .gcard h4{margin:0 0 6px;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;color:var(--g)}
+  .gcard dl{margin:0;font-size:.88rem;line-height:1.45}
+  .gcard dt{font-weight:900;margin-top:7px}
+  .gcard dd{margin:1px 0 0;color:#3c4654}
+  .prob{display:grid;grid-template-columns:60px 1fr 46px;gap:6px;align-items:center;font-size:.88rem;min-width:200px}
+  .prob i{display:block;height:12px;border-radius:6px;background:var(--acc)}
+  .apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:860px){.apps{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:2rem;display:block}
+  .apps button b{display:block}
+  .appd{display:none}
+  .appd.on{display:block;animation:enter .35s both}
+  .ex2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:640px){.ex2{grid-template-columns:1fr}}
+  .ex2>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem;border-left:4px solid var(--acc)}
+  .try{margin-top:12px;background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+  .try ol{margin:4px 0 0;padding-left:20px}
+  /* 3단원 공통 */
+  .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
+  .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
+  .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
+  .route .st i{font-style:normal;font-size:1.6rem}
+  .route .st b{display:block;font-size:1.02rem}
+  .route .st small{color:#c8d6e8;font-size:.82rem}
+  .route .ar{color:var(--amber);text-align:center;font-weight:900;opacity:0;animation:rin .5s forwards}
+  @keyframes rin{to{opacity:1;transform:none}}
+  @media (max-width:1080px){.route{position:relative;right:auto;top:auto;width:100%;margin-top:22px}}
+  .story{background:rgba(255,255,255,.08);border-left:4px solid var(--amber);border-radius:10px;padding:10px 14px;margin:14px 0;color:#e1e9f4;font-size:.95rem}
+  .story b{color:#fff}
+  /* 카드 묶음 */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:900px){.cards3,.cards4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards3,.cards2,.cards4{grid-template-columns:1fr}}
+  .kc{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:14px 16px;border-top:6px solid var(--k,var(--acc))}
+  .kc h4{color:var(--k,var(--acc));font-size:1.05rem;margin:0 0 4px}
+  .kc p{font-size:.92rem;margin:4px 0 0}
+  .kc .ic{font-size:1.7rem;line-height:1}
+  .kc small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+  .tagt{display:inline-block;font-size:.76rem;font-weight:900;border-radius:999px;padding:1px 9px;background:color-mix(in srgb,var(--k,var(--acc)) 14%,white);color:var(--k,var(--acc));margin:6px 4px 0 0}
+  /* 연표 */
+  .tl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tl button{flex:1;min-width:92px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;font:inherit;font-weight:900;cursor:pointer;color:var(--ink)}
+  .tl button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.tlv{grid-template-columns:1fr}}
+  .tlv>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--k)}
+  .tlv h4{color:var(--k)}
+  .tlv .it{margin:6px 0 0;font-size:.93rem}
+  .tlv .it b{display:block}
+  /* 분류 게임 */
+  .sit{background:#fbfaf7;border:2px dashed var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-height:170px}
+  .sit .cnt{font-size:.82rem;color:var(--muted)}
+  .sit .sq{font-size:1.08rem;font-weight:900;margin:6px 0 12px;min-height:52px}
+  .sit .ic{font-size:2rem}
+  .sit .row{justify-content:center}
+  .sit .fb{min-height:24px;margin-top:8px;font-size:.93rem}
+  .sit .cat{border:2px solid var(--k);color:var(--k);background:#fff;font-weight:900}
+  .sit .cat:hover{background:color-mix(in srgb,var(--k) 12%,white)}
+  .board{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;margin-top:12px}
+  @media (max-width:760px){.board{grid-template-columns:1fr 1fr}}
+  .board>div{background:#fff;border-radius:12px;border-top:5px solid var(--k);padding:8px 10px;font-size:.84rem;min-height:70px}
+  .board>div b{display:block;color:var(--k);font-size:.92rem}
+  .board>div span{display:block;border-top:1px dashed var(--line);padding:3px 0}
+  .board>div span.x{color:var(--red)}
+  /* 뒤집는 카드 */
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .tcard{perspective:900px;height:172px;cursor:pointer}
+  .tcard .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .tcard.flip .in{transform:rotateY(180deg)}
+  .tcard .f,.tcard .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:12px 14px;box-shadow:0 6px 16px rgba(15,39,66,.09);overflow:auto}
+  .tcard .f{background:#fff;border-top:6px solid var(--acc);display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .tcard .f i{font-style:normal;font-size:2rem;line-height:1.1}
+  .tcard .f b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;line-height:1.25;margin-top:4px}
+  .tcard .f small{color:var(--muted);font-size:.78rem;margin-top:6px}
+  .tcard .b{background:var(--acc);color:#fff;transform:rotateY(180deg);font-size:.9rem;line-height:1.5}
+  .tcard .b .x{margin-top:6px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px;font-size:.84rem}
+  /* 사례 탭 */
+  .apps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .apps.a6{grid-template-columns:repeat(6,1fr)}
+  @media (max-width:860px){.apps,.apps.a6{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.apps,.apps.a6{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:12px 8px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s;font-size:.92rem}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:1.8rem;display:block}
+  .apps button b{display:block}
+  .cview{margin-top:14px}
+  .pr{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+  @media (max-width:760px){.pr{grid-template-columns:1fr}}
+  .pr>div{border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .pr .p{background:#fdecea;border-left:5px solid var(--red)}
+  .pr .s{background:#e7f6ef;border-left:5px solid var(--mint)}
+  .pr h4{font-size:.95rem}
+  .pr .p h4{color:#9b2c20}.pr .s h4{color:#13684d}
+  .dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:10px;background:#fbfaf7;border-radius:10px;padding:10px 12px}
+  .dl b{color:var(--acc)}
+  /* 메모 */
+  .memo{margin-top:10px}
+  .memo label{display:block;font-weight:700;font-size:.93rem;margin:10px 0 4px}
+  .memo label small{font-weight:400;color:var(--muted)}
+  .memo input[type=text]{width:100%}
+  textarea{font:inherit;width:100%;min-height:64px;padding:8px 10px;border:1px solid #c5ccd5;border-radius:8px;resize:vertical;color:var(--ink);background:#fff}
+  .saved{font-size:.8rem;color:var(--mint);min-height:1em}
+  /* 투표 */
+  .vote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:560px){.vote{grid-template-columns:1fr}}
+  .vote button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center;font-weight:900}
+  .vote button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .vote button small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+  .reveal{display:none;margin-top:12px}
+  .reveal.on{display:block;animation:fadein .4s both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .pct{display:grid;grid-template-columns:120px 1fr 50px;gap:8px;align-items:center;margin:6px 0;font-size:.93rem}
+  .pct i{display:block;height:16px;border-radius:8px;background:var(--acc);width:0;transition:width .8s}
+  /* 질문폼 연결 */
+  .formgo{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-top:18px}
+  .formgo .kicker{color:#fff;border-bottom-color:var(--amber)}
+  .formgo h3{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;margin:4px 0 8px}
+  .formgo ol{margin:6px 0 12px;padding-left:22px;color:#e1e9f4}
+  .formgo ol li{margin:6px 0}
+  .formgo p{color:#c8d6e8;font-size:.92rem}
+  .formgo .go{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:1.1rem;text-decoration:none;border-radius:12px;padding:12px 22px;margin-top:6px}
+  .formgo .go:hover{filter:brightness(1.05)}
+  .msum{background:#fff;border-radius:14px;padding:12px 16px;margin-top:12px;color:var(--ink);font-size:.9rem}
+  .msum h4{color:var(--navy)}
+  .msum dl{margin:6px 0 0}
+  .msum dt{font-weight:700;margin-top:8px;color:var(--muted);font-size:.84rem}
+  .msum dd{margin:2px 0 0;white-space:pre-wrap}
+  .msum dd.e{color:#aab2bd}
+  .key3{display:grid;gap:10px;margin-bottom:18px}
+  .key3 div{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--k);font-size:1.02rem}
+  .note{font-size:.84rem;color:var(--muted);margin-top:8px}
+  .flow2{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .flow2>div{flex:1;min-width:140px;background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .flow2>div b{display:block}
+  .flow2>div span{font-size:.88rem}
+  .flow2>.ar{flex:0 0 auto;min-width:0;background:none;border:0;align-self:center;font-weight:900;color:var(--muted);padding:0}
+  @media (max-width:640px){.flow2>.ar{flex-basis:100%;text-align:center;transform:rotate(90deg)}}
+  .chk{display:flex;flex-wrap:wrap;gap:8px}
+  .chk button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .chk button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .tbl td,.tbl th{padding:8px 10px;vertical-align:top}
+  .tbl td{text-align:left;font-size:.92rem}
+  .mx{min-width:560px}
+  .mx th{background:#fbfaf7}
+  .mx td{border:1px solid var(--line);height:74px;width:30%;font-size:.86rem;cursor:pointer;background:#fff;transition:background .2s}
+  .mx td:hover{background:var(--acc-soft)}
+  .mx td.fill{background:#e7f6ef;cursor:default}
+  .mx td.bad{background:#fdecea}
+  .mx th.r{white-space:nowrap}
+  #mxPool button{border-radius:12px;text-align:left;max-width:100%}
+  /* 4단원 */
+  .sdg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media (max-width:760px){.sdg{grid-template-columns:repeat(3,1fr)}}
+  .sdg button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;padding:8px 6px;color:#fff;background:var(--c);min-height:74px;font-size:.78rem;line-height:1.3;font-weight:700;display:flex;flex-direction:column;gap:2px;transition:transform .15s}
+  .sdg button b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.3rem;line-height:1}
+  .sdg button:hover,.sdg button.on{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .sdg button.on{outline:3px solid var(--navy)}
+  .sdgv{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:6px solid var(--c,#0f2742);min-height:60px}
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.five{grid-template-columns:1fr}}
+  .five>div{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:12px 12px;border-top:6px solid var(--k)}
+  .five b.n{font-family:"Black Han Sans",sans-serif;color:var(--k);font-size:1.2rem}
+  .five h4{margin:2px 0 4px;font-size:.98rem}
+  .five p{font-size:.86rem;margin:4px 0}
+  .five .ml{margin-top:8px;background:color-mix(in srgb,var(--k) 10%,white);border-radius:8px;padding:6px 8px;font-size:.82rem}
+  .quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:6px;margin-top:8px}
+  .quad .ax{font-size:.78rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .quad .ax.v{writing-mode:vertical-rl}
+  .quad .cell{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 8px;font-size:.84rem;cursor:pointer}
+  .quad .cell.best{border-color:var(--mint);background:#e7f6ef}
+  .quad .cell small{display:block;color:var(--muted);font-size:.74rem}
+  .quad .cell span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin:2px 2px 0 0}
+  .qbuild{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:1.08rem;font-weight:700;background:#fff8e6;border:2px solid #f6d58a;border-radius:12px;padding:12px 14px}
+  .qbuild input{flex:1;min-width:200px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px}
+  .plan{width:100%}
+  .plan td:first-child{width:150px;font-weight:700;font-size:.9rem;background:#fbfaf7}
+  .plan input{width:100%;font:inherit;padding:5px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 시뮬레이터 */
+  .sim{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.sim{grid-template-columns:1fr}}
+  .sim .cls{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .sim .cls h4{color:var(--k);display:flex;justify-content:space-between}
+  .sim .cls ul{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+  .sim .cls li.new{color:var(--k);font-weight:700}
+  .cand{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cand button{border:2px dashed var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--ink)}
+  .cand button.on{border-style:solid;background:color-mix(in srgb,var(--k) 15%,white);font-weight:700}
+  .tt td,.tt th{padding:6px 8px;font-size:.88rem}
+  .tt td.r{color:var(--mint);font-weight:900}.tt td.w{color:var(--red);font-weight:900}
+  .score2{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .score2 div{flex:1;min-width:140px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px 12px;text-align:center}
+  .score2 b{display:block;font-family:"Black Han Sans",sans-serif;font-size:1.8rem;color:var(--acc)}
+  /* 스크래치 블록 */
+  .blocks{font-family:ui-sans-serif,system-ui;font-size:.86rem;display:inline-block}
+  .blk{display:block;border-radius:6px;padding:5px 10px;margin:3px 0;color:#fff;width:max-content;max-width:100%}
+  .blk.ev{background:#ffbf00;color:#333;border-radius:14px 14px 6px 6px}
+  .blk.ctl{background:#ffab19;color:#333}
+  .blk.ml{background:#4c97ff}
+  .blk.lk{background:#9966ff}
+  .blk.in{margin-left:22px}
+  .blk i{font-style:normal;background:rgba(255,255,255,.9);color:#333;border-radius:10px;padding:0 6px;margin:0 2px}
+  .penguin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:560px){.penguin{grid-template-columns:1fr}}
+  .penguin div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .dist td,.dist th{padding:6px 8px;font-size:.88rem;text-align:center}
+  .dist tr.near{background:#fff4d6;font-weight:900}
+  .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.roles{grid-template-columns:1fr 1fr}}
+  .roles div{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px;text-align:center;font-size:.84rem}
+  .roles div i{font-style:normal;font-size:1.6rem;display:block}
+  .roles div b{display:block;font-size:.92rem}
+  .roles div em{display:block;font-style:normal;margin-top:6px;background:#e6eefb;border-radius:8px;padding:4px 6px;color:#1b3d66}
+  .types div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .types div b{display:block}
+  .types div small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+
+  /* 카드 격자 칸이 안의 긴 코드·표 때문에 늘어나지 않게 */
+  .cards2>*,.cards3>*,.cards4>*,.grid2>*{min-width:0}
+  /* 진도 보내기 */
+  .tr-gate{position:fixed;inset:0;z-index:200;background:rgba(15,39,66,.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .tr-card{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px 22px 16px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  .tr-card h2{margin:0;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+  .tr-sub{margin:-4px 0 4px;color:var(--muted);font-size:.92rem}
+  .tr-cls{display:flex;gap:8px}
+  .tr-cls label{flex:1;cursor:pointer}
+  .tr-cls input{position:absolute;opacity:0;pointer-events:none}
+  .tr-cls span{display:block;text-align:center;padding:10px 0;border:2px solid var(--line);border-radius:12px;font-weight:900;font-size:1.05rem}
+  .tr-cls input:checked+span{border-color:var(--navy);background:var(--navy);color:#fff}
+  .tr-cls input:focus-visible+span{outline:3px solid var(--amber)}
+  .tr-f{display:flex;align-items:center;gap:10px}
+  .tr-f span{width:40px;font-weight:700}
+  .tr-f input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:9px 12px;border:1px solid #c5ccd5;border-radius:10px}
+  .tr-err{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em}
+  .tr-card .btn{padding:12px;font-size:1.05rem;background:var(--navy)}
+  .tr-note{margin:2px 0 0;color:var(--muted);font-size:.8rem;line-height:1.5;text-align:center}
+  .tr-who,.tr-badge{display:flex;align-items:center;gap:6px;font-size:.82rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px 4px 3px 12px;white-space:nowrap}
+  .tr-badge{padding:3px 12px;background:var(--amber);color:#111;font-weight:700}
+  .tr-who button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px}
+  .tr-who button:hover{background:rgba(255,255,255,.3)}
+  .tr-cls[hidden]{display:none}
+  .tr-badge button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(0,0,0,.14);border-radius:999px;padding:2px 9px;margin-left:6px}
+  /* page-guard: 글자 선택·복사 막기 (입력 칸은 편집 가능) */
+  body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
+  .pg-toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0f2742;color:#fff;padding:9px 16px;border-radius:999px;font-size:.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+  .pg-toast.on{opacity:1}
+
+  /* u1-attributes 전용 (at-) */
+  .at-scroll{overflow-x:auto;max-width:100%}
+  .at-tbl{font-size:.9rem;margin:6px 0}
+  .at-tbl th,.at-tbl td{border:1px solid var(--line);padding:5px 8px}
+  .at-tbl th{background:#fbfaf7}
+  .at-click th,.at-click td{cursor:pointer;transition:background .15s}
+  .at-click th:hover,.at-click td:hover{background:var(--acc-soft)}
+  .at-click .hh{background:#f2a516 !important;color:#0f2742}
+  .at-click .hl{background:#fff4d6}
+  .at-click .new{background:#eef6ff;color:#1b3d66}
+  .at-info,.at-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0;min-height:2.4em}
+  .at-msg:empty{display:none}
+  .at-v{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:6px;padding:0 7px;margin:1px 2px;font-variant-numeric:tabular-nums}
+  .at-purpose{margin-top:10px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .at-purpose p{margin:0 0 6px;font-size:.93rem}
+  .at-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .at-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .at-prev span{white-space:pre-wrap}
+  .at-opt{display:inline-block;vertical-align:middle;font-family:"Noto Sans KR",sans-serif;font-size:.8rem;font-weight:900;background:var(--amber);color:var(--navy);border-radius:999px;padding:2px 10px;margin-left:6px}
+  /* 02 형태 나무 */
+  .at-tree{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:760px){.at-tree{grid-template-columns:1fr}}
+  .at-br{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:6px solid var(--k)}
+  .at-br h4{color:var(--k);margin:0}
+  .at-br>p{margin:2px 0 8px;font-size:.88rem;color:var(--muted)}
+  .at-leaf{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .at-leaf>div{background:#fff;border-radius:10px;padding:8px 10px;border-left:4px solid var(--k);font-size:.88rem}
+  .at-leaf b{display:block}
+  .at-leaf small{display:block;color:var(--muted);font-size:.8rem;margin-top:2px}
+  /* 02 판별기 */
+  .at-jpick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .at-jpick button{font:inherit;font-size:.9rem;border:2px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--ink)}
+  .at-jpick button.ok{border-color:var(--mint);color:#13684d;font-weight:700}
+  .at-jpick button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .at-jbox{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;padding:12px 14px;min-height:120px}
+  .at-jvals{font-size:.9rem;margin-bottom:6px}
+  .at-jq{font-weight:700;margin:6px 0 8px}
+  .at-jr{font-size:1.05rem;margin:6px 0 2px}
+  .at-jw{font-size:.9rem;margin:4px 0 0}
+  .at-jcnt{margin-top:8px;font-size:.85rem;color:var(--muted)}
+  .at-det{margin-top:12px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .at-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .at-t8 td{text-align:left}
+  /* 02 같은 1 */
+  .at-one{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:860px){.at-one{grid-template-columns:1fr}}
+  .at-one>*,.at-srows>*{min-width:0}
+  .at-oc{background:#fbfaf7;border-radius:12px;padding:10px 12px;border:2px solid var(--line)}
+  .at-oc.good{border-color:var(--mint)}
+  .at-oc.bad{border-color:var(--red)}
+  .at-mini{font-size:.84rem;margin:0 0 8px;background:#fff}
+  .at-mini th,.at-mini td{border:1px solid #cdb9e6;padding:3px 7px}
+  .at-mini th{background:#f4eefa;color:#5b3d8a}
+  .at-mini td.one{background:#ffe9a8;outline:2px solid #d64535;font-weight:900}
+  .at-ob{display:flex;flex-wrap:wrap;gap:6px}
+  .at-ob button{font:inherit;font-size:.84rem;border:2px solid var(--line);background:#fff;border-radius:8px;padding:3px 10px;cursor:pointer;color:var(--ink);min-height:34px}
+  .at-ob button:hover:not(:disabled){border-color:var(--acc)}
+  .at-ob button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .at-ob button:disabled{cursor:default}
+  /* 03 관계 */
+  .at-sc{max-width:420px;margin:10px auto 0}
+  .at-sc .gl{stroke:#eceae4;stroke-width:1}
+  .at-sc .tk{font-size:10px;fill:var(--muted)}
+  .at-sc .axl{font-size:11px;font-weight:700;fill:var(--muted)}
+  .at-sc .at-ln{stroke:#1f9d74;stroke-width:2;stroke-dasharray:5 4}
+  .at-sc .at-pt{fill:#1f9d74;stroke:#fff;stroke-width:2}
+  #atCalc td.ok,#atCalc td.ng{font-weight:900}
+  .at-cross td small{display:block;color:var(--muted);font-size:.78rem}
+  .at-two{margin-top:4px}
+  .at-two>div span{display:block;margin-top:2px}
+  /* 04 수면·건강 */
+  .at-sleep{min-width:960px;font-size:.84rem}
+  .at-sleep th{font-size:.78rem;line-height:1.3}
+  .at-srows{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media (max-width:900px){.at-srows{grid-template-columns:1fr}}
+  .at-sr{background:#fbfaf7;border-radius:10px;padding:8px 10px;border:2px solid var(--line)}
+  .at-sr.good{border-color:var(--mint)}
+  .at-sr.bad{border-color:var(--red)}
+  .at-sr.amb{border-color:#e6b84a;background:#fffaf0}
+  .at-sn{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+  .at-sn small{color:var(--muted);font-size:.8rem}
+  .at-key{display:inline-block;border-radius:6px;padding:0 6px}
+  .at-key.amb{background:#fff4d6;border:2px solid #e6b84a}
+  .at-blanks li{margin:8px 0;line-height:1.9}
+  .at-blanks .blank{font:inherit;font-weight:700;border:0;border-bottom:2px dashed var(--acc);background:var(--acc-soft);color:var(--acc);border-radius:6px 6px 0 0;padding:0 10px;min-width:64px;cursor:pointer}
+  .at-blanks .blank.on{border-bottom-style:solid;background:#fff4d6;color:var(--ink)}
+  /* 05 선택 */
+  .at-car{min-width:900px;font-size:.82rem}
+  .at-sel{margin-top:0}
+  .at-sel p{font-size:.92rem}
+  .at-more summary{cursor:pointer}
+  .at-more[open] summary{margin-bottom:8px}
+  .at-prev span{display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">데이터 과학</span>
+  <nav class="steps" id="steps"></nav>
+  <div class="score" id="score"></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+
+<main id="main">
+
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 1. 데이터 과학과 데이터</span>
+      <h1>데이터 속성은<br>무엇을<br>알려 줄까?</h1>
+      <div class="story"><b>지난 시간에 한 일</b><br>급식 사진에서 <b>날짜 · 쇠고기 · 돼지고기 · 닭고기 · 오리고기</b>를 뽑아 표로 정리했어요. 이렇게 표를 이루는 열 하나하나가 오늘 배울 <b>데이터 속성</b>이에요.</div>
+      <p>데이터의 속성과 형태를 이해하면 속성 간의 관계를 파악하고, 숨겨진 의미와 패턴을 더 정확히 분석할 수 있어요. 오늘은 학생 수강 데이터와 수면·건강 데이터의 속성을 직접 판별하고 관계를 찾아봐요.</p>
+      <ol>
+        <li>데이터 속성이란?</li><li>데이터 속성의 형태</li><li>속성 간의 관계</li>
+        <li>함께 해결하기 · 수면·건강 데이터</li><li>정리 (선택) · 역량 키우기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🏷️</i><div><b>속성명과 속성값</b><small>열의 이름과 그 칸의 실제 값</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🧭</i><div><b>속성의 형태 판별</b><small>범주형(명목·순서) · 수치형(연속·이산)</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🔗</i><div><b>속성 간의 관계</b><small>출석 일수와 출석률 · 성별과 이수 여부</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>😴</i><div><b>수면·건강 데이터 분석</b><small>속성 12개를 판별하고 관계 찾기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>표의 열인 <b>데이터 속성</b>이 무엇인지 알아보고, 속성값이 숫자인지 문자인지가 아니라 <b>무엇을 뜻하는지</b>에 따라 속성의 형태를 판별해요. 그리고 두 속성을 나란히 놓고 <b>관계</b>를 찾으며, 그 데이터가 분석 대상으로서 어떤 가치가 있는지 판단해 봐요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">학습 계획 세우기</span>
+        <div class="at-prev" id="atPrev"></div>
+        <div class="memo"><label>같은 숫자 「1」이라도 무엇을 나타내는지에 따라 뜻이 달라질 수 있을까요? 떠오르는 예를 적어 보세요.</label><textarea data-memo="planGuess" rows="2" placeholder="예: 1등 / 1개 / …"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터의 형태와 속성</b> · 전 세계인이 주목하고 있는 데이터는 어떤 형태를 가지고, 분석 대상으로서의 가치는 어떻게 판단할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 데이터 속성 간의 관계에서 어떤 정보를 파악할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 속성의 의미를 알고 속성 간 관계를 파악하여 분석 대상으로서의 가치를 판단할 수 있다.</li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">지난 시간 목표: 정형 데이터와 비정형 데이터를 구별할 수 있다.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 속성이란부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 속성 -->
+<section class="page" data-name="데이터 속성" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 속성이란?</h2><p>교과서 26쪽 · 속성 · 특성 · 변수 · 속성명과 속성값 · 표 Ⅰ-6</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>표에서 <b>열 하나</b>가 데이터 속성이에요. 열의 맨 위에 적힌 이름이 <b>속성명</b>, 그 아래 칸마다 적힌 실제 값이 <b>속성값</b>이에요.</span></div>
+  <div class="card">
+    <h3>🏷️ 데이터 속성</h3>
+    <div class="callout" style="margin-top:4px">데이터를 구성하는 <b>개별 요소</b>를 일컫는 말로, <b>특성(feature)</b>이나 <b>변수(variable)</b> 등의 용어로 쓰이기도 한다.</div>
+    <p>일반적으로 데이터는 여러 속성으로 구성돼요. 학생의 수강 데이터에는 이름, 성별 같은 기본 정보뿐 아니라 성취도, 출석 일수, 출석률, 이수 여부 등 다양한 속성이 있고, 학생 개인의 이수 여부를 확인하는 데 활용할 수 있어요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">📐</div><h4>변수와 특성</h4><p>「변수」는 주로 통계 분석에서 쓰는 말이고, 「특성」은 데이터 과학이나 기계학습에서 모델이 학습하는 대상 요소를 뜻해요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🎯</div><h4>변수(variable)</h4><p>다양한 속성 중 <b>분석에 사용하기 위해 선택한 요소</b>를 말해요. <small>예: 독립 변수, 종속 변수</small></p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">🧰</div><h4>목적에 따라 고른 속성</h4><p>데이터의 속성은 <b>수집의 목적</b>에 따라 선택된 속성들을 추상화한 결과물이에요. 목적이 바뀌면 필요한 속성도 달라져요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>👆 표 Ⅰ-6을 눌러 보자 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 26쪽 학생 수강 데이터)</span></h3>
+    <p class="muted" style="margin-top:0">맨 윗줄 이름을 누르면 그 <b>속성명</b>과 속성값들이, 칸을 누르면 그 칸의 <b>속성값</b>이 무엇인지 보여요.</p>
+    <div class="at-scroll"><table class="at-tbl at-click" id="atT6"></table></div>
+    <div class="at-info" id="atInfo">표의 이름이나 칸을 눌러 보세요.</div>
+    <div class="at-purpose">
+      <p><b>목적이 바뀌면?</b> 이 데이터를 「우리 <b>학급</b>의 과목 이수 여부 확인」에 쓴다면 어떤 속성을 더 넣어야 할까요? 먼저 생각해 본 뒤 눌러요.</p>
+      <button class="btn ghost sm" id="atAdd">속성 추가해 보기</button>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 속성의 형태 -->
+<section class="page" data-name="속성의 형태" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>데이터 속성의 형태</h2><p>교과서 26~27쪽 · 범주형(명목형·순서형) · 수치형(연속형·이산형) · 표 Ⅰ-8 · 그림 Ⅰ-3</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>숫자로 적었다고 다 수치형이 아니에요. 그 값이 <b>양(얼마나)</b>을 나타내는지, <b>분류(무엇인지)</b>를 나타내는지부터 따져요. 분류라면 순서가 있는지, 양이라면 소수점이 있는 값인지 정수인지 보면 돼요.</span></div>
+  <div class="card">
+    <h3>🔤 표기 방법보다 중요한 것</h3>
+    <p style="margin-top:0">표 Ⅰ-6에서 이름, 성별, 성취도, 이수 여부는 속성값을 <b>문자</b>로, 등급, 출석 일수, 출석률은 <b>숫자</b>로 표기하고 있어요. 하지만 데이터 분석에서는 표기 방법보다 <b>데이터 속성의 형태(data type)</b>가 핵심이에요. 속성의 형태에 따라 알맞은 표기 방식을 고르고, 알맞은 분석 방법을 적용하고, 결과를 해석하거든요.</p>
+    <div class="at-tree">
+      <div class="at-br" style="--k:#e0702b">
+        <h4>범주형 데이터</h4><p>몇 개의 범주나 항목으로 구분되는 데이터</p>
+        <div class="at-leaf"><div><b>명목형</b><span>순서의 의미가 없다</span><small>예: 성별, 색깔, 종교, 국가</small></div><div><b>순서형</b><span>순서의 의미가 있다</span><small>예: 학년, 등급, 만족도, 위험 수준</small></div></div>
+      </div>
+      <div class="at-br" style="--k:#2f6fd0">
+        <h4>수치형 데이터</h4><p>숫자 형태로 측정된 값을 표현하는 데이터</p>
+        <div class="at-leaf"><div><b>연속형</b><span>연속된 값을 표현한다</span><small>예: 키, 몸무게, 온도, 가격</small></div><div><b>이산형</b><span>특정값만 표현한다</span><small>예: 점수, 개수, 횟수</small></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧭 속성 형태 판별기 <span class="muted" style="font-weight:400;font-size:.88rem">(27쪽 「데이터 형태 구분」 Q1~Q6)</span></h3>
+    <p class="muted" style="margin-top:0">표 Ⅰ-6의 속성을 하나 골라 질문에 차례로 답하면 형태가 판별돼요. 일곱 개를 모두 판별해 보세요.</p>
+    <div id="atJudge"></div>
+    <details class="at-det"><summary>다 판별했다면 · 표 Ⅰ-7과 표 Ⅰ-8로 확인하기</summary>
+      <div class="at-scroll"><table class="at-tbl at-t8">
+        <tr><th>형태</th><th>세부</th><th>특징</th><th>표 Ⅰ-6의 속성</th></tr>
+        <tr><td rowspan="2"><b>범주형</b></td><td>명목형</td><td>순서의 의미가 없다.</td><td>이름, 성별, 이수 여부</td></tr>
+        <tr><td>순서형</td><td>순서의 의미가 있다.</td><td>성취도, 등급</td></tr>
+        <tr><td rowspan="2"><b>수치형</b></td><td>연속형</td><td>연속된 값을 표현한다.</td><td>출석률</td></tr>
+        <tr><td>이산형</td><td>특정값만 표현한다.</td><td>출석 일수</td></tr>
+      </table></div>
+      <p class="note">표 Ⅰ-7은 학년, 반, 번호도 범주형으로 분류해요. 01에서 목적에 맞게 추가해 본 속성이에요.</p>
+    </details>
+  </div>
+  <div class="card">
+    <h3>🧮 숫자라고 계산해도 될까?</h3>
+    <p style="margin-top:0">표 Ⅰ-6의 등급(1, 3, 1, 5, 5)을 수치형처럼 더해서 평균을 내면 (1+3+1+5+5) ÷ 5 = <b>3</b>이에요. 「이 학생들의 평균 등급은 3등급」이라는 말은 뜻이 있을까요? 출석 일수(64, 52, 58, 43, 25)의 평균 48.4일과 비교해 생각해 보세요.</p>
+    <div class="memo"><label>숫자로 적혀 있다고 수치형처럼 계산하면 어떤 문제가 생길까요? <small>판별기에서 판별한 내용을 근거로</small></label><textarea data-memo="numTrap" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>1️⃣ 같은 「1」, 다른 의미 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅰ-3을 다시 그림)</span></h3>
+    <p class="muted" style="margin-top:0">두 표에서 노란 칸의 값은 모두 1이에요. 각각의 1은 어떤 형태의 데이터일까요?</p>
+    <div class="at-one" id="atOne"></div>
+    <details class="at-det"><summary>(선택) 그림 Ⅰ-3의 나머지 두 표도 해 보기</summary><div class="at-one" id="atOneMore" style="margin-top:8px"></div></details>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="atOneRe">다시 하기</button></div>
+    <p class="note">데이터 형태는 데이터 속성이 의미하는 바를 정확하게 이해하기 위해 필요해요. 같은 1로 적혀 있어도 그 값이 무엇을 뜻하느냐에 따라 다르게 해석돼요.</p>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 속성 간의 관계 -->
+<section class="page" data-name="속성 간의 관계" data-acc="#1f9d74">
+  <div class="head"><div class="num">03</div><div><h2>속성 간의 관계에서 무엇을 알 수 있을까?</h2><p>교과서 28쪽 · 출석 일수와 출석률 · 성별과 이수 여부 · 표 Ⅰ-9</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>두 속성을 나란히 놓고 <b>함께 변하는지</b>, <b>어떤 값끼리 자주 같이 나오는지</b> 살펴보면 데이터 속에 숨겨진 의미와 정보를 찾을 수 있어요. 어떤 관계는 바로 보이고, 어떤 관계는 데이터가 많아야 보여요.</span></div>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>📈 출석 일수와 출석률</h3>
+      <p style="margin-top:0;font-size:.93rem">출석률은 <b>전체 수업 일수에 대비한 출석 일수의 비율</b>이에요. 전체 수업 일수는 며칠이었을까요? 막대를 움직여 표의 출석률과 맞춰 보세요.</p>
+      <div class="ctrl"><label for="atDays">수업 일수</label><input type="range" id="atDays" min="50" max="80" value="56"><output id="atDaysOut">56</output></div>
+      <div class="at-scroll"><table class="at-tbl" id="atCalc"></table></div>
+      <div class="at-msg" id="atCalcMsg"></div>
+      <svg viewBox="0 0 320 210" id="atScatter" class="at-sc" role="img" aria-label="출석 일수와 출석률 점그래프"></svg>
+    </div>
+    <div class="card">
+      <h3>👥 성별과 이수 여부</h3>
+      <p style="margin-top:0;font-size:.93rem">표 Ⅰ-6의 5명을 성별과 이수 여부로 세어 보면 다음과 같아요.</p>
+      <div class="at-scroll"><table class="at-tbl at-cross">
+        <tr><th></th><th>이수</th><th>미이수</th></tr>
+        <tr><th>남</th><td>2 <small>유선재, 이나은</small></td><td>1 <small>정세영</small></td></tr>
+        <tr><th>여</th><td>1 <small>김소희</small></td><td>1 <small>최영현</small></td></tr>
+      </table></div>
+      <p style="font-size:.93rem"><b>생각해 보기</b> 이 5명만 보고 「성별과 이수 여부는 관계가 있다」고 말할 수 있을까요?</p>
+      <div class="vote" id="atVote"></div>
+      <div class="reveal" id="atVoteAns"><div class="callout" style="margin:0;font-size:.93rem">5명의 정보로는 이 관계를 파악하기 어려워요. 최영현 학생 한 명만 이수했어도 여학생의 이수 비율은 절반에서 2명 중 2명으로 바뀌거든요. <b>우리 학교 전체 학생 정보</b>를 분석하면 어떤 관계가 있는지 알 수 있어요. 만약 관계가 있다면, 분석으로 원인을 찾아 더 많은 학생이 이수할 수 있도록 돕는 정책을 마련하는 데 활용할 수도 있어요.</div></div>
+    </div>
+  </div>
+  <div class="flow2 at-two">
+    <div style="--k:#1f9d74"><b>출석 일수와 출석률 · 정비례</b><span>출석률은 전체 수업 일수에 대비한 출석 일수의 비율이므로 쉽게 관계를 파악할 수 있다.</span></div>
+    <div style="--k:#9b4fc4"><b>성별과 이수 여부의 관계</b><span>적은 양의 데이터로 확인이 어렵고 많은 양의 데이터를 통해 관계를 파악할 수 있다.</span></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>🔗 속성 간의 관계를 활용하는 다른 예</h3>
+    <div class="cards2">
+      <div class="kc" style="--k:#e0702b"><div class="ic">🛒</div><h4>고객 구매 데이터</h4><p>고객 연령, 성별, 구매 상품, 구매 금액대 사이의 관계를 파악하면 고객의 구매 패턴을 알 수 있고, 효과적인 마케팅 전략을 세우는 데 활용할 수 있어요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">💬</div><h4>사회 미디어 데이터</h4><p>사용자 게시글, 댓글, 좋아요, 공유 사이의 관계를 파악하면 사회적 트렌드를 알 수 있고, 공공 정책을 세우는 데 활용할 수 있어요.</p></div>
+    </div>
+    <h4 style="margin-top:12px">표 Ⅰ-9 데이터 속성 간의 관계를 파악하여 활용하는 예시</h4>
+    <div class="at-scroll"><table class="at-tbl">
+      <tr><th>구분</th><th>범주형 데이터</th><th>수치형 데이터</th></tr>
+      <tr><td><b>속성 관계 파악</b></td><td>고객 연령, 성별, 구매 상품, 구매 금액대</td><td>게시글 수, 댓글 수, 좋아요 수, 공유 수</td></tr>
+      <tr><td><b>활용</b></td><td>고객 구매 패턴 파악, 효과적 마케팅 전략 수립</td><td>사회적 트렌드 파악, 공공 정책 수립</td></tr>
+    </table></div>
+    <p class="note">(교과서가 고객 연령을 범주형에 넣은 까닭을 풀어 보면) 고객 연령을 「10대, 20대」처럼 몇 개의 구간으로 나누어 쓰면 범주형으로 다룰 수 있어요. 이처럼 데이터 속성 간의 관계를 파악하고 분석하면 더 풍부하고 의미 있는 정보를 얻어 세상을 깊이 이해할 수 있어요.</p>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 함께 해결하기 -->
+<section class="page" data-name="함께 해결하기" data-acc="#d64535">
+  <div class="head"><div class="num">04</div><div><h2>함께 해결하기 · 수면·건강 데이터 분석</h2><p>교과서 29쪽 · 데이터 속성의 형태 확인 · 속성 간의 관계 · 잠재적 가치</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>표를 보고 관계가 있어 보이는 속성과 이 데이터의 가치를 <b>먼저 적은 뒤</b>, 친구와 함께 속성 12개의 형태를 판별해요. 판단이 갈리는 속성도 있으니 <b>왜 그렇게 보았는지</b> 서로 설명해 봐요.</span></div>
+  <div class="card">
+    <h3>😴 수면·건강 데이터 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 29쪽, 4명의 일부)</span></h3>
+    <div class="at-scroll"><table class="at-tbl at-sleep">
+      <tr><th>개인 번호</th><th>성별</th><th>나이</th><th>직업</th><th>수면 시간<br>(시)</th><th>수면 질<br>(1-10)</th><th>신체 활동<br>수준(분)</th><th>스트레스<br>지수(1-10)</th><th>체질량<br>지수</th><th>혈압</th><th>심박수</th><th>일일<br>걸음 수</th><th>수면<br>장애</th></tr>
+      <tr><td>1</td><td>남성</td><td>27</td><td>소프트웨어 엔지니어</td><td>6.1</td><td>6</td><td>42</td><td>6</td><td>과체중</td><td>126/83</td><td>77</td><td>4200</td><td>없음</td></tr>
+      <tr><td>2</td><td>남성</td><td>28</td><td>의사</td><td>6.2</td><td>6</td><td>60</td><td>8</td><td>정상</td><td>125/80</td><td>75</td><td>10000</td><td>없음</td></tr>
+      <tr><td>3</td><td>남성</td><td>28</td><td>의사</td><td>6.2</td><td>6</td><td>60</td><td>8</td><td>정상</td><td>125/80</td><td>75</td><td>10000</td><td>없음</td></tr>
+      <tr><td>4</td><td>남성</td><td>28</td><td>영업 사원</td><td>5.9</td><td>4</td><td>30</td><td>8</td><td>비만</td><td>140/90</td><td>85</td><td>3000</td><td>수면 무호흡</td></tr>
+    </table></div>
+  </div>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>① 데이터 속성 간의 관계를 파악해 보자 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 2번)</span></h3>
+      <div class="memo"><label>관계가 있어 보이는 두 속성과 그렇게 생각한 근거 <small>표를 보고 먼저 적어요. 4명뿐이니 「~해 보인다」처럼 조심해서 쓰고, 아래 ③을 하며 고쳐 써도 돼요</small></label><textarea data-memo="relMemo" rows="4" placeholder="예: ○○ 속성 값이 클수록 △△ 속성 값도 … 보인다. 근거: …"></textarea><div class="saved"></div></div>
+    </div>
+    <div class="card">
+      <h3>② 데이터 분석의 잠재적 가치를 한 문장으로 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 3번)</span></h3>
+      <div class="memo"><label>이 데이터를 더 많이 모아 분석하면 누구에게 어떤 도움이 될까요? <small>한 문장으로 쓰고 친구와 이야기 나누어요</small></label><textarea data-memo="valueMemo" rows="4"></textarea><div class="saved"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>③ 데이터 속성의 형태를 확인해 보자 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 1번)</span></h3>
+    <p class="muted" style="margin-top:0">속성마다 형태를 고르고 「확인하기」를 눌러요. 02의 Q1~Q6을 떠올리세요.</p>
+    <div id="atSleep"></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="atSleepOk">확인하기</button><button class="btn ghost sm" id="atSleepRe">다시 고르기</button></div>
+    <div class="at-msg" id="atSleepMsg"></div>
+  </div>
+  <details class="card at-more">
+    <summary><b>📝 (선택) 개념 정리하기</b> <span class="muted">빈칸 세 문장</span></summary>
+    <p class="muted" style="font-size:.9rem">빈칸에 들어갈 말을 먼저 떠올린 뒤 눌러서 확인하세요.</p>
+    <ol class="at-blanks">
+      <li>도서관 대출 데이터에서 「책 제목」, 「대출일」처럼 열을 설명하는 이름은 <button class="blank" data-a="속성명">?</button>이고, 「어린 왕자」처럼 그 열에 적힌 실제 값은 <button class="blank" data-a="속성값">?</button>이다.</li>
+      <li>반 친구들의 혈액형(A, B, O, AB)은 <button class="blank" data-a="범주형-명목형">?</button>, 체력 등급(상·중·하)은 <button class="blank" data-a="범주형-순서형">?</button>, 하루에 마신 물의 양(1.5 L)은 <button class="blank" data-a="수치형-연속형">?</button>, 하루에 받은 문자 개수는 <button class="blank" data-a="수치형-이산형">?</button> 데이터이다.</li>
+      <li>운동 앱 데이터에서 걸음 수와 수면 시간을 나란히 놓고 함께 변하는지 살펴보는 것은 데이터 <button class="blank" data-a="속성 간의 관계">?</button>를 파악하는 일이다. 이 관계가 분명하다면 이 데이터는 분석 대상으로서 <button class="blank" data-a="가치">?</button>가 있다고 판단할 수 있다.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>✅ 성취도 평가</h3>
+    <p style="margin-top:0">데이터 속성의 형태를 파악하여 데이터 속성 간의 관계를 설명할 수 있나요? 할 수 있게 된 것을 모두 골라 보세요.</p>
+    <div id="atSelf"></div>
+  </div>
+  <div class="callout">시간이 부족하면 다음 「정리 (선택)」 화면은 건너뛰고 <button class="btn sm" onclick="go(6)">마무리로 가기 →</button></div>
+</section>
+
+<!-- 5 정리 (선택) -->
+<section class="page" data-name="정리 (선택)" data-acc="#c98a00">
+  <div class="head"><div class="num">05</div><div><h2>역량 키우기 · 「데이터 과학과 데이터」 정리 <span class="at-opt">선택</span></h2><p>교과서 30~31쪽 · 시간이 남거나 집에서 해요</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>교과서 30쪽 세 활동은 아래 칸에 <b>내 말로</b> 정리하고, 화면의 연습 게임은 <b>새로 만든 예시 데이터</b>로 해요. 마지막에 내 실력을 점검하고 보충이나 심화 활동 하나를 골라요.</span></div>
+  <div class="card">
+    <h3>1 정형 데이터와 비정형 데이터의 차이 <span class="tagt" style="--k:#2f6fd0">지식·이해</span></h3>
+    <div class="memo"><label>두 데이터의 차이점을 <b>내가 고른 예시</b>와 함께 설명해 보세요.</label><textarea data-memo="capDiff" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>2 중고 자동차 판매 데이터에서 수치형과 범주형 구분하기 <span class="tagt" style="--k:#1f9d74">과정·기능</span></h3>
+    <div class="at-scroll"><table class="at-tbl at-car">
+      <tr><th>차량 ID</th><th>차종</th><th>브랜드</th><th>모델명</th><th>연식</th><th>주행 거리</th><th>색상</th><th>연료</th><th>변속기</th><th>사고 유무</th><th>소유주 변경 횟수</th><th>만족도</th></tr>
+      <tr><td>12345</td><td>SUV</td><td>현대</td><td>싼타페</td><td>2020</td><td>35000</td><td>흰색</td><td>가솔린</td><td>자동</td><td>0</td><td>0</td><td>2</td></tr>
+      <tr><td>67890</td><td>준중형</td><td>기아</td><td>K3</td><td>2018</td><td>52000</td><td>검정색</td><td>디젤</td><td>자동</td><td>1</td><td>1</td><td>1</td></tr>
+      <tr><td>34567</td><td>경차</td><td>기아</td><td>모닝</td><td>2022</td><td>15000</td><td>빨간색</td><td>가솔린</td><td>자동</td><td>0</td><td>1</td><td>5</td></tr>
+      <tr><td>89012</td><td>세단</td><td>벤츠</td><td>E300</td><td>2019</td><td>40000</td><td>은색</td><td>디젤</td><td>자동</td><td>0</td><td>2</td><td>5</td></tr>
+      <tr><td>56789</td><td>SUV</td><td>BMW</td><td>X5</td><td>2021</td><td>25000</td><td>파란색</td><td>가솔린</td><td>자동</td><td>0</td><td>0</td><td>4</td></tr>
+      <tr><td>12345</td><td>쿠페</td><td>아우디</td><td>A5</td><td>2017</td><td>60000</td><td>흰색</td><td>가솔린</td><td>자동</td><td>0</td><td>1</td><td>1</td></tr>
+      <tr><td>67890</td><td>트럭</td><td>포드</td><td>F-150</td><td>2022</td><td>10000</td><td>검정색</td><td>디젤</td><td>자동</td><td>0</td><td>3</td><td>4</td></tr>
+      <tr><td>34567</td><td>해치백</td><td>폭스바겐</td><td>골프</td><td>2020</td><td>30000</td><td>빨간색</td><td>디젤</td><td>수동</td><td>1</td><td>2</td><td>3</td></tr>
+    </table></div>
+    <p class="note">교과서 30쪽 표를 다시 적었어요. 차량 ID가 같은 줄이 있는 것도 눈여겨보세요. 서로 다른 차가 같은 ID를 가지면 어떤 문제가 생길지는 기본키를 배울 때 다시 생각해 봐요.</p>
+    <div class="memo"><label>수치형 데이터와 범주형 데이터로 나누고, 각 데이터가 나타내려는 값의 특징을 적어 보세요. <small>숫자로 적힌 속성을 특히 꼼꼼히</small></label><textarea data-memo="capCar" rows="4"></textarea><div class="saved"></div></div>
+    <h4 style="margin-top:14px">연습 · 자전거 대여 데이터 (새로 만든 예시)</h4>
+    <p class="muted" style="margin-top:0;font-size:.9rem">속성명과 속성값 예를 보고 수치형인지 범주형인지 골라요.</p>
+    <div id="atBike"></div>
+  </div>
+  <div class="card">
+    <h3>3 데이터 기반 의사 결정의 장단점과 윤리적 책임 <span class="tagt" style="--k:#d64535">가치·태도</span></h3>
+    <div class="memo"><label>장점과 단점을 한 가지씩 쓰고, 데이터 과학자로서 가져야 할 윤리적 책임을 설명해 보세요.</label><textarea data-memo="capEthics" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>📊 내 실력 점검하기</h3>
+    <p class="muted" style="margin-top:0">스스로 「예」라고 답할 수 있는 것을 모두 골라요. 모두 고를 수 있으면 <b>심화</b>, 아니면 <b>보충</b> 활동을 해 봐요.</p>
+    <div id="atLevel"></div>
+    <div class="grid2 even" style="margin-top:12px">
+      <details class="at-det at-sel"><summary>🧩 보충 · 축제 음식 부스</summary>
+        <p>학교 축제에서 우리 반이 음식 부스를 운영할 때, 데이터를 바탕으로 결정하려면 어떤 데이터를 모으면 좋을까요?</p>
+        <div class="memo"><label>모을 데이터와 그 데이터로 결정할 것</label><textarea data-memo="boothData" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+      <details class="at-det at-sel"><summary>🚀 심화 · 공개 데이터 분석</summary>
+        <p>데이터 공유 사이트(교과서: 공공데이터포털, 캐글 — 선생님이 알려 주는 사이트)에서 데이터를 하나 골라, 데이터의 형태, 속성별 의미, 속성 간의 관계를 설명해 보세요.</p>
+        <div class="memo"><label>고른 데이터 · 형태 · 속성별 의미 · 속성 간의 관계</label><textarea data-memo="deepData" rows="4"></textarea><div class="saved"></div></div>
+      </details>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📒 내 계획 점검하기</h3>
+    <p class="muted" style="margin-top:0">「데이터 과학과 데이터」를 마치며, 처음 적은 나의 계획(교과서 14쪽, 22쪽)을 점검하고 새롭게 알게 된 점을 적어요.</p>
+    <div class="at-prev" id="atPrev2"></div>
+    <div class="grid2 even">
+      <div class="memo"><label>나의 계획 점검</label><textarea data-memo="planCheck" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>새롭게 알게 된 점</label><textarea data-memo="newLearn" rows="3"></textarea><div class="saved"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0"><b>데이터 속성</b>은 데이터를 구성하는 개별 요소(특성, 변수)이다. 열을 설명하는 이름이 <b>속성명</b>, 특정 속성의 실젯값이 <b>속성값</b>이다.</div>
+    <div style="--k:#e0702b">데이터 속성의 형태는 <b>범주형</b>(순서의 의미가 없는 명목형, 있는 순서형)과 <b>수치형</b>(연속된 값의 연속형, 특정값만의 이산형)으로 나뉜다. 숫자인지 문자인지보다 값이 무엇을 뜻하는지가 중요하다.</div>
+    <div style="--k:#1f9d74"><b>데이터 속성 간의 관계</b>를 분석하면 숨겨진 의미와 정보를 찾을 수 있다. 어떤 관계는 바로 보이지만, 어떤 관계는 많은 양의 데이터가 있어야 파악된다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 적은 「같은 1, 다른 뜻」의 예를 다시 보고, 오늘 배운 낱말(속성, 범주형·수치형, 관계, 데이터의 양)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터 속성 간의 관계에서 어떤 정보를 파악할 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>표 Ⅰ-6에서 <b>숫자로 적힌 속성</b> 두 개를 판별기로 판별한 과정과, 「숫자면 수치형」이라고 생각하면 생기는 문제 쓰기</li>
+      <li><b>출석 일수와 출석률</b>, <b>성별과 이수 여부</b>의 관계가 어떻게 다른지, 뒤의 관계를 알려면 무엇이 필요한지 설명하기</li>
+      <li>수면·건강 데이터에서 <b>판단이 갈렸던 속성</b>과 내가 찾은 <b>관계·잠재적 가치</b> 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="../forms/data-u1-attributes.html" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="foot">
+  <button class="btn ghost" id="prev">← 이전</button>
+  <span class="pg" id="pg"></span>
+  <button class="btn" id="next">다음 →</button>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toLocaleString('ko-KR');
+
+
+
+const LESSON='u1-attributes', PEP='';
+
+/* 진도 보내기 ①: 누가 쓰는지 확인 (반·학번마다 퀴즈·메모를 따로 저장) */
+const WHO=(function(){
+  if(!PEP) return {off:true,sfx:''};
+  if(/[?&]preview(=|&|$)/.test(location.search)) return {preview:true,sfx:'@preview'};
+  let w=null; try{w=JSON.parse(sessionStorage.getItem('aiw-who')||'null');}catch(e){}
+  if(w&&w.teacher) return {preview:true,teacher:true,sfx:'@preview'};
+  if(!w||!/^\d{5}$/.test(w.no||'')) return {need:true,sfx:'@none'};
+  return {cls:w.cls,no:w.no,name:w.name,sfx:'@'+w.no};
+})();
+/* 퀴즈 (교과서 26~29쪽) — 보기는 짧은 것 → 긴 것, 극단어 피하기 */
+const QUIZ={
+ 1:[{q:'표 Ⅰ-6에서 「출석률」처럼 데이터의 열을 설명하는 이름을 무엇이라고 할까?',o:['속성명','속성값','데이터 형태'],a:0,w:'열을 설명하는 이름을 속성명, 특정 속성의 실젯값을 속성값이라고 해요(26쪽).'},
+    {q:'학생 수강 데이터를 「우리 학급의 과목 이수 여부 확인」에 쓰려고 할 때 추가하면 좋은 속성은?',o:['키, 몸무게','학년, 반, 번호','좋아하는 과목과 음식'],a:1,w:'데이터의 속성은 수집 목적에 따라 선택돼요. 학급 단위로 확인하려면 학생이 어느 학급의 누구인지 알려 주는 속성이 필요해요(26쪽).'},
+    {q:'데이터 과학이나 기계학습에서 모델이 학습하는 대상 요소를 가리킬 때 데이터 속성 대신 흔히 쓰는 말은?',o:['범주','항목','특성'],a:2,w:'일반적으로 「변수」는 통계 분석에서, 「특성」은 데이터 과학이나 기계학습에서 쓰는 용어예요(26쪽 옆 설명).'}],
+ 2:[{q:'표 Ⅰ-6의 「등급」 속성은 1~5의 숫자로 적혀 있다. 이 속성의 형태는?',o:['수치형-연속형','수치형-이산형','범주형-순서형'],a:2,w:'등급의 숫자는 양이 아니라 등급을 구분하는 데 쓰이고 숫자 사이 간격이 일정하지 않아요. 2등급보다 1등급이 높다는 위계가 있어요(표 Ⅰ-8).'},
+    {q:'명목형 데이터에 대한 설명으로 옳은 것은?',o:['중간값을 표현한다','순서나 위계의 의미가 없다','1보다 2가 정확히 1만큼 많음을 나타낸다'],a:1,w:'명목형은 범주형 가운데 단순히 분류를 위해 쓰여 순서나 위계가 없는 형태예요. 성별, 색깔, 국가가 그 예예요(27쪽).'},
+    {q:'측정한 값 사이에 얼마든지 중간값이 있을 수 있는 키, 몸무게, 온도 같은 데이터의 형태는?',o:['수치형-연속형','범주형-명목형','수치형-이산형'],a:0,w:'키나 몸무게는 양을 나타내고 170.5처럼 소수점으로 중간값을 표현할 수 있어요(27쪽 데이터 형태의 예).'}],
+ 3:[{q:'표 Ⅰ-6에서 출석 일수와 출석률의 관계를 쉽게 파악할 수 있는 까닭은?',o:['두 속성 모두 문자라서','출석률이 출석 일수의 비율이라서','학생 수가 5명뿐이라 계산이 쉬워서'],a:1,w:'출석률은 전체 수업 일수에 대비한 출석 일수의 비율이라, 출석 일수가 늘면 출석률도 같은 비율로 늘어나요(28쪽).'},
+    {q:'학생 5명의 데이터로 「성별」과 「이수 여부」의 관계를 파악하기 어려운 까닭은?',o:['데이터의 양이 적어서','성별이 범주형 데이터라서','이수 여부가 수치형 데이터라서'],a:0,w:'몇 명만 바뀌어도 결과가 크게 달라지므로, 학교 전체 학생 정보처럼 많은 데이터를 분석해야 관계를 알 수 있어요(28쪽).'},
+    {q:'고객 연령, 성별, 구매 상품, 구매 금액대 사이의 관계를 파악해 활용할 수 있는 일로 알맞은 것은?',o:['출석률 계산','공공 정책 수립','효과적인 마케팅 전략 수립'],a:2,w:'고객 구매 데이터의 속성 간 관계로 구매 패턴을 파악하면 마케팅 전략을 세우는 데 쓸 수 있어요. 공공 정책은 사회 미디어 데이터의 예예요(표 Ⅰ-9).'}],
+ 6:[{q:'설문 응답의 「만족도」(매우 불만, 불만, 보통, 만족, 매우 만족)는 어떤 데이터 형태일까?',o:['범주형-명목형','범주형-순서형','수치형-연속형'],a:1,w:'몇 개의 항목으로 나뉘고 좋고 나쁨의 위계가 있으므로 순서형이에요(27쪽 데이터 형태의 예).'},
+    {q:'정형 데이터에서 데이터 속성의 형태를 알아야 하는 까닭으로 알맞은 것은?',o:['데이터를 빠짐없이 더 많이 모으려고','속성값을 문자와 숫자로 나누어 적으려고','알맞은 분석 방법을 고르고 결과를 해석하려고'],a:2,w:'데이터 속성의 형태에 따라 알맞은 표기 방식과 분석 방법을 정하고 분석 결과를 해석해요(26쪽).'},
+    {q:'데이터 속성 간의 관계를 분석하여 얻을 수 있는 것은?',o:['숨겨진 의미와 정보','데이터의 저장 형식과 용량','속성마다 알맞은 표기 방법'],a:0,w:'속성 간의 관계를 분석하면 데이터 속에 숨겨진 의미와 정보를 추출해 더 풍부한 정보를 얻을 수 있어요(28쪽).'}]
+};
+
+const QK='ds-u1-attributes-quiz'+WHO.sfx;
+const MK='ds-u1-attributes-memo'+WHO.sfx;
+let QS={}; try{QS=JSON.parse(localStorage.getItem(QK)||'{}')||{};}catch(e){QS={};}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(QS));}catch(e){}}
+const TOTALQ=Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+function qperm(n,key){ let h=2166136261; for(const c of key){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}
+  const p=[...Array(n).keys()]; for(let i=n-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0; h=(h+0x6D2B79F5)>>>0; const j=h%(i+1); [p[i],p[j]]=[p[j],p[i]];} return p; }
+function renderQuiz(box){
+  const k=box.dataset.quiz; box.innerHTML=`<div class="qh"><b>개념 퀴즈</b><span>${QUIZ[k].length}문제 · 고르면 바로 채점</span></div>`;
+  QUIZ[k].forEach((it,i)=>{
+    const id=k+'-'+i, d=document.createElement('div'); d.className='qi';
+    /* 보기 순서는 학생마다 섞되(새로 고쳐도 같은 순서), 저장·채점은 원래 번호로 */
+    const perm=qperm(it.o.length, QK+'|'+id);
+    d.innerHTML=`<div class="qq">${i+1}. ${it.q}</div><div class="opts">${perm.map(j=>`<button data-j="${j}">${it.o[j]}</button>`).join('')}</div><div class="why"></div>`;
+    const btn=j=>d.querySelector(`button[data-j="${j}"]`);
+    const mark=(j,anim)=>{
+      const bs=d.querySelectorAll('button'); bs.forEach(b=>b.disabled=true);
+      btn(it.a).classList.add('right'); if(j!==it.a){btn(j).classList.add('wrong'); if(anim) d.classList.add('shake');}
+      d.classList.add('answered', j===it.a?'correct':'incorrect');
+      d.querySelector('.why').textContent=(j===it.a?'정답. ':'정답은 「'+it.o[it.a]+'」. ')+it.w;
+    };
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;QS[id]=j;saveQ();mark(j,true);updScore();});
+    if(QS[id]!=null && QS[id]<it.o.length) mark(QS[id],false);
+    box.appendChild(d);
+  });
+}
+
+/* 페이지 이동 */
+const pages=[...document.querySelectorAll('.page')];
+const stepBtns=pages.map((p,i)=>{const b=document.createElement('button');b.textContent=i?`${i}. ${p.dataset.name}`:'시작';b.onclick=()=>go(i);$('steps').appendChild(b);return b;});
+function updScore(){
+  let ok=0; for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{if(QS[k+'-'+i]===it.a) ok++;});
+  $('score').textContent=`퀴즈 ${ok} / ${TOTALQ}`;
+  pages.forEach((p,i)=>{const q=p.querySelector('[data-quiz]'); if(!q) return; const k=q.dataset.quiz; stepBtns[i].classList.toggle('done',QUIZ[k].every((_,j)=>QS[k+'-'+j]!=null));});
+  let h='<tr><th class="l">개념</th><th>맞힌 문제</th></tr>';
+  for(const k in QUIZ){const n=QUIZ[k].length, c=QUIZ[k].filter((it,i)=>QS[k+'-'+i]===it.a).length, a=QUIZ[k].filter((_,i)=>QS[k+'-'+i]!=null).length;
+    h+=`<tr><td class="l">${k}. ${pages[k].dataset.name}</td><td>${a?`<b class="${c===n?'ok':''}">${c} / ${n}</b>`:'<span class="muted">아직 안 풂</span>'}</td></tr>`;}
+  h+=`<tr><td class="l"><b>합계</b></td><td><b>${ok} / ${TOTALQ}</b></td></tr>`;
+  $('result').innerHTML=h;
+}
+let cur=-1;
+const onShow={};
+function go(i){
+  i=Math.max(0,Math.min(pages.length-1,i)); if(i===cur) return;
+  const back=i<cur; if(cur>=0) pages[cur].classList.remove('on','back');
+  pages[i].classList.add('on'); pages[i].classList.toggle('back',back);
+  document.documentElement.style.setProperty('--acc',pages[i].dataset.acc);
+  document.documentElement.style.setProperty('--acc-soft',pages[i].dataset.acc+'1a');
+  stepBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sb=$('steps'), btn=stepBtns[i]; sb.scrollLeft=btn.offsetLeft-sb.clientWidth/2+btn.clientWidth/2;
+  $('prog').style.width=(i/(pages.length-1)*100)+'%';
+  $('pg').textContent=`${i} / ${pages.length-1}`;
+  $('prev').style.visibility=i?'visible':'hidden'; $('next').style.visibility=i<pages.length-1?'visible':'hidden';
+  cur=i; try{history.replaceState(null,'','#p'+i);}catch(e){} window.scrollTo(0,0);
+  if(onShow[i]) onShow[i]();
+}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.defaultPrevented)return; if(e.target.matches&&e.target.matches('input,select,textarea'))return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+document.querySelectorAll('.gcard').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.click();}}));
+document.querySelectorAll('[data-quiz]').forEach(renderQuiz);
+$('quizReset').onclick=()=>{QS={};saveQ();document.querySelectorAll('[data-quiz]').forEach(renderQuiz);updScore();};
+
+
+/* 공용 부품: 메모·카드·분류 게임·탭·투표·칩 */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* 메모: data-memo가 있는 입력칸은 이 기기에 저장 */
+let MEMO=store.get(MK,{});
+function bindMemos(){
+  document.querySelectorAll('[data-memo]').forEach(t=>{
+    const k=t.dataset.memo; if(MEMO[k]!=null) t.value=MEMO[k];
+    let tm; t.addEventListener('input',()=>{MEMO[k]=t.value; clearTimeout(tm); tm=setTimeout(()=>{store.set(MK,MEMO); const s=t.parentElement.querySelector('.saved'); if(s){s.textContent='이 기기에 저장됨'; setTimeout(()=>s.textContent='',1400);} t.dispatchEvent(new Event('memo'));},300);});
+  });
+}
+function memoSummary(box,list){
+  const h=list.map(([k,label])=>{const v=(MEMO[k]||'').trim(); return `<dt>${esc(label)}</dt><dd class="${v?'':'e'}">${v?esc(v):'(아직 안 씀)'}</dd>`;}).join('');
+  $(box).innerHTML=`<h4>오늘 화면에 적어 둔 내 메모</h4><dl>${h}</dl>`;
+}
+
+/* 뒤집는 카드 */
+function flipCards(box,items){
+  $(box).innerHTML=items.map(c=>`<div class="tcard" tabindex="0"><div class="in"><div class="f"><i>${c.ic||''}</i><b>${c.f}</b>${c.s?`<small>${c.s}</small>`:''}</div><div class="b">${c.b}${c.x?`<div class="x">${c.x}</div>`:''}</div></div></div>`).join('');
+  $(box).querySelectorAll('.tcard').forEach(t=>{const f=()=>t.classList.toggle('flip'); t.onclick=f; t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+}
+
+/* 분류 게임: 문장을 보고 알맞은 묶음 고르기 */
+function sorter(box,cfg){
+  const B=$(box);
+  function start(){
+    const order=shuffle(cfg.items.map((_,i)=>i)); let pos=0, ok=0; const placed=cfg.cats.map(()=>[]);
+    B.innerHTML=`<div class="sit"><div class="cnt"></div><div class="ic"></div><div class="sq"></div><div class="row btns">${cfg.cats.map((c,j)=>`<button class="btn sm cat" style="--k:${c.k}" data-j="${j}">${c.n}</button>`).join('')}</div><div class="fb"></div><div class="row nx" style="margin-top:8px"></div></div><div class="board" style="--n:${cfg.cats.length}">${cfg.cats.map(c=>`<div style="--k:${c.k}"><b>${c.n}</b></div>`).join('')}</div>`;
+    const sq=B.querySelector('.sq'), ic=B.querySelector('.ic'), cnt=B.querySelector('.cnt'), fb=B.querySelector('.fb'), nx=B.querySelector('.nx'), btns=[...B.querySelectorAll('.cat')], cols=[...B.querySelectorAll('.board>div')];
+    function show(){
+      if(pos>=order.length){cnt.textContent=''; ic.textContent='🎉'; sq.innerHTML=`${order.length}개 중 <b>${ok}개</b>를 바로 맞혔어요.`; fb.innerHTML=cfg.end||''; btns.forEach(b=>b.style.display='none'); nx.innerHTML='<button class="btn ghost sm">처음부터 다시</button>'; nx.firstChild.onclick=start; return;}
+      const it=cfg.items[order[pos]]; cnt.textContent=`${pos+1} / ${order.length}`; ic.textContent=it.ic||''; sq.innerHTML=it.t; fb.textContent=''; nx.innerHTML=''; btns.forEach(b=>{b.disabled=false;b.style.display='';});
+    }
+    btns.forEach(b=>b.onclick=()=>{
+      const it=cfg.items[order[pos]], j=+b.dataset.j, right=j===it.c; if(right) ok++;
+      btns.forEach(x=>x.disabled=true);
+      fb.innerHTML=(right?'<span class="ok">맞아요!</span> ':`<span class="ng">아쉬워요.</span> 정답은 <b>${cfg.cats[it.c].n}</b>. `)+(it.w||'');
+      const s=document.createElement('span'); s.innerHTML=it.short||it.t; if(!right) s.className='x'; cols[it.c].appendChild(s);
+      nx.innerHTML='<button class="btn sm">다음 →</button>'; nx.firstChild.onclick=()=>{pos++;show();}; nx.firstChild.focus();
+    });
+    show();
+  }
+  start();
+}
+
+/* 탭 보기: 버튼을 누르면 내용 바꾸기 */
+function tabs(btnBox,viewBox,items,render){
+  $(btnBox).innerHTML=items.map((it,i)=>`<button data-i="${i}"><span class="e">${it.ic||''}</span><b>${it.n}</b></button>`).join('');
+  const bs=[...$(btnBox).querySelectorAll('button')];
+  const pick=i=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); $(viewBox).innerHTML=render(items[i],i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i)); pick(0);
+}
+
+/* 투표: 고르면 결과 보이기 (이 기기에만 저장) */
+function vote(box,key,opts,onPick){
+  const B=$(box); B.innerHTML=opts.map((o,i)=>`<button data-i="${i}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')];
+  const pick=(i,save)=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); if(save){MEMO[key]=opts[i][0]; store.set(MK,MEMO);} onPick&&onPick(i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i,true));
+  const prev=opts.findIndex(o=>o[0]===MEMO[key]); if(prev>=0) pick(prev,false);
+}
+function chips(box,key,opts,multi){
+  const B=$(box); B.classList.add('chk'); B.innerHTML=opts.map(o=>`<button>${o}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')]; let sel=(MEMO[key]||'').split(' · ').filter(Boolean);
+  const draw=()=>bs.forEach(b=>b.classList.toggle('on',sel.includes(b.textContent)));
+  bs.forEach(b=>b.onclick=()=>{const t=b.textContent; if(multi) sel=sel.includes(t)?sel.filter(x=>x!==t):[...sel,t]; else sel=sel.includes(t)?[]:[t]; MEMO[key]=sel.join(' · '); store.set(MK,MEMO); draw(); B.dispatchEvent(new Event('memo'));});
+  draw();
+}
+/* 교과서 26쪽 표 Ⅰ-6 학생 수강 데이터 */
+const AT_COLS=['이름','성별','성취도','등급','출석 일수','출석률','이수 여부'];
+const AT_ROWS=[
+  ['유선재','남','A','1','64','1.00','이수'],
+  ['이나은','남','C','3','52','0.81','이수'],
+  ['김소희','여','B','1','58','0.91','이수'],
+  ['최영현','여','I','5','43','0.67','미이수'],
+  ['정세영','남','E','5','25','0.39','미이수']
+];
+const AT_TY=['범주형-명목형','범주형-순서형','수치형-연속형','수치형-이산형'];
+const AT_TYS=['범주 · 명목','범주 · 순서','수치 · 연속','수치 · 이산'];
+/* 받침에 따라 조사 고르기: josa('등급','은','는') */
+const josa=(w,a,b)=>{const c=w.charCodeAt(w.length-1)-0xAC00; if(c<0||c>11171) return a+'('+b+')'; const j=c%28; if(a==='으로') return (j===0||j===8)?'로':'으로'; return j?a:b;};
+
+/* 0 시작 · 05 정리: 앞 차시에 적은 나의 계획 보여 주기 (u1-data-science 14쪽, u1-data-types 22쪽) — 읽기만 함 */
+(function(){
+  const rd=(lid,key)=>{ try{ return String((store.get('ds-'+lid+'-memo'+WHO.sfx,{})||{})[key]||'').trim(); }catch(e){ return ''; } };
+  const p14=rd('u1-data-science','planLearn'), p22=rd('u1-data-types','plan');
+  const box=(t,v)=>v?`<b>${t}</b><span>${esc(v)}</span>`:'';
+  const h1=box('지난 시간(22쪽)에 적은 나의 계획',p22);
+  const h2=box('「데이터 과학의 이해」 처음(14쪽)에 적은 나의 계획',p14)+box('「데이터의 형태와 속성」 처음(22쪽)에 적은 나의 계획',p22);
+  $('atPrev').innerHTML=h1; $('atPrev').style.display=h1?'':'none';
+  $('atPrev2').innerHTML=h2||'<span class="muted">이 기기에 저장된 앞 시간 계획 메모가 없어요. 기억나는 대로 떠올려 점검해요.</span>';
+})();
+
+/* 01 표 Ⅰ-6 누르기 */
+(function(){
+  const T=$('atT6'), info=$('atInfo'); let added=false;
+  const EXTRA={cols:['학년','반','번호'],vals:[['2','3','11'],['2','3','15'],['2','3','4'],['2','3','19'],['2','3','23']]};
+  function draw(){
+    const cols=added?[...EXTRA.cols,...AT_COLS]:AT_COLS;
+    const rows=AT_ROWS.map((r,i)=>added?[...EXTRA.vals[i],...r]:r);
+    T.innerHTML='<tr>'+cols.map((c,j)=>`<th data-j="${j}" class="${added&&j<3?'new':''}" tabindex="0">${c}</th>`).join('')+'</tr>'+
+      rows.map((r,i)=>'<tr>'+r.map((v,j)=>`<td data-i="${i}" data-j="${j}" class="${added&&j<3?'new':''}" tabindex="0">${v}</td>`).join('')+'</tr>').join('');
+    const clear=()=>T.querySelectorAll('.hl,.hh').forEach(x=>x.classList.remove('hl','hh'));
+    const head=j=>T.querySelector(`th[data-j="${j}"]`);
+    T.querySelectorAll('th').forEach(th=>{const f=()=>{
+      clear(); const j=+th.dataset.j; th.classList.add('hh'); T.querySelectorAll(`td[data-j="${j}"]`).forEach(td=>td.classList.add('hl'));
+      info.innerHTML=`<b>속성명</b> 「${cols[j]}」 · 이 속성의 <b>속성값</b>: ${rows.map(r=>`<span class="at-v">${r[j]}</span>`).join(' ')}`+(added&&j<3?' <span class="muted">(예시 값)</span>':'');
+    }; th.onclick=f; th.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+    T.querySelectorAll('td').forEach(td=>{const f=()=>{
+      clear(); const i=+td.dataset.i, j=+td.dataset.j; td.classList.add('hl'); head(j).classList.add('hh');
+      info.innerHTML=`<b>${rows[i][added?3:0]}</b> 학생의 <b>「${cols[j]}」</b> 속성의 속성값은 <span class="at-v">${rows[i][j]}</span>이에요.`+(added&&j<3?' <span class="muted">(예시 값)</span>':'');
+    }; td.onclick=f; td.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+  }
+  $('atAdd').onclick=()=>{
+    added=!added; draw();
+    $('atAdd').textContent=added?'원래 표로 돌아가기':'속성 추가해 보기';
+    info.innerHTML=added?'<b>학년 · 반 · 번호</b> 속성을 앞에 추가했어요(값은 예시). 학급 단위로 이수 여부를 확인하려면 학생이 어느 학급의 누구인지 알아야 하니까요. 이처럼 데이터의 속성은 <b>수집 목적</b>에 따라 골라요.':'표의 이름이나 칸을 눌러 보세요.';
+  };
+  draw();
+})();
+
+/* 02 속성 형태 판별기 (27쪽 Q1~Q6) */
+(function(){
+  const A=[
+    {n:'이름',t:0,w:'서로 다른 사람을 구별하기 위한 고윳값을 사용해요. 순서나 위계가 없어요.'},
+    {n:'성별',t:0,w:'「남」, 「여」 중 한 가지를 사용하고, 순서나 위계의 개념이 없어요.'},
+    {n:'성취도',t:1,w:'A, B, C, D, E, I의 6개 문자를 사용하고, 성취도 B보다 A가 더 높다는 위계가 있어요.'},
+    {n:'등급',t:1,w:'1~5 숫자를 쓰지만 숫자 사이 간격이 일정하지 않고, 등급을 구분하는 데 써요. 2등급보다 1등급의 성적이 더 높아요.'},
+    {n:'출석 일수',t:3,w:'양을 나타내는 값으로 1보다 2는 정확히 1만큼 많지만 1.5 같은 중간값이 없어요.'},
+    {n:'출석률',t:2,w:'양을 나타내는 값으로 소수점을 사용해 중간값을 표현해요.'},
+    {n:'이수 여부',t:0,w:'「이수」, 「미이수」 중 한 가지를 사용하고, 순서나 위계의 개념이 없어요.'}
+  ];
+  const B=$('atJudge'); let done, jc=-1;
+  function pickBar(){
+    return `<div class="at-jpick">${A.map((a,i)=>`<button class="${i===jc?'on':''}${done[i]?' ok':''}" data-i="${i}">${done[i]?'✓ ':''}${a.n}</button>`).join('')}</div>`;
+  }
+  function home(msg){
+    const n=done.filter(Boolean).length;
+    B.innerHTML=pickBar()+`<div class="at-jbox">${msg||'판별할 속성을 위에서 골라요.'}<div class="at-jcnt">${n} / 7 판별 완료${n===7?' · <button class="btn ghost sm" id="atJAll">처음부터 다시</button>':''}</div></div>`;
+    bindPick(); const r=$('atJAll'); if(r) r.onclick=()=>{done=A.map(()=>false);jc=-1;home();};
+  }
+  function bindPick(){ B.querySelectorAll('.at-jpick button').forEach(b=>b.onclick=()=>{jc=+b.dataset.i; step1();}); }
+  const vals=i=>`<div class="at-jvals"><b>${A[i].n}</b>의 속성값: ${AT_ROWS.map(r=>`<span class="at-v">${r[AT_COLS.indexOf(A[i].n)]}</span>`).join(' ')}</div>`;
+  function ask(q,opts,fn){
+    B.innerHTML=pickBar()+`<div class="at-jbox">${vals(jc)}<p class="at-jq">${q}</p><div class="row">${opts.map((o,k)=>`<button class="btn ghost sm" data-k="${k}">${o}</button>`).join('')}</div></div>`;
+    bindPick(); B.querySelectorAll('.at-jbox .btn').forEach(b=>b.onclick=()=>fn(+b.dataset.k));
+  }
+  function step1(){
+    ask('<b>Q1 · Q4</b> 이 속성값은 숫자로 표기하면서 <b>양</b>을 의미하나요, 아니면 <b>질(분류)</b>을 의미하나요?',['양을 의미해요 → 수치형','질(분류)을 의미해요 → 범주형'],k=>{
+      const isNum=k===0, right=(A[jc].t>=2)===isNum;
+      const numVals=AT_ROWS.every(r=>!isNaN(parseFloat(r[AT_COLS.indexOf(A[jc].n)])));
+      if(!right) return result(isNum?'수치형':'범주형',false,isNum?(numVals?'숫자로 적혀 있어도 개수나 비율 같은 <b>양</b>을 나타내는지 따져 봐요. 이 값은 무언가를 구분하는 데 쓰여요.':'이 속성값은 <b>문자</b>예요. Q1은 「숫자로 표기하면서 양을 의미하는가」를 물어요. 문자는 더하거나 평균을 낼 수 있는 양이 아니에요.'):'이 값은 개수나 비율처럼 <b>양</b>을 나타내요. 크고 작음을 계산할 수 있는지 생각해 봐요.');
+      if(isNum) ask('<b>Q2 · Q3</b> 수치형이에요. 속성값을 <b>실수(소수점)</b>로 표현하나요, <b>정수</b>로 표현하나요?',['실수로 표현해요 → 연속형','정수로 표현해요 → 이산형'],k2=>{const t=k2===0?2:3; result(AT_TY[t],t===A[jc].t,t===A[jc].t?'':'값에 소수점이 있는지 다시 살펴봐요.');});
+      else ask('<b>Q5 · Q6</b> 범주형이에요. 분류에 <b>위계나 좋고 나쁨</b>의 의미가 포함되어 있나요?',['없어요, 단순히 분류만 해요 → 명목형','있어요 → 순서형'],k2=>{const t=k2===0?0:1; result(AT_TY[t],t===A[jc].t,t===A[jc].t?'':(t===0?'값 사이에 「더 높다·더 좋다」 같은 순서가 있는지 생각해 봐요.':'값을 바꿔 적어도 높고 낮음이 생기는지 생각해 봐요.'));});
+    });
+  }
+  function result(name,ok,hint){
+    const a=A[jc];
+    if(ok){ done[jc]=true;
+      const n=done.filter(Boolean).length;
+      home(`${vals(jc)}<p class="at-jr ok">✓ 「${a.n}」${josa(a.n,'은','는')} <b>${AT_TY[a.t]}</b></p><p class="at-jw">${a.w}</p>${n===7?'<p class="at-jw"><b>모두 판별했어요!</b> 아래 「표 Ⅰ-7과 표 Ⅰ-8로 확인하기」를 열어 비교해 보세요. 숫자로 적힌 등급이 범주형인 것을 놓치지 않았나요?</p>':'<p class="at-jw muted">다음 속성을 골라요.</p>'}`);
+    } else {
+      B.innerHTML=pickBar()+`<div class="at-jbox">${vals(jc)}<p class="at-jr ng">✗ ${name}${josa(name,'으로','로')} 판별했어요. 다시 생각해 봐요.</p><p class="at-jw">${hint}</p><button class="btn sm" id="atJRe">다시 판별하기</button></div>`;
+      bindPick(); $('atJRe').onclick=step1;
+    }
+  }
+  done=A.map(()=>false); home();
+})();
+
+/* 02 같은 1, 다른 의미 (그림 Ⅰ-3) */
+(function(){
+  const O=[
+    {h:['불량품 개수','라인','월','담당'],r:[['0','A','9','홍'],['1','B','9','김'],['2','C','9','박']],hl:[1,0],a:3,w:'불량품을 센 개수라 1과 2 사이의 중간값이 없어요.'},
+    {h:['종류','성별','몸무게','서식지'],r:[['젠투','0','4500','●●'],['아델리','1','3750','▲▲']],hl:[1,1],a:0,w:'0과 1은 펭귄의 성별을 구분하는 기호예요. 1이 0보다 크다는 뜻이 없어요.'},
+    {h:['제출일','제목','일치도'],r:[['25-01-04','●●●','1.00'],['25-01-03','▲▲▲▲','0.23'],['25-01-05','◆◆◆','0.95']],hl:[0,2],a:2,w:'얼마나 일치하는지를 소수로 나타낸 양이라 0.95처럼 중간값이 있어요.'},
+    {h:['가공일','등급','장소','종류','검사'],r:[['0926','1','★★','안심','합격'],['0926','2','◇◇','등심','합격']],hl:[0,1],a:1,w:'고기의 등급을 나타내는 1이라, 2등급보다 높다는 순서가 있어요.'}
+  ];
+  let pick;
+  const card=(o,i)=>`<div class="at-oc${pick[i]==null?'':(pick[i]===o.a?' good':' bad')}"><div class="at-scroll"><table class="at-mini"><tr>${o.h.map(x=>`<th>${x}</th>`).join('')}</tr>${o.r.map((r,ri)=>`<tr>${r.map((v,ci)=>`<td class="${ri===o.hl[0]&&ci===o.hl[1]?'one':''}">${v}</td>`).join('')}</tr>`).join('')}</table></div>
+      <div class="at-ob">${AT_TYS.map((t,j)=>`<button class="${pick[i]===j?'on':''}" data-i="${i}" data-j="${j}"${pick[i]!=null?' disabled':''}>${t}</button>`).join('')}</div>
+      ${pick[i]==null?'':`<p class="at-jw">${pick[i]===o.a?'<span class="ok">맞아요.</span>':`<span class="ng">정답은 ${AT_TY[o.a]}.</span>`} ${o.w}</p>`}</div>`;
+  function draw(){
+    $('atOne').innerHTML=O.slice(0,2).map((o,i)=>card(o,i)).join('');
+    $('atOneMore').innerHTML=O.slice(2).map((o,i)=>card(o,i+2)).join('');
+    ['atOne','atOneMore'].forEach(id=>$(id).querySelectorAll('button').forEach(b=>b.onclick=()=>{pick[+b.dataset.i]=+b.dataset.j; draw();}));
+  }
+  $('atOneRe').onclick=()=>{pick=O.map(()=>null); draw();};
+  pick=O.map(()=>null); draw();
+})();
+
+/* 03 출석률 계산기 · 점그래프 */
+(function(){
+  const days=AT_ROWS.map(r=>+r[4]), rate=AT_ROWS.map(r=>r[5]);
+  function calc(){
+    const N=+$('atDays').value; $('atDaysOut').textContent=N;
+    let ok=0;
+    $('atCalc').innerHTML='<tr><th>이름</th><th>출석 일수</th><th>출석 일수 ÷ '+N+'</th><th>표의 출석률</th><th></th></tr>'+
+      AT_ROWS.map((r,i)=>{const c=(days[i]/N).toFixed(2), m=c===rate[i]; if(m) ok++; return `<tr><td>${r[0]}</td><td>${days[i]}</td><td>${c}</td><td>${rate[i]}</td><td class="${m?'ok':'ng'}">${m?'✓':'✗'}</td></tr>`;}).join('');
+    $('atCalcMsg').innerHTML=ok===5?`<span class="ok">5명 모두 맞았어요!</span> 전체 수업 일수는 <b>${N}일</b>로 보여요. 출석률 = 출석 일수 ÷ ${N}. 출석 일수가 늘면 출석률도 같은 비율로 늘어나는 <b>정비례</b> 관계예요.`:`${ok}명이 맞아요. 막대를 움직여 5명이 모두 맞는 수업 일수를 찾아보세요.`;
+  }
+  $('atDays').oninput=calc; calc();
+  /* 점그래프: 가로 출석 일수(0~70), 세로 출석률(0~1) */
+  const S=$('atScatter'), X=d=>40+d/70*265, Y=v=>180-v*160;
+  for(let v=0;v<=1.001;v+=.25){el('line',{x1:40,x2:305,y1:Y(v),y2:Y(v),class:'gl'},S); el('text',{x:34,y:Y(v)+4,class:'tk','text-anchor':'end'},S,v.toFixed(2));}
+  for(let d=0;d<=70;d+=10){el('text',{x:X(d),y:196,class:'tk','text-anchor':'middle'},S,d);}
+  el('line',{x1:X(0),y1:Y(0),x2:X(70),y2:Y(70/64),class:'at-ln'},S);
+  el('text',{x:172,y:208,class:'axl','text-anchor':'middle'},S,'출석 일수');
+  el('text',{x:44,y:14,class:'axl'},S,'출석률');
+  AT_ROWS.forEach((r,i)=>{el('circle',{cx:X(days[i]),cy:Y(+rate[i]),r:5.5,class:'at-pt'},S); const far=days[i]>55; el('text',{x:X(days[i])+(far?-8:8),y:Y(+rate[i])+(far?4:12),class:'tk','text-anchor':far?'end':'start'},S,r[0]);});
+})();
+
+/* 03 투표: 5명으로 관계를 말할 수 있을까? */
+vote('atVote','sexVote',[['관계가 있다','남학생이 이수한 비율이 더 높으니까'],['아직 알 수 없다','5명은 너무 적으니까']],()=>$('atVoteAns').classList.add('on'));
+
+/* 04 수면·건강 데이터 속성 판별 (교과서 29쪽) — a: 맞는 답(판단이 갈리면 두 개) */
+(function(){
+  const S=[
+    {n:'성별',v:'남성',a:[0],w:'남성·여성을 구분하는 값이고 순서나 위계가 없어요.'},
+    {n:'나이',v:'27, 28',a:[3],w:'나이는 몇 해를 살았는지 <b>햇수를 센 값</b>이라 Q3대로 이산형이에요. 혈압이나 활동 시간은 「재는 양」이라 판단이 갈리지만, 나이는 「세는 값」이라 이산형 하나로 봐요.'},
+    {n:'직업',v:'소프트웨어 엔지니어, 의사, 영업 사원',a:[0],w:'직업을 분류하는 이름이고 좋고 나쁨의 순서가 없어요(Q5).'},
+    {n:'수면 시간(시)',v:'6.1, 6.2, 5.9',a:[2],w:'잠을 잔 시간의 양을 소수점이 있는 실수로 나타내 중간값을 표현해요(Q2).'},
+    {n:'수면 질(1-10)',v:'6, 6, 4',a:[3,1],w:'<b>판단이 갈리는 속성</b>이에요. 1~10을 정수 점수로 보면 수치형-이산형, 만족도처럼 「좋고 나쁨의 단계」로 보면 범주형-순서형이에요. 어느 쪽인지보다 왜 그렇게 보았는지가 중요해요.'},
+    {n:'신체 활동 수준(분)',v:'42, 60, 30',a:[3,2],w:'<b>판단이 갈리는 속성</b>이에요. 분 단위 정수로 적혀 있으니 이산형(Q3)으로 볼 수 있고, 활동한 시간은 본래 연속된 양이라 연속형으로 볼 수도 있어요.'},
+    {n:'스트레스 지수(1-10)',v:'6, 8, 8',a:[3,1],w:'<b>판단이 갈리는 속성</b>이에요. 수면 질처럼 1~10 점수예요. 정수 점수로 보면 이산형, 높고 낮음의 단계로 보면 순서형이에요.'},
+    {n:'체질량 지수',v:'과체중, 정상, 비만',a:[1],w:'숫자가 아니라 정상, 과체중, 비만처럼 위계가 있는 문자로 분류했어요(Q6).'},
+    {n:'혈압',v:'126/83, 125/80, 140/90',a:[2,3],w:'<b>판단이 갈리는 속성</b>이에요. 수축기 혈압과 이완기 혈압 두 수치를 「/」로 함께 적은 값이에요. 혈압은 연속된 양을 재는 값이라 연속형으로 볼 수 있고, 정수로 적혀 있어 이산형으로 볼 수도 있어요. 분석할 때는 두 수치를 나누어 두 속성으로 저장하면 편해요.'},
+    {n:'심박수',v:'77, 75, 85',a:[3],w:'1분 동안 심장이 뛴 횟수를 정수로 나타내요(Q3).'},
+    {n:'일일 걸음 수',v:'4200, 10000, 3000',a:[3],w:'걸음의 개수를 센 값이라 중간값이 없어요(Q3).'},
+    {n:'수면 장애',v:'없음, 수면 무호흡',a:[0],w:'수면 장애의 종류를 분류하는 값이고 순서가 없어요(Q5).'}
+  ];
+  const B=$('atSleep'); let pick, done;
+  function draw(){
+    B.innerHTML='<div class="at-srows">'+S.map((s,i)=>{
+      const st=done?(pick[i]==null?' bad':(s.a.includes(pick[i])?(s.a.length>1?' amb':' good'):' bad')):'';
+      return `<div class="at-sr${st}"><div class="at-sn"><b>${s.n}</b><small>${s.v}</small></div><div class="at-ob">${AT_TYS.map((t,j)=>`<button class="${pick[i]===j?'on':''}" data-i="${i}" data-j="${j}"${done?' disabled':''}>${t}</button>`).join('')}</div>${done?`<p class="at-jw">${pick[i]!=null&&s.a.includes(pick[i])?'<span class="ok">맞아요.</span>':`<span class="ng">${s.a.map(x=>AT_TY[x]).join(' 또는 ')}</span>`} ${s.w}</p>`:''}</div>`;
+    }).join('')+'</div>';
+    B.querySelectorAll('button').forEach(b=>b.onclick=()=>{pick[+b.dataset.i]=+b.dataset.j; draw();});
+  }
+  function start(){ pick=S.map(()=>null); done=false; draw(); $('atSleepMsg').textContent='12개를 모두 고르면 확인할 수 있어요.'; }
+  $('atSleepOk').onclick=()=>{
+    const left=pick.filter(p=>p==null).length;
+    if(left){ $('atSleepMsg').textContent=`아직 ${left}개를 고르지 않았어요.`; return; }
+    done=true; draw();
+    const ok=S.filter((s,i)=>s.a.includes(pick[i])).length;
+    $('atSleepMsg').innerHTML=`<b>12개 중 ${ok}개</b>가 맞아요. <span class="at-key amb">노란 줄</span>은 판단이 갈리는 속성이에요. 친구와 「왜 그렇게 보았는지」 이야기해 보고, 질문폼 3번에 활용해요.`;
+    MEMO.sleepTypes=S.map((s,i)=>`${s.n}: ${AT_TY[pick[i]]}`).join(' · '); store.set(MK,MEMO);
+  };
+  $('atSleepRe').onclick=start;
+  start();
+})();
+
+/* 04 개념 빈칸 · 성취도 평가 */
+document.querySelectorAll('.at-blanks .blank').forEach(b=>b.onclick=()=>{b.textContent=b.dataset.a; b.classList.add('on');});
+chips('atSelf','selfCheckPick',['속성명과 속성값을 구분할 수 있다','범주형과 수치형을 구분할 수 있다','명목형·순서형·연속형·이산형을 판별할 수 있다','두 속성의 관계를 근거와 함께 말할 수 있다'],true);
+
+/* 05 정리 (선택): 자전거 대여 데이터 (새로 만든 예시) */
+sorter('atBike',{
+  cats:[{n:'수치형',k:'#2f6fd0'},{n:'범주형',k:'#e0702b'}],
+  items:[
+    {t:'대여 번호 (예: B-0412, B-0413)',short:'대여 번호',c:1,ic:'🔖',w:'대여 건을 구별하는 고윳값이라 크기를 비교하거나 계산하지 않아요.'},
+    {t:'이동 거리 (예: 3.2km, 7.8km)',short:'이동 거리',c:0,ic:'📏',w:'거리라는 양을 소수점이 있는 숫자로 나타내요.'},
+    {t:'대여소 이름 (예: 정문 앞, 체육관 옆)',short:'대여소 이름',c:1,ic:'📍',w:'대여소를 구분하는 이름이에요.'},
+    {t:'이용 시간 (예: 25분, 48분)',short:'이용 시간',c:0,ic:'⏱️',w:'시간의 양을 숫자로 나타내요.'},
+    {t:'요금제 (예: 일반, 정기권)',short:'요금제',c:1,ic:'💳',w:'요금제의 종류를 나누는 값이에요.'},
+    {t:'이용자 연령대 (예: 10대, 20대, 30대)',short:'이용자 연령대',c:1,ic:'👥',w:'나이를 구간으로 묶어 몇 개의 항목으로 나누었어요. 순서가 있는 범주예요(표 Ⅰ-9의 고객 연령처럼).'},
+    {t:'하루 대여 횟수 (예: 3회, 5회)',short:'하루 대여 횟수',c:0,ic:'🔁',w:'횟수를 센 값이라 계산할 수 있어요.'},
+    {t:'헬멧 착용 여부 (예: 0, 1)',short:'헬멧 착용 여부',c:1,ic:'⛑️',w:'숫자로 적었지만 착용했는지 아닌지를 나누는 기호예요. 그림 Ⅰ-3의 펭귄 성별 0, 1과 같아요.'}
+  ],
+  end:'<b>정리</b> 숫자로 적혀 있어도 <b>구분하는 기호</b>면 범주형이고, 구간으로 묶은 값도 범주형으로 다뤄요. 양을 재거나 센 값이 수치형이에요.'
+});
+chips('atLevel','levelPick',['정형 데이터와 비정형 데이터의 개념을 설명할 수 있다','데이터에서 수치형 데이터와 범주형 데이터를 구분할 수 있다','데이터를 기반으로 합리적 의사 결정을 하려는 태도를 가지고 있다'],true);
+
+/* 06 마무리 */
+const MEMOLIST=[['planGuess','처음 생각: 같은 「1」이 다른 뜻이 되는 예'],['numTrap','숫자라고 계산해도 될까(등급의 평균)'],['sexVote','5명으로 성별과 이수 여부의 관계를 말할 수 있을까(투표)'],['sleepTypes','수면·건강 데이터 속성 판별'],['relMemo','속성 간의 관계와 근거'],['valueMemo','데이터 분석의 잠재적 가치(한 문장)'],['selfCheckPick','성취도 평가: 할 수 있게 된 것'],['capDiff','(선택) 정형·비정형 데이터의 차이'],['capCar','(선택) 중고차 데이터 수치형·범주형'],['capEthics','(선택) 데이터 기반 의사 결정과 윤리'],['levelPick','(선택) 내 실력 점검'],['boothData','(선택) 보충: 축제 음식 부스 데이터'],['deepData','(선택) 심화: 공개 데이터 분석'],['planCheck','(선택) 나의 계획 점검'],['newLearn','(선택) 새롭게 알게 된 점'],['keyQ','오늘의 질문에 대한 내 답']];
+/* (선택) 항목은 쓴 것만 모아 보기에 보이기 */
+onShow[6]=()=>memoSummary('msum',MEMOLIST.filter(([k,l])=>!l.startsWith('(선택)')||String(MEMO[k]||'').trim()));
+
+/* 진도 보내기 ②: 화면 이동·퀴즈·메모·창 이탈을 선생님 시트로 */
+(function(){
+  if(WHO.off) return;
+  const box=document.createElement('div');
+  if(WHO.preview){
+    box.className='tr-badge';
+    box.innerHTML=WHO.teacher?'교사 모드 · 전송 안 함 <button type="button">끝내기</button>':'미리보기 · 진도 전송 안 함';
+    (document.querySelector('.top')||document.body).appendChild(box);
+    const b=box.querySelector('button'); if(b) b.onclick=()=>{ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); };
+    return;
+  }
+
+  if(WHO.need){
+    let last={}; try{last=JSON.parse(localStorage.getItem('aiw-last')||'{}')||{};}catch(e){}
+    box.className='tr-gate';
+    box.innerHTML=`<form class="tr-card" autocomplete="off">
+      <h2>수업 시작 전에</h2>
+      <p class="tr-sub">학번과 이름을 써 주세요.</p>
+      <label class="tr-f"><span>학번</span><input name="no" inputmode="numeric" maxlength="5" placeholder="예: 20101" value="${esc(last.no||'')}"></label>
+      <label class="tr-f"><span>이름</span><input name="name" maxlength="10" placeholder="이름" value="${esc(last.name||'')}"></label>
+      <div class="tr-cls" hidden>${[].map(c=>`<label><input type="radio" name="cls" value="${c}"><span>${c}</span></label>`).join('')}</div>
+      <div class="tr-err"></div>
+      <button class="btn" type="submit">시작하기 →</button>
+      <p class="tr-note">어느 화면까지 왔는지, 퀴즈와 메모가 선생님께 전달돼요.<br>다른 친구 이름으로 들어가지 마세요.</p>
+    </form>`;
+    document.body.appendChild(box);
+    const f=box.querySelector('form'), err=box.querySelector('.tr-err'), go2=f.querySelector('button[type=submit]'), clsBox=box.querySelector('.tr-cls');
+    f.no.addEventListener('input',()=>{f.no.value=f.no.value.replace(/\D/g,'').slice(0,5);});
+    const TEACH=t=>{let h=2166136261;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return h.toString(36);}, TEACH_H='853zuh';
+    const enter=w=>{ try{sessionStorage.setItem('aiw-who',JSON.stringify(w)); if(!w.teacher) localStorage.setItem('aiw-last',JSON.stringify({no:w.no,name:w.name}));}catch(e){} location.reload(); };
+    const busy=on=>{ go2.disabled=on; go2.textContent=on?'명단에서 확인하는 중…':'시작하기 →'; };
+    f.onsubmit=async e=>{
+      e.preventDefault(); err.textContent='';
+      const no=f.no.value.trim(), name=f.name.value.replace(/\s+/g,'').trim();
+      if(TEACH(no+'|'+name)===TEACH_H) return enter({teacher:true});
+      if(!/^\d{5}$/.test(no)){err.textContent='학번 다섯 자리를 숫자로 써 주세요.';f.no.focus();return;}
+      if(name.length<2){err.textContent='이름을 써 주세요.';f.name.focus();return;}
+      /* 명단에서 확인이 안 될 때만 반을 직접 고른다 */
+      if(!clsBox.hidden){
+        const cls=(f.querySelector('input[name=cls]:checked')||{}).value;
+        if(!cls){err.textContent='반을 골라 주세요.';return;}
+        return enter({cls,no,name});
+      }
+      busy(true);
+      try{
+        const r=await fetch(PEP,{method:'POST',body:JSON.stringify({op:'who',no,name})});
+        const d=await r.json();
+        if(d.ok) return enter({cls:d.cls,no,name});
+        busy(false);
+        if(d.err==='notfound'){ err.textContent='명단에서 찾지 못했어요. 학번과 이름을 다시 확인해 주세요. 계속 안 되면 선생님께 말해 주세요.'; return; }
+        throw new Error(d.err);
+      }catch(x){
+        busy(false);
+        if(clsBox.hidden){ clsBox.hidden=false; err.textContent='명단을 확인하지 못했어요. 내 반을 골라 주세요.'; }
+      }
+    };
+    setTimeout(()=>{ (f.no.value?(f.name.value?go2:f.name):f.no).focus(); },50);
+    return;
+  }
+
+  /* 이름 표시 + 바꾸기 */
+  box.className='tr-who';
+  box.innerHTML=`<span>${esc(WHO.cls)} ${esc(WHO.no)} <b>${esc(WHO.name)}</b></span><button type="button" title="다른 학생으로 바꾸기">바꾸기</button>`;
+  (document.querySelector('.top')||document.body).appendChild(box);
+  box.querySelector('button').onclick=()=>{ if(confirm('다른 학생으로 바꿀까요? (지금까지 한 것은 이 학번으로 저장돼 있어요)')){ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); } };
+
+  const SK=QK+'-seen', AK=QK+'-away';
+  const seen=new Set(store.get(SK,[]));
+  const A=store.get(AK,{n:0,s:0});
+  let awayAt=null, lastAct=Date.now(), sent=0, lastSent=0, tmr=null, dirty=false;
+
+  function snap(){
+    let ok=0, done=0;
+    for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{const v=QS[k+'-'+i]; if(v!=null){done++; if(v===it.a) ok++;}});
+    const ML=(typeof MEMOLIST!=='undefined')?MEMOLIST:[];
+    return {op:'put',lesson:LESSON,title:document.title,cls:WHO.cls,no:WHO.no,name:WHO.name,
+      scr:cur,names:pages.map((p,i)=>i?p.dataset.name:'시작'),seen:[...seen].sort((a,b)=>a-b),
+      qOk:ok,qDone:done,qTot:TOTALQ,
+      memo:ML.map(([k,l])=>[l,String(MEMO[k]==null?'':MEMO[k]).slice(0,1500)]),
+      away:awayAt?1:0,leaves:A.n,awaySec:Math.round(A.s+(awayAt?(Date.now()-awayAt)/1000:0)),idle:Math.round((Date.now()-lastAct)/1000),n:++sent};
+  }
+  function flush(){
+    if(!dirty) return; dirty=false; lastSent=Date.now();
+    const body=JSON.stringify(snap());
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(PEP,new Blob([body],{type:'text/plain'}))) return; }catch(e){}
+    try{ fetch(PEP,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  /* 너무 자주 보내지 않기: 보통 15초, 창 이탈·복귀는 3초 간격 */
+  function send(urgent){
+    dirty=true; clearTimeout(tmr);
+    const gap=urgent?3000:15000, wait=Math.max(0,gap-(Date.now()-lastSent));
+    tmr=setTimeout(flush,wait);
+  }
+
+  const _go=go; go=function(i){ _go(i); if(!seen.has(cur)){seen.add(cur); store.set(SK,[...seen]);} send(true); };
+  const _upd=updScore; updScore=function(){ _upd(); send(); };
+  const _set=store.set; store.set=function(k,v){ _set(k,v); if(k===MK) send(); };
+
+  function leave(){ if(awayAt) return; awayAt=Date.now(); A.n++; _set(AK,A); send(true); }
+  function back(){ if(!awayAt) return; A.s+=(Date.now()-awayAt)/1000; awayAt=null; _set(AK,A); send(true); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?leave():(document.hasFocus()&&back()); });
+  window.addEventListener('blur',()=>setTimeout(()=>{ if(!document.hasFocus()) leave(); },300));
+  window.addEventListener('focus',back);
+  window.addEventListener('pagehide',()=>{ dirty=true; flush(); });
+  ['pointerdown','keydown','input','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now();},{capture:true,passive:true}));
+  /* 화면에 머물러 있으면 2분마다 한 번 신호 */
+  setInterval(()=>{ if(!document.hidden) send(); },120000);
+})();
+
+/* 시작 */
+bindMemos();
+updScore();
+const h0=parseInt((location.hash.match(/^#p(\d+)$/)||[])[1],10);
+go(isNaN(h0)?0:h0);
+</script>
+<script>
+/* page-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 (복사 버튼은 그대로 동작) */
+(function(){
+  var t=null, tm=null, MSG='수업 자료는 복사할 수 없어요. 내 말로 정리해 보세요.';
+  function say(){ if(!t){t=document.createElement('div');t.className='pg-toast';document.body.appendChild(t);} t.textContent=MSG; t.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){t.classList.remove('on');},1800); }
+  function inField(e){ return e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'); }
+  ['copy','cut'].forEach(function(type){ document.addEventListener(type,function(e){ e.preventDefault(); say(); },true); });
+  document.addEventListener('contextmenu',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('selectstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('keydown',function(e){ var k=(e.key||'').toLowerCase(); if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x')){ e.preventDefault(); say(); } if((e.ctrlKey||e.metaKey)&&k==='a'&&!inField(e)) e.preventDefault(); },true);
+})();
+</script>
+</body>
+</html>

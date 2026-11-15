@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터셋과 데이터베이스</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202c; --muted:#5b6776; --paper:#f3efe7; --card:#fff; --line:#e3ddd2;
+    --navy:#0f2742; --amber:#f2a516; --red:#d64535; --mint:#1f9d74;
+    --acc:#2f6fd0; --acc-soft:#e6eefb;
+    --shadow:0 18px 50px rgba(15,39,66,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.65;
+    background-image:radial-gradient(rgba(15,39,66,.07) 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column}
+  .top{position:sticky;top:0;z-index:10;background:rgba(15,39,66,.97);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+  .brand{font-family:"Black Han Sans",sans-serif;font-size:1.15rem;letter-spacing:.01em;white-space:nowrap;color:inherit;text-decoration:none}
+  .steps{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps button{flex:0 0 auto;border:0;background:transparent;color:#9fb3cc;font:inherit;font-size:.82rem;padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .steps button.on{background:var(--amber);color:var(--navy);font-weight:900}
+  .steps button.done::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fd3a5;margin-left:5px;vertical-align:middle}
+  .score{font-size:.85rem;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .progress{height:4px;background:rgba(15,39,66,.12)}
+  .progress i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+  main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:26px 20px 30px}
+  .page{display:none}
+  .page.on{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1) both}
+  .page.on.back{animation-name:enterBack}
+  @keyframes enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes enterBack{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  .head{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .num{font-family:"Black Han Sans",sans-serif;font-size:4.2rem;line-height:.85;color:var(--acc);opacity:.9}
+  .head h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:2.1rem;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .head p{margin:4px 0 0;color:var(--muted)}
+  .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;border:1px solid rgba(0,0,0,.04)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .grid2.even{grid-template-columns:1fr 1fr}
+  @media (max-width:860px){.grid2,.grid2.even{grid-template-columns:1fr}.num{font-size:3rem}.head h2{font-size:1.6rem}}
+  h3{margin:0 0 8px;font-size:1.1rem}
+  h4{margin:0 0 4px}
+  p{margin:6px 0}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .book{display:inline-block;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:center}
+  th{color:var(--muted);font-weight:700;font-size:.85rem}
+  td.l,th.l{text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .chip.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .btn{border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;transition:transform .1s, box-shadow .2s;box-shadow:0 6px 16px rgba(15,39,66,.18)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+  .btn.sm{padding:5px 12px;font-size:.88rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctrl{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:4px 10px;margin:4px 0}
+  .ctrl label{font-weight:900;font-size:.95rem}
+  .ctrl output{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  input[type=text],input[type=number]{font:inherit;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px;background:#fff;color:var(--ink)}
+  .big{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+  .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
+  .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
+  .cx>h3{margin:0 0 4px;font-size:1.15rem}
+  .cx>.lead2{color:var(--muted);margin:0 0 12px}
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media (max-width:860px){.qa{grid-template-columns:1fr}}
+  .qa>div{background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .qa b.q{display:block;color:var(--acc);margin-bottom:3px}
+  .vsteps{list-style:none;margin:0;padding:0;counter-reset:v}
+  .vsteps>li{position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line)}
+  .vsteps>li:first-child{border-top:0}
+  .vsteps>li::before{counter-increment:v;content:counter(v);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.9rem}
+  .vsteps p{margin:2px 0 0;font-size:.93rem}
+  .case{background:#fff8e6;border:2px solid #f6d58a;border-radius:16px;padding:16px 20px;margin-bottom:18px}
+  .case>h3{margin:0 0 8px;font-size:1.05rem;color:#8a5a00}
+  /* 퀴즈 */
+  .quiz{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:16px;padding:20px 22px;margin-top:6px;box-shadow:var(--shadow)}
+  .quiz .qh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .quiz .qh b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.25rem;color:var(--amber)}
+  .quiz .qh span{font-size:.85rem;color:#a9bbd2}
+  .qi{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;margin-top:10px}
+  .qi .qq{font-weight:700;margin-bottom:8px}
+  .qi .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .qi .opts button{font:inherit;font-size:.93rem;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .qi .opts button:hover:not(:disabled){border-color:var(--amber)}
+  .qi .opts button.right{background:var(--mint);border-color:var(--mint);font-weight:700}
+  .qi .opts button.wrong{background:var(--red);border-color:var(--red);text-decoration:line-through}
+  .qi .opts button:disabled{cursor:default}
+  .qi .why{margin-top:8px;font-size:.9rem;color:#d7e3f2;display:none}
+  .qi.answered .why{display:block}
+  .qi.answered.correct{box-shadow:inset 4px 0 0 var(--mint)}
+  .qi.answered.incorrect{box-shadow:inset 4px 0 0 var(--red)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(243,239,231,.94);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+  .foot .btn{min-width:110px}
+  .foot .pg{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  /* 표지 */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 20% 0%,#24507f 0%,#0f2742 55%,#0a1a2e 100%);color:#fff;min-height:520px;padding:46px 44px;box-shadow:var(--shadow)}
+  .cover canvas{position:absolute;right:0;top:0;height:100%;width:62%;image-rendering:pixelated;opacity:.95}
+  .cover .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0f2742 34%,rgba(15,39,66,.75) 50%,rgba(15,39,66,0) 70%)}
+  .cover .in{position:relative;max-width:560px}
+  .cover .tag{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.85rem;padding:4px 12px;border-radius:999px}
+  .cover h1{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:3.1rem;line-height:1.15;margin:16px 0 10px}
+  .cover p{color:#c8d6e8;font-size:1.05rem}
+  .cover ol{margin:18px 0 26px;padding-left:20px;color:#e1e9f4;columns:2;column-gap:28px;font-size:.95rem}
+  @media (max-width:700px){.cover{padding:30px 22px}.cover h1{font-size:2.2rem}.cover ol{columns:1}.cover canvas{width:100%;opacity:.3}.cover .fade{display:none}}
+  .today{margin-top:26px}
+  .kicker{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:1.15rem;color:var(--navy);margin-bottom:6px;border-bottom:4px solid var(--amber);line-height:1.2}
+  .today-lead{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+  .today-lead p{font-size:1.12rem;margin:6px 0 0}
+  .why3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  @media (max-width:900px){.why3{grid-template-columns:1fr}}
+  .why{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 22px}
+  .why ul{margin:6px 0 0;padding-left:18px;font-size:.95rem}
+  .why li{margin:6px 0}
+  .why ul.can{list-style:none;padding:0}
+  .why ul.can li{padding-left:28px;position:relative}
+  .why ul.can li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .why ul.uses{list-style:none;padding:0}
+  .why ul.uses li{border-left:3px solid var(--amber);padding-left:10px}
+  .glossary-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .glossary-head .muted{font-size:.88rem}
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.glossary{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.glossary{grid-template-columns:1fr}}
+  .gcard{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:#fff;border-radius:14px;padding:16px 16px 12px;box-shadow:var(--shadow);border-top:6px solid var(--g);position:relative;transition:transform .18s, box-shadow .18s}
+  .gcard:hover,.gcard:focus-visible{transform:translateY(-4px);box-shadow:0 22px 50px rgba(15,39,66,.16)}
+  .gcard:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+  .gcard i{position:absolute;right:14px;top:8px;font-style:normal;font-family:"Black Han Sans",sans-serif;font-size:1.9rem;color:var(--g);opacity:.25}
+  .gcard h4{margin:0 0 6px;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;color:var(--g)}
+  .gcard dl{margin:0;font-size:.88rem;line-height:1.45}
+  .gcard dt{font-weight:900;margin-top:7px}
+  .gcard dd{margin:1px 0 0;color:#3c4654}
+  .prob{display:grid;grid-template-columns:60px 1fr 46px;gap:6px;align-items:center;font-size:.88rem;min-width:200px}
+  .prob i{display:block;height:12px;border-radius:6px;background:var(--acc)}
+  .apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:860px){.apps{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:2rem;display:block}
+  .apps button b{display:block}
+  .appd{display:none}
+  .appd.on{display:block;animation:enter .35s both}
+  .ex2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:640px){.ex2{grid-template-columns:1fr}}
+  .ex2>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem;border-left:4px solid var(--acc)}
+  .try{margin-top:12px;background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+  .try ol{margin:4px 0 0;padding-left:20px}
+  /* 3단원 공통 */
+  .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
+  .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
+  .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
+  .route .st i{font-style:normal;font-size:1.6rem}
+  .route .st b{display:block;font-size:1.02rem}
+  .route .st small{color:#c8d6e8;font-size:.82rem}
+  .route .ar{color:var(--amber);text-align:center;font-weight:900;opacity:0;animation:rin .5s forwards}
+  @keyframes rin{to{opacity:1;transform:none}}
+  @media (max-width:1080px){.route{position:relative;right:auto;top:auto;width:100%;margin-top:22px}}
+  .story{background:rgba(255,255,255,.08);border-left:4px solid var(--amber);border-radius:10px;padding:10px 14px;margin:14px 0;color:#e1e9f4;font-size:.95rem}
+  .story b{color:#fff}
+  /* 카드 묶음 */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:900px){.cards3,.cards4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards3,.cards2,.cards4{grid-template-columns:1fr}}
+  .kc{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:14px 16px;border-top:6px solid var(--k,var(--acc))}
+  .kc h4{color:var(--k,var(--acc));font-size:1.05rem;margin:0 0 4px}
+  .kc p{font-size:.92rem;margin:4px 0 0}
+  .kc .ic{font-size:1.7rem;line-height:1}
+  .kc small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+  .tagt{display:inline-block;font-size:.76rem;font-weight:900;border-radius:999px;padding:1px 9px;background:color-mix(in srgb,var(--k,var(--acc)) 14%,white);color:var(--k,var(--acc));margin:6px 4px 0 0}
+  /* 연표 */
+  .tl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tl button{flex:1;min-width:92px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;font:inherit;font-weight:900;cursor:pointer;color:var(--ink)}
+  .tl button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.tlv{grid-template-columns:1fr}}
+  .tlv>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--k)}
+  .tlv h4{color:var(--k)}
+  .tlv .it{margin:6px 0 0;font-size:.93rem}
+  .tlv .it b{display:block}
+  /* 분류 게임 */
+  .sit{background:#fbfaf7;border:2px dashed var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-height:170px}
+  .sit .cnt{font-size:.82rem;color:var(--muted)}
+  .sit .sq{font-size:1.08rem;font-weight:900;margin:6px 0 12px;min-height:52px}
+  .sit .ic{font-size:2rem}
+  .sit .row{justify-content:center}
+  .sit .fb{min-height:24px;margin-top:8px;font-size:.93rem}
+  .sit .cat{border:2px solid var(--k);color:var(--k);background:#fff;font-weight:900}
+  .sit .cat:hover{background:color-mix(in srgb,var(--k) 12%,white)}
+  .board{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;margin-top:12px}
+  @media (max-width:760px){.board{grid-template-columns:1fr 1fr}}
+  .board>div{background:#fff;border-radius:12px;border-top:5px solid var(--k);padding:8px 10px;font-size:.84rem;min-height:70px}
+  .board>div b{display:block;color:var(--k);font-size:.92rem}
+  .board>div span{display:block;border-top:1px dashed var(--line);padding:3px 0}
+  .board>div span.x{color:var(--red)}
+  /* 뒤집는 카드 */
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .tcard{perspective:900px;height:172px;cursor:pointer}
+  .tcard .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .tcard.flip .in{transform:rotateY(180deg)}
+  .tcard .f,.tcard .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:12px 14px;box-shadow:0 6px 16px rgba(15,39,66,.09);overflow:auto}
+  .tcard .f{background:#fff;border-top:6px solid var(--acc);display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .tcard .f i{font-style:normal;font-size:2rem;line-height:1.1}
+  .tcard .f b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;line-height:1.25;margin-top:4px}
+  .tcard .f small{color:var(--muted);font-size:.78rem;margin-top:6px}
+  .tcard .b{background:var(--acc);color:#fff;transform:rotateY(180deg);font-size:.9rem;line-height:1.5}
+  .tcard .b .x{margin-top:6px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px;font-size:.84rem}
+  /* 사례 탭 */
+  .apps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .apps.a6{grid-template-columns:repeat(6,1fr)}
+  @media (max-width:860px){.apps,.apps.a6{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.apps,.apps.a6{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:12px 8px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s;font-size:.92rem}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:1.8rem;display:block}
+  .apps button b{display:block}
+  .cview{margin-top:14px}
+  .pr{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+  @media (max-width:760px){.pr{grid-template-columns:1fr}}
+  .pr>div{border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .pr .p{background:#fdecea;border-left:5px solid var(--red)}
+  .pr .s{background:#e7f6ef;border-left:5px solid var(--mint)}
+  .pr h4{font-size:.95rem}
+  .pr .p h4{color:#9b2c20}.pr .s h4{color:#13684d}
+  .dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:10px;background:#fbfaf7;border-radius:10px;padding:10px 12px}
+  .dl b{color:var(--acc)}
+  /* 메모 */
+  .memo{margin-top:10px}
+  .memo label{display:block;font-weight:700;font-size:.93rem;margin:10px 0 4px}
+  .memo label small{font-weight:400;color:var(--muted)}
+  .memo input[type=text]{width:100%}
+  textarea{font:inherit;width:100%;min-height:64px;padding:8px 10px;border:1px solid #c5ccd5;border-radius:8px;resize:vertical;color:var(--ink);background:#fff}
+  .saved{font-size:.8rem;color:var(--mint);min-height:1em}
+  /* 투표 */
+  .vote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:560px){.vote{grid-template-columns:1fr}}
+  .vote button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center;font-weight:900}
+  .vote button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .vote button small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+  .reveal{display:none;margin-top:12px}
+  .reveal.on{display:block;animation:fadein .4s both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .pct{display:grid;grid-template-columns:120px 1fr 50px;gap:8px;align-items:center;margin:6px 0;font-size:.93rem}
+  .pct i{display:block;height:16px;border-radius:8px;background:var(--acc);width:0;transition:width .8s}
+  /* 질문폼 연결 */
+  .formgo{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-top:18px}
+  .formgo .kicker{color:#fff;border-bottom-color:var(--amber)}
+  .formgo h3{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;margin:4px 0 8px}
+  .formgo ol{margin:6px 0 12px;padding-left:22px;color:#e1e9f4}
+  .formgo ol li{margin:6px 0}
+  .formgo p{color:#c8d6e8;font-size:.92rem}
+  .formgo .go{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:1.1rem;text-decoration:none;border-radius:12px;padding:12px 22px;margin-top:6px}
+  .formgo .go:hover{filter:brightness(1.05)}
+  .msum{background:#fff;border-radius:14px;padding:12px 16px;margin-top:12px;color:var(--ink);font-size:.9rem}
+  .msum h4{color:var(--navy)}
+  .msum dl{margin:6px 0 0}
+  .msum dt{font-weight:700;margin-top:8px;color:var(--muted);font-size:.84rem}
+  .msum dd{margin:2px 0 0;white-space:pre-wrap}
+  .msum dd.e{color:#aab2bd}
+  .key3{display:grid;gap:10px;margin-bottom:18px}
+  .key3 div{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--k);font-size:1.02rem}
+  .note{font-size:.84rem;color:var(--muted);margin-top:8px}
+  .flow2{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .flow2>div{flex:1;min-width:140px;background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .flow2>div b{display:block}
+  .flow2>div span{font-size:.88rem}
+  .flow2>.ar{flex:0 0 auto;min-width:0;background:none;border:0;align-self:center;font-weight:900;color:var(--muted);padding:0}
+  @media (max-width:640px){.flow2>.ar{flex-basis:100%;text-align:center;transform:rotate(90deg)}}
+  .chk{display:flex;flex-wrap:wrap;gap:8px}
+  .chk button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .chk button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .tbl td,.tbl th{padding:8px 10px;vertical-align:top}
+  .tbl td{text-align:left;font-size:.92rem}
+  .mx{min-width:560px}
+  .mx th{background:#fbfaf7}
+  .mx td{border:1px solid var(--line);height:74px;width:30%;font-size:.86rem;cursor:pointer;background:#fff;transition:background .2s}
+  .mx td:hover{background:var(--acc-soft)}
+  .mx td.fill{background:#e7f6ef;cursor:default}
+  .mx td.bad{background:#fdecea}
+  .mx th.r{white-space:nowrap}
+  #mxPool button{border-radius:12px;text-align:left;max-width:100%}
+  /* 4단원 */
+  .sdg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media (max-width:760px){.sdg{grid-template-columns:repeat(3,1fr)}}
+  .sdg button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;padding:8px 6px;color:#fff;background:var(--c);min-height:74px;font-size:.78rem;line-height:1.3;font-weight:700;display:flex;flex-direction:column;gap:2px;transition:transform .15s}
+  .sdg button b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.3rem;line-height:1}
+  .sdg button:hover,.sdg button.on{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .sdg button.on{outline:3px solid var(--navy)}
+  .sdgv{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:6px solid var(--c,#0f2742);min-height:60px}
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.five{grid-template-columns:1fr}}
+  .five>div{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:12px 12px;border-top:6px solid var(--k)}
+  .five b.n{font-family:"Black Han Sans",sans-serif;color:var(--k);font-size:1.2rem}
+  .five h4{margin:2px 0 4px;font-size:.98rem}
+  .five p{font-size:.86rem;margin:4px 0}
+  .five .ml{margin-top:8px;background:color-mix(in srgb,var(--k) 10%,white);border-radius:8px;padding:6px 8px;font-size:.82rem}
+  .quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:6px;margin-top:8px}
+  .quad .ax{font-size:.78rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .quad .ax.v{writing-mode:vertical-rl}
+  .quad .cell{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 8px;font-size:.84rem;cursor:pointer}
+  .quad .cell.best{border-color:var(--mint);background:#e7f6ef}
+  .quad .cell small{display:block;color:var(--muted);font-size:.74rem}
+  .quad .cell span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin:2px 2px 0 0}
+  .qbuild{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:1.08rem;font-weight:700;background:#fff8e6;border:2px solid #f6d58a;border-radius:12px;padding:12px 14px}
+  .qbuild input{flex:1;min-width:200px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px}
+  .plan{width:100%}
+  .plan td:first-child{width:150px;font-weight:700;font-size:.9rem;background:#fbfaf7}
+  .plan input{width:100%;font:inherit;padding:5px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 시뮬레이터 */
+  .sim{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.sim{grid-template-columns:1fr}}
+  .sim .cls{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .sim .cls h4{color:var(--k);display:flex;justify-content:space-between}
+  .sim .cls ul{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+  .sim .cls li.new{color:var(--k);font-weight:700}
+  .cand{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cand button{border:2px dashed var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--ink)}
+  .cand button.on{border-style:solid;background:color-mix(in srgb,var(--k) 15%,white);font-weight:700}
+  .tt td,.tt th{padding:6px 8px;font-size:.88rem}
+  .tt td.r{color:var(--mint);font-weight:900}.tt td.w{color:var(--red);font-weight:900}
+  .score2{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .score2 div{flex:1;min-width:140px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px 12px;text-align:center}
+  .score2 b{display:block;font-family:"Black Han Sans",sans-serif;font-size:1.8rem;color:var(--acc)}
+  /* 스크래치 블록 */
+  .blocks{font-family:ui-sans-serif,system-ui;font-size:.86rem;display:inline-block}
+  .blk{display:block;border-radius:6px;padding:5px 10px;margin:3px 0;color:#fff;width:max-content;max-width:100%}
+  .blk.ev{background:#ffbf00;color:#333;border-radius:14px 14px 6px 6px}
+  .blk.ctl{background:#ffab19;color:#333}
+  .blk.ml{background:#4c97ff}
+  .blk.lk{background:#9966ff}
+  .blk.in{margin-left:22px}
+  .blk i{font-style:normal;background:rgba(255,255,255,.9);color:#333;border-radius:10px;padding:0 6px;margin:0 2px}
+  .penguin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:560px){.penguin{grid-template-columns:1fr}}
+  .penguin div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .dist td,.dist th{padding:6px 8px;font-size:.88rem;text-align:center}
+  .dist tr.near{background:#fff4d6;font-weight:900}
+  .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.roles{grid-template-columns:1fr 1fr}}
+  .roles div{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px;text-align:center;font-size:.84rem}
+  .roles div i{font-style:normal;font-size:1.6rem;display:block}
+  .roles div b{display:block;font-size:.92rem}
+  .roles div em{display:block;font-style:normal;margin-top:6px;background:#e6eefb;border-radius:8px;padding:4px 6px;color:#1b3d66}
+  .types div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .types div b{display:block}
+  .types div small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+
+  /* 카드 격자 칸이 안의 긴 코드·표 때문에 늘어나지 않게 */
+  .cards2>*,.cards3>*,.cards4>*,.grid2>*{min-width:0}
+  /* 진도 보내기 */
+  .tr-gate{position:fixed;inset:0;z-index:200;background:rgba(15,39,66,.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .tr-card{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px 22px 16px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  .tr-card h2{margin:0;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+  .tr-sub{margin:-4px 0 4px;color:var(--muted);font-size:.92rem}
+  .tr-cls{display:flex;gap:8px}
+  .tr-cls label{flex:1;cursor:pointer}
+  .tr-cls input{position:absolute;opacity:0;pointer-events:none}
+  .tr-cls span{display:block;text-align:center;padding:10px 0;border:2px solid var(--line);border-radius:12px;font-weight:900;font-size:1.05rem}
+  .tr-cls input:checked+span{border-color:var(--navy);background:var(--navy);color:#fff}
+  .tr-cls input:focus-visible+span{outline:3px solid var(--amber)}
+  .tr-f{display:flex;align-items:center;gap:10px}
+  .tr-f span{width:40px;font-weight:700}
+  .tr-f input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:9px 12px;border:1px solid #c5ccd5;border-radius:10px}
+  .tr-err{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em}
+  .tr-card .btn{padding:12px;font-size:1.05rem;background:var(--navy)}
+  .tr-note{margin:2px 0 0;color:var(--muted);font-size:.8rem;line-height:1.5;text-align:center}
+  .tr-who,.tr-badge{display:flex;align-items:center;gap:6px;font-size:.82rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px 4px 3px 12px;white-space:nowrap}
+  .tr-badge{padding:3px 12px;background:var(--amber);color:#111;font-weight:700}
+  .tr-who button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px}
+  .tr-who button:hover{background:rgba(255,255,255,.3)}
+  .tr-cls[hidden]{display:none}
+  .tr-badge button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(0,0,0,.14);border-radius:999px;padding:2px 9px;margin-left:6px}
+  /* page-guard: 글자 선택·복사 막기 (입력 칸은 편집 가능) */
+  body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
+  .pg-toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0f2742;color:#fff;padding:9px 16px;border-radius:999px;font-size:.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+  .pg-toast.on{opacity:1}
+
+  /* u1-database 전용 (db-) */
+  .btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+  .db-more{margin-top:10px}
+  .db-more summary{cursor:pointer;font-weight:900;font-size:.93rem;color:var(--acc)}
+  .db-more p,.db-more ul{font-size:.93rem}
+  .db-scroll{overflow-x:auto;max-width:100%}
+  /* 공통 표 */
+  .db-tbl{min-width:420px}
+  .db-tbl td,.db-tbl th{border:1px solid var(--line);font-size:.9rem;padding:6px 8px}
+  .db-tbl th{background:#fbfaf7;color:var(--ink)}
+  .db-cmp td{text-align:left;vertical-align:top}
+  .db-cmp .mid{text-align:center;font-weight:900;background:#fbfaf7;white-space:nowrap;width:60px}
+  /* 01 다산의 정리 흐름 */
+  .db-flow{display:flex;align-items:stretch;gap:8px;margin:10px 0}
+  .db-fstep{flex:1;min-width:0;background:#fbfaf7;border-radius:14px;border-top:5px solid var(--k);padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+  .db-fstep small{color:var(--muted);font-size:.78rem}
+  .db-flab{align-self:flex-start;background:var(--k);color:#fff;font-weight:900;font-size:.82rem;border-radius:999px;padding:2px 10px}
+  .db-rec{background:#fff;border:1px solid #d9d2c4;border-radius:6px;padding:4px 8px;font-size:.84rem;box-shadow:2px 2px 0 #ece6da}
+  .db-rec.dots{text-align:center;border:0;box-shadow:none;background:none;padding:0}
+  .db-far{align-self:center;font-size:1.4rem;color:var(--muted);font-weight:900}
+  .db-mini{margin:0;min-width:220px}
+  .db-mini td,.db-mini th{border:1px solid var(--line);padding:3px 6px;font-size:.82rem;background:#fff}
+  .db-mini th{background:#f1efe9}
+  .db-mini .sum td,.db-mini .sum th{font-weight:900}
+  .db-mini .hi{background:#fff4d6}
+  @media (max-width:900px){.db-flow{flex-direction:column}.db-far{transform:rotate(90deg)}}
+  /* 표 Ⅰ-10 */
+  .db-pick td{cursor:pointer}
+  .db-pick td:hover{background:#eef7f2}
+  .db-pick td.on{background:var(--mint);color:#fff;font-weight:900}
+  .db-pick.all{outline:3px solid var(--mint);outline-offset:2px;border-radius:4px}
+  .db-cap{margin-top:8px;font-size:.92rem;background:#eef7f2;border-radius:10px;padding:8px 12px;min-height:38px}
+  /* 21세기 다산 */
+  .db-ds{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;align-items:start}
+  @media (max-width:900px){.db-ds{grid-template-columns:1fr}}
+  .db-tabs{display:flex;gap:6px;margin-bottom:6px}
+  .db-tabs button{font:inherit;font-weight:900;border:2px solid var(--line);background:#fff;border-radius:10px 10px 0 0;padding:5px 12px;cursor:pointer}
+  .db-tabs button small{font-weight:400;color:var(--muted);font-size:.76rem;margin-left:4px}
+  .db-tabs button.on{border-color:var(--mint);background:var(--mint);color:#fff}
+  .db-tabs button.on small{color:#e6f5ee}
+  .db-sheet{min-width:400px}
+  .db-sheet tr[data-r]{cursor:pointer}
+  .db-sheet tr[data-r]:hover td{background:#eef7f2}
+  .db-sheet tr.pick td{background:#fff4d6;font-weight:900}
+  .db-sheet tr.done td{color:#b8b2a6;background:#f6f4ef;text-decoration:line-through}
+  .db-agt{display:block;margin:6px 0 4px;color:var(--mint)}
+  .db-agg{min-width:240px}
+  .db-agg td{height:46px;min-width:70px}
+  .db-agg td b{font-size:1.1rem;display:block}
+  .db-agg td small{font-size:.72rem;color:var(--muted)}
+  .db-agg td.can{cursor:pointer;background:#fffdf3;box-shadow:inset 0 0 0 2px #f6d58a}
+  .db-agg td.can:hover{background:#fff4d6}
+  .db-agg .sum td,.db-agg .sum th{background:#e6f5ee}
+  .db-stat{font-size:.86rem;color:var(--muted);margin-top:6px}
+  .db-fb{margin-top:10px;background:#fbfaf7;border-radius:10px;padding:8px 12px;font-size:.93rem;min-height:40px}
+  /* 02 은행 */
+  .db-reveal:not(:empty){margin-top:10px;background:var(--acc-soft);border-left:5px solid var(--acc);border-radius:10px;padding:10px 14px;font-size:.93rem}
+  /* 03 그림 Ⅰ-6 */
+  .db-bank{display:grid;grid-template-columns:1.3fr auto 1fr;gap:12px;align-items:center;background:#f3f7fd;border-radius:16px;padding:14px}
+  @media (max-width:800px){.db-bank{grid-template-columns:1fr}.db-bk-ar span{display:inline-block;transform:rotate(90deg)}}
+  .db-bk-sys{background:#fff;border:2px solid #b9c7e6;border-radius:14px;padding:10px;display:grid;gap:10px}
+  .db-bk-t{justify-self:start;background:#fde3d4;color:#a2461a;border-radius:999px;padding:2px 12px;font-size:.9rem}
+  .db-cyl{border:2px solid var(--k);border-radius:50% / 14px;padding:16px 12px 10px;background:color-mix(in srgb,var(--k) 10%,#fff);display:grid;gap:4px;text-align:center}
+  .db-cyl b{color:var(--k);font-size:.88rem}
+  .db-cyl span{background:#fff;border:1px solid var(--line);border-radius:6px;font-size:.78rem;padding:2px 6px}
+  .db-bk-ar{text-align:center;color:#d64535;font-weight:900}
+  .db-bk-ar span{font-size:2rem;display:block}
+  .db-bk-ar small{color:var(--ink);font-size:.78rem}
+  .db-bk-users{display:grid;gap:8px}
+  .db-bk-users span{background:#fff;border-left:5px solid #e0702b;border-radius:10px;padding:6px 10px;font-weight:700;font-size:.9rem}
+  .db-gl{padding-left:18px}
+  .db-gl li{margin:6px 0}
+  /* 03 ATM 실험 */
+  .db-atm-story{background:#fbfaf7;border-radius:10px;padding:8px 12px;font-size:.95rem}
+  .db-atm-steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0}
+  .db-atm-steps span{background:var(--navy);color:#fff;border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:700}
+  .db-atm-steps i{font-style:normal;color:var(--muted);font-weight:900}
+  .db-atm-pick{margin:8px 0}
+  .db-atm-pick>b{display:block;font-size:.9rem;margin-bottom:4px}
+  .db-opt{font:inherit;font-size:.88rem;border:2px solid var(--line);background:#fff;border-radius:10px;padding:5px 10px;cursor:pointer}
+  .db-opt:hover{border-color:var(--acc)}
+  .db-opt.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:900}
+  .db-atm-out{margin-top:12px;border-radius:12px;padding:10px 14px;border:2px solid var(--line)}
+  .db-atm-out.good{border-color:var(--mint);background:#f1faf5}
+  .db-atm-out.bad{border-color:var(--red);background:#fdf1ef}
+  .db-atm-out p{margin:8px 0 0;font-size:.93rem}
+  .db-log{list-style:none;margin:0;padding:0}
+  .db-log li{display:flex;gap:8px;font-size:.9rem;padding:3px 0;border-bottom:1px dashed var(--line);animation:fadein .35s both}
+  .db-log li:nth-child(2){animation-delay:.1s}.db-log li:nth-child(3){animation-delay:.2s}.db-log li:nth-child(4){animation-delay:.3s}.db-log li:nth-child(5){animation-delay:.4s}.db-log li:nth-child(6){animation-delay:.5s}.db-log li:nth-child(7){animation-delay:.6s}.db-log li:nth-child(8){animation-delay:.7s}.db-log li:nth-child(9){animation-delay:.8s}
+  .db-log i{font-style:normal;flex:0 0 22px}
+  .db-atm-res{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;font-size:.92rem}
+  .db-atm-tbl{margin-top:12px;min-width:520px}
+  .db-atm-tbl td{font-size:1.1rem}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .db-fold>summary{cursor:pointer;list-style:none}
+  .db-fold>summary::-webkit-details-marker{display:none}
+  .db-fold>summary h3{display:inline;margin:0}
+  .db-fold>summary::before{content:"▸ ";color:var(--acc);font-weight:900}
+  .db-fold[open]>summary::before{content:"▾ "}
+  .db-fold[open]>summary{margin-bottom:10px}
+  .db-first{margin:0 0 8px;background:#fff4d6;border-radius:10px;padding:7px 12px;font-size:.92rem}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">데이터 과학</span>
+  <nav class="steps" id="steps"></nav>
+  <div class="score" id="score"></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+
+<main id="main">
+
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 2. 데이터의 저장과 활용</span>
+      <h1>수레 가득한 기록을<br>종이 한 장에?</h1>
+      <div class="story"><b>정조의 부탁, 다산의 한 장</b><br>1789년 조선의 왕 정조는 현륭원(사도세자의 무덤, 지금의 융릉)에 7년 동안 나무를 심었어요. 8개 고을에서 심은 나무의 기록은 수레에 실으면 소가 땀을 흘릴 만큼 많았지요. 정조가 「고을별로, 종류별로 몇 그루인지 한 권의 책으로 명확하게 정리해 보라」고 하자, 다산 정약용은 그 많은 기록을 <b>종이 한 장</b>에 담아 왔어요.</div>
+      <p>오늘은 흩어진 <b>데이터</b>를 모아 <b>데이터셋</b>을 만들어 보고, 데이터셋이 아주 많아지면 왜 <b>데이터베이스</b>와 <b>데이터베이스 관리 시스템</b>이 필요한지 알아봐요.</p>
+      <ol>
+        <li>데이터와 데이터셋</li><li>데이터베이스</li>
+        <li>데이터베이스 관리 시스템</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">중단원 도입 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📜</i><div><b>데이터</b><small>공문 한 건 한 건의 기록</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📊</i><div><b>데이터셋</b><small>분석하기 쉽게 모은 표</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🗄️</i><div><b>데이터베이스</b><small>컴퓨터로 체계적으로 저장해요</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>⚙️</i><div><b>데이터베이스 관리 시스템</b><small>여럿이 동시에, 안전하게</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">중단원 도입 · 2. 데이터의 저장과 활용</span>
+      <p>이 중단원에서는 데이터를 <b>체계적으로 저장하고 정리하는 방법</b>을 배워요. 중단원 핵심 질문은 <b>「데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까?」</b>예요.</p>
+    </div>
+
+    <div class="card">
+      <h3>📣 세상을 바꾸는 데이터 · 임진왜란 1년 전, 왕실에서 벌어진 토론 <span class="muted" style="font-weight:400;font-size:.88rem">(32~33쪽)</span></h3>
+      <p style="margin-top:0">일본을 다녀온 두 신하가 왕에게 정반대의 보고를 올렸어요. 왕은 혼란스러웠어요. 「동시에 보고 들었는데 어째서 말이 서로 다른 것이냐?」</p>
+      <div class="cards2">
+        <div class="kc" style="--k:#d64535"><div class="ic">⚔️</div><h4>황윤길</h4><p>「전하, 일본은 우리나라를 반드시 침략할 것이옵니다.」</p><small>도요토미 히데요시의 군사력과 준비 상황을 지켜보며 침략 의도를 파악했어요.</small></div>
+        <div class="kc" style="--k:#2f6fd0"><div class="ic">🍵</div><h4>김성일</h4><p>「아니옵니다 전하. 일본은 우리나라를 침략할 생각이 없어 보였사옵니다.」</p><small>도요토미 히데요시의 친절한 겉모습을 보고 전쟁의 의도가 없다고 판단했어요.</small></div>
+      </div>
+      <div class="memo" style="margin-top:12px"><label>💭 생각 정리하기 · 황윤길과 김성일이 같은 곳을 다녀오고도 서로 다른 해석을 한 이유는 무엇일까요? <small>두 사람이 판단의 근거로 삼은 것을 떠올려 봐요.</small></label><textarea data-memo="whyDiff" rows="2"></textarea><div class="saved"></div></div>
+      <details class="db-more"><summary>메모를 쓴 뒤에 교과서 33쪽의 정리 보기</summary>
+        <p>두 신하 모두 <b>자신의 직관과 단편적인 정보</b>에 기대어 판단했어요. 침략을 내다본 황윤길도, 눈으로 본 사실 말고도 관련 데이터를 충분히 모으고 분석했다면 더 합리적인 판단을 내릴 수 있었을 거예요. 중요한 결정은 직감보다 <b>구체적인 근거와 데이터</b>를 바탕으로 해야 해요.</p>
+      </details>
+    </div>
+
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">데이터 과학으로 문제를 바라본다면? (34쪽)</span>
+        <p style="margin:0 0 6px;font-size:.92rem">매일 아침 우리는 휴대폰으로 메시지를 확인하고, 인터넷에서 물건을 주문하고, 은행 앱으로 계좌 잔액을 조회해요. 이런 메시지, 쇼핑 내역, 금융 정보는 모두 체계적으로 관리되고 있어서 언제든 필요한 정보를 빠르게 확인할 수 있어요.</p>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>중단원</b> · 데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까?</li>
+          <li><b>오늘의 질문</b> · 메시지, 쇼핑 내역, 금융 정보 같은 정보들은 어디에, 어떻게 저장되는 것일까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터베이스의 개념과 필요성을 설명할 수 있다.</li>
+          <li>데이터베이스에 데이터가 저장되는 구조를 설명할 수 있다. <small class="muted">(관계형 데이터베이스는 다음 시간에 이어서)</small></li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">주요 용어: 데이터셋 · 데이터베이스 · 데이터베이스 관리 시스템 · 트랜잭션</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📝 나의 계획 <span class="muted" style="font-weight:400;font-size:.88rem">(선택)</span></h3>
+      <div class="memo"><label>내가 다산이라면 수레 가득한 식수 기록을 어떻게 정리해서 종이 한 장에 담을까요? 지금 떠오르는 방법을 적어 보세요. <small>시간이 없으면 건너뛰어도 돼요. 01에서 다산이 실제로 정리한 방법과 비교해요.</small></label><textarea data-memo="planDasan" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터와 데이터셋부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터와 데이터셋 -->
+<section class="page" data-name="데이터와 데이터셋" data-acc="#1f9d74">
+  <div class="head"><div class="num">01</div><div><h2>데이터와 데이터셋은 어떤 관계일까?</h2><p>교과서 35~36쪽 · 데이터, 데이터셋, 정형·비정형 데이터셋</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>「어느 날, 어느 고을에, 무슨 나무를, 몇 그루 심었다」 같은 낱낱의 기록 하나가 <b>데이터</b>예요. 이런 기록을 분석하기 쉽게 기준을 정해 표로 모으면 <b>데이터셋</b>이 돼요. 데이터는 개별적인 정보의 단위이고, 데이터셋은 이를 모은 <b>구조화된 집합</b>이에요.</span></div>
+
+  <div class="card">
+    <h3>📜 다산은 이렇게 정리했어요 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅰ-4 · Ⅰ-5를 다시 그림)</span></h3>
+    <p style="margin-top:0">현륭원에 나무를 심을 때마다 기록이 남았지만, 셀 수 없이 많은 <b>공문서</b>의 무더기일 뿐이었어요. 다산은 공문을 <b>8개의 고을별로 분류</b>하고, 고을별 묶음을 <b>월별로 정렬</b>해 <b>연도별</b> 표로 옮겨 적었어요. 이렇게 요약한 8개의 표를 다시 <b>1개의 표</b>에 옮겨 적었지요.</p>
+    <div class="db-flow">
+      <div class="db-fstep" style="--k:#8a94a3">
+        <span class="db-flab">데이터</span>
+        <div class="db-rec">03-05 · A 고을 · 소나무 5그루 식수</div>
+        <div class="db-rec">03-07 · B 고을 · 잣나무 5그루 식수</div>
+        <div class="db-rec dots">⋮</div>
+        <div class="db-rec">03-08 · H 고을 · 소나무 10그루 식수</div>
+        <small>공문에 적힌 날짜별 식수 기록</small>
+      </div>
+      <div class="db-far">➜</div>
+      <div class="db-fstep" style="--k:#1f9d74">
+        <span class="db-flab">데이터셋1</span>
+        <div class="db-scroll"><table class="db-mini">
+          <tr><th></th><th>소나무</th><th>잣나무</th><th>합계</th></tr>
+          <tr><th>1월</th><td>10</td><td>10</td><td>20</td></tr>
+          <tr><th>⋮</th><td colspan="3">⋮</td></tr>
+          <tr><th>12월</th><td>20</td><td>30</td><td>50</td></tr>
+          <tr class="sum"><th>합계</th><td>100</td><td>100</td><td class="hi">200</td></tr>
+        </table></div>
+        <small>[A 고을 1년 차 식수 현황] · 고을마다 이런 표가 연도별로 있어요</small>
+      </div>
+      <div class="db-far">➜</div>
+      <div class="db-fstep" style="--k:#2f6fd0">
+        <span class="db-flab">데이터셋2</span>
+        <div class="db-scroll"><table class="db-mini">
+          <tr><th></th><th class="hi">A 고을</th><th>~</th><th>H 고을</th><th>합계</th></tr>
+          <tr><th>1년 차</th><td class="hi">200</td><td>~</td><td>100</td><td>1,500</td></tr>
+          <tr><th>⋮</th><td colspan="4">⋮</td></tr>
+          <tr><th>7년 차</th><td>200</td><td>~</td><td>50</td><td>1,600</td></tr>
+          <tr class="sum"><th>합계</th><td>1,400</td><td>~</td><td>800</td><td>15,000</td></tr>
+        </table></div>
+        <small>8개 고을의 연도별 데이터를 합계 · 나무를 가장 많이 심은 고을을 찾는 표</small>
+      </div>
+    </div>
+    <p class="note" style="margin-top:0">교과서 그림의 연도(1412년)와 데이터셋1의 1월 합계(30)는 34쪽 이야기·표의 합계와 맞지 않아 바로잡아 실었어요(연도는 빼고 1월 합계는 20).</p>
+    <p>다산이 한 일이 바로 <b>데이터에서 데이터셋을 만들어 낸 것</b>이에요. 처음 공문 형식으로 기록된 문자와 숫자의 값들이 데이터이고, 이를 고을별·나무 종류별 수치를 연도별로 정리한 표가 데이터셋이에요. 그런데 정조가 알고 싶었던 것은 <b>지난 7년 동안 가장 많은 나무를 심은 고을</b>이었어요. 그래서 다산은 데이터셋1을 이용해 다시 데이터셋2를 만들었어요. 이처럼 데이터셋은 <b>분석하고자 하는 대상에 따라 관점이 달라질 수 있어요</b>.</p>
+  </div>
+
+  <div class="card">
+    <h3>📦 데이터셋</h3>
+    <p style="margin-top:0">데이터 과학에서는 데이터만으로 유용한 정보를 얻기 매우 어렵기 때문에, 데이터를 정리해 데이터셋으로 만드는 과정이 꼭 필요해요. <b>데이터셋</b>은 분석이나 처리를 목적으로 구성된, <b>구조화된 데이터의 모음</b>이에요.</p>
+    <div class="cards2">
+      <div class="kc" style="--k:#1f9d74"><h4>정형 데이터셋</h4><p>사전에 정해진 데이터 모델에 맞도록 <b>테이블 형태의 고정된 필드</b>에 저장되는 데이터로 구성돼요.</p></div>
+      <div class="kc" style="--k:#e0702b"><h4>비정형 데이터셋</h4><p><b>텍스트 형식이나 이미지, 비디오</b>와 같은 다양한 미디어 형식으로 존재해요.</p></div>
+    </div>
+    <p style="margin:14px 0 4px"><b>표 Ⅰ-10 책의 관리를 위해 구성한 책 정보 데이터셋</b> <span class="muted" style="font-size:.88rem">(교과서 36쪽 · 칸을 하나 눌러 보세요)</span></p>
+    <div class="db-scroll">
+      <table class="db-tbl db-pick" id="bookTbl">
+        <tr><th>ID</th><th>장르</th><th>제목</th><th>저자</th><th>연도</th><th>제본</th><th>판</th><th>가격</th></tr>
+        <tr><td>1</td><td>단편 소설</td><td>동백꽃</td><td>김유정</td><td>2020</td><td>페이퍼백</td><td>1</td><td>10,000</td></tr>
+        <tr><td>2</td><td>장편 소설</td><td>에마</td><td>오스틴</td><td>2023</td><td>페이퍼백</td><td>2</td><td>20,000</td></tr>
+        <tr><td>3</td><td>교양 과학</td><td>코스모스</td><td>세이건</td><td>1997</td><td>양장본</td><td>1</td><td>20,000</td></tr>
+        <tr><td>4</td><td>교양 과학</td><td>종의 기원</td><td>다윈</td><td>2020</td><td>양장본</td><td>1</td><td>22,000</td></tr>
+        <tr><td>5</td><td>역사</td><td>난중일기</td><td>이순신</td><td>2007</td><td>페이퍼백</td><td>2</td><td>16,000</td></tr>
+      </table>
+    </div>
+    <div class="db-cap" id="bookCap">칸 하나를 누르면 그 값이 무엇인지 알려 줘요.</div>
+    <p class="note">‘데이텀(datum)’의 복수형인 ‘데이터(data)’는 그 자체로 복수의 정보를 포함하고 있어요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🌳 스스로 해결하기 · 21세기 다산 되기 <span class="muted" style="font-weight:400;font-size:.88rem">(36쪽 · 분석 · 표현)</span></h3>
+    <p style="margin-top:0">연도별로 정리되어 있는 <b>고을별 데이터셋</b>(수원 시트, 광주 시트)을 바탕으로, 각 고을의 총 식수량을 한눈에 확인할 수 있는 <b>총 식수량 데이터셋</b>을 만들어요. <span class="muted">시트에서 기록 한 줄을 고르고 → 아래 집계 표에서 그 기록이 들어갈 칸을 눌러요.</span></p>
+    <div id="dasanSim"></div>
+    <p class="note">기록 값: 교과서 36쪽 「실습 데이터」의 수원·광주 시트와 같은 값을 화면 표로 옮겨 적었어요.</p>
+    <div class="memo" style="margin-top:12px"><label>총 식수량 데이터셋을 완성한 뒤, 4년 동안 나무를 더 많이 심은 고을은 어디인지, 그리고 그것을 알기 위해 기록을 <b>어떤 기준으로</b> 모았는지 적어요.</label><textarea data-memo="dasanNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+
+  <div class="callout"><b>표가 수천 장으로 늘어난다면?</b> 다산이 보기 쉽게 잘 만든 표도, 시간이 흘러 데이터가 많아지면서 수백 장 또는 수천 장으로 늘어나면 어떻게 될까요? 20세기 후반, 컴퓨터의 발전과 함께 생겨난 방대한 양의 데이터셋을 체계적으로 관리할 필요가 커졌어요. 그래서 등장한 것이 <b>데이터베이스</b>예요.</div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터베이스 -->
+<section class="page" data-name="데이터베이스" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>데이터베이스는 무엇일까?</h2><p>교과서 37~38쪽 · 데이터베이스, 데이터셋과 데이터베이스 비교</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터셋이 수백, 수천 개로 늘어나고 여러 사람이 동시에 써야 한다면, 종이나 파일 하나로는 감당하기 어려워요. 데이터셋을 <b>컴퓨터로 체계적으로 저장</b>해서 <b>여러 사용자가 동시에</b> 꺼내 쓰고 관리할 수 있게 만든 것이 <b>데이터베이스</b>예요.</span></div>
+
+  <div class="card">
+    <h3>🗄️ 데이터베이스(database)</h3>
+    <p style="margin-top:0">데이터를 <b>전자적으로 저장</b>하고 <b>체계적으로 관리</b>하기 위해 구성된 조직화된 데이터의 모음이에요. 데이터셋이 특정 형식으로 정리된 데이터의 집합이라면, 데이터베이스는 컴퓨터로 이러한 데이터셋을 더 효율적으로 저장하고 <b>여러 사용자가 동시에 접근</b>해 데이터를 관리하고 활용할 수 있도록 설계된 데이터 구조예요. 분석이나 연구를 위해 모은 데이터셋이 대량으로 쌓이면, 이를 <b>장기적으로 저장</b>하고 <b>다양한 응용 프로그램</b>에서 쓸 수 있게 구성한 것이 데이터베이스라고 할 수 있어요.</p>
+    <p style="margin:12px 0 4px"><b>표 Ⅰ-11 데이터셋과 데이터베이스</b> <span class="muted" style="font-size:.88rem">(교과서 37쪽)</span></p>
+    <div class="db-scroll">
+      <table class="db-tbl db-cmp">
+        <tr><th>데이터셋</th><th class="mid">구분</th><th>데이터베이스</th></tr>
+        <tr><td>특정한 형식으로 구성된 데이터의 집합</td><td class="mid">정의</td><td>저장과 접근을 컴퓨터로 편리하게 할 수 있도록 체계적으로 구성한 데이터의 집합</td></tr>
+        <tr><td>일반적으로 데이터 분석이나 연구, 최근에는 기계학습의 훈련을 위해 사용</td><td class="mid">사용</td><td>일반적으로 조직의 운영을 지원하기 위한 대량의 데이터를 저장하고 관리하는 데 사용</td></tr>
+        <tr><td>스프레드시트, CSV 파일 등 다양한 형식으로 저장</td><td class="mid">형식</td><td>텍스트, 숫자, 이미지 또는 기타 유형의 데이터를 포함한 다양한 데이터 유형 저장</td></tr>
+        <tr><td>더 큰 데이터베이스에서 추출한 데이터의 하위 집합</td><td class="mid">범위</td><td>여러 데이터셋을 가질 수 있으며 다양한 응용 프로그램에 활용</td></tr>
+        <tr><td>일반적으로 특정 용도로 사용</td><td class="mid">용도</td><td>일반적으로 포괄적이고 장기적인 저장과 활용이 목적</td></tr>
+      </table>
+    </div>
+    <p class="note">주어진 데이터셋에 속성을 추가해 새로운 데이터셋을 만들 수도 있어요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎯 데이터셋일까, 데이터베이스일까?</h3>
+    <p class="muted" style="margin-top:0">상황을 읽고 표 Ⅰ-11의 정의·사용·형식·범위·용도를 떠올리며 골라요.</p>
+    <div id="dsdbGame"></div>
+  </div>
+
+  <div class="card">
+    <h3>🏦 은행의 예금 계좌</h3>
+    <p style="margin-top:0">여러 사람의 예금 계좌 정보를 모아 놓은 것이 바로 <b>데이터베이스</b>예요. 은행의 예금 계좌 데이터베이스에는 고객, 은행 직원, ATM 기기, 인터넷 뱅킹 등 다양한 사용자가 <b>동시에 접근</b>해 업무를 처리해요. 이렇게 할 수 있는 까닭은 데이터베이스가 있기 때문이에요.</p>
+    <p style="margin-bottom:4px"><b>그런데 은행 데이터 처리 작업을 스프레드시트에서 한다면 가능할까요?</b></p>
+    <div class="vote" id="bankVote"></div>
+    <div class="db-reveal" id="bankWhy"></div>
+    <div class="memo" style="margin-top:10px"><label>은행 업무를 스프레드시트 한 장으로 하면 생길 문제 한 가지를 한 줄로 적어요. <small>03에서 데이터베이스 관리 시스템이 이 문제를 어떻게 해결하는지 이어서 봐요.</small></label><input type="text" data-memo="bankNote"><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 데이터베이스 관리 시스템 -->
+<section class="page" data-name="데이터베이스 관리 시스템" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터베이스 관리 시스템은 무엇일까?</h2><p>교과서 38~39쪽 · DBMS의 역할, 종류, 트랜잭션</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터베이스가 <b>은행 그 자체</b>라면, <b>데이터베이스 관리 시스템(DBMS)</b>은 예금 계좌 주인이 원하는 <b>입출금 거래나 대출 등을 도와주는 시스템</b>이에요. 사람들은 DBMS를 통해 데이터베이스에 접근해 데이터를 추가·삭제·수정·검색해요.</span></div>
+
+  <div class="card">
+    <h3>⚙️ 데이터베이스 관리 시스템(DBMS: Database Management System)</h3>
+    <p style="margin-top:0">여러 데이터베이스를 가지고 있으면서 다양한 사용자가 요청하는 여러 작업을 처리해 주는 시스템이에요. <b>여러 데이터셋이 모여 하나의 데이터베이스</b>를 이루고, 이 <b>데이터베이스들을 효율적으로 관리</b>하는 것이 DBMS의 역할이에요.</p>
+    <div class="db-bank" aria-label="데이터베이스 관리 시스템 예시">
+      <div class="db-bk-sys">
+        <b class="db-bk-t">○○은행 · DBMS</b>
+        <div class="db-cyl" style="--k:#9b4fc4"><b>예금 데이터베이스</b><span>예금 계좌 데이터 집합</span><span>예금 계좌 데이터 집합</span></div>
+        <div class="db-cyl" style="--k:#1f9d74"><b>대출 데이터베이스</b><span>대출 계좌 데이터 집합</span><span>대출 계좌 데이터 집합</span></div>
+      </div>
+      <div class="db-bk-ar"><span>⬅</span><small>동시 접속 및<br>데이터 공유</small></div>
+      <div class="db-bk-users">
+        <span>🙋 예금 계좌 주인</span><span>🧑‍💼 은행 담당 직원</span><span>📱 인터넷 뱅킹</span><span>🏧 ATM 기기</span>
+      </div>
+    </div>
+    <p class="note" style="text-align:center">그림 Ⅰ-6 데이터베이스 관리 시스템 예시를 다시 그림</p>
+    <p class="note">흔히 데이터베이스와 DBMS를 헷갈리는데, DBMS는 데이터베이스를 조작하고 관리하는 기능을 포함한 <b>응용 프로그램</b>을 가리켜요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🛡️ DBMS의 역할 · 데이터베이스는 이렇게 관리돼요</h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">✅</div><h4>무결성</h4><p>데이터의 정확성과 신뢰성을 유지해요.</p></div>
+      <div class="kc" style="--k:#d64535"><div class="ic">🔐</div><h4>보안</h4><p>허가된 사용자만 데이터에 접근할 수 있도록 보호해요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">💾</div><h4>백업</h4><p>데이터를 안전하게 복사하고 저장해요.</p></div>
+    </div>
+    <p class="note">데이터베이스 관리 시스템의 예: MySQL, PostgreSQL, Oracle, MongoDB 등 <span class="muted">(표 Ⅰ-12)</span></p>
+    <details class="db-more"><summary>표 Ⅰ-12 데이터베이스와 데이터베이스 관리 시스템 비교 (교과서 38쪽) 펼쳐 보기</summary>
+    <div class="db-scroll">
+      <table class="db-tbl db-cmp">
+        <tr><th>데이터베이스</th><th class="mid">구분</th><th>데이터베이스 관리 시스템</th></tr>
+        <tr><td>체계적으로 조직된 데이터셋의 모음</td><td class="mid">정의</td><td>데이터베이스를 생성, 관리, 유지 보수하는 소프트웨어</td></tr>
+        <tr><td>데이터를 저장하는 장소</td><td class="mid">역할</td><td>데이터를 효율적으로 관리하고 접근할 수 있도록 지원</td></tr>
+        <tr><td>데이터의 물리적 저장</td><td class="mid">기능</td><td>데이터의 추가, 수정, 삭제, 검색, 보안 관리, 백업 등 다양한 관리 기능 제공</td></tr>
+        <tr><td>학생 정보, 상품 목록, 고객 데이터 등</td><td class="mid">예시</td><td>MySQL, PostgreSQL, Oracle, MongoDB 등</td></tr>
+      </table>
+    </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3>🏧 더 알아보기 · DBMS는 왜 필요할까? <span class="muted" style="font-weight:400;font-size:.88rem">(39쪽 · ATM 트랜잭션 실험)</span></h3>
+    <p style="margin-top:0">ATM에서 돈을 찾을 때 <b>언제 계좌에 기록할지</b> 정하는 것은 중요해요. 비밀번호 입력, 인출 승인, 현금 지급 가운데 어느 시점이 알맞을까요? <b>기록하는 시점</b>과 <b>일어날 일</b>을 골라 실행해 보고, 실험 기록표를 채워 보세요.</p>
+    <p class="db-first">👉 <b>먼저 이 순서부터</b> 해 봐요: ①·② × ⚡정전 → ③ × 👥동시 요청 → ④ × ⚡정전·👥동시 요청. 나머지 칸은 시간이 남으면 채워요.</p>
+    <div id="atmSim"></div>
+    <div class="callout" style="margin-bottom:0"><b>트랜잭션</b> 데이터베이스 관리 시스템에서 안전성과 일관성을 유지하기 위해 수행되는 일련의 작업이에요. DBMS는 인출 요청부터 현금 지급까지의 과정을 <b>하나의 트랜잭션</b>으로 묶어, <b>최종 완료 시에만</b> 데이터베이스에 기록해요.</div>
+    <div class="memo" style="margin-top:12px"><label>실험 기록표를 보고, 너무 일찍 기록할 때와 늦게 기록할 때 각각 어떤 문제가 생겼는지, 트랜잭션으로 묶으면 무엇이 달라졌는지 적어요.</label><textarea data-memo="atmNote" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+
+  <details class="card db-fold">
+    <summary><h3>🗂️ 데이터베이스 관리 시스템의 종류 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅰ-7 · 눌러서 펼쳐 보기)</span></h3></summary>
+    <p style="margin-top:0">데이터베이스는 관계형 데이터베이스, 문서 데이터베이스, 키-값(key-value) 데이터베이스 등 여러 유형으로 나뉘고, 유형마다 고유한 장단점이 있어 알맞은 응용 프로그램에 쓰여요. 관계형 데이터베이스는 사전 정의된 <b>스키마</b>가 있는 테이블에 구조화된 데이터를 저장하는 데 알맞고, 문서 데이터베이스는 <b>JSON, XML</b>과 같은 문서 형식의 구조화되지 않은 데이터를 저장하는 데 더 알맞아요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#1f9d74"><h4>관계형 데이터베이스 관리 시스템</h4><p>RDBMS: Relational Database Management System. 데이터를 <b>표 형태</b>로 저장하며, SQL(Structured Query Language)을 사용해 데이터를 관리해요.</p><small>예) MySQL, PostgreSQL, Oracle</small></div>
+      <div class="kc" style="--k:#d64535"><h4>비관계형 데이터베이스 시스템</h4><p>NoSQL: Not only SQL. 다양한 데이터 구조를 지원하며, <b>대규모 데이터 처리</b>에 유리해요.</p><small>예) MongoDB, Cassandra</small></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>클라우드 데이터베이스 시스템</h4><p><b>클라우드 환경</b>에서 제공되는 데이터베이스 서비스로, 확장성과 접근성이 좋아요.</p><small>예) Amazon RDS, Google Cloud Firestore</small></div>
+    </div>
+    <p>이 가운데 <b>1970년대 이후 지금까지 가장 많이 쓰이는</b> 것은 관계형 데이터베이스 관리 시스템이에요. 인터넷이 발전하면서 방대한 데이터를 처리하려고 다른 DBMS도 개발되어 쓰이고 있지만, 여전히 많은 산업 분야에서 관계형 데이터베이스를 활용해요.</p>
+    <details class="db-more"><summary>낱말 풀이 · 스키마, JSON, XML</summary>
+      <ul class="db-gl">
+        <li><b>스키마</b> 데이터베이스의 구조를 정의하는 설계도예요. 테이블, 열, 관계 등 데이터베이스 요소들의 구성과 제약을 규정해 데이터의 조직과 구조를 설명해요.</li>
+        <li><b>제이슨(JSON)</b> 데이터를 저장하고 전달하기 위한 간단한 형식으로, 사람이 읽기 쉽고 컴퓨터가 처리하기 쉬운 텍스트 기반 구조예요. 주로 웹에서 데이터를 주고받을 때 써요.</li>
+        <li><b>XML</b> 확장 가능한 마크업 언어로, 데이터를 구조화해 저장하고 전달하는 데 쓰는 언어예요.</li>
+      </ul>
+    </details>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#1f9d74">공문 한 건 한 건 같은 낱낱의 기록이 <b>데이터</b>이고, 이를 분석이나 처리를 목적으로 구조화해 모은 것이 <b>데이터셋</b>이다. 같은 데이터로도 알고 싶은 것에 따라 다른 데이터셋을 만들 수 있다.</div>
+    <div style="--k:#e0702b"><b>데이터베이스</b>는 많은 데이터셋을 컴퓨터로 체계적으로 저장해, 여러 사용자가 동시에 접근하고 장기적으로 활용할 수 있게 구성한 데이터의 모음이다.</div>
+    <div style="--k:#9b4fc4"><b>데이터베이스 관리 시스템(DBMS)</b>은 데이터베이스를 생성·관리·유지 보수하는 소프트웨어로, 무결성·보안·백업을 맡고 <b>트랜잭션</b>으로 작업을 묶어 안전성과 일관성을 지킨다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 다시 답하기</h3>
+    <p class="muted" style="margin-top:0">처음 생각(황윤길·김성일 메모)이나 나의 계획을 적었다면 그것과 비교하며, 오늘 배운 낱말(데이터셋, 데이터베이스, DBMS, 트랜잭션 등)을 넣어 내 말로 답해 보세요.</p>
+    <b style="font-size:.93rem">메시지, 쇼핑 내역, 금융 정보 같은 정보들은 어디에, 어떻게 저장되는 것일까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>「21세기 다산 되기」에서 흩어진 식수 기록을 모아 총 식수량 데이터셋을 만들었습니다. 이 활동에서 무엇이 <b>데이터</b>이고 무엇이 <b>데이터셋</b>인지 구분해 쓰고, 기록을 표로 모은 덕분에 알 수 있게 된 것을 설명하세요.</li>
+      <li>은행의 예금 계좌 업무를 <b>스프레드시트 한 장</b>으로 처리한다면 어떤 문제가 생길지 쓰고, <b>데이터베이스</b>와 <b>데이터베이스 관리 시스템</b>이 각각 어떤 역할로 그 문제를 해결하는지 설명하세요.</li>
+      <li>ATM 트랜잭션 실험에서 기록 시점을 바꿔 가며 「정전」과 「동시 요청」을 일으켜 보았습니다. <b>너무 일찍 기록할 때</b>와 <b>늦게 기록할 때</b> 생긴 문제를 각각 쓰고, <b>트랜잭션</b>으로 묶으면 왜 안전한지 설명하세요.</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="../forms/data-u1-database.html" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="foot">
+  <button class="btn ghost" id="prev">← 이전</button>
+  <span class="pg" id="pg"></span>
+  <button class="btn" id="next">다음 →</button>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toLocaleString('ko-KR');
+
+
+
+const LESSON='u1-database', PEP='';
+
+/* 진도 보내기 ①: 누가 쓰는지 확인 (반·학번마다 퀴즈·메모를 따로 저장) */
+const WHO=(function(){
+  if(!PEP) return {off:true,sfx:''};
+  if(/[?&]preview(=|&|$)/.test(location.search)) return {preview:true,sfx:'@preview'};
+  let w=null; try{w=JSON.parse(sessionStorage.getItem('aiw-who')||'null');}catch(e){}
+  if(w&&w.teacher) return {preview:true,teacher:true,sfx:'@preview'};
+  if(!w||!/^\d{5}$/.test(w.no||'')) return {need:true,sfx:'@none'};
+  return {cls:w.cls,no:w.no,name:w.name,sfx:'@'+w.no};
+})();
+/* 퀴즈 */
+const QUIZ={
+ 1:[{q:'다산이 흩어진 공문을 고을별로 모아 연도별 표로 옮겨 적은 일은 무엇에 해당할까?',o:['데이터를 측정한 일','데이터로 데이터셋을 만든 일','데이터셋을 낱낱의 데이터로 나눈 일'],a:1,w:'다산은 공문에 흩어진 값을 분석하기 쉽도록 고을별·연도별 표로 구조화했어요.'},
+    {q:'텍스트, 이미지, 비디오처럼 다양한 미디어 형식으로 존재하는 데이터셋은?',o:['데이터베이스','정형 데이터셋','비정형 데이터셋'],a:2,w:'정형 데이터셋은 정해진 데이터 모델에 맞춘 테이블 형태이고, 비정형 데이터셋은 여러 미디어 형식으로 존재해요.'},
+    {q:'표 Ⅰ-10 책 정보 데이터셋에서 「코스모스」 한 칸의 값은 무엇에 해당할까?',o:['데이터','데이터셋','데이터베이스'],a:0,w:'칸 하나하나의 값이 데이터이고, 그 값들을 정해진 항목(필드)에 맞춰 묶은 표 전체가 데이터셋이에요.'}],
+ 2:[{q:'보고서를 쓰려고 큰 데이터베이스에서 우리 학교 자료만 뽑아 스프레드시트 파일로 저장했다. 이것에 가장 가까운 것은?',o:['데이터','데이터셋','데이터베이스'],a:1,w:'더 큰 데이터베이스에서 추출한 하위 집합을 특정 용도로 쓰는 것은 데이터셋이에요.'},
+    {q:'데이터베이스의 쓰임으로 알맞은 것은?',o:['한 번 쓰고 버릴 계산 결과를 잠깐 적어 둔다','그래프 한 장을 그리려고 일부 값을 골라 둔다','조직 운영에 필요한 대량의 데이터를 오래 저장한다'],a:2,w:'데이터베이스는 조직의 운영을 지원하는 대량의 데이터를 포괄적이고 장기적으로 저장하고 활용하려고 써요.'},
+    {q:'은행의 수백만 건 계좌 업무를 스프레드시트 한 장으로 처리하기 어려운 까닭은?',o:['동시에 여럿이 쓰기 어려워서','칸마다 다른 글꼴을 쓸 수 없어서','숫자를 더하는 계산 기능이 없어서'],a:0,w:'하나의 스프레드시트에 여러 명이 동시에 접속해 쓰기 쉽지 않고, 수백만 건 이상을 한 시트에 저장하는 것도 사실상 불가능해요.'}],
+ 3:[{q:'허가된 사용자만 데이터에 접근할 수 있도록 지키는 DBMS의 역할은?',o:['보안','백업','무결성'],a:0,w:'보안은 허가된 사용자만 접근하게 보호하고, 무결성은 정확성과 신뢰성을, 백업은 안전한 복사와 저장을 맡아요.'},
+    {q:'ATM에서 인출 요청부터 현금 지급까지를 하나로 묶어 다루는, 안전성과 일관성을 위한 일련의 작업은?',o:['백업','무결성','트랜잭션'],a:2,w:'트랜잭션은 데이터베이스 관리 시스템에서 안전성과 일관성을 유지하기 위해 수행되는 일련의 작업이에요.'},
+    {q:'ATM이 현금을 지급한 뒤에야 계좌에 기록한다면, 같은 계좌로 동시에 인출 요청이 들어올 때 생길 수 있는 일은?',o:['아무 문제 없다','추가 인출이 생긴다','현금이 나오지 않는다'],a:1,w:'첫 인출이 기록되기 전의 잔액을 보고 다른 요청도 승인되어, 계좌에 없는 돈까지 나갈 수 있어요.'}],
+ 4:[{q:'ATM이 정전되어 현금은 받지 못했는데, 계좌에서는 돈이 빠진 것으로 기록되었다. 무엇이 문제였을까?',o:['기록이 너무 늦었다','기록이 너무 일찍 되었다','현금을 너무 많이 넣었다'],a:1,w:'현금을 지급하기 전에 미리 기록해 두어서, 중간에 멈추자 기록과 실제가 어긋났어요.'},
+    {q:'21세기 다산 활동에서 수원 시트와 광주 시트의 기록을 한 표로 모을 때 기준으로 삼은 공통된 특성은?',o:['연도','기록한 사람','나무 이름의 글자 수'],a:0,w:'두 고을 시트 모두 날짜가 있어서, 연도를 기준으로 고을별 식수량을 나란히 모을 수 있었어요.'},
+    {q:'MySQL, PostgreSQL, Oracle, MongoDB가 공통으로 속하는 것은?',o:['정형 데이터셋 파일','스프레드시트 프로그램','데이터베이스 관리 시스템'],a:2,w:'모두 데이터베이스를 생성·관리·유지 보수하는 소프트웨어, 곧 데이터베이스 관리 시스템(DBMS)의 예예요.'}],
+};
+
+const QK='ds-u1-database-quiz'+WHO.sfx;
+const MK='ds-u1-database-memo'+WHO.sfx;
+let QS={}; try{QS=JSON.parse(localStorage.getItem(QK)||'{}')||{};}catch(e){QS={};}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(QS));}catch(e){}}
+const TOTALQ=Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+function qperm(n,key){ let h=2166136261; for(const c of key){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}
+  const p=[...Array(n).keys()]; for(let i=n-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0; h=(h+0x6D2B79F5)>>>0; const j=h%(i+1); [p[i],p[j]]=[p[j],p[i]];} return p; }
+function renderQuiz(box){
+  const k=box.dataset.quiz; box.innerHTML=`<div class="qh"><b>개념 퀴즈</b><span>${QUIZ[k].length}문제 · 고르면 바로 채점</span></div>`;
+  QUIZ[k].forEach((it,i)=>{
+    const id=k+'-'+i, d=document.createElement('div'); d.className='qi';
+    /* 보기 순서는 학생마다 섞되(새로 고쳐도 같은 순서), 저장·채점은 원래 번호로 */
+    const perm=qperm(it.o.length, QK+'|'+id);
+    d.innerHTML=`<div class="qq">${i+1}. ${it.q}</div><div class="opts">${perm.map(j=>`<button data-j="${j}">${it.o[j]}</button>`).join('')}</div><div class="why"></div>`;
+    const btn=j=>d.querySelector(`button[data-j="${j}"]`);
+    const mark=(j,anim)=>{
+      const bs=d.querySelectorAll('button'); bs.forEach(b=>b.disabled=true);
+      btn(it.a).classList.add('right'); if(j!==it.a){btn(j).classList.add('wrong'); if(anim) d.classList.add('shake');}
+      d.classList.add('answered', j===it.a?'correct':'incorrect');
+      d.querySelector('.why').textContent=(j===it.a?'정답. ':'정답은 「'+it.o[it.a]+'」. ')+it.w;
+    };
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;QS[id]=j;saveQ();mark(j,true);updScore();});
+    if(QS[id]!=null && QS[id]<it.o.length) mark(QS[id],false);
+    box.appendChild(d);
+  });
+}
+
+/* 페이지 이동 */
+const pages=[...document.querySelectorAll('.page')];
+const stepBtns=pages.map((p,i)=>{const b=document.createElement('button');b.textContent=i?`${i}. ${p.dataset.name}`:'시작';b.onclick=()=>go(i);$('steps').appendChild(b);return b;});
+function updScore(){
+  let ok=0; for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{if(QS[k+'-'+i]===it.a) ok++;});
+  $('score').textContent=`퀴즈 ${ok} / ${TOTALQ}`;
+  pages.forEach((p,i)=>{const q=p.querySelector('[data-quiz]'); if(!q) return; const k=q.dataset.quiz; stepBtns[i].classList.toggle('done',QUIZ[k].every((_,j)=>QS[k+'-'+j]!=null));});
+  let h='<tr><th class="l">개념</th><th>맞힌 문제</th></tr>';
+  for(const k in QUIZ){const n=QUIZ[k].length, c=QUIZ[k].filter((it,i)=>QS[k+'-'+i]===it.a).length, a=QUIZ[k].filter((_,i)=>QS[k+'-'+i]!=null).length;
+    h+=`<tr><td class="l">${k}. ${pages[k].dataset.name}</td><td>${a?`<b class="${c===n?'ok':''}">${c} / ${n}</b>`:'<span class="muted">아직 안 풂</span>'}</td></tr>`;}
+  h+=`<tr><td class="l"><b>합계</b></td><td><b>${ok} / ${TOTALQ}</b></td></tr>`;
+  $('result').innerHTML=h;
+}
+let cur=-1;
+const onShow={};
+function go(i){
+  i=Math.max(0,Math.min(pages.length-1,i)); if(i===cur) return;
+  const back=i<cur; if(cur>=0) pages[cur].classList.remove('on','back');
+  pages[i].classList.add('on'); pages[i].classList.toggle('back',back);
+  document.documentElement.style.setProperty('--acc',pages[i].dataset.acc);
+  document.documentElement.style.setProperty('--acc-soft',pages[i].dataset.acc+'1a');
+  stepBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sb=$('steps'), btn=stepBtns[i]; sb.scrollLeft=btn.offsetLeft-sb.clientWidth/2+btn.clientWidth/2;
+  $('prog').style.width=(i/(pages.length-1)*100)+'%';
+  $('pg').textContent=`${i} / ${pages.length-1}`;
+  $('prev').style.visibility=i?'visible':'hidden'; $('next').style.visibility=i<pages.length-1?'visible':'hidden';
+  cur=i; try{history.replaceState(null,'','#p'+i);}catch(e){} window.scrollTo(0,0);
+  if(onShow[i]) onShow[i]();
+}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.defaultPrevented)return; if(e.target.matches&&e.target.matches('input,select,textarea'))return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+document.querySelectorAll('.gcard').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.click();}}));
+document.querySelectorAll('[data-quiz]').forEach(renderQuiz);
+$('quizReset').onclick=()=>{QS={};saveQ();document.querySelectorAll('[data-quiz]').forEach(renderQuiz);updScore();};
+
+
+/* 공용 부품: 메모·카드·분류 게임·탭·투표·칩 */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* 메모: data-memo가 있는 입력칸은 이 기기에 저장 */
+let MEMO=store.get(MK,{});
+function bindMemos(){
+  document.querySelectorAll('[data-memo]').forEach(t=>{
+    const k=t.dataset.memo; if(MEMO[k]!=null) t.value=MEMO[k];
+    let tm; t.addEventListener('input',()=>{MEMO[k]=t.value; clearTimeout(tm); tm=setTimeout(()=>{store.set(MK,MEMO); const s=t.parentElement.querySelector('.saved'); if(s){s.textContent='이 기기에 저장됨'; setTimeout(()=>s.textContent='',1400);} t.dispatchEvent(new Event('memo'));},300);});
+  });
+}
+function memoSummary(box,list){
+  const h=list.map(([k,label])=>{const v=(MEMO[k]||'').trim(); return `<dt>${esc(label)}</dt><dd class="${v?'':'e'}">${v?esc(v):'(아직 안 씀)'}</dd>`;}).join('');
+  $(box).innerHTML=`<h4>오늘 화면에 적어 둔 내 메모</h4><dl>${h}</dl>`;
+}
+
+/* 뒤집는 카드 */
+function flipCards(box,items){
+  $(box).innerHTML=items.map(c=>`<div class="tcard" tabindex="0"><div class="in"><div class="f"><i>${c.ic||''}</i><b>${c.f}</b>${c.s?`<small>${c.s}</small>`:''}</div><div class="b">${c.b}${c.x?`<div class="x">${c.x}</div>`:''}</div></div></div>`).join('');
+  $(box).querySelectorAll('.tcard').forEach(t=>{const f=()=>t.classList.toggle('flip'); t.onclick=f; t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+}
+
+/* 분류 게임: 문장을 보고 알맞은 묶음 고르기 */
+function sorter(box,cfg){
+  const B=$(box);
+  function start(){
+    const order=shuffle(cfg.items.map((_,i)=>i)); let pos=0, ok=0; const placed=cfg.cats.map(()=>[]);
+    B.innerHTML=`<div class="sit"><div class="cnt"></div><div class="ic"></div><div class="sq"></div><div class="row btns">${cfg.cats.map((c,j)=>`<button class="btn sm cat" style="--k:${c.k}" data-j="${j}">${c.n}</button>`).join('')}</div><div class="fb"></div><div class="row nx" style="margin-top:8px"></div></div><div class="board" style="--n:${cfg.cats.length}">${cfg.cats.map(c=>`<div style="--k:${c.k}"><b>${c.n}</b></div>`).join('')}</div>`;
+    const sq=B.querySelector('.sq'), ic=B.querySelector('.ic'), cnt=B.querySelector('.cnt'), fb=B.querySelector('.fb'), nx=B.querySelector('.nx'), btns=[...B.querySelectorAll('.cat')], cols=[...B.querySelectorAll('.board>div')];
+    function show(){
+      if(pos>=order.length){cnt.textContent=''; ic.textContent='🎉'; sq.innerHTML=`${order.length}개 중 <b>${ok}개</b>를 바로 맞혔어요.`; fb.innerHTML=cfg.end||''; btns.forEach(b=>b.style.display='none'); nx.innerHTML='<button class="btn ghost sm">처음부터 다시</button>'; nx.firstChild.onclick=start; return;}
+      const it=cfg.items[order[pos]]; cnt.textContent=`${pos+1} / ${order.length}`; ic.textContent=it.ic||''; sq.innerHTML=it.t; fb.textContent=''; nx.innerHTML=''; btns.forEach(b=>{b.disabled=false;b.style.display='';});
+    }
+    btns.forEach(b=>b.onclick=()=>{
+      const it=cfg.items[order[pos]], j=+b.dataset.j, right=j===it.c; if(right) ok++;
+      btns.forEach(x=>x.disabled=true);
+      fb.innerHTML=(right?'<span class="ok">맞아요!</span> ':`<span class="ng">아쉬워요.</span> 정답은 <b>${cfg.cats[it.c].n}</b>. `)+(it.w||'');
+      const s=document.createElement('span'); s.innerHTML=it.short||it.t; if(!right) s.className='x'; cols[it.c].appendChild(s);
+      nx.innerHTML='<button class="btn sm">다음 →</button>'; nx.firstChild.onclick=()=>{pos++;show();}; nx.firstChild.focus();
+    });
+    show();
+  }
+  start();
+}
+
+/* 탭 보기: 버튼을 누르면 내용 바꾸기 */
+function tabs(btnBox,viewBox,items,render){
+  $(btnBox).innerHTML=items.map((it,i)=>`<button data-i="${i}"><span class="e">${it.ic||''}</span><b>${it.n}</b></button>`).join('');
+  const bs=[...$(btnBox).querySelectorAll('button')];
+  const pick=i=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); $(viewBox).innerHTML=render(items[i],i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i)); pick(0);
+}
+
+/* 투표: 고르면 결과 보이기 (이 기기에만 저장) */
+function vote(box,key,opts,onPick){
+  const B=$(box); B.innerHTML=opts.map((o,i)=>`<button data-i="${i}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')];
+  const pick=(i,save)=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); if(save){MEMO[key]=opts[i][0]; store.set(MK,MEMO);} onPick&&onPick(i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i,true));
+  const prev=opts.findIndex(o=>o[0]===MEMO[key]); if(prev>=0) pick(prev,false);
+}
+function chips(box,key,opts,multi){
+  const B=$(box); B.classList.add('chk'); B.innerHTML=opts.map(o=>`<button>${o}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')]; let sel=(MEMO[key]||'').split(' · ').filter(Boolean);
+  const draw=()=>bs.forEach(b=>b.classList.toggle('on',sel.includes(b.textContent)));
+  bs.forEach(b=>b.onclick=()=>{const t=b.textContent; if(multi) sel=sel.includes(t)?sel.filter(x=>x!==t):[...sel,t]; else sel=sel.includes(t)?[]:[t]; MEMO[key]=sel.join(' · '); store.set(MK,MEMO); draw(); B.dispatchEvent(new Event('memo'));});
+  draw();
+}
+/* 01 표 Ⅰ-10: 칸을 누르면 데이터와 데이터셋 */
+(function(){
+  const T=$('bookTbl'), cap=$('bookCap'), head=[...T.rows[0].cells].map(c=>c.textContent);
+  T.querySelectorAll('td').forEach(td=>td.onclick=()=>{
+    T.querySelectorAll('td.on').forEach(x=>x.classList.remove('on'));
+    td.classList.add('on'); T.classList.add('all');
+    const col=head[td.cellIndex], id=td.parentElement.cells[0].textContent;
+    cap.innerHTML=`ID ${id}번 책의 「${esc(col)}」 칸 값 <b>${esc(td.textContent)}</b> 하나하나가 <b>데이터</b>예요. 이런 데이터를 정해진 항목(필드)에 맞춰 묶은 <b>표 전체</b>(테두리 상자)가 <b>데이터셋</b>이에요.`;
+  });
+})();
+
+/* 01 스스로 해결하기 · 21세기 다산 되기 (36쪽 실습 데이터의 수원·광주 시트) */
+(function(){
+  const KIND=['소나무','잣나무','단풍나무','뽕나무'], YEARS=[2019,2020,2021,2022];
+  const TOWN=[
+    {n:'수원',rows:[['2019-04-05',[4,0,0,0]],['2019-05-15',[4,0,5,0]],['2020-02-11',[0,4,0,0]],['2020-09-14',[1,0,0,5]],['2021-04-05',[0,4,2,0]],['2021-10-11',[0,3,0,5]],['2022-04-19',[0,0,6,0]]]},
+    {n:'광주',rows:[['2019-03-15',[2,3,0,0]],['2019-05-26',[0,1,0,3]],['2020-07-18',[0,4,3,0]],['2020-11-21',[2,0,1,3]],['2021-10-05',[1,1,3,0]],['2022-03-24',[0,2,4,5]],['2022-04-19',[1,0,0,5]]]},
+  ];
+  const sum=a=>a.reduce((x,y)=>x+y,0);
+  const B=$('dasanSim'); let tab, pick, done, agg, cnt, miss, msg;
+  function reset(){tab=0; pick=null; done=TOWN.map(t=>t.rows.map(()=>false)); agg=YEARS.map(()=>[0,0]); cnt=YEARS.map(()=>[0,0]); miss=0;
+    msg='시트에서 기록 한 줄을 눌러 고르세요.'; draw();}
+  function left(){return done.flat().filter(x=>!x).length;}
+  function place(t,r,y){const rec=TOWN[t].rows[r]; done[t][r]=true; agg[y][t]+=sum(rec[1]); cnt[y][t]++;}
+  function draw(){
+    const L=left(), T=TOWN[tab];
+    const parts=p=>p[1].map((v,k)=>v?`${KIND[k]} ${v}`:'').filter(Boolean).join(' + ');
+    B.innerHTML=`<div class="db-ds">
+      <div class="db-ds-l">
+        <div class="db-tabs">${TOWN.map((t,i)=>`<button data-t="${i}" class="${i===tab?'on':''}">${t.n} 시트 <small>${t.rows.filter((_,r)=>!done[i][r]).length}줄 남음</small></button>`).join('')}</div>
+        <div class="db-scroll"><table class="db-tbl db-sheet">
+          <tr><th>날짜</th>${KIND.map(k=>`<th>${k}</th>`).join('')}</tr>
+          ${T.rows.map((r,i)=>`<tr data-r="${i}" class="${done[tab][i]?'done':''} ${pick&&pick[0]===tab&&pick[1]===i?'pick':''}"><td class="mono">${r[0]}</td>${r[1].map(v=>`<td>${v||''}</td>`).join('')}</tr>`).join('')}
+        </table></div>
+        <p class="note">빈칸은 그날 심지 않은 나무예요. 한 줄에 여러 종류가 있으면 모두 더해서 집계해요.</p>
+      </div>
+      <div class="db-ds-r">
+        <b class="db-agt">총 식수량 데이터셋</b>
+        <div class="db-scroll"><table class="db-tbl db-agg">
+          <tr><th>연도</th><th>수원</th><th>광주</th></tr>
+          ${YEARS.map((y,i)=>`<tr><th>${y}</th>${[0,1].map(t=>`<td data-y="${i}" data-t="${t}" class="${pick?'can':''}">${cnt[i][t]?`<b>${agg[i][t]}</b><small>${cnt[i][t]}건</small>`:'<span class="muted">·</span>'}</td>`).join('')}</tr>`).join('')}
+          ${L===0?`<tr class="sum"><th>합계</th>${[0,1].map(t=>`<td><b>${sum(agg.map(a=>a[t]))}</b></td>`).join('')}</tr>`:''}
+        </table></div>
+        <div class="db-stat">남은 기록 <b>${L}</b>줄 · 잘못 넣으려 한 횟수 <b class="${miss?'ng':''}">${miss}</b></div>
+      </div>
+    </div>
+    <div class="db-fb">${msg}</div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" data-k="all" ${L?'':'disabled'}>남은 기록 한 번에 넣기</button><button class="btn ghost sm" data-k="re">처음부터 다시</button></div>`;
+    B.querySelectorAll('[data-t]').forEach(b=>{ if(b.tagName==='BUTTON') b.onclick=()=>{tab=+b.dataset.t; draw();}; });
+    B.querySelectorAll('.db-sheet tr[data-r]').forEach(tr=>tr.onclick=()=>{const r=+tr.dataset.r;
+      if(done[tab][r]){msg='이 기록은 이미 집계 표에 넣었어요. 아직 흐린 색이 아닌 줄을 골라요.'; draw(); return;}
+      pick=[tab,r]; const rec=TOWN[tab].rows[r];
+      msg=`<b>${TOWN[tab].n} · ${rec[0]}</b> 기록을 골랐어요(${parts(rec)} = ${sum(rec[1])}그루). 이제 오른쪽 집계 표에서 이 기록이 들어갈 칸을 눌러요.`; draw();});
+    B.querySelectorAll('.db-agg td[data-y]').forEach(td=>td.onclick=()=>{
+      if(!pick){msg='먼저 왼쪽 시트에서 기록 한 줄을 골라요.'; draw(); return;}
+      const [t,r]=pick, rec=TOWN[t].rows[r], y=+td.dataset.y, tt=+td.dataset.t, ry=YEARS.indexOf(+rec[0].slice(0,4));
+      if(y===ry && tt===t){place(t,r,y); pick=null;
+        msg=left()?`<span class="ok">맞아요!</span> ${YEARS[y]}년 ${TOWN[t].n} 칸에 <b>${sum(rec[1])}그루</b>(${parts(rec)})를 더했어요. 다음 기록을 골라요.`
+          :`<span class="ok">완성!</span> 흩어진 기록 14줄이 <b>연도 × 고을</b> 표 하나로 모였어요. 교과서 36쪽의 총 식수량 데이터셋과 비교해 보고, 맨 아래 <b>합계</b> 줄로 4년 동안 더 많이 심은 고을을 찾아보세요.`;}
+      else{miss++; const why=[]; if(tt!==t) why.push(`이 기록은 <b>${TOWN[t].n}</b> 시트에 있어요`); if(y!==ry) why.push(`날짜의 연도가 <b>${YEARS[ry]}</b>년이에요`);
+        msg=`<span class="ng">다른 칸이에요.</span> ${why.join(', ')}. 고을과 연도를 함께 확인해요.`;}
+      draw();});
+    B.querySelector('[data-k=all]').onclick=()=>{TOWN.forEach((T2,t)=>T2.rows.forEach((rec,r)=>{if(!done[t][r]) place(t,r,YEARS.indexOf(+rec[0].slice(0,4)));})); pick=null;
+      msg='남은 기록을 모두 넣었어요. 표 맨 아래 <b>합계</b> 줄로 4년 동안 더 많이 심은 고을을 찾아보세요. (스프레드시트에서는 함수를 써서 이런 집계를 한 번에 할 수도 있어요.)'; draw();};
+    B.querySelector('[data-k=re]').onclick=reset;
+  }
+  reset();
+})();
+
+/* 02 데이터셋일까, 데이터베이스일까? */
+sorter('dsdbGame',{
+  cats:[{n:'📊 데이터셋',k:'#1f9d74'},{n:'🗄️ 데이터베이스',k:'#e0702b'}],
+  items:[
+    {t:'기계학습 훈련에 쓰려고 고양이 사진 파일 이름과 이름표를 CSV 파일 하나에 정리한다',c:0,ic:'🐱',w:'기계학습 훈련이라는 특정 용도로, CSV 파일 형식에 모은 데이터의 집합이에요.'},
+    {t:'학교 전체 기록 가운데 우리 반 체육 측정 결과만 뽑아 스프레드시트 한 장에 옮겼다',c:0,ic:'🏃',w:'더 큰 데이터에서 추출한 하위 집합을 분석에 쓰고 있어요.'},
+    {t:'지역 기온 관측 기록에서 지난여름 값만 골라 그래프용 표를 만들었다',c:0,ic:'🌡️',w:'그래프를 그리는 특정 분석 목적으로 골라 모은 데이터예요.'},
+    {t:'온라인 쇼핑몰이 몇 년 동안 쌓은 상품·주문·회원 정보를 앱과 누리집에서 함께 꺼내 썼다',c:1,ic:'🛒',w:'조직의 운영을 위해 대량의 데이터를 장기적으로 저장하고 여러 응용 프로그램이 함께 써요.'},
+    {t:'학교가 전교생의 출결·성적 정보를 오랫동안 보관하고, 여러 선생님이 동시에 조회한다',c:1,ic:'🏫',w:'여러 사용자가 동시에 접근하고, 장기적인 저장과 활용이 목적이에요.'},
+    {t:'병원이 여러 진료과에서 꺼내 볼 수 있도록 진료 기록, 엑스레이 사진, 처방 정보를 함께 저장했다',c:1,ic:'🏥',w:'텍스트·숫자·이미지 등 다양한 유형의 데이터를 저장하고 여러 곳에서 활용해요.'},
+  ],
+  end:'<b>정리</b> 특정 용도로 모은 데이터의 집합은 <b>데이터셋</b>, 여러 데이터셋을 컴퓨터로 체계적으로 저장해 여럿이 오래 함께 쓰는 것은 <b>데이터베이스</b>예요.'
+});
+
+/* 02 은행 업무를 스프레드시트로? */
+vote('bankVote','bankSheet',[['🙆 가능할 것 같다'],['🙅 어려울 것 같다'],['🤔 잘 모르겠다']],()=>{
+  $('bankWhy').innerHTML=`<b>교과서 38쪽에서는 이렇게 말해요.</b> 하나의 스프레드시트를 <b>여러 명이 동시에 접속</b>해서 쓰는 것은 쉽지 않아요. 또 <b>수백만 건 이상</b>의 데이터를 하나의 시트에 저장하는 것도 사실상 불가능해요. 이런 문제를 해결하려고 등장한 것이 다음 화면의 <b>데이터베이스 관리 시스템</b>이에요.`;
+});
+
+/* 03 더 알아보기 · ATM 트랜잭션 실험 */
+(function(){
+  const WHEN=[['pin','① 비밀번호 입력 때'],['ok','② 인출 승인 때'],['late','③ 현금 지급 뒤'],['tx','④ 트랜잭션으로 묶기']];
+  const EV=[['none','😊 아무 일 없음'],['power','⚡ 현금 지급 직전 정전'],['both','👥 동시 요청']];
+  const STEPS=['인출 요청 70,000원','비밀번호 입력','인출 승인','현금 지급'];
+  const won=n=>n.toLocaleString('ko-KR')+'원';
+  const B=$('atmSim'); let w=null, e=null, log=null, res=null, rec={};
+  function run(){
+    const L=[], early=(w==='pin'||w==='ok'); let bal=100000, cash=0, other=0, ok=true, why='';
+    const at=w==='pin'?1:w==='ok'?2:-1;
+    L.push(['💳','내 ATM: <b>인출 요청 70,000원</b> (계좌 잔액 100,000원)']);
+    for(let s=1;s<=3;s++){
+      if(s===3 && e==='power'){
+        L.push(['⚡','<b>정전!</b> 현금이 나오기 직전에 ATM이 꺼졌어요.']);
+        if(early){ok=false; why='계좌에서는 돈이 빠진 것으로 기록되었는데, 실제로는 현금을 받지 못했어요. <b>너무 일찍 기록</b>한 탓이에요.';}
+        else if(w==='tx'){L.push(['↩️','트랜잭션이 끝나지 않았으니 <b>기록하지 않고 취소</b>해요. 처음 상태 그대로예요.']); why='트랜잭션이 완료되지 않아 아무것도 기록되지 않았어요. 잔액도 현금도 처음 그대로라서 다시 시도하면 돼요.';}
+        else {why='현금 지급 전에 멈췄고 아직 기록하지 않았으니 잔액도 그대로예요. 정전에는 괜찮았지만, <b>늦게 기록해도 동시 요청에는 위험해요.</b> 같은 시점(③)으로 👥 동시 요청을 실행해 보세요.';}
+        break;
+      }
+      L.push(['▶️',`내 ATM: ${STEPS[s]}`+(s===3?' — 현금 70,000원이 나왔어요':'')]);
+      if(s===3) cash+=70000;
+      if(s===at){bal-=70000; L.push(['📝',`<b>계좌에 기록</b>: 잔액 ${won(bal)}`]);}
+      if(s===2 && e==='both'){
+        if(w==='tx'){L.push(['⏳','어머니가 다른 ATM에서 같은 계좌로 70,000원 인출 요청 → 내 트랜잭션이 끝날 때까지 <b>기다려요</b>.']);}
+        else{
+          L.push(['👩',`어머니가 다른 ATM에서 같은 계좌로 70,000원 인출 요청 → 지금 기록된 잔액은 <b>${won(bal)}</b>`]);
+          if(bal>=70000){other=70000; L.push(['💸','잔액이 충분해 보여서 <b>어머니의 인출도 승인</b>, 현금 70,000원이 나갔어요.']);}
+          else L.push(['🙅','잔액이 부족해서 어머니의 인출은 <b>거절</b>돼요.']);
+        }
+      }
+    }
+    if(e!=='power' || early){
+      if(w==='late' && !(e==='power')){bal=100000-70000; L.push(['📝',`현금 지급 뒤 <b>계좌에 기록</b>: 잔액 ${won(bal)}`]);
+        if(other){L.push(['📝',`어머니 ATM도 처음 본 잔액 100,000원에서 빼서 기록: 잔액 ${won(100000-70000)}`]); ok=false; why='두 요청 모두 기록 전의 잔액 100,000원을 보고 승인되어 <b>140,000원</b>이 나갔는데, 계좌에는 30,000원이 남은 것으로 기록되었어요. <b>기록이 늦어</b> 계좌에 없는 돈까지 인출됐어요.';}
+      }
+      if(w==='tx' && e!=='power'){bal=30000; L.push(['✅','모든 과정이 끝났으니 <b>트랜잭션을 한 번에 기록</b>: 잔액 30,000원']);
+        if(e==='both'){L.push(['👩','이제 어머니의 요청을 처리해요. 기록된 잔액은 30,000원 → 잔액이 부족해 <b>거절</b>돼요.']);}
+      }
+    }
+    if(!why) why=e==='both'?'먼저 기록된 잔액을 보고 어머니의 요청이 거절되어 계좌에 있는 돈만큼만 나갔어요.':'잔액 기록과 실제로 나간 현금이 서로 맞아요.';
+    const out=cash+other;
+    if(ok && out!==100000-bal) ok=false;
+    log=L; res={ok,why,bal,out}; rec[w+'|'+e]=ok;
+  }
+  function draw(){
+    const n=Object.keys(rec).length;
+    B.innerHTML=`<div class="db-atm-story">🏦 어머니 계좌에 <b>100,000원</b>이 있어요. 내가 ATM에서 <b>70,000원</b>을 찾으려고 해요. <span class="muted">(금액은 예시)</span></div>
+      <div class="db-atm-steps">${STEPS.map((s,i)=>`<span>${s}</span>${i<3?'<i>→</i>':''}`).join('')}</div>
+      <div class="db-atm-pick"><b>계좌에 기록하는 시점</b><div class="row">${WHEN.map(x=>`<button class="db-opt ${w===x[0]?'on':''}" data-w="${x[0]}">${x[1]}</button>`).join('')}</div></div>
+      <div class="db-atm-pick"><b>일어날 일</b><div class="row">${EV.map(x=>`<button class="db-opt ${e===x[0]?'on':''}" data-e="${x[0]}">${x[1]}</button>`).join('')}</div>
+        <small class="muted">동시 요청: 내가 돈을 찾는 동안, 어머니도 다른 ATM에서 같은 계좌로 70,000원을 찾으려고 해요.</small></div>
+      <div class="row"><button class="btn sm" data-k="run" ${w&&e?'':'disabled'}>실행 ▶</button><button class="btn ghost sm" data-k="clr">기록표 지우기</button></div>
+      ${log?`<div class="db-atm-out ${res.ok?'good':'bad'}"><ol class="db-log">${log.map(l=>`<li><i>${l[0]}</i><span>${l[1]}</span></li>`).join('')}</ol>
+        <div class="db-atm-res"><span>계좌에 기록된 잔액 <b>${won(res.bal)}</b></span><span>실제로 나간 현금 <b>${won(res.out)}</b></span><span class="${res.ok?'ok':'ng'}">${res.ok?'✅ 기록과 현금이 맞아요':'⚠️ 기록과 현금이 어긋났어요'}</span></div>
+        <p>${res.why}</p></div>`:''}
+      <div class="db-scroll"><table class="db-tbl db-atm-tbl"><tr><th>기록 시점 \\ 일어날 일</th>${EV.map(x=>`<th>${x[1]}</th>`).join('')}</tr>
+        ${WHEN.map(x=>`<tr><th>${x[1]}</th>${EV.map(y=>{const v=rec[x[0]+'|'+y[0]];return `<td>${v==null?'<span class="muted">·</span>':v?'✅':'⚠️'}</td>`;}).join('')}</tr>`).join('')}</table></div>
+      <p class="note">실험 기록표 ${n} / 12칸. ⚠️가 나온 칸을 보고 그 까닭을 생각해 보세요.</p>`;
+    B.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{w=b.dataset.w; log=null; draw();});
+    B.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{e=b.dataset.e; log=null; draw();});
+    B.querySelector('[data-k=run]').onclick=()=>{run(); draw();};
+    B.querySelector('[data-k=clr]').onclick=()=>{rec={}; log=null; draw();};
+  }
+  draw();
+})();
+
+/* 04 마무리 */
+const MEMOLIST=[['whyDiff','생각 정리하기 · 두 신하가 다르게 해석한 이유'],['planDasan','나의 계획 · 내가 다산이라면'],['dasanNote','21세기 다산 · 더 많이 심은 고을과 모은 기준'],['bankSheet','은행 업무를 스프레드시트로?'],['bankNote','스프레드시트 한 장으로 하면 생길 문제'],['atmNote','ATM 트랜잭션 실험에서 알게 된 것'],['keyQ','오늘의 질문에 대한 내 답']];
+onShow[4]=()=>memoSummary('msum',MEMOLIST);
+
+/* 진도 보내기 ②: 화면 이동·퀴즈·메모·창 이탈을 선생님 시트로 */
+(function(){
+  if(WHO.off) return;
+  const box=document.createElement('div');
+  if(WHO.preview){
+    box.className='tr-badge';
+    box.innerHTML=WHO.teacher?'교사 모드 · 전송 안 함 <button type="button">끝내기</button>':'미리보기 · 진도 전송 안 함';
+    (document.querySelector('.top')||document.body).appendChild(box);
+    const b=box.querySelector('button'); if(b) b.onclick=()=>{ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); };
+    return;
+  }
+
+  if(WHO.need){
+    let last={}; try{last=JSON.parse(localStorage.getItem('aiw-last')||'{}')||{};}catch(e){}
+    box.className='tr-gate';
+    box.innerHTML=`<form class="tr-card" autocomplete="off">
+      <h2>수업 시작 전에</h2>
+      <p class="tr-sub">학번과 이름을 써 주세요.</p>
+      <label class="tr-f"><span>학번</span><input name="no" inputmode="numeric" maxlength="5" placeholder="예: 20101" value="${esc(last.no||'')}"></label>
+      <label class="tr-f"><span>이름</span><input name="name" maxlength="10" placeholder="이름" value="${esc(last.name||'')}"></label>
+      <div class="tr-cls" hidden>${[].map(c=>`<label><input type="radio" name="cls" value="${c}"><span>${c}</span></label>`).join('')}</div>
+      <div class="tr-err"></div>
+      <button class="btn" type="submit">시작하기 →</button>
+      <p class="tr-note">어느 화면까지 왔는지, 퀴즈와 메모가 선생님께 전달돼요.<br>다른 친구 이름으로 들어가지 마세요.</p>
+    </form>`;
+    document.body.appendChild(box);
+    const f=box.querySelector('form'), err=box.querySelector('.tr-err'), go2=f.querySelector('button[type=submit]'), clsBox=box.querySelector('.tr-cls');
+    f.no.addEventListener('input',()=>{f.no.value=f.no.value.replace(/\D/g,'').slice(0,5);});
+    const TEACH=t=>{let h=2166136261;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return h.toString(36);}, TEACH_H='853zuh';
+    const enter=w=>{ try{sessionStorage.setItem('aiw-who',JSON.stringify(w)); if(!w.teacher) localStorage.setItem('aiw-last',JSON.stringify({no:w.no,name:w.name}));}catch(e){} location.reload(); };
+    const busy=on=>{ go2.disabled=on; go2.textContent=on?'명단에서 확인하는 중…':'시작하기 →'; };
+    f.onsubmit=async e=>{
+      e.preventDefault(); err.textContent='';
+      const no=f.no.value.trim(), name=f.name.value.replace(/\s+/g,'').trim();
+      if(TEACH(no+'|'+name)===TEACH_H) return enter({teacher:true});
+      if(!/^\d{5}$/.test(no)){err.textContent='학번 다섯 자리를 숫자로 써 주세요.';f.no.focus();return;}
+      if(name.length<2){err.textContent='이름을 써 주세요.';f.name.focus();return;}
+      /* 명단에서 확인이 안 될 때만 반을 직접 고른다 */
+      if(!clsBox.hidden){
+        const cls=(f.querySelector('input[name=cls]:checked')||{}).value;
+        if(!cls){err.textContent='반을 골라 주세요.';return;}
+        return enter({cls,no,name});
+      }
+      busy(true);
+      try{
+        const r=await fetch(PEP,{method:'POST',body:JSON.stringify({op:'who',no,name})});
+        const d=await r.json();
+        if(d.ok) return enter({cls:d.cls,no,name});
+        busy(false);
+        if(d.err==='notfound'){ err.textContent='명단에서 찾지 못했어요. 학번과 이름을 다시 확인해 주세요. 계속 안 되면 선생님께 말해 주세요.'; return; }
+        throw new Error(d.err);
+      }catch(x){
+        busy(false);
+        if(clsBox.hidden){ clsBox.hidden=false; err.textContent='명단을 확인하지 못했어요. 내 반을 골라 주세요.'; }
+      }
+    };
+    setTimeout(()=>{ (f.no.value?(f.name.value?go2:f.name):f.no).focus(); },50);
+    return;
+  }
+
+  /* 이름 표시 + 바꾸기 */
+  box.className='tr-who';
+  box.innerHTML=`<span>${esc(WHO.cls)} ${esc(WHO.no)} <b>${esc(WHO.name)}</b></span><button type="button" title="다른 학생으로 바꾸기">바꾸기</button>`;
+  (document.querySelector('.top')||document.body).appendChild(box);
+  box.querySelector('button').onclick=()=>{ if(confirm('다른 학생으로 바꿀까요? (지금까지 한 것은 이 학번으로 저장돼 있어요)')){ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); } };
+
+  const SK=QK+'-seen', AK=QK+'-away';
+  const seen=new Set(store.get(SK,[]));
+  const A=store.get(AK,{n:0,s:0});
+  let awayAt=null, lastAct=Date.now(), sent=0, lastSent=0, tmr=null, dirty=false;
+
+  function snap(){
+    let ok=0, done=0;
+    for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{const v=QS[k+'-'+i]; if(v!=null){done++; if(v===it.a) ok++;}});
+    const ML=(typeof MEMOLIST!=='undefined')?MEMOLIST:[];
+    return {op:'put',lesson:LESSON,title:document.title,cls:WHO.cls,no:WHO.no,name:WHO.name,
+      scr:cur,names:pages.map((p,i)=>i?p.dataset.name:'시작'),seen:[...seen].sort((a,b)=>a-b),
+      qOk:ok,qDone:done,qTot:TOTALQ,
+      memo:ML.map(([k,l])=>[l,String(MEMO[k]==null?'':MEMO[k]).slice(0,1500)]),
+      away:awayAt?1:0,leaves:A.n,awaySec:Math.round(A.s+(awayAt?(Date.now()-awayAt)/1000:0)),idle:Math.round((Date.now()-lastAct)/1000),n:++sent};
+  }
+  function flush(){
+    if(!dirty) return; dirty=false; lastSent=Date.now();
+    const body=JSON.stringify(snap());
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(PEP,new Blob([body],{type:'text/plain'}))) return; }catch(e){}
+    try{ fetch(PEP,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  /* 너무 자주 보내지 않기: 보통 15초, 창 이탈·복귀는 3초 간격 */
+  function send(urgent){
+    dirty=true; clearTimeout(tmr);
+    const gap=urgent?3000:15000, wait=Math.max(0,gap-(Date.now()-lastSent));
+    tmr=setTimeout(flush,wait);
+  }
+
+  const _go=go; go=function(i){ _go(i); if(!seen.has(cur)){seen.add(cur); store.set(SK,[...seen]);} send(true); };
+  const _upd=updScore; updScore=function(){ _upd(); send(); };
+  const _set=store.set; store.set=function(k,v){ _set(k,v); if(k===MK) send(); };
+
+  function leave(){ if(awayAt) return; awayAt=Date.now(); A.n++; _set(AK,A); send(true); }
+  function back(){ if(!awayAt) return; A.s+=(Date.now()-awayAt)/1000; awayAt=null; _set(AK,A); send(true); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?leave():(document.hasFocus()&&back()); });
+  window.addEventListener('blur',()=>setTimeout(()=>{ if(!document.hasFocus()) leave(); },300));
+  window.addEventListener('focus',back);
+  window.addEventListener('pagehide',()=>{ dirty=true; flush(); });
+  ['pointerdown','keydown','input','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now();},{capture:true,passive:true}));
+  /* 화면에 머물러 있으면 2분마다 한 번 신호 */
+  setInterval(()=>{ if(!document.hidden) send(); },120000);
+})();
+
+/* 시작 */
+bindMemos();
+updScore();
+const h0=parseInt((location.hash.match(/^#p(\d+)$/)||[])[1],10);
+go(isNaN(h0)?0:h0);
+</script>
+<script>
+/* page-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 (복사 버튼은 그대로 동작) */
+(function(){
+  var t=null, tm=null, MSG='수업 자료는 복사할 수 없어요. 내 말로 정리해 보세요.';
+  function say(){ if(!t){t=document.createElement('div');t.className='pg-toast';document.body.appendChild(t);} t.textContent=MSG; t.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){t.classList.remove('on');},1800); }
+  function inField(e){ return e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'); }
+  ['copy','cut'].forEach(function(type){ document.addEventListener(type,function(e){ e.preventDefault(); say(); },true); });
+  document.addEventListener('contextmenu',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('selectstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('keydown',function(e){ var k=(e.key||'').toLowerCase(); if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x')){ e.preventDefault(); say(); } if((e.ctrlKey||e.metaKey)&&k==='a'&&!inField(e)) e.preventDefault(); },true);
+})();
+</script>
+</body>
+</html>

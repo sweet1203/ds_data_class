@@ -1,0 +1,59 @@
+
+  /* 0 시작 · 상식 문제 */
+  .uf-vote3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:560px){.uf-vote3{grid-template-columns:1fr}}
+  .uf-vote3 button:disabled{cursor:default}
+  .uf-vote3 button:disabled:not(.on){opacity:.55}
+  .uf-bars{max-width:560px}
+  .uf-bars .pct{grid-template-columns:120px 1fr 64px}
+  .uf-bars .pct i{width:var(--w)}
+  .uf-bars .pct b{text-align:right;font-variant-numeric:tabular-nums}
+  /* 02 직업 탭 */
+  .uf-apps4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:860px){.uf-apps4{grid-template-columns:1fr 1fr}}
+  .uf-task{margin-top:8px;background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.88rem}
+  .uf-task ul{margin:4px 0 0;padding-left:18px}
+  /* 03 정리 · 도서 대출 정보 통합 */
+  .uf-steps{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .uf-steps span{font-size:.84rem;font-weight:700;border-radius:999px;padding:3px 11px;background:#f1f3f6;color:var(--muted)}
+  .uf-steps span.on{background:var(--acc);color:#fff}
+  .uf-steps span.done{background:#e7f6ef;color:#13684d}
+  .uf-ln{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;align-items:start}
+  @media (max-width:900px){.uf-ln{grid-template-columns:1fr}}
+  .uf-ln>*{min-width:0}
+  .uf-sheet{margin-bottom:12px}
+  .uf-sname{display:inline-block;font-size:.82rem;font-weight:900;background:#e6eefb;color:#1b3d66;border-radius:8px 8px 0 0;padding:2px 10px}
+  .uf-sheet table{margin:0;min-width:420px;font-size:.88rem;background:#fff}
+  .uf-sheet th,.uf-sheet td{border:1px solid #d9dee5;padding:5px 7px;white-space:nowrap}
+  .uf-sheet th{background:#fbfaf7;color:var(--ink)}
+  .uf-sheet th.cl,.uf-sheet th.rn{background:#eef1f5;color:var(--muted);font-weight:400;font-size:.78rem;padding:2px 6px}
+  .uf-sheet th.add{background:#fff4d6}
+  .uf-sheet td.k{cursor:pointer}
+  .uf-sheet td.k:hover{background:var(--acc-soft)}
+  .uf-sheet td.bad{background:#fdecea;color:#9b2c20;font-weight:900}
+  .uf-sheet td.na,.uf-ul .na{color:var(--red);font-weight:900}
+  .uf-sheet td.dup,.uf-ul .dup{background:#fff4d6;color:#8a5a00;font-weight:700}
+  .uf-sheet td.act{outline:3px solid var(--amber);outline-offset:-3px;background:#fffbea;font-weight:900}
+  .uf-sheet td.fixed{background:#e7f6ef;color:#13684d;font-weight:900}
+  .uf-sheet td.look{background:#e6eefb;font-weight:900}
+  .uf-sheet td.tg{min-width:56px;background:#fffdf6}
+  .uf-sheet td.okc{background:#e7f6ef;color:#13684d;font-weight:700}
+  .uf-side{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .uf-side p{margin:4px 0 8px}
+  .uf-msg{min-height:24px;margin-top:8px}
+  .uf-ul{margin:4px 0 10px;padding-left:18px}
+  .uf-ul li{margin:4px 0}
+  .uf-fx{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #c5ccd5;border-radius:8px;padding:6px 8px;overflow-x:auto}
+  .uf-fx .addr{font-weight:900;background:#eef1f5;border-radius:6px;padding:1px 8px;font-size:.85rem}
+  .uf-fx code{font-family:ui-monospace,Menlo,monospace;font-size:.88rem;white-space:nowrap}
+  .uf-arg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .uf-arg span{font-size:.8rem;background:#fff;border:1px solid var(--line);border-radius:8px;padding:2px 8px}
+  .uf-arg b{font-family:ui-monospace,Menlo,monospace;color:var(--acc)}
+  .uf-arg em{font-style:normal;font-weight:900}
+  /* 03 출산율 */
+  .uf-birth{display:grid;gap:6px;max-width:620px}
+  .uf-birth div{display:grid;grid-template-columns:110px 1fr 62px;gap:8px;align-items:center;font-size:.93rem}
+  .uf-birth i{display:block;height:18px;border-radius:9px;background:var(--acc);width:var(--w)}
+  .uf-birth b{text-align:right}
+  .uf-opt summary{cursor:pointer;font-weight:900;font-size:1.02rem}
+  .uf-opt[open] summary{margin-bottom:8px}

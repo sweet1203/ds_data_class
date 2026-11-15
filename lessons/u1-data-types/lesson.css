@@ -1,0 +1,75 @@
+
+  /* u1-data-types 전용 (dt-) */
+  .dt-scroll{overflow-x:auto;max-width:100%}
+  .dt-tbl{min-width:520px;font-size:.9rem;margin:6px 0}
+  .dt-tbl th,.dt-tbl td{border:1px solid var(--line);padding:5px 8px}
+  .dt-tbl th{background:#fbfaf7}
+  .dt-tbl td.dt-d{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted);font-weight:700}
+  .dt-tbl tr.on td{background:#fff4d6}
+  .dt-tbl tr.dt-sum td{background:#f4eefa;font-weight:900}
+  .dt-st{display:flex;align-items:center;gap:8px;margin:6px 0 4px;font-size:1rem}
+  .dt-st i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#fff;font-size:.82rem}
+  .dt-st .muted{font-weight:400;font-size:.85rem}
+  .dt-grid{min-width:440px}
+  .dt-grid td{padding:3px 6px}
+  .dt-c{font:inherit;font-weight:900;font-size:1.05rem;width:100%;min-height:36px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--muted);cursor:pointer;transition:.15s}
+  .dt-c:hover{border-color:var(--acc)}
+  .dt-c[data-v="1"]{background:var(--acc);border-color:var(--acc);color:#fff}
+  .dt-c.good{background:#e7f6ef;border-color:var(--mint);color:#13684d}
+  .dt-c.bad{background:#fdecea;border-color:var(--red);color:#9b2c20}
+  .dt-c.amb{background:#fff4d6;border-color:#e6b84a;color:#8a5a00}
+  .dt-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0}
+  .dt-msg:empty{display:none}
+  .dt-msg ul{margin:4px 0 0;padding-left:20px}
+  .dt-amb{margin-top:8px;background:#fff8e6;border-radius:8px;padding:8px 10px;font-size:.9rem}
+  .dt-count{display:none;margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
+  .dt-count.on{display:block;animation:fadein .4s both}
+  .dt-json,.dt-csv{background:#0f2742;color:#e8eef6;border-radius:10px;padding:10px 12px;font-size:.84rem;line-height:1.55;margin:6px 0;white-space:pre;overflow-x:auto;font-family:ui-monospace,Menlo,monospace}
+  .dt-json .c{color:#9fb3c8}
+  .dt-ops{margin-bottom:6px}
+  .dt-ops .btn.ghost.on{background:var(--acc);color:#fff}
+  .dt-chips .chip{cursor:default}
+  /* 01 사실 → 기록 */
+  .dt-fact{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:12px 0 4px}
+  @media (max-width:760px){.dt-fact{grid-template-columns:1fr}}
+  .dt-fbox{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--acc);text-align:center}
+  .dt-fbox>b{display:block}
+  .dt-fbox>span{display:block;color:var(--muted);font-size:.86rem;margin-bottom:6px}
+  .dt-farr{text-align:center;font-weight:900;color:var(--acc);font-size:1.4rem;line-height:1.2}
+  .dt-farr span{display:block;font-size:.78rem;color:var(--muted);font-weight:700}
+  .dt-tray{max-width:220px;margin:0 auto}
+  .dt-tray .tr{fill:#cfd5dc;stroke:#a9b2bd;stroke-width:2}
+  .dt-tray .cp{fill:#e9ecef}
+  .dt-rec{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.92rem;text-align:left}
+  .dt-rec small{display:block;color:var(--muted);font-size:.78rem}
+  .dt-talk p{margin:4px 0;background:#fff;border-radius:12px;padding:6px 12px;display:inline-block}
+  .dt-talk p b{color:#8a5a00;margin-right:6px}
+  .dt-talk p:nth-child(2){margin-left:24px}
+  /* 04 네 가지 데이터 */
+  .dt-four{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:860px){.dt-four{grid-template-columns:1fr}}
+  .dt-four>*{min-width:0}
+  .dt-fc{background:#fbfaf7;border-radius:12px;padding:10px 12px;border:2px solid var(--line)}
+  .dt-fc.good{border-color:var(--mint)}
+  .dt-fc.bad{border-color:var(--red)}
+  .dt-fc h4{margin:0 0 6px}
+  .dt-fc .btn.ghost.on{background:var(--acc);color:#fff}
+  .dt-fc .btn:disabled{cursor:default;opacity:.85}
+  .dt-fw{font-size:.88rem;margin:6px 0 0}
+  .dt-mock{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:8px;min-height:110px;overflow-x:auto}
+  .dt-df{margin:0;font-family:ui-monospace,Menlo,monospace;font-size:.76rem;line-height:1.6;white-space:pre}
+  .dt-cm p{margin:0 0 6px;font-size:.84rem;background:#f4f6f9;border-radius:10px;padding:5px 10px}
+  .dt-cm p b{font-size:.78rem;color:var(--muted);margin-right:6px}
+  .dt-cm small{color:var(--muted);font-size:.74rem}
+  .dt-hand div{display:flex;gap:2px;line-height:1.15}
+  .dt-hand span{display:inline-block;width:1.15em;text-align:center;font-family:"Comic Sans MS","Segoe Print","Bradley Hand",cursive;font-size:1.15rem;color:#2b2b2b}
+  .dt-sheet{min-width:470px;font-size:.74rem;margin:0}
+  .dt-sheet th,.dt-sheet td{border:1px solid #d5dbe2;padding:2px 5px;white-space:nowrap}
+  .dt-sheet th{background:#eef1f5;color:var(--muted);font-weight:400}
+  .dt-sheet td{text-align:right}
+  /* 04 개념 빈칸 */
+  .dt-blanks li{margin:8px 0;line-height:1.9}
+  .dt-blanks .blank{font:inherit;font-weight:700;border:0;border-bottom:2px dashed var(--acc);background:var(--acc-soft);color:var(--acc);border-radius:6px 6px 0 0;padding:0 10px;min-width:64px;cursor:pointer}
+  .dt-blanks .blank.on{border-bottom-style:solid;background:#fff4d6;color:var(--ink)}
+  .dt-more summary{cursor:pointer;list-style:revert}
+  .dt-more[open] summary{margin-bottom:8px}

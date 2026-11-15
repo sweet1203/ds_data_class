@@ -1,0 +1,252 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 협력적 창의·융합 활동 · 단원 정리</span>
+      <h1>나의 상식을<br>데이터로 확인하기</h1>
+      <div class="story"><b>상식은 정말 데이터에 근거할까?</b><br>우리는 상식을 바탕으로 여러 결정을 내려요. 상식이 데이터에 근거한다고 믿기 때문이지요. 그런데 「부의 양극화로 중산층이 사라지고 있다」, 「행복은 수입과 관계가 없다」 같은 생각은 과연 사실일까요?</div>
+      <p>오늘은 모둠이 함께 <b>상식 문제를 고르고</b>, <b>실제 데이터로 검증</b>한 뒤 결과를 나눠요. 마지막에는 Ⅰ단원 전체를 정리하고 단원 핵심 질문에 답해요.</p>
+      <ol>
+        <li>상식 확인하기</li><li>데이터로 검증하기</li><li>진로 · 성찰</li><li>Ⅰ단원 정리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">모둠 정하기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>⭕ ❌</i><div><b>상식 확인하기</b><small>데이터를 보기 전에 먼저 답하기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📊</i><div><b>데이터로 검증하기</b><small>그래프로 확인하고 이유 토론하기</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🥽</i><div><b>진로 · 성찰</b><small>실감 미디어공학 연구원 · 자기 평가</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📚</i><div><b>Ⅰ단원 정리</b><small>핵심 질문에 답하기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>우리가 가진 상식을 <b>데이터로 검증</b>해 보며 친구들과 다양한 생각을 나눠요. 단원을 시작할 때 던진 두 물음도 이 활동과 단원 정리를 거쳐 스스로 답해 봐요.</p>
+    </div>
+    <div class="cards2" style="margin-bottom:16px">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🧭</div><h4>단원 핵심 질문 · 데이터 과학과 데이터</h4><p>데이터에 기반한 합리적인 의사 결정 과정은 무엇이고, 데이터의 잠재적 가치는 어떻게 파악할 수 있을까?</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🗄️</div><h4>단원 핵심 질문 · 데이터의 저장과 활용</h4><p>데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까?</p></div>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">모둠 구성</span>
+        <p style="margin:0;font-size:.9rem">3명 내외가 한 모둠이에요.</p>
+        <ul style="font-size:.9rem">
+          <li><b>팀장</b> 모둠 활동을 진행하고 결과를 발표한다.</li>
+          <li><b>기술자</b> 프로그램 사용법을 익혀 직접 다룬다.</li>
+          <li><b>기록자</b> 활동 진행 상황을 기록한다.</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">모둠 정하기</span>
+        <div class="memo" style="margin-top:0">
+          <label>모둠명</label><input type="text" data-memo="team" placeholder="예: 숫자 탐정단">
+          <label>나의 역할</label><div id="myRoleChips"></div>
+          <div class="saved"></div>
+        </div>
+      </div>
+      <div class="why">
+        <span class="kicker">50분 계획</span>
+        <ul>
+          <li>모둠 정하기 · 상식 확인 <b>8분</b></li>
+          <li>데이터로 검증하기 <b>15분</b> → 진로 · 성찰 <b>9분</b></li>
+          <li>Ⅰ단원 정리 <b>8분</b> → 마무리 <b>10분</b></li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">모둠이 함께 이야기하되, 메모는 각자 내 화면에 적어요.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 상식 확인하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 상식 확인하기 -->
+<section class="page" data-name="상식 확인하기" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>상식 확인하기</h2><p>교과서 54쪽 · 준비 학습</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터를 보기 <b>전에</b> 내 상식으로 먼저 답해 두는 단계예요. 처음 생각을 적어 두어야 나중에 데이터와 <b>어디가 다른지</b> 비교할 수 있어요. 한 번 고르면 바꿀 수 없어요.</span></div>
+  <div class="card ur-ox">
+    <h3>⭕❌ 다음 질문에 상식으로 답해 보자</h3>
+    <div class="ur-q"><p><b>1.</b> 1970년대 이후 지진에 의한 사망은 꾸준히 증가하고 있다.</p><div class="vote ur-vote" id="ox1Vote"></div></div>
+    <div class="ur-q"><p><b>2.</b> 소득 수준이 높으면 기대수명이 높다.</p><div class="vote ur-vote" id="ox2Vote"></div></div>
+    <div class="ur-q"><p><b>3.</b> GDP가 높은 국가의 고등학생이 수학 공부를 더 잘한다.</p><div class="vote ur-vote" id="ox3Vote"></div></div>
+    <p class="note" id="oxDone">세 문제에 모두 답하면 다음 화면에서 데이터로 확인해요.</p>
+    <div class="memo"><label>가장 자신 있는 답과 가장 헷갈리는 답을 하나씩 골라, 그렇게 생각한 근거를 적어 보세요. <small>뉴스, 들은 이야기, 느낌 등 무엇이든 괜찮아요. 질문폼 1번에 써요.</small></label><textarea data-memo="oxWhy" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터로 검증하기 -->
+<section class="page" data-name="데이터로 검증하기" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>데이터로 검증하기</h2><p>교과서 54~55쪽 · Gapminder Tools · 문제 선정 · 데이터 검증</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>세계 여러 나라의 데이터를 그래프로 보여 주는 도구에서 <b>가로축·세로축</b>을 질문에 맞게 바꾸고, 그래프가 보여 주는 모습과 내 상식을 비교해요. 다르면 <b>왜 다를까</b>를 모둠이 함께 토론해요.</span></div>
+  <div class="card">
+    <h3>🌍 Gapminder Tools</h3>
+    <p style="margin-top:0"><b>Gapminder Tools</b>는 전 세계 여러 국가의 <b>사회적·경제적 데이터 변화</b>를 시각적으로 탐색할 수 있는 무료 온라인 도구예요. 복잡한 데이터를 그래프와 차트로 보여 주어 직관적으로 이해하도록 도와요. <b>사이트는 선생님이 알려 줘요.</b></p>
+    <div class="grid2">
+      <div>
+        <svg viewBox="0 0 520 300" class="ur-svg" role="img" aria-label="거품 그래프 읽는 법 그림">
+          <rect x="60" y="20" width="440" height="230" fill="#fbfaf7" stroke="#d9dee5"/>
+          <text x="280" y="160" text-anchor="middle" font-size="64" fill="#e3ddd2" font-weight="900">연도</text>
+          <line x1="60" y1="250" x2="500" y2="250" stroke="#16202c" stroke-width="2"/>
+          <line x1="60" y1="20" x2="60" y2="250" stroke="#16202c" stroke-width="2"/>
+          <circle cx="130" cy="120" r="18" fill="#2f6fd0" opacity=".55"/>
+          <circle cx="210" cy="190" r="10" fill="#1f9d74" opacity=".6"/>
+          <circle cx="300" cy="90" r="26" fill="#e0702b" opacity=".5"/>
+          <circle cx="360" cy="170" r="8" fill="#9b4fc4" opacity=".6"/>
+          <circle cx="430" cy="110" r="14" fill="#d64535" opacity=".55"/>
+          <text x="280" y="285" text-anchor="middle" font-size="15" fill="#16202c" font-weight="700">가로축 → 고른 지표 (예: 소득)</text>
+          <text x="22" y="135" text-anchor="middle" font-size="15" fill="#16202c" font-weight="700" transform="rotate(-90 22 135)">세로축 → 고른 지표 (예: 기대수명)</text>
+          <line x1="300" y1="90" x2="352" y2="45" stroke="#5b6776"/>
+          <text x="356" y="44" font-size="13" fill="#5b6776">거품 하나 = 나라 하나</text>
+        </svg>
+        <p class="note">읽는 법을 설명하려고 새로 그린 그림이에요. 거품의 위치는 실제 데이터가 아니에요.</p>
+      </div>
+      <div class="ur-tb">
+        <b>📖 교과서 54쪽 그림 읽기</b>
+        <p>교과서 그림은 가로축이 <b>1인당 GDP(소득)</b>, 세로축이 <b>기대수명</b>인 거품 그래프예요. 그림을 보면 소득 수준이 높을수록 기대수명이 높은 것을 알 수 있어요. 그래서 <b>질문 2의 답은 ‘O’</b>예요.</p>
+        <p class="muted" style="font-size:.88rem">질문 1과 3은 같은 방법으로 모둠이 직접 확인해요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧭 사이트에서 확인하는 순서 <span class="muted" style="font-weight:400;font-size:.88rem">기술자가 화면을 다루고, 모두 함께 봐요</span></h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 사이트에서 Gapminder Tools를 열어요.</b><p>처음에는 거품 모양의 그래프가 나와요. 화면 구성은 바뀔 수 있으니 버튼 이름이 조금 달라도 당황하지 않아요.</p></li>
+      <li><b>축을 질문에 맞게 정해요.</b><p>축 이름을 누르면 다른 지표를 고를 수 있어요. 질문 2는 <b>가로축 소득(Income · 1인당 GDP)</b>, <b>세로축 기대수명(Life expectancy)</b>으로 맞추면 교과서 그림과 같아져요.</p></li>
+      <li><b>거품을 읽어요.</b><p>거품 하나가 나라 하나예요. 거품의 크기와 색이 무엇을 뜻하는지는 화면 옆 설명에서 확인해요. 나라 이름을 검색해 <b>대한민국(South Korea)</b>을 표시해 두면 비교하기 좋아요.</p></li>
+      <li><b>시간을 바꿔 봐요.</b><p>아래쪽 재생(▶) 버튼이나 연도 막대를 움직이면 해마다 어떻게 바뀌는지 볼 수 있어요. 그래프 가운데의 큰 숫자가 지금 보고 있는 연도예요.</p></li>
+      <li><b>질문 1·3도 확인해요.</b><p>지표 검색 창에 영어 낱말(지진은 earthquake, 수학은 math)을 넣어 알맞은 지표를 찾아봐요. 지진처럼 <b>시간에 따른 변화</b>를 보는 질문은 선 그래프가 편할 수 있어요. 사이트 메뉴에서는 선 그래프가 「Trends」 같은 이름일 수 있어요. 지표 설명에서 <b>몇 년의, 누구의 데이터인지</b>(예: 몇 학년 학생의 점수인지)도 꼭 확인해요.</p></li>
+    </ol>
+  </div>
+  <details class="card ur-opt">
+    <summary>🗣️ 사이트에 접속할 수 없을 때 · 모둠 토론으로 대신하기</summary>
+    <ol class="ur-ol">
+      <li>각자 고른 O/X와 그 근거를 차례로 말해요. 근거가 데이터인지, 느낌이나 들은 이야기인지 구분해 봐요.</li>
+      <li>이 상식을 확인하려면 <b>어떤 데이터</b>가 필요할지 정해요. 어떤 속성을, 몇 년부터 몇 년까지, 어느 나라들에서 모아야 할까요?</li>
+      <li>그래프로 나타낸다면 <b>가로축·세로축</b>을 무엇으로 할지 정해요.</li>
+      <li>교과서 54쪽 그림(질문 2)을 함께 읽고, 같은 방법으로 질문 1·3을 확인하려면 어떤 그래프가 필요할지 이야기해요.</li>
+    </ol>
+    <div class="memo"><label>우리 모둠이 정한 「필요한 데이터」와 「그래프의 가로축·세로축」</label><textarea data-memo="needData" rows="2"></textarea><div class="saved"></div></div>
+  </details>
+  <div class="card">
+    <h3>1️⃣ 문제 선정 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 55쪽)</span></h3>
+    <p class="muted" style="margin-top:0">모둠이 검증할 문제를 하나 골라요. 모둠이 새로 정한 상식도 괜찮아요(데이터로 검증할 수 있는 것이어야 해요).</p>
+    <div id="probChips"></div>
+    <div class="memo"><label>고른 문제 <small>새로 정했다면 그 상식 문장을 적어요</small></label><input type="text" data-memo="probText"><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>2️⃣ 데이터 검증 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 55쪽)</span></h3>
+    <div class="memo">
+      <label>결과 분석 <small>어떤 지표를 가로축·세로축에 두었는지, 그래프에서 무엇을 보았는지</small></label><textarea data-memo="resultNote" rows="3"></textarea>
+      <label>이유 <small>결과가 우리 상식과 같았나요, 달랐나요? 달랐다면 왜 그렇게 생각하게 되었는지 함께 토론한 내용</small></label><textarea data-memo="reasonNote" rows="3"></textarea>
+      <div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 성찰 · 진로 -->
+<section class="page" data-name="진로 · 성찰" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터 과학에 도전하는 사람들 · 성찰하기</h2><p>교과서 56쪽 · 55쪽 · 실감 미디어공학 연구원, 성찰 및 발표, 평가하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>먼저 데이터로 <b>현실 같은 3D 세상</b>을 만드는 연구원의 이야기를 읽고 내 진로와 이어 봐요. 그다음 오늘 활동을 돌아보며 아쉬운 점과 앞으로의 계획을 적고 스스로 평가해요.</span></div>
+  <div class="card">
+    <h3>🥽 현실을 넘어서, 생생한 세상을 그리다 · 실감 미디어공학 연구원</h3>
+    <p style="margin-top:0">센서와 카메라로 찍은 실제 세상을 <b>3D 영상</b>으로 바꾸고, 보는 사람이 움직이는 대로 시점이 따라 바뀌는 <b>XR(확장 현실)</b> 영상을 연구하는 사람이에요.</p>
+    <p class="muted" style="font-size:.88rem;margin-bottom:10px">질문 카드를 눌러 연구원의 답을 확인해요. (인터뷰 내용을 줄여 다시 썼어요.)</p>
+    <div class="tcards ur-tc" id="careerCards"></div>
+    <div class="memo" style="margin-top:14px">
+      <label>🪪 나의 진로 메모 · 내가 관심 있는 분야에서 데이터가 쓰일 수 있는 일 하나와, 그 일을 위해 기르고 싶은 역량 <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="career" rows="3" placeholder="예: 관심 분야 — ○○ / 데이터가 쓰이는 일 — ○○ / 기르고 싶은 역량 — ○○"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📝 성찰 및 발표 <span class="muted" style="font-weight:400;font-size:.88rem">(데이터 검증 3단계)</span></h3>
+    <div class="grid2 even">
+      <div class="memo" style="margin-top:0"><label>아쉬운 점</label><textarea data-memo="regret" rows="2"></textarea><div class="saved"></div></div>
+      <div class="memo" style="margin-top:0"><label>앞으로의 계획 <small>질문폼 2번에 써요</small></label><textarea data-memo="nextPlan" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <h3 style="margin-top:14px">📝 자기 평가 <span class="muted" style="font-weight:400;font-size:.88rem">5 = 아주 잘함 · 1 = 많이 부족함</span></h3>
+    <div style="overflow-x:auto"><table class="ur-eval">
+      <tr><th class="l">평가 영역</th><th class="l">평가 항목</th><th>자기 평가</th></tr>
+      <tr><td class="l"><b>문제 선정</b></td><td class="l">데이터로 검증할 수 있는 상식 문제를 선정하였는가?</td><td><div id="eval1"></div></td></tr>
+      <tr><td class="l"><b>데이터 검증</b></td><td class="l">선정한 문제와 관련한 데이터를 이용하여 검증하였는가?</td><td><div id="eval2"></div></td></tr>
+      <tr><td class="l"><b>데이터 과학의 필요성 이해</b></td><td class="l">상식 문제에 대한 데이터 검증의 필요성을 논리적으로 설명하였는가?</td><td><div id="eval3"></div></td></tr>
+    </table></div>
+    <details class="ur-opt" style="margin-top:8px">
+      <summary>동료 평가 (선택)</summary>
+      <div class="memo" style="margin-top:4px"><label>다른 모둠 발표를 듣고, 위 세 항목에서 잘한 점이나 더 보면 좋을 데이터를 한 가지씩 적어요.</label><textarea data-memo="peerNote" rows="2"></textarea><div class="saved"></div></div>
+    </details>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 Ⅰ단원 정리 -->
+<section class="page" data-name="Ⅰ단원 정리" data-acc="#e0702b">
+  <div class="head"><div class="num">04</div><div><h2>Ⅰ단원 정리: 데이터 과학의 이해</h2><p>교과서 57쪽 · 주요 개념 정리</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>Ⅰ단원에서 배운 낱말을 두 묶음으로 돌아보고, <b>새로운 상황 문장</b>에서 알맞은 개념을 떠올려 봐요. 그다음 퀴즈로 확인해요.</span></div>
+  <div class="cards2">
+    <div class="kc" style="--k:#2f6fd0"><div class="ic">🔬</div><h4>1. 데이터 과학과 데이터</h4><p>데이터 과학 · 4가지 패러다임(실험 · 이론 · 계산 · 데이터 과학) · 가설 수립 → 검증 → 법칙 도출 · 데이터 기반 의사 결정(설명 · 진단 · 예측 · 처방) · 정형 · 비정형 데이터 · 속성(범주형: 명목형 · 순서형 / 수치형: 연속형 · 이산형) · 속성 간의 관계</p></div>
+    <div class="kc" style="--k:#1f9d74"><div class="ic">🗄️</div><h4>2. 데이터의 저장과 활용</h4><p>데이터 · 데이터셋 · 데이터베이스 · 데이터베이스 관리 시스템(DBMS) · 관계형 데이터베이스(테이블 · 칼럼 · 레코드 · 기본키 · 외래키) · 데이터 통합 · SQL · 데이터와 미래 사회</p></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>📝 이 상황의 개념은?</h3>
+    <p class="muted" style="margin-top:0;font-size:.9rem">빈칸에 들어갈 말을 먼저 떠올린 뒤 눌러서 확인하세요. 한 번 더 누르면 다시 가려져요.</p>
+    <ol class="ur-blanks">
+      <li>동아리 부원 명단 표의 「학번」은 부원마다 달라서 한 사람을 정확히 가리킬 수 있다. 이렇게 테이블 안에서 각 레코드를 고유하게 식별하는 키는 <button class="ur-blank" data-a="기본키">?</button>다.</li>
+      <li>매점 판매 기록 시트와 그날의 날씨 시트를 날짜를 기준으로 하나로 모아 「비 오는 날에는 무엇이 잘 팔릴까?」를 분석하려 한다. 여러 곳의 데이터를 한곳에 모으는 이 과정은 <button class="ur-blank" data-a="데이터 통합">?</button>이다.</li>
+      <li>학급 설문의 「급식 만족도(매우 만족 · 만족 · 보통 · 불만족)」는 「불만족 → 보통 → 만족 → 매우 만족」처럼 높고 낮음을 견줄 수 있는 범주형 데이터, 곧 <button class="ur-blank" data-a="순서형">?</button> 데이터다.</li>
+      <li>카페 주인이 매출 데이터를 보며 「지난달 매출이 왜 줄었을까?」 원인을 찾는다. 데이터 과학의 활용 목적 가운데 <button class="ur-blank" data-a="진단">?</button>에 해당한다.</li>
+    </ol>
+  </div>
+  <details class="card ur-opt">
+    <summary>✅ 역량 Check! <span class="muted" style="font-weight:400;font-size:.88rem">(선택 · 이 단원에서 길러진 역량을 모두 골라요)</span></summary>
+    <div id="unitComp" style="margin-top:8px"></div>
+  </details>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 단원 핵심 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">우리가 당연하게 여기는 <b>상식</b>은 데이터에 근거한 사실과 다를 수 있다. 상식을 <b>데이터로 검증</b>하고, 결과가 다르면 그 이유를 함께 토론해야 선입견을 줄일 수 있다.</div>
+    <div style="--k:#1f9d74"><b>데이터 기반 의사 결정</b>은 문제와 관련된 데이터를 통해 문제를 깊이 이해하고 합리적인 해결 방안을 마련하는 것이다. 데이터의 <b>형태와 속성, 속성 간의 관계</b>를 파악하면 데이터의 잠재적 가치를 찾을 수 있다.</div>
+    <div style="--k:#e0702b">데이터는 <b>데이터셋</b>으로 모으고, <b>데이터베이스와 DBMS</b>로 체계적으로 저장·관리하며, 필요하면 공통된 속성을 기준으로 <b>통합</b>해 분석한다.</div>
+  </div>
+  <div class="card">
+    <h3>Ⅰ단원 핵심 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">①은 꼭, ②는 시간이 남으면 답해요. 오늘 활동과 지금까지 배운 낱말(데이터 기반 의사 결정, 설명·진단·예측·처방, 속성, 데이터셋, 데이터베이스, 기본키, 데이터 통합 등)을 넣어 내 말로 답해 보세요.</p>
+    <div class="memo">
+      <label>① 데이터에 기반한 합리적인 의사 결정 과정은 무엇이고, 데이터의 잠재적 가치는 어떻게 파악할 수 있을까?</label><textarea data-memo="keyQ1" rows="3"></textarea>
+      <label>② (선택) 데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까? <small>①을 쓰고 시간이 남으면 답해요.</small></label><textarea data-memo="keyQ2" rows="3"></textarea>
+      <div class="saved"></div>
+    </div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>우리 모둠이 고른 <b>상식 문제</b>와 그 문제에 대한 내 처음 생각, 데이터(그래프 또는 모둠 토론)로 확인한 <b>결과</b>를 비교하고, 같거나 달랐던 <b>이유</b>를 설명하세요.</li>
+      <li>이번 활동을 바탕으로 우리가 가진 상식을 <b>데이터로 검증해야 하는 까닭</b>을 설명하고, 앞으로 데이터를 볼 때 바꾸고 싶은 태도를 쓰세요.</li>
+      <li>실감 미디어공학 연구원 인터뷰를 읽고 쓴 <b>진로 메모</b>를 바탕으로, 관심 분야에서 데이터가 쓰일 수 있는 일과 그 일을 위해 기르고 싶은 역량을 쓰세요.</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

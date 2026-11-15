@@ -106,7 +106,7 @@ def check_lesson(c, l):
             err(lid, f'lesson.js 가 찾는 #{x} 가 화면에 없음')
     # 금지 표현 (화면에 보이는 글)
     text = re.sub(r'<[^>]+>', ' ', screens)
-    for pat, what in [(r'\d+\s*차시', '차시 번호'), (r'\d{1,2}\s*월\s*\d{1,2}\s*일', '날짜'), (r'vercel\.app|https?://', '사이트 주소')]:
+    for pat, what in [(r'\d+\s*차시', '차시 번호'), (r'\d{1,2}\s*월\s*\d{1,2}\s*일', '날짜'), (r'vercel\.app|https?://', '사이트 주소'), (r'수행\s*평가|세특|세부\s*능력', '평가·세특 문구')]:
         for hit in re.findall(pat, text):
             err(lid, f'화면에 {what}: {hit}')
     if '{{FORM_URL}}' in screens and not l.get('form'):

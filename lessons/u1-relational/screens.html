@@ -1,0 +1,235 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 2. 데이터의 저장과 활용</span>
+      <h1>같은 값이 반복되는 표,<br>어떻게 정리할까?</h1>
+      <div class="story"><b>영화 「메멘토」의 레너드</b><br>10분 이상 기억을 이어 가지 못하는 레너드는 폴라로이드 사진과 메모, 몸에 새긴 글씨에 기대어 결론을 내리려 해요. 그런데 시간이 지나며 자신의 기록이 바뀌고 있다는 것을 알아차리지 못하지요. 아무리 많이 기록해도, <b>믿을 수 없거나 제대로 관리하지 못한 데이터</b>는 혼란과 왜곡을 낳을 수 있어요.</div>
+      <p>오늘은 데이터를 <b>중복 없이 저장</b>하는 관계형 데이터베이스의 구조와, 여러 곳에 흩어진 데이터를 하나로 모으는 <b>데이터 통합</b>을 배워요.</p>
+      <ol>
+        <li>관계형 데이터베이스</li><li>관계형 데이터베이스 구조</li><li>데이터 통합</li>
+        <li>(선택) SQL 명령어</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘의 질문 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🎬</i><div><b>한 표에 모두 넣으면</b><small>같은 값이 줄마다 반복돼요</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✂️</i><div><b>주제별 테이블로 나누기</b><small>기본키와 외래키로 이어요</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🔗</i><div><b>흩어진 데이터 통합</b><small>날짜를 기준으로 찾아 붙여요</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>💬</i><div><b>(선택) SQL</b><small>명령으로 만들고, 넣고, 찾아요</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">지난 시간에 이어서</span>
+      <p>다산의 표가 하나가 아니라 <b>여러 개로 늘어난다면</b> 어떻게 될까요? 표마다 같은 데이터가 <b>반복해서</b> 들어가겠지요. 그렇다고 모든 정보를 표 하나에 넣으면 <b>칼럼 수가 지나치게 많아지는</b> 문제가 생겨요. 관계형 데이터베이스는 이 문제를 어떻게 풀까요?</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">읽을거리 · 데이터 기록의 중요성 (44쪽)</span>
+        <p style="margin:0;font-size:.92rem">우리는 인터넷에 쌓인 데이터를 바탕으로 판단하고, 우리가 모은 데이터도 다른 사람의 판단 근거가 돼요. 그런데 데이터가 부정확하거나 왜곡되었다면 잘못된 결론으로 이어질 수 있어요. 데이터는 기록하는 것으로 끝나지 않고, <b>신뢰성 확보와 체계적인 관리</b>가 꼭 필요해요.</p>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>중단원</b> · 데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까?</li>
+          <li><b>오늘의 질문 ①</b> · 관계형 데이터베이스의 개념과 구조는 무엇일까?</li>
+          <li><b>오늘의 질문 ②</b> · 데이터 통합은 왜 필요할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터베이스에 데이터가 저장되는 구조를 설명할 수 있다.</li>
+          <li>서로 다른 데이터셋을 데이터 분석이 가능한 형태로 통합할 수 있다.</li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">주요 용어: 테이블(관계) · 칼럼 · 레코드 · 기본키 · 외래키 · 데이터 통합 · SQL</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📝 학습 계획 세우기</h3>
+      <div class="memo"><label>같은 정보가 여러 줄에 반복해서 적힌 표가 있어요. 그 정보가 바뀌어 표를 고쳐야 한다면 어떤 일이 생길 수 있을까요? 지금 생각을 적어 보세요. <small>02에서 「중복의 문제점」과 비교해요.</small></label><textarea data-memo="planRel" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 관계형 데이터베이스부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 관계형 데이터베이스 -->
+<section class="page" data-name="관계형 데이터베이스" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>관계형 데이터베이스란 무엇일까?</h2><p>교과서 40쪽 · 관계형 데이터베이스, 테이블(관계), 칼럼, 레코드</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>관계형 데이터베이스는 데이터를 <b>표(테이블)</b>로 저장하고, 표와 표 사이의 <b>관계</b>로 데이터를 엮어 관리하는 방식이에요. 표의 <b>세로줄은 칼럼</b>, <b>가로줄은 레코드</b>라고 불러요.</span></div>
+
+  <div class="card">
+    <h3>🧩 관계형 데이터베이스(RDB: Relational Database)</h3>
+    <p style="margin-top:0">데이터를 <b>테이블의 형태로 저장</b>하고, 이러한 <b>테이블 간의 관계</b>를 통해 데이터를 구성하고 관리하는 방식이에요. 데이터의 중복을 최대한 없애고 데이터 사이의 관계를 잘 정의해서, 데이터의 생성·수정·삭제가 효율적으로 이루어지도록 설계한 모델을 <b>관계형 모델</b>이라고 해요. <span class="muted">(관계형 데이터베이스는 E. F. Codd 박사가 1970년대에 처음 제시했어요.)</span></p>
+    <p class="muted" style="margin-bottom:0">관계형 데이터베이스 시스템은 관계형 데이터베이스를 처리·유지·관리하며, 사용자가 데이터를 효율적으로 쓸 수 있도록 지원해요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎬 영화 상영 정보 테이블 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅰ-8을 다시 그림 · 가상의 영화 데이터)</span></h3>
+    <div class="rd-mode" id="mvMode"></div>
+    <div id="mvBox"></div>
+    <div class="cards2" style="margin-top:12px">
+      <div class="kc" style="--k:#2f6fd0"><h4>칼럼</h4><p>테이블 안에 <b>세로로 묶인 값들</b>. 영화 제목, 감독 이름 같은 칼럼이 있어요.</p><small>다른 말로 열, 필드, 속성이라고도 하고, 인공지능 분야에서는 특성이라고도 해요.</small></div>
+      <div class="kc" style="--k:#e0702b"><h4>레코드</h4><p>각 칼럼의 값들을 <b>가로로 묶은 것</b>. 영화 한 편의 상영 정보 한 줄이에요.</p><small>행(row) 또는 튜플이라고도 불러요.</small></div>
+    </div>
+    <div class="callout" style="margin-bottom:0">표 형식으로 된 전체 데이터는 <b>테이블</b> 또는 <b>관계(relation)</b>라고 불러요. 이 테이블은 잘 저장된 것처럼 보이지만, 자세히 보면 전체 칼럼에 <b>중복</b>이 많아요. 레코드가 5개 정도면 큰 문제가 없어 보여도, 데이터가 많아지면 중복 때문에 처리와 관리가 어려워져요.</div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 관계형 데이터베이스 구조 -->
+<section class="page" data-name="기본키와 외래키" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>관계형 데이터베이스는 어떤 구조일까?</h2><p>교과서 41쪽 · 중복의 문제점, 기본키, 외래키</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>모든 것을 한 표에 넣는 대신 <b>주제별로 표를 나누고</b>, 표마다 행을 하나씩 구분하는 번호(<b>기본키</b>)를 붙여요. 그리고 다른 표의 번호를 적어 두는 칸(<b>외래키</b>)으로 표와 표를 이어요.</span></div>
+
+  <div class="card">
+    <h3>➕ 칼럼을 계속 추가하면?</h3>
+    <p style="margin-top:0">그림 Ⅰ-8 테이블에 영화 제작 국가 정보가 필요하다면 칼럼을 추가하면 돼요. 그런데 필요할 때마다 칼럼을 추가하다 보면 테이블이 엄청나게 커지고 중복도 많아질 수 있어요.</p>
+    <div class="rd-bubbles"><span>「상영관 좌석 수도 추가해 줘.」</span><span>「상영 시간 칼럼도 추가해 줘.」</span><span>「영화 제작 국가 칼럼도 추가해 줘.」</span></div>
+    <div class="grid2 even" style="margin-top:12px">
+      <div class="kc" style="--k:#d64535"><h4>중복의 문제점</h4>
+        <ul class="rd-ul"><li>데이터 일관성 문제</li><li>데이터 품질(신뢰성) 및 성능 저하</li><li>저장 공간 낭비</li><li>데이터 관리 비용 증가</li><li>데이터 복구 및 백업 시간 증가</li></ul></div>
+      <div class="kc" style="--k:#1f9d74"><h4>관계형 데이터베이스는</h4><p><b>중복을 제거한 테이블</b>로 데이터를 저장하고, 각 테이블은 <b>특정 주제나 개체</b>에 대한 정보만 담아요. 또 테이블을 <b>연결</b>해 새로운 정보를 만들고 효율적으로 관리해요.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔗 외래키 따라가기 <span class="muted" style="font-weight:400;font-size:.88rem">(41쪽 관계형 데이터베이스 예시)</span></h3>
+    <p class="muted" style="margin-top:0">가운데 <b>영화 테이블</b>에서 외래키 칸(감독 ID, 배우 ID, 장르 ID, 상영관 ID)을 누르면 그 값이 가리키는 테이블의 행으로 따라가요. <b>영화 ID</b>를 누르면 네 개의 외래키를 한꺼번에 따라가 상영 정보 한 줄을 다시 만들어요.</p>
+    <div id="fkSim"></div>
+    <div class="cards2" style="margin-top:12px">
+      <div class="kc" style="--k:#e0702b"><h4>🔑 기본키</h4><p>각 테이블 안에서 데이터를 <b>고유하게 식별</b>하는 키예요. <b>중복되는 값이 없어야</b> 해요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>🧷 외래키</h4><p><b>다른 테이블의 키를 참조</b>하는 키로, 테이블 간의 관계를 연결해요. 영화 테이블의 감독 ID·배우 ID·장르 ID·상영관 ID는 각 테이블의 기본키를 참조하는 외래키예요.</p></div>
+    </div>
+    <div class="memo" style="margin-top:12px"><label>영화 ID 02의 상영 정보를 외래키를 따라가며 다시 읽어 보세요. 어떤 테이블을 어떤 순서로 찾아갔는지, 다시 만든 상영 정보 한 줄은 무엇인지 적어요.</label><textarea data-memo="fkNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <p class="note">이런 방식으로 중복 문제를 해결하면 데이터의 중복을 최소화하고 데이터 관리의 효율성을 높일 수 있어요.</p>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 데이터 통합 -->
+<section class="page" data-name="데이터 통합" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>데이터 통합은 왜 필요할까?</h2><p>교과서 42~43쪽 · 데이터 통합의 필요성과 방법, VLOOKUP</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>문제를 풀려고 여러 곳에서 모은 데이터는 대개 <b>따로따로</b> 있어요. 날씨는 날씨대로, 교통사고는 교통사고대로요. 이것을 <b>공통된 기준(예: 날짜)</b>으로 한곳에 모아야 함께 분석할 수 있어요. 이것이 <b>데이터 통합</b>이에요.</span></div>
+
+  <div class="card">
+    <h3>🔗 데이터 통합</h3>
+    <p style="margin-top:0"><b>데이터 통합</b>은 다양한 소스의 데이터를 한곳에 모아 사용자가 효율적으로 분석하고 활용할 수 있게 하는 과정이에요. 데이터는 파일이나 데이터베이스 관리 시스템으로 잘 관리되지만, 새로운 문제를 해결하거나 인공지능 시스템을 만들 때 필요한 데이터가 한곳에 모여 있지 않을 가능성이 높아요.</p>
+    <div class="flow2">
+      <div style="--k:#2f6fd0"><b>🌦️ 날씨 정보</b><span>‘기상청 기상자료개방포털’에서 날짜별 날씨를 찾아요.</span></div>
+      <div class="ar">+</div>
+      <div style="--k:#d64535"><b>🚗 교통사고 정보</b><span>‘공공데이터포털’에서 도로교통공단 사망 교통사고 정보를 따로 찾아요.</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#1f9d74"><b>🧹 전처리 · 통합</b><span>원하는 형태로 다듬어 날짜별 날씨와 사상자 수를 한 데이터셋으로 모아요.</span></div>
+    </div>
+    <p class="note">예: 날씨에 따른 교통사고 사상자 수를 분석하거나 예측하는 인공지능 시스템을 만들려면 두 정보가 함께 담긴 데이터셋이 필요하지만, 이런 데이터셋을 한꺼번에 구하기는 쉽지 않아요.</p>
+  </div>
+
+  <div class="card">
+    <h3>📗 스스로 해결하기 · VLOOKUP으로 두 시트 통합하기 <span class="muted" style="font-weight:400;font-size:.88rem">(43쪽 · 탐구 · 실습)</span></h3>
+    <p style="margin-top:0">서로 다른 곳에서 모은 가상의 두 데이터셋이 스프레드시트의 <b>교통사고 시트</b>와 <b>날씨 시트</b>에 있어요. <b>교통사고 시트를 기준</b>으로 날씨 정보를 붙여 <b>데이터 통합 시트</b>를 만들어요.</p>
+    <ol class="rd-order"><li><b>한 줄(3칸) 직접 채우기</b> — 통합 시트의 노란 빈칸을 누르고, 날씨 시트에서 <b>몇 번째 열</b>을 가져올지 골라요.</li><li><b>날씨 시트 행 섞기</b> — 이미 채운 값이 그대로 맞는지 봐요.</li><li><b>순서대로 붙여넣기와 비교</b> — 날짜로 찾지 않으면 어떻게 되는지 봐요. 그다음 <b>남은 칸 모두 채우기</b>로 마무리해요.</li></ol>
+    <p class="note" style="margin-top:0">VLOOKUP 함수: 지정한 값을 표의 왼쪽 열에서 찾은 뒤, 같은 행에 있는 다른 열의 값을 가져오는 함수예요.</p>
+    <div id="vlook"></div>
+    <div class="memo" style="margin-top:12px"><label>통합 시트를 다 채운 뒤 적어요. ① 날짜를 기준으로 찾아 붙이는 방법이 <b>순서대로 붙여넣기</b>보다 나은 까닭 ② 통합한 데이터로 답해 보고 싶은 질문 하나</label><textarea data-memo="vlookNote" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+
+  <details class="card rd-fold">
+    <summary><h3>🧭 데이터 통합의 이점과 통합하는 방법 <span class="muted" style="font-weight:400;font-size:.88rem">(42~43쪽 · 눌러서 펼쳐 보기)</span></h3></summary>
+    <p style="margin:0 0 4px"><b>데이터 통합의 이점</b></p>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><h4>종합적인 시야</h4><p>하나의 통합된 시스템에서 다양한 데이터를 분석해 <b>더 나은 의사 결정</b>을 더 빨리 내릴 수 있어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><h4>비용 절감 · 효율성 향상</h4><p>수동 작업을 자동화해 <b>시간과 노동 비용</b>을 크게 아낄 수 있어요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>데이터 접근성 증가</h4><p>모든 구성원이 필요한 데이터에 쉽게 접근해 <b>공평하게</b> 데이터를 활용할 수 있어요.</p></div>
+    </div>
+    <p style="margin:14px 0 4px"><b>데이터를 통합하는 방법</b></p>
+    <div class="cards3">
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🗄️</div><h4>한 데이터베이스에 모으기</h4><p>데이터베이스 관리 시스템으로, 다양한 경로로 모은 데이터를 <b>하나의 데이터베이스에 집중</b>해 통합해요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🌐</div><h4>나눠 저장하고 필요한 것만 모으기</h4><p>데이터를 <b>물리적으로 서로 다른 위치에 분산</b>해 저장하면서, 필요한 통합 정보만 모아 써요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">📗</div><h4>스프레드시트로 통합하기</h4><p>데이터 양이 아주 크지 않다면 <b>스프레드시트</b>로 간단하게 통합할 수 있어요.</p></div>
+    </div>
+    <div class="callout" style="margin-bottom:0"><b>통합할 때 생각할 점</b> 데이터 크기가 커져 처리에 부담이 될 수 있고, 통합 과정에서 오류가 생길 수 있어 주의해야 해요. 상황에 맞게, <b>데이터 양</b>과 <b>데이터 내용이 바뀌는 빈도</b>에 따라 알맞은 통합 방식을 골라요.</div>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) SQL -->
+<section class="page" data-name="(선택) SQL 명령어" data-acc="#9b4fc4">
+  <div class="head"><div class="num">04</div><div><h2>(선택) SQL 명령어로 데이터베이스 다루기</h2><p>교과서 45~47쪽 · SQL, DDL, DML, DCL, TCL, CREATE, INSERT, SELECT, WHERE</p></div></div>
+  <div class="callout rd-opt"><b>선택 화면이에요.</b> 시간이 남거나 더 해 보고 싶을 때 해요. 질문폼은 다음 화면(마무리)에 있어요. <button class="btn sm" onclick="go(5)">마무리로 가기 →</button></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>SQL은 관계형 데이터베이스에게 <b>「표를 만들어」, 「이 값을 넣어」, 「이런 것만 보여 줘」</b>라고 말하는 언어예요. 명령 한 줄을 실행하면 데이터베이스가 바로 답해요.</span></div>
+
+  <div class="card">
+    <h3>💬 SQL(Structured Query Language)</h3>
+    <p style="margin-top:0">관계형 데이터베이스 관리 시스템(RDBMS)에서 데이터를 관리하고 조작하는 데 가장 널리 쓰이는 <b>표준 언어</b>예요. 데이터를 검색·삽입·수정·삭제하고, 테이블 간의 관계를 정의하고 처리할 수 있어요. 각 테이블은 행(레코드)과 열(필드)로 이루어지고, SQL로 여러 테이블을 연결하고 데이터를 조작해요.</p>
+    <div class="rd-sqlk">
+      <div style="--k:#2f6fd0"><b>데이터 정의 언어(DDL)</b><small>데이터를 저장하려고 데이터베이스 구조, 테이블 등을 정의할 때</small><span><code>CREATE</code> 새 테이블 또는 데이터베이스를 생성</span><span><code>ALTER</code> 기존 테이블의 구조를 변경</span><span><code>DROP</code> 테이블이나 데이터베이스를 삭제</span></div>
+      <div style="--k:#1f9d74"><b>데이터 조작 언어(DML)</b><small>효율적인 관리를 위해 테이블의 데이터를 다룰 때</small><span><code>SELECT</code> 데이터를 조회</span><span><code>INSERT</code> 새 데이터를 삽입</span><span><code>UPDATE</code> 기존 데이터를 수정</span><span><code>DELETE</code> 데이터를 삭제</span></div>
+      <div style="--k:#e0702b"><b>데이터 제어 언어(DCL)</b><small>무결성을 위해 사용자 권한을 관리할 때</small><span><code>GRANT</code> 사용자에게 특정 권한을 부여</span><span><code>REVOKE</code> 사용자 권한을 취소</span></div>
+      <div style="--k:#9b4fc4"><b>트랜잭션 제어 언어(TCL)</b><small>일관성을 위해 트랜잭션을 관리할 때</small><span><code>COMMIT</code> 트랜잭션을 확정해 영구적으로 적용</span><span><code>ROLLBACK</code> 트랜잭션을 취소해 원래 상태로 되돌림</span></div>
+    </div>
+    <p class="note">SQL은 국제 표준(ISO/IEC)으로 정해져 있어 MySQL, PostgreSQL, Oracle, SQL Server 등에서 쓸 수 있지만, 데이터베이스마다 고유한 <b>확장 SQL</b>을 제공하기도 해요. 이 화면의 실습기는 SQLite라는 데이터베이스를 브라우저 안에서 돌려요.</p>
+    <p class="note">ℹ️ 데이터 제어 언어(GRANT·REVOKE)와 트랜잭션 제어 언어(COMMIT·ROLLBACK)는 <b>이 실습기(SQLite)에서는 지원하지 않는 명령이에요.</b> 아래에서는 CREATE, INSERT, SELECT, UPDATE, DELETE를 실습해요.</p>
+  </div>
+
+  <div class="card">
+    <h3>🧪 SQL 실습 · BoxOffice 테이블 <span class="muted" style="font-weight:400;font-size:.88rem">(46~47쪽)</span></h3>
+    <p class="muted" style="margin-top:0">① → ⑦ 순서로 단추를 눌러 명령을 불러오고 <b>실행 ▶</b>을 눌러요. 명령을 직접 고쳐 써서 실행해도 돼요. <span class="mono">Ctrl</span>+<span class="mono">Enter</span>로도 실행돼요.</p>
+    <div id="sqlLab"></div>
+    <details class="rd-more"><summary>교과서 코드와 달라진 점</summary>
+      <ul class="rd-ul">
+        <li>교과서 46~47쪽의 일부 따옴표가 굽은 따옴표(‘ ’)로 인쇄되어 그대로 실행하면 오류가 나요. 실습기에서는 곧은 따옴표(')로 고쳤어요.</li>
+        <li>칼럼 이름 「주연 배우_이름」은 띄어쓰기가 있어 그대로 쓰면 오류가 나거나 다른 이름이 되기 때문에 「주연_배우_이름」으로 붙여 썼어요.</li>
+        <li>상영관 이름 「옷데 시청」은 「롯데 시청」으로, 배우 이름은 40·41쪽 표기(매듀 매커니히)로 맞췄어요.</li>
+        <li>타이타닉의 장르는 46쪽처럼 「액션」으로 넣고, 47쪽 ⑥ UPDATE에서 40쪽 표와 같은 「로맨스」로 고쳐요.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0"><b>관계형 데이터베이스</b>는 데이터를 테이블(관계)로 저장하고 테이블 사이의 관계로 데이터를 관리한다. 세로로 묶인 값은 <b>칼럼</b>, 가로로 묶인 값은 <b>레코드</b>다.</div>
+    <div style="--k:#1f9d74">한 테이블에 모든 정보를 담으면 중복이 늘어난다. 그래서 주제별 테이블로 나누고, 행을 고유하게 구분하는 <b>기본키</b>와 다른 테이블의 키를 참조하는 <b>외래키</b>로 테이블을 잇는다.</div>
+    <div style="--k:#e0702b"><b>데이터 통합</b>은 여러 곳에서 모은 데이터를 공통된 기준으로 한곳에 모아 분석할 수 있게 하는 과정이다. 스프레드시트에서는 VLOOKUP으로 기준 값을 찾아 같은 행의 값을 가져올 수 있다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 다시 답하기</h3>
+    <p class="muted" style="margin-top:0">처음에 적은 생각과 비교하며, 오늘 배운 낱말(테이블, 칼럼, 레코드, 기본키, 외래키, 데이터 통합 등)을 넣어 내 말로 답해 보세요.</p>
+    <b style="font-size:.93rem">관계형 데이터베이스는 데이터를 어떤 구조로 저장할까? 그리고 데이터 통합은 왜 필요할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <p class="muted" style="margin-top:0;font-size:.88rem">04 SQL 화면은 선택이라, 풀지 않았으면 「아직 안 풂」으로 보여요.</p>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>영화 상영 정보 테이블(그림 Ⅰ-8)에서 <b>중복</b>을 찾아보았습니다. 같은 값이 반복되는 테이블에 정보를 계속 추가하거나 값을 고칠 때 생길 수 있는 문제를 쓰고, 관계형 데이터베이스가 이 문제를 어떻게 줄이는지 설명하세요.</li>
+      <li>「외래키 따라가기」에서 영화 테이블의 ID를 눌러 다른 테이블의 값을 찾아보았습니다. <b>기본키</b>와 <b>외래키</b>가 무엇인지 예를 들어 설명하고, 나뉘어 있는 테이블에서 영화 한 편의 상영 정보를 어떻게 다시 읽을 수 있는지 쓰세요.</li>
+      <li>VLOOKUP으로 교통사고 시트에 날씨 정보를 통합해 보았습니다. <b>날짜를 기준으로 값을 찾아 붙이는 과정</b>을 자기 말로 설명하고, 순서대로 붙여넣을 때와 비교해 어떤 점이 나은지, 통합한 데이터로 답할 수 있는 질문 하나를 쓰세요.</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

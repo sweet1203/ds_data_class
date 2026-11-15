@@ -1,0 +1,261 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 1. 데이터 과학과 데이터</span>
+      <h1>마시멜로를 참은 아이는<br>정말 성공할까?</h1>
+      <div class="story"><b>세상을 바꾸는 데이터 · 나는 자라서 무엇이 될까요?</b><br>선생님이 마시멜로를 주시면서 「바로 먹지 않고 기다리면 하나 더 줄게」라고 하셨어요. 꾹 참아서 두 개를 받은 아이는 칭찬을 듣고 「나는 성공한 어른이 될 수 있대요!」라며 기뻐했지요. 정말 그럴까요? 오늘은 이 실험의 데이터를 따져 보는 데서 출발해요.</div>
+      <p>오늘은 데이터 과학이 <b>무엇</b>이고, <b>어떻게 등장</b>했으며, 우리 사회의 문제를 <b>어떻게 해결</b>하는지 살펴봐요.</p>
+      <ol>
+        <li>데이터 과학은 무엇일까?</li><li>데이터 과학은 어떻게 등장했을까?</li><li>데이터 과학은 어디에 쓰일까?</li>
+        <li>스스로 해결하기 · 실종 아동 찾기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">단원 도입부터 보기 ↓</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="go(1)">01로 바로 가기 →</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🔭</i><div><b>관측 데이터</b><small>브라헤가 맨눈으로 남긴 기록</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📐</i><div><b>법칙 발견</b><small>케플러가 데이터에서 찾은 규칙</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>💡</i><div><b>지식과 통찰</b><small>숫자에서 의미와 결정으로</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🔮</i><div><b>미래 예측</b><small>전염병·기후·재난 문제 해결</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">단원 도입 · Ⅰ. 데이터 과학의 이해 (10~11쪽)</span>
+      <p>이 단원에서는 <b>데이터 과학의 개념</b>을 이해하고, 이를 바탕으로 <b>데이터 기반의 합리적인 의사 결정 과정</b>을 배워요. 데이터의 속성을 분석해 잠재적 가치를 발견하고, 데이터 통합의 중요성과 의미를 알아봐요. 또 데이터가 사회에 미치는 변화를 이해하고, 데이터로 문제를 해결한 사례를 살펴보며 자신의 진로를 탐색해요.</p>
+    </div>
+    <div class="cards2" style="margin:14px 0">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🔍</div><h4>1. 데이터 과학과 데이터</h4><p>데이터에 기반한 합리적인 의사 결정 과정은 무엇이고, 데이터의 잠재적 가치는 어떻게 파악할 수 있을까?</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🗄️</div><h4>2. 데이터의 저장과 활용</h4><p>데이터를 효율적으로 관리하는 방법과 그 필요성은 무엇일까?</p></div>
+    </div>
+    <div class="callout">🌏 <b>단원을 여는 질문</b> 합리적인 의사 결정을 위해 데이터에 기반한 이해가 필요한 사회에서, 데이터 과학은 복잡한 문제를 해결하는 데 어떻게 활용될까요? <span class="muted" style="font-size:.88rem">이 물음들은 단원 끝 「협력적 창의·융합 활동」에서 해결해요.</span></div>
+
+    <div class="card">
+      <h3>🍡 세상을 바꾸는 데이터 · 마시멜로 실험 <span class="muted" style="font-weight:400;font-size:.88rem">(12~13쪽)</span></h3>
+      <p style="margin-top:0">1960년대 스탠포드 대학교에서 3~5세 아이들을 대상으로 <b>「마시멜로 실험」</b>을 했어요. 자기 통제력과 인내심을 재려는 실험이었고, <b>마시멜로 먹는 것을 잘 참은 아이들의 자기 통제력이 강하다</b>는 결론이 나왔어요. 이 결론을 바탕으로 다양한 학습 프로그램과 교육 방침이 만들어졌지요.</p>
+      <p style="margin-bottom:0"><b>여러분은 이 분석 결과를 그대로 믿을 수 있나요?</b> 하나를 골라 보세요.</p>
+      <div class="vote sci-vote3" id="mallowVote"></div>
+      <div class="reveal" id="mallowMore">
+        <div class="callout"><b>그런데…</b> 이 실험은 주로 <b>부유한 가정의 아이들</b>을 대상으로 했을 가능성이 커서, 모든 아이에게 일반화하기 어렵다는 지적을 받았어요. 후속 연구에서는 마시멜로 실험에서 나타난 참을성이 개인의 성격보다 <b>경제적 안정성</b>과 <b>실험 환경에 대한 신뢰</b>에 크게 좌우된다는 결과도 나왔어요. 경제적 배경이 실험 결과에 영향을 미쳤을 가능성을 놓친 거예요.</div>
+        <p style="margin:6px 0 0">👉 그래서 데이터를 분석할 때는 <b>분석 대상과 배경</b>을 정확히 이해하고, 결과를 <b>과장하거나 성급히 일반화하지 않는 것</b>이 중요해요.</p>
+        <div class="memo"><label>💭 생각 정리하기 · 「잘 참은 아이들의 자기 통제력이 강하다」는 분석 결과가 옳지 않은 이유는 무엇일까요? <small>누가 실험에 참여했는지, 「기다리면 하나 더 준다」는 약속을 믿을 수 있는 환경이었는지 떠올려 내 말로 적어요.</small></label><textarea data-memo="mallowWhy" rows="2"></textarea><div class="saved"></div></div>
+      </div>
+    </div>
+
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학과 데이터</b> · 데이터에 기반한 합리적인 의사 결정 과정은 무엇이고, 데이터의 잠재적 가치는 어떻게 파악할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 과거부터 현재까지 사람들은 데이터를 사용하여 어떤 문제를 해결하고자 하였을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 과학의 개념을 설명할 수 있다.</li>
+          <li>데이터 기반 문제 해결 사례를 탐색하고 데이터 기반 의사 결정의 중요성을 인식할 수 있다.</li>
+        </ul>
+        <p style="font-size:.86rem;margin-top:8px" class="muted">데이터 기반 의사 결정(18~21쪽)은 다음 시간에 이어서 배워요.</p>
+      </div>
+      <div class="why">
+        <span class="kicker">오늘 만날 낱말</span>
+        <p style="margin:4px 0 0;font-size:.95rem">데이터 과학 · 패러다임 · 실험 과학 · 이론 과학 · 계산 과학 · 가설 · 통찰</p>
+        <p style="font-size:.86rem;margin-top:8px" class="muted">처음 보는 낱말이 있어도 괜찮아요. 화면을 넘기며 하나씩 만나요.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📝 나의 계획 <span class="muted" style="font-weight:400;font-size:.88rem">(14쪽) · (선택)</span></h3>
+      <div class="memo"><label>나는 이 단원에서 다음과 같은 내용을 배우고 싶다. <small>시간이 있으면 한두 가지 적어 보세요. 마지막 화면에서 다시 볼 수 있어요.</small></label><textarea data-memo="planLearn" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 과학은 무엇일까부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 과학이란 -->
+<section class="page" data-name="데이터 과학이란" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 과학은 무엇일까?</h2><p>교과서 14~15쪽 · 브라헤와 케플러, 데이터 과학의 개념</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터 과학은 데이터를 <b>과학적으로 분석</b>해서 세상의 <b>규칙(법칙)</b>을 찾고, 거기서 얻은 지식과 통찰로 <b>앞으로 일어날 일을 내다보는</b> 학문이에요. 400여 년 전 케플러가 바로 이런 일을 했어요.</span></div>
+  <div class="card">
+    <h3>🔭 데이터 과학으로 문제를 바라본다면? <span class="muted" style="font-weight:400;font-size:.88rem">(14쪽)</span></h3>
+    <div class="grid2">
+      <div>
+        <ol class="vsteps">
+          <li><b>1543년 · 코페르니쿠스</b><p>지구가 태양을 중심으로 1년 주기로 돈다는 <b>지동설</b>을 주장했어요. 하지만 천체가 태양을 중심으로 <b>원운동</b>을 한다고 가정했기 때문에, 천동설보다 천체 예측 결과를 정밀하게 설명하지 못했어요.</p></li>
+          <li><b>티코 브라헤</b><p>아직 망원경이나 렌즈가 나오기 전, 시력이 좋은 브라헤는 <b>눈으로 천체를 직접 관측</b>해 방대하고 정밀한 천체 관측 데이터를 남겼어요.</p></li>
+          <li><b>요하네스 케플러(1571~1630)</b><p>스승 브라헤가 관측한 <b>데이터를 기반으로</b>, 천체가 태양을 중심으로 한 <b>타원 궤도</b>를 따라 움직인다는 <b>케플러 제1법칙</b>을 발표했어요.</p></li>
+        </ol>
+      </div>
+      <div class="sci-orbit">
+        <div class="row sci-obtn" id="orbitBtns"></div>
+        <svg id="orbitSvg" viewBox="0 0 360 230" role="img" aria-label="원 궤도 가정, 관측 데이터, 타원 궤도를 차례로 겹쳐 보는 그림"></svg>
+        <p class="sci-ocap" id="orbitCap"></p>
+        <p class="note" style="margin-top:2px">궤도 모양은 알아보기 쉽게 과장해서 그렸어요.</p>
+      </div>
+    </div>
+  </div>
+  <p class="callout sci-today">🏛️ <b>오늘날에는?</b> <span class="muted" style="font-size:.86rem">(14쪽)</span> 브라헤는 맨눈으로 직접 관측해 데이터를 모았지만, 지금은 공공 기관이 쓰던 데이터가 <b>데이터 공유 사이트</b>로 공개되어 누구나 활용할 수 있어요. 기상청 단기 예보 데이터와 농업 기상 관측 데이터로 만든 「작물의 최적 환경 분석을 위한 데이터 분석 플랫폼」은 공공 데이터 공모전에서 나온 사례예요.</p>
+  <div class="card">
+    <h3>📘 데이터 과학이란? <span class="muted" style="font-weight:400;font-size:.88rem">(15쪽)</span></h3>
+    <p class="sci-def" id="defText"><b>데이터 과학(data science)</b>이란 과학적 방법으로 데이터를 분석하여 보편적 진리나 법칙을 발견하고 유의미한 지식과 통찰을 얻어 미래를 예측하는 학문이다.</p>
+    <p class="note">데이터 과학과 융합한 분야로는 통계학, 컴퓨터 과학, 인공지능 등이 있어요.</p>
+  </div>
+  <div class="card">
+    <h3>🧩 정의 문장 다시 짜기</h3>
+    <p class="muted" style="margin-top:0">위의 정의를 가린 채, 조각을 <b>순서대로</b> 눌러 문장을 완성해요. 정의에 없는 조각도 2개 섞여 있어요.</p>
+    <div id="defGame"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 과학의 등장 -->
+<section class="page" data-name="데이터 과학의 등장" data-acc="#9b4fc4">
+  <div class="head"><div class="num">02</div><div><h2>데이터 과학은 어떻게 등장했을까?</h2><p>교과서 15쪽 · 과학 연구의 네 가지 패러다임</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span><b>패러다임</b>은 쉽게 말해 <b>「사고방식」</b>, 곧 문제를 해결하거나 세상을 이해하는 데 쓰는 기본적인 방법이에요. 과학자들이 세상을 연구하는 방법은 도구가 발전할 때마다 새 방법이 더해지며 넓어져 왔고, 그 네 번째가 데이터 과학이에요.</span></div>
+  <div class="card">
+    <h3>🪜 데이터 과학의 등장 <span class="muted" style="font-weight:400;font-size:.88rem">(15쪽)</span></h3>
+    <p style="margin-top:0">데이터 과학은 데이터의 <b>수집, 처리, 분석 및 활용 방법</b>이 발전함에 따라 다양한 분야와 융합되어 형성되었어요. 아래 카드를 왼쪽부터 읽어 보세요.</p>
+    <div class="sci-para">
+      <div style="--k:#e0702b"><span class="n">제1패러다임</span><h4>🔬 실험 과학</h4><em>자연 현상 설명</em><p>16세기 이전에는 자연 현상을 이해하려고 <b>관찰과 실험</b>을 활용한 연구가 제한적으로 이루어졌어요.</p><small>실험 과학의 연구 방법은 점차 발전해 훗날 데이터 과학의 기초가 되었어요.</small></div>
+      <div style="--k:#2f6fd0"><span class="n">제2패러다임</span><h4>💡 이론 과학</h4><em>현상을 수학적 모델링 및 일반화</em><p>자연 현상을 <b>수학적 모델</b>로 표현하고 추론해 현상을 설명하고 예측해요. 뉴턴의 <b>만유인력의 법칙</b>, 아인슈타인의 <b>상대성 이론</b>처럼 공식이 있는 과학 법칙이 나왔어요.</p><small>지금도 과학의 핵심 이론으로 활용되고 있어요.</small></div>
+      <div style="--k:#1f9d74"><span class="n">제3패러다임</span><h4>🖥️ 계산 과학</h4><em>복잡한 현상을 가상화</em><p>20세기 중반 <b>컴퓨터</b>가 등장하면서 <b>컴퓨터 시뮬레이션</b>이나 알고리즘을 활용하는 연구로 발전했어요.</p><small>시뮬레이션을 활용한 기상 예측과 유전자 분석은 실험이나 이론으로는 해결하기 어려웠던 문제의 해결 방법을 주었어요.</small></div>
+      <div style="--k:#9b4fc4"><span class="n">제4패러다임</span><h4>📊 데이터 과학</h4><em>데이터 중심 현상 분석 및 미래 예측</em><p>4차산업혁명으로 데이터가 만들어지는 <b>양과 속도가 폭발적으로 증가</b>했어요.</p><small>인공지능과 같은 기술의 발전으로 데이터 과학이 새로운 과학 연구 패러다임으로 떠올랐어요.</small></div>
+    </div>
+    <p class="sci-ext">➕ 새 패러다임이 나왔다고 앞의 방법이 사라진 것은 아니에요. 실험·이론·계산은 지금도 쓰이고, 그 위에 새 방법이 <b>더해지며 연구 방법이 넓어져</b> 왔어요.</p>
+    <div class="callout" style="margin-bottom:0"><b>2016년 클라우스 슈바프가 말한 4차산업혁명</b> 물리 세계, 디지털 세계, 생물 세계가 융합되어 경제와 사회의 모든 영역에 영향을 미치는 새로운 산업 시대예요. 단순히 기기와 시스템을 연결하고 스마트화하는 데 그치지 않고, 유전자 염기 서열 분석, 나노 기술, 재생 가능 에너지, 양자 컴퓨팅 등 여러 분야에서 거대한 발전이 동시에 일어나고 있어요.</div>
+  </div>
+  <div class="card">
+    <h3>🎯 어느 패러다임의 연구일까?</h3>
+    <p class="muted" style="margin-top:0">연구 장면을 읽고 알맞은 패러다임을 골라요. 「무엇으로」 연구하는지(눈과 손, 수학 공식, 컴퓨터 속 가상 세계, 쌓인 기록)를 살펴봐요.</p>
+    <div id="paraGame"></div>
+    <div class="memo"><label>✍️ 기억에 남는 카드 하나와 그 패러다임 <small>왜 그 패러다임인지 「무엇으로 연구하는지」를 넣어 한 줄로 적어요.</small></label><textarea data-memo="paraNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 데이터 과학의 활용 -->
+<section class="page" data-name="데이터 과학의 활용" data-acc="#1f9d74">
+  <div class="head"><div class="num">03</div><div><h2>데이터 과학은 어디에 쓰일까?</h2><p>교과서 16~17쪽 · 관련 분야, 혈압, 스마트 농업, 해결 가능한 문제</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터 과학은 혼자 하는 학문이 아니에요. <b>컴퓨터 과학</b>, <b>수학과 통계</b>, 그 분야를 깊이 아는 <b>전문 지식</b>이 함께 있어야 해요. 그렇게 데이터에서 얻은 <b>지식과 통찰</b>로 전염병, 기후 변화, 자연재해 같은 큰 문제도 풀어요.</span></div>
+  <div class="card">
+    <h3>🔵 데이터 과학의 관련 분야 <span class="muted" style="font-weight:400;font-size:.88rem">(16쪽 그림 Ⅰ-1을 다시 그림)</span></h3>
+    <p style="margin-top:0">데이터 과학은 데이터를 효과적으로 다루기 위해 프로그래밍 언어와 알고리즘 같은 <b>컴퓨터 과학 및 IT</b>, 데이터 분석을 위한 <b>수학과 통계</b>, 각 <b>연구 분야의 전문 지식</b> 등 다양한 학문과 밀접하게 연결되어 있어요. 그림의 원이나 겹친 곳을 눌러 보세요.</p>
+    <div class="grid2">
+      <div><svg id="vennSvg" viewBox="0 0 360 300" role="img" aria-label="데이터 과학의 관련 분야 벤 다이어그램"></svg></div>
+      <div>
+        <div class="sci-vinfo" id="vennInfo"></div>
+        <div class="sci-vbtns" id="vennBtns"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🩺 데이터에서 통찰까지 <span class="muted" style="font-weight:400;font-size:.88rem">(17쪽)</span></h3>
+    <p style="margin-top:0">데이터 과학은 문제 해결뿐 아니라 데이터에서 유의미한 지식과 통찰을 끌어내 <b>미래를 예측하거나 계획을 세우는 데</b>도 쓰여요.</p>
+    <div class="flow2 sci-dikw">
+      <div style="--k:#8a94a3"><b>데이터</b><span>「혈압 수치」</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#2f6fd0"><b>정보</b><span>「160/100(mmHg)」</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#9b4fc4"><b>지식</b><span>「혈압이 매우 높다」</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#1f9d74"><b>통찰</b><span>「운동과 채식을 병행해야겠다」는 의사 결정</span></div>
+    </div>
+    <p class="note">혈압은 수축기 혈압과 이완기 혈압 두 수치로 재고, 밀리미터 수은(mmHg) 단위로 나타내요. 160/100이면 160이 수축기 혈압, 100이 이완기 혈압이에요. 이 통찰은 운동 계획을 세워 실천하는 디딤돌이 되기도 해요.</p>
+    <div class="sci-mine">
+      <b>✍️ 내 생활 속 데이터로 이어 보기</b> <span class="muted" style="font-size:.88rem">혈압 말고 다른 데이터를 하나 골라 네 단계로 이어 봐요.</span>
+      <table class="plan">
+        <tr><td>데이터</td><td><input type="text" data-memo="insD" placeholder="어떤 종류의 기록인가요? 예: 하루 걸음 수"><div class="saved"></div></td></tr>
+        <tr><td>정보</td><td><input type="text" data-memo="insI" placeholder="실제로 얻은 값은? 예: 어제 3,000걸음"><div class="saved"></div></td></tr>
+        <tr><td>지식</td><td><input type="text" data-memo="insK" placeholder="그 값이 뜻하는 상태는?"><div class="saved"></div></td></tr>
+        <tr><td>통찰</td><td><input type="text" data-memo="insW" placeholder="그래서 어떤 결정·계획을 세울까?"><div class="saved"></div></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🌱 데이터 과학으로 문제를 해결한 사례 <span class="muted" style="font-weight:400;font-size:.88rem">(16쪽 표 Ⅰ-1)</span></h3>
+    <p style="margin-top:0">2023년 창업 경진 대회에서 우수상을 받은 <b>「AI 디지털 트윈 스마트 농업 플랫폼」</b>은 공공 데이터와 센서로 수집한 데이터로 제어 시스템을 만들면, 작물 생육의 최적 상태를 유지하는 환경을 구성할 수 있다는 <b>가설</b>을 세웠어요. 그 뒤 데이터를 수학과 통계 방법으로 검증하고, 컴퓨터 과학으로 분석해 인공지능 원격 제어 시스템을 개발했어요.</p>
+    <div class="flow2">
+      <div style="--k:#e0702b"><b>① 가설 수립</b><span>현장 센서, 기상 데이터, 토양 데이터, 작물 데이터로 실시간으로 작물 생육의 최적 상태를 유지하도록 환경을 구성할 수 있다.</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#2f6fd0"><b>② 데이터 검증 및 통합</b><span>· 수집된 데이터의 정확성과 일관성을 검증한다.<br>· 다양한 형식의 데이터를 통합한다.</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#1f9d74"><b>③ 일정한 법칙 도출</b><span>작물의 생육 밸런스를 맞추는 알고리즘 분석 기술을 개발했다.</span></div>
+    </div>
+    <p class="note"><b>가설</b> · 어떤 사실을 설명하거나 이론 체계를 끌어내려고 세운 가정이에요. 연구 문제에 대해 미리 내놓는 예측적인 답이지요.</p>
+    <p style="margin-bottom:0">이처럼 데이터 과학에서는 <b>가설을 세우고 → 데이터로 검증한 뒤 → 일정한 법칙을 도출</b>해요. 다양한 데이터로 모델과 결과의 신뢰성을 확인하고, 이를 실제 의사 결정이나 업무에 반영하지요. 각 단계마다 전문 지식, 수학 및 통계학, 컴퓨터 과학, 기계학습 같은 이론과 기술이 쓰여요.</p>
+  </div>
+  <div class="card">
+    <h3>🔗 데이터와 해결할 문제 짝짓기 <span class="muted" style="font-weight:400;font-size:.88rem">(17쪽 표 Ⅰ-2)</span></h3>
+    <p class="muted" style="margin-top:0">왼쪽에서 <b>데이터</b>를 하나 누르고, 오른쪽에서 그 데이터로 해결할 수 있는 <b>문제</b>를 눌러 짝을 지어요.</p>
+    <div id="pairGame"></div>
+    <p class="note">사회 각 분야에서 데이터가 폭발적으로 늘면서 교육, 의료, 금융, 제조, 경영 등 다양한 영역에서 데이터 과학이 적극 활용되고, 그 범위는 빠르게 넓어지고 있어요. 이처럼 데이터 과학은 인류의 지속 가능한 삶을 위해 꼭 풀어야 하는 문제에서 중요한 역할을 하는, 우리 사회의 여러 문제를 해결하는 데 꼭 필요한 도구예요.</p>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 스스로 해결하기 -->
+<section class="page" data-name="실종 아동 찾기" data-acc="#d64535">
+  <div class="head"><div class="num">04</div><div><h2>스스로 해결하기 · 데이터 과학의 가치</h2><p>교과서 17쪽 · 조사 · 발표</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오래전에 잃어버린 아이는 그사이 얼굴이 많이 바뀌어요. 데이터 과학이 이 어려운 문제에 어떤 도움을 주었는지 읽고, 데이터 과학의 <b>가치</b>를 내 말로 정리해요.</span></div>
+  <div class="case">
+    <h3>📰 연령 변화에 따른 추적 안면 인식 앱</h3>
+    <p style="margin:0">어린이 실종 사건은 매일 끊임없이 일어나지만, 실종 아동 가운데 짧은 기간 안에 발견되는 아동은 매우 적어요. 빨리 찾지 못하면 아이가 자라면서 모습이 달라져 찾을 확률은 더 낮아져요.</p>
+    <p style="margin:8px 0 0">한 메신저 플랫폼은 자신들이 가진 <b>1,000만 개의 얼굴 사진 샘플</b>을 분석해, 어릴 때의 얼굴을 추적해 <b>성인이 된 모습으로 바꿔 주는</b> 앱을 개발했어요. 잃어버린 아이의 어릴 적 사진으로 <b>5년 뒤 또는 10년 뒤의 얼굴</b>을 추적할 수 있는 거예요. 실제로 이 기술로 총 <b>286건 중 176명</b>의 실종 아동이 가족의 품으로 돌아올 수 있었다고 해요.</p>
+    <p class="note" style="margin-bottom:0">교과서 17쪽 사례를 풀어 쓴 글이에요(교과서에 기사 출처가 있어요).</p>
+  </div>
+  <div class="card">
+    <h3>💬 이야기 나누기 · 데이터 과학은 어떤 가치를 가질까?</h3>
+    <div class="memo"><label>1. 이 사례에서 쓰인 데이터는 무엇이고, 그 데이터를 분석해 무엇을 할 수 있게 되었나요?</label><textarea data-memo="valData" rows="2"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>2. 데이터 과학이 이 사례에서 만든 가치는 무엇일까요? <small>아이와 가족, 그리고 우리 사회에 어떤 의미가 있는지 생각해 봐요.</small></label><textarea data-memo="valWorth" rows="2"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>3. (선택) 사람의 얼굴 사진 같은 데이터를 쓸 때 함께 생각해야 할 점은 무엇일까요? <small>「기술이 좋다」에서 멈추지 말고, 이 기술이 사람에게 어떤 의미인지 따져 봐요.</small></label><textarea data-memo="valCare" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>✅ 성취도 평가 · 스스로 점검</h3>
+    <p class="muted" style="margin-top:0">오늘 할 수 있게 된 것을 모두 골라요.</p>
+    <div id="selfCheck"></div>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">케플러가 브라헤의 관측 데이터에서 타원 궤도의 법칙을 찾았듯이, <b>데이터 과학</b>은 데이터를 과학적으로 분석해 세상의 규칙을 찾고, 거기서 얻은 지식과 통찰로 앞으로 일어날 일을 내다보는 학문이다.</div>
+    <div style="--k:#9b4fc4">과학 연구 방법은 <b>실험 과학 → 이론 과학 → 계산 과학 → 데이터 과학</b>의 네 가지 패러다임으로 발전했다. 앞의 방법은 사라지지 않고, 새 방법이 더해지며 넓어졌다. 데이터가 만들어지는 양과 속도가 폭발적으로 늘고 인공지능 같은 기술이 발전하면서 데이터 과학이 새로운 패러다임으로 떠올랐다.</div>
+    <div style="--k:#1f9d74">데이터 과학은 <b>컴퓨터 과학/IT, 수학과 통계, 연구 분야의 전문 지식</b>이 함께 쓰이는 분야로, 가설을 세우고 데이터로 검증해 법칙을 도출한다. 데이터 → 정보 → 지식 → 통찰로 나아가며 전염병·기후 변화·자연재해·에너지 같은 사회 문제 해결에 쓰인다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 다시 답하기</h3>
+    <p class="muted" style="margin-top:0">브라헤와 케플러, 스마트 농업, 표 Ⅰ-2, 실종 아동 찾기처럼 오늘 본 사례를 둘 이상 넣어 내 말로 답해 보세요.</p>
+    <b style="font-size:.93rem">과거부터 현재까지 사람들은 데이터를 사용하여 어떤 문제를 해결하고자 하였을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>「마시멜로 실험」의 <b>「잘 참은 아이들의 자기 통제력이 강하다」</b>는 분석 결과가 왜 옳지 않을 수 있는지 실험 대상과 배경을 근거로 자기 말로 설명하고, 이 사례에서 알게 된 <b>데이터를 분석할 때 주의할 점</b>을 쓰세요.</li>
+      <li>과학 연구 방법이 <b>실험 과학 → 이론 과학 → 계산 과학 → 데이터 과학</b>으로 더해지며 넓어져 온 흐름을 「어느 패러다임의 연구일까?」에서 분류하고 메모한 예를 하나 이상 들어 설명하고, 데이터 과학이 새로운 패러다임으로 떠오른 까닭을 쓰세요.</li>
+      <li>내 생활 속 데이터 하나를 골라 <b>데이터 → 정보 → 지식 → 통찰</b>로 이어 보았습니다. 내가 이은 과정을 쓰고, 이처럼 데이터에서 통찰을 얻는 일이 사회 문제 해결에 어떻게 쓰이는지 <b>표 Ⅰ-2의 짝 하나</b>나 <b>실종 아동 찾기 사례</b>와 연결해 설명하세요.</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

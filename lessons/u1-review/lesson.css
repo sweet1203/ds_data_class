@@ -1,0 +1,28 @@
+
+  /* 01 O/X */
+  .ur-q{border-top:1px dashed var(--line);padding:10px 0}
+  .ur-q:first-of-type{border-top:0}
+  .ur-q p{margin:0 0 4px;font-weight:700}
+  .ur-vote{margin-top:4px;max-width:420px}
+  .ur-vote button{padding:8px 12px}
+  .ur-vote button:disabled{cursor:default}
+  .ur-vote button:disabled:not(.on){opacity:.5}
+  /* 02 그래프 읽기 */
+  .ur-svg{max-width:520px}
+  .ur-tb{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--acc);font-size:.93rem}
+  .ur-opt summary{cursor:pointer;font-weight:900;font-size:1.02rem}
+  .ur-opt[open] summary{margin-bottom:8px}
+  .ur-ol{margin:4px 0 0;padding-left:20px;font-size:.93rem}
+  .ur-ol li{margin:5px 0}
+  /* 03 자기 평가 · 진로 카드 */
+  .ur-eval{min-width:560px}
+  .ur-eval td{vertical-align:middle;font-size:.9rem}
+  .ur-eval .chk{flex-wrap:nowrap;gap:4px;justify-content:center}
+  .ur-eval .chk button{padding:2px 10px}
+  .ur-tc{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .ur-tc .tcard{height:236px}
+  .ur-tc .tcard .f b{font-size:1.08rem}
+  /* 04 빈칸 */
+  .ur-blanks li{margin:8px 0;line-height:1.9}
+  .ur-blank{font:inherit;font-weight:700;border:0;border-bottom:2px dashed var(--acc);background:var(--acc-soft);color:var(--acc);border-radius:6px 6px 0 0;padding:0 10px;min-width:64px;cursor:pointer}
+  .ur-blank.on{border-bottom-style:solid;background:#fff4d6;color:var(--ink)}

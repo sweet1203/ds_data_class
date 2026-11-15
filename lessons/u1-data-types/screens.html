@@ -1,0 +1,266 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 1. 데이터 과학과 데이터</span>
+      <h1>데이터는<br>어떤 형태로<br>존재할까?</h1>
+      <div class="story"><b>데이터는 새로운 원유</b><br>2006년 영국의 수학자 <b>클리브 험비</b>는 데이터를 「새로운 원유(Data is the new oil)」에 비유했어요. 2017년 <b>이코노미스트</b>는 「세계에서 가장 가치 있는 자원은 더 이상 석유가 아닌 데이터」라는 제목의 기사로 세계의 관심을 받았어요. 원유를 가공한 휘발유가 경제와 산업을 바꾸었듯이, 데이터를 정제해서 만든 가치가 경제에 끼치는 영향은 점점 커지고 있어요.</div>
+      <p>운동을 하거나 TV를 보거나 사진을 올리는 짧은 순간에도 우리는 디지털 흔적을 남겨요. 이렇게 쏟아지는 데이터는 <b>어떤 형태</b>를 가지고 있을까요? 오늘은 급식 사진을 직접 <b>표로 정리</b>해 보며 알아봐요.</p>
+      <ol>
+        <li>데이터란 무엇일까?</li><li>비정형 데이터를 표로 정리하기</li><li>정형 데이터는 무엇이 좋을까?</li>
+        <li>스스로 해결하기 · 정형일까, 비정형일까?</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📷</i><div><b>급식 사진 365장</b><small>닭고기는 며칠이나 나왔을까?</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✍️</i><div><b>필요한 속성 뽑기</b><small>날짜 · 쇠고기 · 돼지고기 · 닭고기 · 오리고기</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📋</i><div><b>행과 열의 표로 정리</b><small>0과 1만 더하면 바로 셀 수 있어요</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🗂️</i><div><b>정형 · 비정형 구분</b><small>내 주변 데이터는 어느 쪽일까?</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p><b>데이터</b>가 무엇인지 알아보고, 급식 사진처럼 규칙 없이 모인 <b>비정형 데이터</b>를 행과 열의 표로 바꾸어 <b>정형 데이터</b>로 만들어 봅니다. 그리고 표로 정리하면 무엇이 쉬워지는지 직접 확인한 뒤, 여러 데이터를 정형과 비정형으로 구분해 봐요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">나의 계획</span>
+        <p style="margin:0 0 6px;font-size:.9rem">「데이터의 형태와 속성」을 배우기 전에, 이 단원에서 배우고 싶은 것을 적어 두어요. 다음 시간 끝에 다시 점검해요.</p>
+        <div class="memo"><label>나는 이 단원에서 다음과 같은 내용을 배우고 싶다.</label><textarea data-memo="plan" rows="3" placeholder="두 가지 정도 적어요"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터의 형태와 속성</b> · 전 세계인이 주목하고 있는 데이터는 어떤 형태를 가지고, 분석 대상으로서의 가치는 어떻게 판단할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 데이터의 형태는 어떤 것이 있고, 급식 사진 같은 데이터는 왜 표로 정리해야 할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>정형 데이터와 비정형 데이터를 구별할 수 있다.</li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">이 소단원의 또 다른 목표 「데이터 속성의 의미를 알고 속성 간 관계를 파악하여 분석 대상으로서의 가치를 판단할 수 있다」는 다음 시간에 이어서 배워요.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터란 무엇일까부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 -->
+<section class="page" data-name="데이터란?" data-acc="#1f9d74">
+  <div class="head"><div class="num">01</div><div><h2>데이터란 무엇일까?</h2><p>교과서 23쪽 · 데이터의 뜻 · 데이터의 양과 정보</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>세상에서 일어난 일을 <b>보고(관찰) 재서(측정)</b> 숫자·글·사진·소리 같은 모양으로 <b>적어 둔 것</b>이 데이터예요. 하나만 있으면 별 뜻이 없어 보여도, 많이 모아서 정리하고 분석하면 쓸모 있는 정보가 돼요.</span></div>
+  <div class="card">
+    <h3>📌 데이터(data)</h3>
+    <div class="callout" style="margin-top:4px"><b>관찰과 측정</b>을 통해 얻은 <b>실질적인 값</b>. 자연이나 일상에서 발생한 사실을 기호, 숫자, 문자, 이미지, 소리, 동영상 등의 형태로 종이나 디지털 매체에 기록한 것</div>
+    <div class="dt-fact">
+      <div class="dt-fbox"><b>사실</b><span>오늘 점심으로 급식을 먹었다</span>
+        <svg viewBox="0 0 220 120" class="dt-tray" role="img" aria-label="급식판 그림">
+          <rect x="6" y="6" width="208" height="108" rx="14" class="tr"/>
+          <rect x="16" y="16" width="56" height="40" rx="8" class="cp"/><rect x="82" y="16" width="56" height="40" rx="8" class="cp"/><rect x="148" y="16" width="56" height="40" rx="8" class="cp"/>
+          <rect x="16" y="64" width="90" height="40" rx="8" class="cp"/><rect x="114" y="64" width="90" height="40" rx="8" class="cp"/>
+          <circle cx="44" cy="36" r="12" fill="#e5a25b"/><circle cx="110" cy="36" r="13" fill="#8bbf6a"/><ellipse cx="176" cy="36" rx="18" ry="10" fill="#f4d35e"/>
+          <ellipse cx="61" cy="84" rx="32" ry="13" fill="#f7f3ea" stroke="#d9cfbd"/><ellipse cx="159" cy="84" rx="32" ry="13" fill="#c9783e"/>
+        </svg>
+      </div>
+      <div class="dt-farr"><span>기호 · 숫자 · 문자<br>이미지 · 소리 · 동영상</span>→</div>
+      <div class="dt-fbox"><b>기록</b><span>사진 한 장 + 메뉴 글</span>
+        <div class="dt-rec"><small>(교과서 23쪽 예)</small>점심 · 수수밥, 된장국, 고등어 무 조림, 콩나물 무침, 파인애플</div>
+      </div>
+    </div>
+    <div class="cards3" style="margin-top:14px">
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🔭</div><h4>예전의 데이터</h4><p>브라헤가 관찰하여 기록한 천체의 움직임, 나이팅게일이 수집한 환자의 상태 기록, 고대 사회에서 세금 징수와 군대 양성을 위해 모은 인구 데이터</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">📱</div><h4>요즘의 데이터</h4><p>모바일 기기와 네트워크가 발전하면서 소셜 네트워크, 게임, 미디어, 검색 등을 이용할 때 <b>자동으로</b> 생성되는 데이터가 많아요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">💡</div><h4>데이터 → 정보 → 가치</h4><p>데이터는 <b>저장, 가공, 분석</b> 과정을 거쳐 유의미한 정보로 바뀌고, 이를 통해 가치를 만들 수 있어요.</p></div>
+    </div>
+    <div class="callout"><b>데이터의 양과 정보</b> 하나의 데이터로는 패턴을 파악하기 어려워서 여러 개를 모아요. 데이터의 양이 많을수록 그 속에 담긴 사실이나 규칙을 찾아 의미 있는 정보를 얻을 가능성이 커져요.</div>
+  </div>
+  <div class="case">
+    <h3>📷 급식 사진을 왜 매일 찍어?</h3>
+    <div class="dt-talk">
+      <p><b>여학생</b> 급식 사진을 왜 매일 찍어?</p>
+      <p><b>남학생</b> 급식 데이터를 모으는 중이야. 내 갤러리엔 급식 사진이 무려 365장이나 있지.</p>
+    </div>
+    <p style="margin-top:10px"><b>생각해 보기</b> 남학생의 <b>사진 데이터만</b> 가지고 급식 재료 중 <b>닭고기의 사용 빈도</b>를 확인할 수 있을까요? 내 생각을 골라 보세요.</p>
+    <div class="vote" id="dtVote"></div>
+    <div class="reveal" id="dtVoteAns"><div class="callout" style="margin:0">사진으로 그날 <b>메뉴</b>는 어느 정도 알 수 있어요. 하지만 사진의 품질이나 요리 방법에 따라 정확하게 판단하기 어렵고, 특히 어떤 <b>재료</b>가 들어갔는지는 확인하기 쉽지 않아요. 게다가 365장을 한 장씩 넘기며 세어야 해요.</div>
+      <div class="memo"><label>사진 365장으로 닭고기가 나온 날을 정확하고 빠르게 세려면 무엇을 해 두면 좋을까요? <small>지금 떠오르는 방법</small></label><textarea data-memo="photoIdea" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 비정형 → 정형 -->
+<section class="page" data-name="표로 정리하기" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>비정형 데이터를 표로 정리하기</h2><p>교과서 24쪽 · 비정형 데이터 · 표 Ⅰ-4 · 표 Ⅰ-5 · 반정형 데이터</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>사진·글·영상처럼 정해진 틀 없이 모인 데이터는 바로 세거나 비교하기 어려워요. 그래서 알고 싶은 것에 맞춰 <b>필요한 속성(항목)을 뽑아</b> 행과 열의 <b>표로 정리(구조화)</b>해요.</span></div>
+  <div class="card">
+    <h3>🧩 비정형 데이터(unstructured data)</h3>
+    <div class="callout" style="margin-top:4px">급식 사진처럼 <b>특별한 규칙 없이</b> 구성되어 있어 데이터들의 의미나 속성을 <b>한눈에 파악하기 어려운</b> 데이터</div>
+    <div class="chips dt-chips" style="margin-top:8px"><span class="chip">소셜 미디어 게시물</span><span class="chip">음성 정보</span><span class="chip">이메일</span><span class="chip">사진</span><span class="chip">영상</span></div>
+    <p>이런 데이터는 일정한 형식이나 규칙을 가지지 않아요. 데이터 분석에 쓰려면 <b>속성을 추출하여 구조화하는 과정</b>이 필요해요. 예를 들어 「급식 메뉴에 많이 나오는 고기 반찬은 어떤 종류의 고기일까?」에 답하려면, 사진에서 아래와 같은 속성을 뽑아낼 수 있어요.</p>
+  </div>
+  <div class="card">
+    <h3>✍️ 직접 구조화하기</h3>
+    <p class="muted" style="margin-top:0">① 급식 사진에서 메뉴를 뽑아 정리한 표 Ⅰ-4를 보고 ② 표 Ⅰ-5의 고기 종류 칸을 채운 뒤 ③ 닭고기가 나온 날을 세어 봐요.</p>
+    <h4 class="dt-st"><i>1</i> 표 Ⅰ-4 급식 메뉴 <span class="muted">(교과서 24쪽)</span></h4>
+    <div class="dt-scroll"><table class="dt-tbl" id="dtMenu"></table></div>
+    <h4 class="dt-st" style="margin-top:14px"><i>2</i> 표 Ⅰ-5 날짜별 사용된 고기 종류 <span class="muted">(0: 미사용, 1: 사용)</span></h4>
+    <p class="note" style="margin-top:0">칸을 누르면 0 ↔ 1이 바뀌어요. 메뉴 <b>이름</b>을 보고 그 고기를 썼다고 분명히 알 수 있는 칸만 1로 바꾸고, 「확인하기」를 눌러요. 칸을 누르면 위의 표에서 그날 메뉴가 강조돼요.</p>
+    <div class="dt-scroll"><table class="dt-tbl dt-grid" id="dtGrid"></table></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="dtCheck">확인하기</button><button class="btn ghost sm" id="dtReset">처음부터 다시</button></div>
+    <div class="dt-msg" id="dtMsg">메뉴 이름에서 고기를 찾아 1로 바꿔 보세요.</div>
+    <div class="dt-count" id="dtCount">
+      <h4 class="dt-st"><i>3</i> 닭고기가 나온 날은 며칠일까?</h4>
+      <div class="row"><span>표 Ⅰ-5에서 세어 보면</span><input type="number" id="dtDays" min="0" max="6" style="width:80px"><span>일</span><button class="btn sm" id="dtDaysOk">확인</button></div>
+      <div class="dt-msg" id="dtDaysMsg"></div>
+    </div>
+  </div>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>📋 무엇이 달라졌을까?</h3>
+      <p style="margin-top:0">표 Ⅰ-4는 급식 메뉴 데이터를 <b>행과 열의 표로 구조화</b>하여 정리한 것이고, 표 Ⅰ-5는 날짜별로 고기 종류를 썼는지(0: 미사용, 1: 사용)를 표로 <b>구조화</b>한 것이에요.</p>
+      <p>사진 365장에서는 「닭고기」를 찾으려면 한 장씩 보고 판단해야 했지만, 표에서는 <b>닭고기 열의 1만 더하면</b> 돼요.</p>
+    </div>
+    <div class="card">
+      <h3>🔖 더 알아보기 · 반정형 데이터</h3>
+      <p style="margin-top:0;font-size:.93rem"><b>반정형 데이터(semi-structured data)</b>는 정형 데이터처럼 테이블의 행과 열로 구조화되어 있지는 않지만, <b>데이터 구조 정보를 포함</b>하고 파일 형식(XML, HTML, JSON)으로 제공하는 데이터예요. 데이터의 형식과 구조가 바뀔 수 있어요. (예: 이메일, 로그 데이터 등)</p>
+      <pre class="dt-json"><span class="c">// 급식 메뉴를 JSON으로 적으면(예시)</span>
+{ "날짜": "25-03-05",
+  "밥": "잡곡밥",
+  "반찬": ["찜닭", "홀그레인 콘샐러드"] }</pre>
+      <p class="note">「날짜」「반찬」 같은 이름표(구조 정보)가 값과 함께 들어 있지만, 날마다 반찬 개수가 달라도 괜찮아요. 이메일은 본문 글은 자유롭게 쓰지만 보낸 사람·받은 시각 같은 구조 정보도 함께 있어서, 교과서 24쪽에서 비정형 데이터의 예(본문)와 반정형 데이터의 예(옆 설명)로 모두 나와요.</p>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 정형 데이터 -->
+<section class="page" data-name="정형 데이터" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>정형 데이터는 무엇이 좋을까?</h2><p>교과서 24~25쪽 · 정형 데이터의 뜻과 장점 · 현대 사회의 비정형 데이터</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>행과 열의 표로 깔끔하게 정리된 데이터는 컴퓨터가 바로 <b>찾고, 다시 줄 세우고, 계산</b>할 수 있어요. 그래서 사진·영상 같은 데이터도 분석하려면 목적에 맞게 표로 바꾸는 과정이 꼭 필요해요.</span></div>
+  <div class="card">
+    <h3>📋 정형 데이터(structured data)</h3>
+    <div class="callout" style="margin-top:4px">표 Ⅰ-4, 표 Ⅰ-5와 같이 <b>규칙에 따라 정리된 명확한 형태나 구조</b>로 이루어진 데이터. 주로 <b>행과 열</b>로 표현할 수 있는 표 형태로 구성된다.</div>
+    <div class="cards3">
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🔎</div><h4>정리 · 검색 · 재정렬 · 저장</h4><p>원하는 값을 쉽게 찾고, 기준에 따라 다시 줄 세우고, 저장할 수 있어요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🔗</div><h4>다른 정형 데이터와 결합</h4><p>날짜처럼 같은 속성이 있으면 다른 표와 쉽게 이어 붙일 수 있어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🧮</div><h4>통계 분석 · 연산</h4><p>명확한 구조가 있어서 컴퓨팅 도구로 통계 분석을 하거나 삽입, 삭제, 수정, 검색 등의 연산을 비교적 쉽게 할 수 있어요.</p></div>
+    </div>
+    <p class="note">데이터 분석에 흔히 쓰는 <b>스프레드시트 파일</b>, <b>CSV 형식의 파일</b>로 저장·관리되는 데이터는 대부분 정형 데이터예요.</p>
+  </div>
+  <div class="card">
+    <h3>⚙️ 표 Ⅰ-5로 직접 해 보기</h3>
+    <p class="muted" style="margin-top:0">버튼을 눌러 정형 데이터로 할 수 있는 일을 해 보세요. 같은 일을 급식 사진 365장으로 한다면 얼마나 걸릴지 떠올려 봐요.</p>
+    <div class="row dt-ops">
+      <button class="btn ghost sm" data-op="find">🔎 닭고기를 쓴 날만 찾기</button>
+      <button class="btn ghost sm" data-op="sum">➕ 열마다 합계 내기</button>
+      <button class="btn ghost sm" data-op="csv">📄 CSV 파일로 보기</button>
+      <button class="btn ghost sm" data-op="reset">↺ 원래대로</button>
+    </div>
+    <div class="dt-msg" id="dtOpMsg"></div>
+    <div class="dt-scroll" id="dtOpView"></div>
+  </div>
+  <div class="card">
+    <h3>📡 현대 사회에는 비정형 데이터가 더 많아요 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅰ-2를 글로 바꿈)</span></h3>
+    <p style="margin-top:0">과거에는 데이터 분석에 쓰는 데이터 대부분이 정형 데이터였어요. 하지만 지금은 사람들이 주로 스마트폰, 소셜 미디어, 채팅, 영상 통화, 실험 등으로 의사소통을 하고, 이 과정에서 생기는 것은 대부분 <b>비정형 데이터</b>예요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#d64535"><div class="ic">🗺️</div><h4>위치 정보</h4><p>지도 앱 화면에 남은 내 위치와 이동 경로</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">📸</div><h4>SNS 게시물</h4><p>사진과 글, 해시태그가 섞여 올라오는 게시물</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">💓</div><h4>센서 데이터</h4><p>몸에 붙인 센서가 보낸 신호를 그래프로 보여 주는 건강 앱 화면</p></div>
+    </div>
+    <div class="callout">급식 사진 같은 비정형 데이터를 분석하려면 <b>목적에 맞게 정형화하는 과정</b>이 반드시 필요해요. 정형 데이터는 표와 구조화된 형식으로 저장되어 있어, 컴퓨팅 도구로 통계 분석, 시각화 등 다양한 분석 작업을 쉽게 할 수 있기 때문이에요.</div>
+  </div>
+  <div class="card">
+    <h3>💭 내 주변의 비정형 데이터를 표로 바꾼다면?</h3>
+    <p class="muted" style="margin-top:0">급식 사진에서 「고기 종류」 열을 뽑았던 것처럼, 내가 가진 비정형 데이터 하나를 골라 정형화해 봐요.</p>
+    <div class="memo">
+      <label>내가 가진 비정형 데이터와, 그것으로 알고 싶은 것 <small>데이터 예: 휴대폰 사진첩, 반 단체 대화방 글, 음성 메모</small></label>
+      <textarea data-memo="myData" rows="2"></textarea><div class="saved"></div>
+      <label>표로 정리한다면 열(속성) 이름은? <small>한 행에는 무엇이 들어가나요?</small></label>
+      <textarea data-memo="myCols" rows="2" placeholder="열 이름을 | 로 나누어 적어요"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 스스로 해결하기 -->
+<section class="page" data-name="스스로 해결하기" data-acc="#d64535">
+  <div class="head"><div class="num">04</div><div><h2>스스로 해결하기 · 정형일까, 비정형일까?</h2><p>교과서 25쪽 · 데이터를 정형 데이터와 비정형 데이터로 구분하고 그 이유 말하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>겉모습이 표처럼 보이는지만 보지 말고, <b>정해진 규칙에 따라 행과 열로 정리되어 있어서 컴퓨터가 바로 분석할 수 있는지</b>를 따져 봐요.</span></div>
+  <div class="card">
+    <h3>🗂️ 네 가지 데이터를 구분해 보자 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 25쪽 자료를 다시 그림)</span></h3>
+    <p class="muted" style="margin-top:0">데이터마다 정형 또는 비정형을 고른 뒤 「확인하기」를 눌러요.</p>
+    <div class="dt-four" id="dtFour"></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="dtFourOk">확인하기</button><button class="btn ghost sm" id="dtFourRe">다시 고르기</button></div>
+    <div class="dt-msg" id="dtFourMsg">네 가지를 모두 고르면 확인할 수 있어요.</div>
+    <div class="memo"><label>두 가지 데이터를 골라, 그렇게 구분한 이유를 적어 보세요. <small>짝에게 말로 설명해 본 뒤 적어요</small></label><textarea data-memo="whyType" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <details class="card dt-more">
+    <summary><b>🎯 (선택) 한 걸음 더 · 내 주변의 데이터</b> <span class="muted">시간이 있으면 열어요</span></summary>
+    <p class="muted">카드에 적힌 데이터가 정형 데이터인지 비정형 데이터인지 골라요. (모두 새로 만든 예시예요)</p>
+    <div id="dtSort"></div>
+  </details>
+  <details class="card dt-more">
+    <summary><b>📝 (선택) 개념 정리하기</b> <span class="muted">빈칸 세 문장</span></summary>
+    <p class="muted" style="font-size:.9rem">빈칸에 들어갈 말을 먼저 떠올린 뒤 눌러서 확인하세요.</p>
+    <ol class="dt-blanks">
+      <li>체육 대회 날 찍은 사진 300장은 일정한 형식이나 규칙이 없어 의미를 한눈에 파악하기 어려운 <button class="blank" data-a="비정형 데이터">?</button>이다. 이 사진들로 「어느 반이 가장 많이 웃었을까?」를 알아보려면 필요한 <button class="blank" data-a="속성">?</button>을 뽑아 <button class="blank" data-a="구조화">?</button>하는 과정이 필요하다.</li>
+      <li>반 친구들의 줄넘기 기록을 이름·횟수 열로 정리한 표는 <button class="blank" data-a="정형 데이터">?</button>이므로, 컴퓨팅 도구로 가장 많이 넘은 친구를 찾거나 평균을 구하기 쉽다.</li>
+      <li>데이터 구조 정보를 담은 JSON 파일처럼, 표의 행과 열은 아니지만 구조 정보가 함께 들어 있는 데이터를 <button class="blank" data-a="반정형 데이터">?</button>라고 한다.</li>
+    </ol>
+  </details>
+  <div class="card">
+    <h3>✅ 성취도 평가</h3>
+    <p style="margin-top:0">데이터의 형태에 따라 데이터를 구분하고 특징을 설명할 수 있나요? 할 수 있게 된 것을 모두 골라 보세요.</p>
+    <div id="dtSelf"></div>
+  </div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#1f9d74"><b>데이터</b>는 관찰과 측정을 통해 얻은 실질적인 값으로, 사실을 기호·숫자·문자·이미지·소리·동영상 등으로 기록한 것이다. 저장, 가공, 분석을 거쳐 유의미한 정보가 된다.</div>
+    <div style="--k:#e0702b"><b>비정형 데이터</b>는 특별한 규칙 없이 구성되어 의미나 속성을 한눈에 파악하기 어려운 데이터(사진, 영상, 게시물 등)로, 분석하려면 속성을 추출하여 구조화해야 한다.</div>
+    <div style="--k:#9b4fc4">급식 메뉴를 날짜·고기 종류 열로 정리한 표 Ⅰ-5처럼 행과 열로 정리된 <b>정형 데이터</b>는 컴퓨팅 도구로 찾기, 더하기, CSV로 저장하기가 쉬워서, 사진 365장을 넘겨 보지 않고도 닭고기가 나온 날을 바로 셀 수 있다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">01에서 적은 「사진 365장을 빠르게 세는 방법」을 떠올리며, 오늘 배운 낱말(비정형, 정형, 속성, 구조화)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터의 형태는 어떤 것이 있고, 급식 사진 같은 데이터는 왜 표로 정리해야 할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>급식 사진만으로 닭고기 사용 빈도를 알기 어려운 까닭과, 표 Ⅰ-5로 <b>직접 구조화</b>해 보니 무엇이 쉬워졌는지 쓰기</li>
+      <li>교과서 25쪽 데이터 두 가지를 <b>정형·비정형</b>으로 구분하고 그 까닭 설명하기</li>
+      <li>내 주변의 비정형 데이터 하나를 <b>어떤 열(속성)의 표</b>로 정리하면 무엇을 알 수 있을지 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

@@ -22,7 +22,7 @@
      "title": "데이터 과학의 등장과 활용",
      "pages": "12~17",
      "form": "data-u1-data-science",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "02",
@@ -30,7 +30,7 @@
      "title": "데이터 기반 의사 결정",
      "pages": "18~21",
      "form": "data-u1-decision",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "03",
@@ -38,7 +38,7 @@
      "title": "데이터의 형태: 정형·비정형 데이터",
      "pages": "22~25",
      "form": "data-u1-data-types",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "04",
@@ -46,7 +46,7 @@
      "title": "데이터 속성과 속성 간의 관계 · 정리",
      "pages": "26~31",
      "form": "data-u1-attributes",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "05",
@@ -54,7 +54,7 @@
      "title": "데이터셋과 데이터베이스",
      "pages": "32~39",
      "form": "data-u1-database",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "06",
@@ -62,7 +62,7 @@
      "title": "관계형 데이터베이스와 데이터 통합",
      "pages": "40~47",
      "form": "data-u1-relational",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "07",
@@ -70,7 +70,7 @@
      "title": "데이터와 미래 사회 · 정리",
      "pages": "48~53",
      "form": "data-u1-future",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "08",
@@ -78,7 +78,7 @@
      "title": "협력적 창의·융합 활동 · Ⅰ단원 정리",
      "pages": "54~57",
      "form": "data-u1-review",
-     "status": "todo"
+     "status": "ready"
     }
    ]
   },

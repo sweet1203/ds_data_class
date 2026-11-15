@@ -1,0 +1,255 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅰ. 데이터 과학의 이해 · 1. 데이터 과학과 데이터</span>
+      <h1>감으로 고를까,<br>데이터로 고를까?</h1>
+      <div class="story"><b>어떤 직업을 선택할지 고민이야.</b><br>한 친구는 「데이터 과학 쪽에서 일하는 내 친구한테 자문을 구해 보는 건 어때?」라고 권해요. 다른 장면의 학생은 컴퓨터 화면을 보며 말해요. 「데이터에 의하면 이 직업이 나의 강점, 흥미와 잘 맞아.」 두 결정은 무엇이 다를까요?</div>
+      <p>오늘은 <b>데이터 기반 의사 결정</b>이 무엇이고 왜 중요한지, 어떤 <b>과정</b>을 거치는지, 데이터를 어떤 <b>목적</b>으로 활용하는지 살펴봐요.</p>
+      <ol>
+        <li>데이터 기반 의사 결정이란?</li><li>의사 결정 과정 · 나이팅게일</li><li>데이터를 무엇에 활용할까?</li>
+        <li>함께 해결하기 · 사례 조사</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘의 질문 보기 ↓</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="go(1)">01로 바로 가기 →</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📋</i><div><b>계획</b><small>가설과 데이터 수집 계획 세우기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🗂️</i><div><b>수집</b><small>계획에 따라 모으고 정리하기</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📊</i><div><b>분석</b><small>알맞게 분석해 현상 이해하기</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🏥</i><div><b>적용</b><small>문제 해결에 적용해 상황 개선하기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">데이터 기반 의사 결정은 왜 중요할까? (18쪽)</span>
+      <p>과제를 언제 시작할지, 외투를 입을지 말지 같은 사소한 결정부터 어떤 진로를 선택할지, 어떤 대학에 진학할지 같은 중요한 결정까지 우리는 매일 다양한 <b>의사 결정</b>을 내려요. 데이터를 얻기 어려웠던 과거에는 이런 결정을 <b>직관이나 경험</b>에 기댔지만, 이제는 다양한 데이터에 쉽게 접근할 수 있게 되면서 <b>데이터를 기반으로</b> 결정할 수 있게 되었어요.</p>
+    </div>
+    <div class="cards2" style="margin:14px 0">
+      <div class="kc dec-talk" style="--k:#e0702b"><div class="ic">💭</div><h4>직관에 의한 의사 결정 예</h4><p><span>「어떤 직업을 선택할지 고민이야.」</span><span>「데이터 과학 쪽에서 일하는 내 친구한테 자문을 구해 보는 건 어때?」</span></p></div>
+      <div class="kc dec-talk" style="--k:#2f6fd0"><div class="ic">📈</div><h4>데이터 기반 의사 결정 예</h4><p><span>「데이터에 의하면 이 직업이 나의 강점, 흥미와 잘 맞아.」</span></p></div>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학과 데이터</b> · 데이터에 기반한 합리적인 의사 결정 과정은 무엇이고, 데이터의 잠재적 가치는 어떻게 파악할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 데이터 기반 의사 결정은 왜 중요할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 기반 문제 해결 사례를 탐색하고 데이터 기반 의사 결정의 중요성을 인식할 수 있다.</li>
+        </ul>
+        <p style="font-size:.86rem;margin-top:8px" class="muted">지난 시간에 배운 데이터 과학의 개념(14~17쪽)에 이어지는 내용이에요.</p>
+      </div>
+      <div class="why">
+        <span class="kicker">오늘 만날 낱말</span>
+        <p style="margin:4px 0 0;font-size:.95rem">데이터 기반 의사 결정 · 계획 · 수집 · 분석 · 적용 · 설명 · 진단 · 예측 · 처방</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📝 최근 내가 직관으로 한 결정</h3>
+      <div class="memo"><label>최근에 느낌이나 경험만으로 내린 결정 하나를 적어 보세요. 무엇을, 왜 그렇게 정했나요? <small>예를 들어 무엇을 먹을지, 언제 공부할지, 어떤 길로 갈지 같은 일이요. 01 화면에서 이 결정을 데이터로 다시 해 봐요.</small></label><textarea data-memo="myGut" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 기반 의사 결정부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 기반 의사 결정 -->
+<section class="page" data-name="데이터 기반 의사 결정" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 기반 의사 결정이란?</h2><p>교과서 18쪽 · 뜻, 중요성, 사례</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>느낌만 믿고 고르지 않고, 문제와 관련된 <b>데이터를 보고 문제를 깊이 이해한 다음</b> 가장 합리적인 해결 방법을 고르는 것이 데이터 기반 의사 결정이에요.</span></div>
+  <div class="card">
+    <h3>📘 데이터 기반 의사 결정 <span class="muted" style="font-weight:400;font-size:.88rem">(18쪽)</span></h3>
+    <p class="dec-def">데이터 기반 의사 결정이란 문제와 관련된 데이터를 통해 문제를 <b>심층적으로 이해</b>하고 <b>합리적인 해결 방안</b>을 마련하는 것을 말한다.</p>
+    <p style="margin:12px 0 6px"><b>왜 중요할까?</b></p>
+    <div class="flow2">
+      <div style="--k:#2f6fd0"><b>데이터는</b><span>현실적이고 객관적인 정보를 제공해요.</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#9b4fc4"><b>그래서</b><span>의사 결정의 오류를 최소화해요.</span></div>
+      <div class="ar">→</div>
+      <div style="--k:#1f9d74"><b>결국</b><span>올바른 결정을 도와요.</span></div>
+    </div>
+    <p class="note">특히 복잡하고 빠르게 변하는 현대 사회에서 데이터 기반 의사 결정은 매우 중요해요.</p>
+  </div>
+  <div class="card">
+    <h3>🗂️ 다양한 데이터 기반 의사 결정 사례 <span class="muted" style="font-weight:400;font-size:.88rem">(18쪽)</span></h3>
+    <div class="cards4">
+      <div class="kc" style="--k:#d64535"><div class="ic">📚</div><h4>학습 데이터</h4><p>학습 효과를 측정해 개선 방안을 찾고, 과제와 시험 준비를 위한 <b>개별 맞춤형 학습 계획</b>을 세워요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🥗</div><h4>식습관 데이터</h4><p>식습관을 분석해 <b>건강한 식단</b>을 구성해요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">🚌</div><h4>교통 데이터</h4><p><b>교통 체증을 완화</b>하고 대중교통 시스템의 개선 방안을 마련해요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🛒</div><h4>고객 구매 데이터</h4><p>구매 기록을 분석해 <b>고객 맞춤형 마케팅 전략</b>을 세워요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🎯 느낌일까, 기록일까?</h3>
+    <p class="muted" style="margin-top:0">상황 카드를 읽고, 직관(느낌·경험)에 의한 결정인지 데이터에 기반한 결정인지 골라요.</p>
+    <div id="gutGame"></div>
+    <div class="memo" style="margin-top:14px"><label>🔁 시작 화면에 적은 「내가 직관으로 한 결정」을 데이터로 다시 한다면? <small>어떤 데이터를 모으고, 그 데이터로 어떻게 판단할지 적어요.</small></label><textarea data-memo="gutRedo" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 의사 결정 과정 -->
+<section class="page" data-name="의사 결정 과정" data-acc="#d64535">
+  <div class="head"><div class="num">02</div><div><h2>데이터 기반 의사 결정은 어떤 과정을 거칠까?</h2><p>교과서 19쪽 · 나이팅게일, 계획 → 수집 → 분석 → 적용</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>「데이터 과학」이라는 말이 없던 1854년에도 나이팅게일은 데이터로 병사들의 목숨을 구했어요. 그 과정을 따라가 보면 <b>계획 → 수집 → 분석 → 적용</b>의 네 단계가 보여요.</span></div>
+  <div class="card">
+    <h3>🏥 나이팅게일이 수집한 데이터 <span class="muted" style="font-weight:400;font-size:.88rem">(19쪽 표 Ⅰ-3)</span></h3>
+    <p style="margin-top:0">1854년 크림 전쟁에 간호사로 참여한 나이팅게일은 병사들이 죽는 <b>주요 원인</b>을 확인하려고 아래와 같은 데이터를 모았어요. 기초 데이터는 그달의 원인별 사망자 수, 누적은 그달까지 모두 더한 수예요.</p>
+    <div style="overflow-x:auto">
+      <table class="dec-ng" id="ngTable">
+        <tr><th colspan="3">날짜</th><th colspan="4" class="g1">기초 데이터</th><th colspan="4" class="g2">누적</th><th colspan="2">비율</th></tr>
+        <tr><th>연도</th><th>월</th><th>연월</th><th class="g1">전염병</th><th class="g1">부상</th><th class="g1">기타</th><th class="g1">합계</th><th class="g2">전염병</th><th class="g2">부상</th><th class="g2">기타</th><th class="g2">합계</th><th>월별</th><th>누적기준</th></tr>
+        <tr data-r="0"><td>1854</td><td>5</td><td>1854.5</td><td>12</td><td>0</td><td>9</td><td>21</td><td>13</td><td>0</td><td>14</td><td>27</td><td>57%</td><td>48%</td></tr>
+        <tr data-r="1"><td>1854</td><td>6</td><td>1854.6</td><td>11</td><td>0</td><td>6</td><td>17</td><td>24</td><td>0</td><td>20</td><td>44</td><td>65%</td><td>55%</td></tr>
+        <tr data-r="2"><td>1855</td><td>11</td><td>1855.11</td><td>178</td><td>33</td><td>32</td><td>243</td><td>14304</td><td>1738</td><td>1581</td><td>17623</td><td>73%</td><td>81%</td></tr>
+        <tr data-r="3"><td>1855</td><td>12</td><td>1855.12</td><td>91</td><td>18</td><td>28</td><td>137</td><td>14395</td><td>1756</td><td>1609</td><td>17760</td><td>66%</td><td>81%</td></tr>
+        <tr class="gap"><td colspan="13">중간 생략</td></tr>
+        <tr data-r="4"><td>1856</td><td>2</td><td>1856.2</td><td>24</td><td>0</td><td>19</td><td>43</td><td>14461</td><td>1758</td><td>1676</td><td>17895</td><td>56%</td><td>81%</td></tr>
+      </table>
+    </div>
+    <p class="note">표에는 일부 달만 실려 있어요. 1854.6과 1855.11 사이의 달들도 표에서 빠져 있어서, 누적 값이 그사이 크게 늘었어요.</p>
+  </div>
+  <div class="card">
+    <h3>📊 그래프로 비교해 보기</h3>
+    <p class="muted" style="margin-top:0">달을 고르고, <b>그달</b>(기초 데이터)과 <b>누적</b>을 바꿔 가며 전염병·부상·기타를 비교해요. (선택) 「다섯 달 한눈에」는 같은 눈금으로 다섯 달을 나란히 보여 줘요.</p>
+    <div class="dec-ctl">
+      <div class="dec-seg" id="ngRows"></div>
+      <div class="dec-seg" id="ngMode"></div>
+    </div>
+    <div id="ngChart" class="dec-chart"></div>
+    <div class="memo"><label>그래프에서 알게 된 사실 한 가지를 <b>수치를 넣어</b> 적어 보세요. <small>어느 원인이 가장 많았는지, 그달과 누적에서 어떻게 달랐는지 등</small></label><textarea data-memo="ngNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🪜 데이터 기반 의사 결정 과정 <span class="muted" style="font-weight:400;font-size:.88rem">(19쪽)</span></h3>
+    <p style="margin-top:0">나이팅게일이 1854~1856년 동안 모은 데이터는 야전 병원에서 숨진 환자들이 <b>부상보다 전염병</b>으로 숨진 경우가 많다는 사실을 발견하는 기초가 되었어요. 나이팅게일은 데이터와 야전 병원의 환경을 함께 관찰해 <b>비위생적인 환경</b>이 전염병의 원인이라고 판단했지요.</p>
+    <div class="dec-steps">
+      <div style="--k:#2f6fd0"><span class="n">계획</span><b>문제와 관련한 가설과 필요한 데이터 수집 계획 세우기</b><p>「환자의 주요 사망 원인이 부상이 아닐 수 있다.」라는 가설을 바탕으로 환자의 데이터를 모을 계획을 세웠어요.</p></div>
+      <div style="--k:#9b4fc4"><span class="n">수집</span><b>계획에 따라 데이터를 수집하여 정리하기</b><p>환자의 상처와 원인, 치료 과정, 사망 원인 등을 기록한 세계 최초의 의무 기록표(표 Ⅰ-3)를 만들어 체계적으로 모으고 관리했으며, 그래프로 시각화해 정리했어요.</p></div>
+      <div style="--k:#1f9d74"><span class="n">분석</span><b>데이터의 적절한 분석을 통하여 현상 이해하기</b><p>부상보다 전염병으로 숨진 환자가 더 많다는 사실을 밝혔어요.</p></div>
+      <div style="--k:#e0702b"><span class="n">적용</span><b>문제 해결에 적용하여 상황 개선하기</b><p>병원 위생 상태가 취약하다는 것을 알리며 병원 환경 개선을 요구한 결과, 부상병의 사망률이 42%에서 2.2%까지 줄었어요.</p></div>
+    </div>
+    <p class="note">눈여겨볼 점은 한 사람의 뛰어남보다, 데이터를 모으고 분석해 결정에 쓴 <b>과정</b>이에요. 수치만 보지 말고 그 데이터가 나온 맥락(야전 병원의 환경)까지 함께 살펴본 거예요.</p>
+  </div>
+  <details class="card dec-opt">
+    <summary><b>🧩 (선택) 순서대로 놓아 보기</b> <span class="muted" style="font-weight:400;font-size:.88rem">예시 상황 · 시간이 남으면 펼쳐요</span></summary>
+    <p class="muted">(예시) 어느 학교 학생회가 <b>급식 잔반</b>을 줄이려고 데이터를 활용했어요. 카드를 <b>계획 → 수집 → 분석 → 적용</b> 순서대로 눌러요.</p>
+    <div id="stepGame"></div>
+  </details>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 활용 목적 -->
+<section class="page" data-name="활용 목적" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터를 무엇에 활용할까?</h2><p>교과서 20~21쪽 · 설명, 진단, 예측, 처방</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터로 결정할 때는 <b>무엇이 궁금한지</b>에 따라 목적이 달라져요. 이미 일어난 일을 알고 싶은지, 그 까닭을 알고 싶은지, 앞으로 일어날 일을 알고 싶은지, 원하는 결과를 만들 방법을 알고 싶은지 생각해 봐요.</span></div>
+  <div class="card">
+    <h3>🧭 데이터 과학의 주요 활용 목적 <span class="muted" style="font-weight:400;font-size:.88rem">(20쪽)</span></h3>
+    <p style="margin-top:0">데이터를 기반으로 의사 결정을 할 때, 설명, 진단, 예측, 처방과 같은 목적을 위해 데이터 과학을 활용할 수 있어요.</p>
+    <div class="cards4 dec-purpose">
+      <div class="kc" style="--k:#2b9bb5"><span class="q">무슨 일이 일어났나?</span><h4>설명</h4><p>데이터를 기반으로 현재 상태나 발생한 상황을 확인하거나, 지난 결과 데이터를 분석해 <b>어떤 일이 발생했는지</b> 정확하게 파악하는 것이 목적이에요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><span class="q">왜 그런 일이 일어났나?</span><h4>진단</h4><p>데이터를 기반으로 <b>왜 그런 일이 일어났는지</b> 발생 이유를 찾아요. 특이한 현상이나 사건이 왜 생겼는지 원인을 찾는 것이 목적이에요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><span class="q">향후 무슨 일이 일어날까?</span><h4>예측</h4><p>지나간 결과를 분석해 <b>어떤 일이 발생할지</b> 예측하는 것이 목적이에요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><span class="q">어떻게 해야 목표한 일이 일어날 수 있나?</span><h4>처방</h4><p>목표한 바가 이루어지도록 상황의 원인이 되는 <b>요소들을 제어하는 방법</b>을 찾아내는 것이 목적이에요.</p></div>
+    </div>
+    <p class="note">네 가지 목적은 꼭 정해진 순서대로만 쓰이는 게 아니라, 상황에 따라 되풀이되고 서로 이어져요.</p>
+  </div>
+  <div class="card">
+    <h3>🎯 이 분석의 목적은?</h3>
+    <p class="muted" style="margin-top:0">교과서 20쪽의 학습 데이터 예시를 바꿔 쓴 카드예요. 「데이터 ▶ 알고 싶은 것」을 읽고 목적을 골라요. <b>같은 데이터</b>가 두 번 나오는 카드도 있으니 화살표 뒤를 잘 봐요.</p>
+    <div id="purposeGame"></div>
+    <div class="memo"><label>✍️ 같은 데이터가 두 목적에 쓰인 짝 하나를 골라, 두 카드가 무엇이 달랐는지 적어 보세요. <small>짝 ① 과제 수행 시간·문제 풀이 시도 횟수·정답률 → 어려운 부분 확인 / 성적이 떨어진 원인 · 짝 ② 학습 기록·학습 자료 이용 기록·과거 설문 조사 결과 → 다음 학기 만족도 / 학습 환경 바꾸기. 화살표 뒤 「알고 싶은 것」을 비교해요.</small></label><textarea data-memo="samePair" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>👍 데이터 기반 의사 결정의 좋은 점 <span class="muted" style="font-weight:400;font-size:.88rem">(21쪽)</span></h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🎯</div><h4>정확하고 효율적인 선택</h4><p>데이터를 기반으로 정확하고 효율적으로 고를 수 있어요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🌫️</div><h4>불확실성 감소</h4><p>어떻게 될지 모르는 불확실성을 줄일 수 있어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">⏱️</div><h4>시간과 비용 절감</h4><p>결정하는 데 드는 시간과 비용을 줄여 효율성을 높여요.</p></div>
+    </div>
+    <p style="margin-bottom:0">이처럼 데이터의 잠재력을 이해하고 이를 바탕으로 데이터 기반 의사 결정을 내리는 <b>문제 해결 능력</b>은 디지털 사회의 필수적인 역량이에요.</p>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 함께 해결하기 -->
+<section class="page" data-name="사례 조사" data-acc="#e0702b">
+  <div class="head"><div class="num">04</div><div><h2>함께 해결하기 · 데이터 기반 의사 결정 사례</h2><p>교과서 21쪽 · 조사 · 발표</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>경제나 스포츠처럼 실제 현장에서 데이터로 결정을 내린 사례를 찾아, <b>어떤 데이터</b>를 <b>어떤 목적</b>으로 썼는지 정리하고 발표해요.</span></div>
+  <div class="callout"><b>🔎 조사 방법</b> 선생님이 알려 주는 사이트나 뉴스 검색에서 「경제 데이터 분석 사례」, 「스포츠 데이터 분석」처럼 찾아봐요. 모둠 안에서 분야를 나눠 조사하면 발표 시간을 아낄 수 있어요.</div>
+  <div class="card">
+    <h3>📝 내가 찾은 사례 정리하기</h3>
+    <p class="muted" style="margin-top:0"><b>꼭 쓸 것</b>: 1. 사례, 2. 활용된 데이터, 3. 목적 칸 가운데 1~2칸. 나머지 칸은 시간이 남으면 채워요.</p>
+    <p style="margin:0 0 4px"><b>분야</b></p>
+    <div id="fieldChips"></div>
+    <div class="memo"><label>1. 내가 찾아본 데이터 기반 의사 결정 사례는 무엇인가요? <small>누가, 무엇을 결정했는지 한두 문장으로</small></label><textarea data-memo="caseName" rows="2"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>2. 그 사례에서 의사 결정에 활용된 데이터에는 어떤 것이 있나요?</label><textarea data-memo="caseData" rows="2"></textarea><div class="saved"></div></div>
+    <p style="margin:12px 0 4px"><b>3. 데이터를 분석해 설명, 진단, 예측, 처방에 어떻게 활용했나요?</b> <span class="muted" style="font-size:.88rem">찾은 목적 1~2칸만 써도 돼요. 찾지 못한 목적은 비워 둬요.</span></p>
+    <table class="plan dec-plan">
+      <tr><td>설명 <small>무슨 일이?</small></td><td><input type="text" data-memo="caseE"><div class="saved"></div></td></tr>
+      <tr><td>진단 <small>왜?</small></td><td><input type="text" data-memo="caseD"><div class="saved"></div></td></tr>
+      <tr><td>예측 <small>앞으로?</small></td><td><input type="text" data-memo="caseP"><div class="saved"></div></td></tr>
+      <tr><td>처방 <small>어떻게?</small></td><td><input type="text" data-memo="caseR"><div class="saved"></div></td></tr>
+    </table>
+    <details class="dec-more">
+      <summary>검색이 어렵다면 · 모둠 토론으로 대신하기</summary>
+      <p>우리 반 <b>학급 텃밭</b>에서 채소를 잘 키우고 싶다고 생각해 봐요. 모둠에서 이야기 나눈 뒤 위 칸에 채워요.</p>
+      <ol>
+        <li>어떤 데이터를 모을 수 있을까요? (누가, 언제, 무엇을 기록할지)</li>
+        <li>그 데이터로 무엇이 일어났는지, 왜 그랬는지, 앞으로 어떨지, 어떻게 하면 좋을지 하나씩 말해 봐요.</li>
+        <li>이 결정이 「감」으로 정할 때와 무엇이 다른지 비교해요.</li>
+      </ol>
+    </details>
+  </div>
+  <div class="card">
+    <h3>✅ 성취도 평가 · 스스로 점검</h3>
+    <p class="muted" style="margin-top:0">오늘 할 수 있게 된 것을 모두 골라요.</p>
+    <div id="selfCheck"></div>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0"><b>데이터 기반 의사 결정</b>은 문제와 관련된 데이터를 통해 문제를 심층적으로 이해하고 합리적인 해결 방안을 마련하는 것이다. 데이터는 현실적이고 객관적인 정보를 제공해 의사 결정의 오류를 최소화한다.</div>
+    <div style="--k:#d64535">데이터 기반 의사 결정은 <b>계획 → 수집 → 분석 → 적용</b>의 과정을 거친다. 나이팅게일은 사망 원인 데이터를 기록하고 시각화해 전염병이 주요 원인임을 밝히고, 병원 환경을 개선해 사망률을 줄였다.</div>
+    <div style="--k:#9b4fc4">데이터 과학은 <b>설명</b>(무슨 일이), <b>진단</b>(왜), <b>예측</b>(앞으로 무슨 일이), <b>처방</b>(어떻게 해야)의 목적으로 활용되며, 불확실성을 줄이고 의사 결정의 시간과 비용을 절감한다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 다시 답하기</h3>
+    <p class="muted" style="margin-top:0">직관에 의한 결정과 비교하고, 나이팅게일 사례나 내가 찾은 사례를 넣어 내 말로 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터 기반 의사 결정은 왜 중요할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>처음에 적은 <b>「최근 내가 직관으로 한 결정」</b>을 데이터 기반 의사 결정으로 다시 해 보았습니다. 어떤 데이터를 모아 어떻게 판단할지 쓰고, 직관에 의한 결정과 비교해 무엇이 나아지는지 설명하세요.</li>
+      <li>나이팅게일의 데이터(표 Ⅰ-3)를 그래프로 비교해 보았습니다. 그래프에서 알 수 있는 사실을 <b>수치를 들어</b> 쓰고, 나이팅게일이 <b>계획 → 수집 → 분석 → 적용</b>의 과정을 거쳐 어떤 결정을 내렸는지 설명하세요.</li>
+      <li>「이 분석의 목적은?」에서 학습 데이터 카드를 <b>설명·진단·예측·처방</b>으로 나누고, 같은 데이터가 두 목적에 쓰인 짝 하나를 골라 적었습니다. 그 짝을 예로 들어 네 목적의 차이를 설명하세요. 함께 해결하기에서 조사한 사례가 있다면 어떤 목적에 해당하는지 덧붙이세요.</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
