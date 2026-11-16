@@ -1,0 +1,275 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 2. 데이터 과학 프로젝트 실제</span>
+      <h1>비슷한 나라끼리<br>묶으면 지원할 곳이<br>보일까?</h1>
+      <div class="story"><b>【선택】 국가 데이터 프로젝트 · 이어서</b><br>국제 NGO 헬프의 지원금을 나눌 차례예요. 167개 나라를 건강·무역·금융 지표로 비슷한 무리끼리 묶고, 무리마다 어떤 나라들인지 해석해요. 그런데 군집 결과만 보고 지원할 나라를 정해도 될까요?</div>
+      <p>프로젝트의 뒤 단계(<b>데이터 모델링 → 평가</b>)를 해요. k-평균으로 묶을 군집 수를 정하고, 상자 그림으로 군집의 특성을 읽고, 병합적 군집과 견주어 결과의 한계를 짚어요.</p>
+      <ol>
+        <li>군집 수 k 정하기 · SSE와 실루엣 계수</li><li>오렌지3 k-Means와 상자 그림으로 해석하기</li><li>병합적 군집과 비교 · 지원 판단의 한계</li><li>(선택) 코랩으로 지도까지 그리기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📉</i><div><b>k 정하기</b><small>SSE 그래프 · 실루엣 계수</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✕</i><div><b>k-Means</b><small>세 지표로 나라 묶기</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📦</i><div><b>Box Plot</b><small>군집마다 특성 읽고 이름 붙이기</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>⚖️</i><div><b>병합적 군집과 비교</b><small>결과가 갈린 나라 · 한계</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>앞 시간에는 속성 9개를 <b>건강(Health)·무역(Trade)·금융(Finance)</b> 세 지표로 묶고 0~1 사이로 정규화했어요. 각 속성을 평균으로 나눠 더한 값이라, 커질수록 좋은 속성과 나쁜 속성이 섞여 있다는 점도 확인했어요. 앞 시간을 놓쳤어도 괜찮아요. 02 화면의 설정 표 1~4번을 따라 하면 같은 데이터가 만들어져요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>군집으로 나눈 결과만으로 지원할 나라를 정해도 될까요?</b></p>
+        <div class="vote" id="c2First"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학 프로젝트</b> · 데이터를 통해 문제를 해결하는 과정은 어떻게 이루어지는 것일까?</li>
+          <li><b>오늘의 질문</b> · 나라들을 군집으로 나누면 어떤 무리가 보이고, 그 결과를 지원 판단에 어디까지 쓸 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>기계학습 알고리즘을 활용하여 군집 모델을 구축하고 평가할 수 있다.</li>
+          <li>군집 결과에 근거를 들어 이름을 붙이고, 다른 모델과 비교해 한계를 말할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 군집 수 정하기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 k 비교 탐색기 -->
+<section class="page" data-name="군집 수 k 정하기" data-acc="#c98a00">
+  <div class="head"><div class="num">01</div><div><h2>군집 수 k 정하기 · SSE와 실루엣 계수</h2><p>교과서 220쪽 · k-평균 · 엘보우 기법 · 오차 제곱합(SSE) · 실루엣 계수</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>k를 늘리면 무리가 잘게 쪼개져 <b>SSE</b>는 거의 늘 줄어요. 그래서 SSE가 <b>뚝 떨어지다가 완만해지는 곳(팔꿈치)</b>을 찾고, 무리끼리 얼마나 또렷하게 떨어졌는지 <b>실루엣 계수</b>로 한 번 더 확인해 k를 정해요.</span></div>
+  <div class="card">
+    <h3>📐 군집에서 SSE는 무엇을 더한 값일까?</h3>
+    <div class="grid2">
+      <div>
+        <p style="margin-top:0"><b>SSE = Σ (점과 그 점이 속한 군집 중심 사이 거리)²</b></p>
+        <p>점마다 자기 군집의 중심(✕)까지 거리를 재어 제곱하고 모두 더해요. 점들이 중심 가까이 모여 있을수록 작아요. 파이썬 <span class="mono">KMeans</span>의 <span class="mono">inertia_</span>가 이 값이에요.</p>
+        <p class="note">교과서 220쪽 옆 설명은 SSE를 「실젯값과 예측값 차이의 제곱합」으로 적었어요. 군집에는 실젯값이 따로 없어서, 위처럼 「중심까지 거리의 제곱합」으로 읽어요.</p>
+      </div>
+      <div class="callout" style="margin:0">💡 <b>실루엣 계수</b> · 점마다 (가장 가까운 다른 군집까지의 평균 거리 − 자기 군집 안 평균 거리)를 둘 중 큰 값으로 나눈 값의 평균이에요. 1에 가까울수록 무리가 또렷하게 나뉜 거예요. k = 1이면 다른 군집이 없어서 계산할 수 없어요.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧪 k 비교 탐색기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 나라가 아니라 새로 만든 예시 나라 24개 · 세 지표 가운데 두 개만 써서 평면에 그림)</span></h3>
+    <div class="row" id="c2K" style="margin-bottom:8px"></div>
+    <div class="grid2">
+      <div>
+        <div class="sp-wrap"><svg id="c2Plot" role="img" aria-label="예시 나라의 건강지표와 금융지표 산점도, 군집별 색과 중심"></svg></div>
+        <p class="muted" style="font-size:.85rem;margin:4px 0 0">점을 끌어 옮기거나, 빈 곳을 눌러 점을 더하거나, 점을 두 번 눌러 지울 수 있어요. 손을 떼면 다시 계산해요.</p>
+        <button class="btn ghost sm" id="c2Reset" style="margin-top:6px">처음 점으로 되돌리기</button>
+      </div>
+      <div>
+        <h4 style="margin:0 0 4px">k에 따른 SSE (엘보우 그래프)</h4>
+        <div class="sp-wrap"><svg id="c2Sse" role="img" aria-label="k가 2부터 6일 때의 SSE 막대그래프"></svg></div>
+        <h4 style="margin:8px 0 4px">k에 따른 평균 실루엣 계수</h4>
+        <div class="sp-wrap"><svg id="c2Sil" role="img" aria-label="k가 2부터 6일 때의 평균 실루엣 계수 막대그래프"></svg></div>
+      </div>
+    </div>
+    <div class="c2-say" id="c2Say"></div>
+    <div class="callout" style="margin-top:10px">🔍 <b>해 볼 일</b> · ① k를 하나씩 눌러 SSE가 어디서 완만해지는지, 실루엣 계수는 어디서 가장 큰지 찾아요. ② 금융지표가 높은 무리(왼쪽 위)의 점 몇 개를 가운데 무리 쪽으로 끌어 보세요. 두 지표가 고르는 k가 그대로인가요?</div>
+  </div>
+  <div class="card">
+    <h3>📋 실제 167개 나라는? <span class="muted" style="font-weight:400;font-size:.88rem">(세 지표로 계산한 값 · 선생님이 알려 주는 노트북 결과 · 반올림)</span></h3>
+    <div class="c2-tw"><table class="tbl c2-k">
+      <tr><th>k</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+      <tr><td>SSE</td><td>9.80</td><td>6.45</td><td>5.24</td><td>4.57</td><td>3.96</td><td>3.39</td><td>3.03</td><td>2.68</td></tr>
+      <tr><td>실루엣 계수</td><td>0.458</td><td>0.452</td><td>0.446</td><td>0.308</td><td>0.310</td><td>0.299</td><td>0.284</td><td>0.289</td></tr>
+    </table></div>
+    <p class="note">SSE는 k = 2→3에서 크게 줄고 그 뒤로 완만해져요. 실루엣 계수는 k = 2가 아주 조금 더 크지만 k = 3과 거의 같아요. 교과서는 엘보우 기법으로 <b>k = 3</b>을 골랐어요. 두 지표가 꼭 같은 k를 가리키지는 않으니, 내가 고른 k의 근거를 두 가지 모두로 말해요.</p>
+  </div>
+  <div class="memo">
+    <label>✍️ 탐구 기록 ① · 국가 데이터의 군집 수를 몇으로 할지 고르고, SSE 그래프와 실루엣 계수를 <b>둘 다</b> 근거로 들어 까닭을 써요. 탐색기에서 점을 옮겨 본 결과도 한 줄 덧붙여요. <small>질문폼 1번에 써요.</small></label>
+    <textarea data-memo="c2K" rows="4" placeholder="내가 고른 k: … / SSE: … / 실루엣 계수: … / 점을 옮겨 보니 …"></textarea><div class="saved"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 k-Means 해석 -->
+<section class="page" data-name="k-Means와 상자 그림" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>k-Means로 묶고 상자 그림으로 해석하기</h2><p>교과서 220~221쪽 · 오렌지3 실습 · k-Means · Box Plot · 군집 특성 읽고 이름 붙이기</p></div></div>
+  <div class="callout c2-warn" style="margin-top:0">📌 <b>여기서는 k = 3으로 묶어 봐요.</b> 교과서 결과, 그리고 03의 병합적 군집(3개)과 견주기 위해서예요. 01에서 내가 고른 k가 3이 아니라면, 그 k로도 한 번 묶어 보고 결과 기록에 「내가 고른 k와 그 결과」를 함께 적어요.</div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>k-평균은 군집에 <b>번호</b>만 붙여 줘요. 번호는 순위가 아니에요. 군집마다 <b>5세 미만 사망률(child_mort)</b>과 <b>1인당 소득(income)</b>이 어떤지 상자 그림으로 보고, 그 특성에 맞는 <b>이름</b>을 우리가 붙여요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div><svg id="c2Flow" role="img" aria-label="국가 데이터 k-평균 군집 분석 위젯 연결 흐름도"></svg></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표 <span class="muted" style="font-weight:400;font-size:.88rem">(앞 시간에 저장한 흐름이 있으면 열어서 5번부터)</span></h3>
+    <div class="of-tw"><table class="tbl" id="c2Set">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td>선생님이 알려 주는 폴더의 <span class="mono">Country-data.csv</span> 열기</td><td>167개 데이터, feature 9개, meta 1개(country)</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Formula</b> (Transform)<br><small class="muted">옛 이름 Feature Constructor</small></td><td>File →</td><td><b>New → Numeric</b>으로 세 개 만들고 <b>Send</b><br><span class="mono">Health</span> = <span class="mono">child_mort/38.27 + health/6.8157 + life_expec/70.5557 + total_fer/2.948</span><br><span class="mono">Trade</span> = <span class="mono">imports/46.89 + exports/41.109</span><br><span class="mono">Finance</span> = <span class="mono">income/17144.69 + inflation/7.7818 + gdpp/12964.16</span></td><td>나누는 수는 167개 나라의 평균(교과서 216쪽)</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Select Columns</b> (Transform)</td><td>Formula →</td><td>Features에 <b>Health · Trade · Finance</b>만, 원래 속성 9개는 <b>Metas</b>로</td><td>feature 3개. child_mort·income은 meta로 남아 해석에 써요.</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Preprocess</b> (Transform)</td><td>Select Columns →</td><td><b>Normalize Features</b> → <b>Normalize to interval [0, 1]</b></td><td>교과서 215쪽 MinMaxScaler와 같은 계산</td></tr>
+      <tr data-s="5"><td>5</td><td><b>k-Means</b> (Unsupervised)</td><td>Preprocess →</td><td>Number of Clusters: <b>From 2 to 9</b><br><b>Normalize columns 끄기</b>(이미 0~1로 맞춤), Initialize with KMeans++, Re-runs 10, Maximum iterations 300(기본값)</td><td>Silhouette Scores 목록: k = 2가 0.458로 가장 커서 자동으로 골라져 있어요. <b>k = 3 줄을 눌러</b> 골라요(0.452). 내가 고른 k가 다르면 그 줄도 눌러 비교해요.</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Box Plot</b> (Visualize)</td><td>k-Means →</td><td>Variable: <b>child_mort</b>, Subgroups: <b>Cluster</b>. 다음에는 Variable을 <b>income</b>으로 바꾸기</td><td>군집마다 중앙값. child_mort가 높은 군집과 income이 높은 군집이 어디인지</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Distributions</b> (Visualize)</td><td>k-Means →</td><td>Variable: <b>Cluster</b></td><td>군집마다 나라가 몇 개인지(막대 높이)</td></tr>
+    </table></div>
+    <div class="callout c2-warn">💡 <b>군집 이름(C1~C3)은 교과서 번호(0~2)와 다르게 붙어요.</b> 오렌지3는 C1부터, 파이썬은 0부터 번호를 붙이고, 같은 무리라도 실행·프로그램마다 번호가 바뀌어요. 번호 대신 「child_mort가 높고 income이 낮은 무리」처럼 <b>특성</b>으로 말해요.</div>
+  </div>
+  <div class="card">
+    <h3>🏷️ 군집에 이름 붙이기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 167개 나라를 k = 3으로 묶은 요약값 · 카드는 섞여서 나와요)</span></h3>
+    <div id="c2Name"></div>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기</h3>
+    <div class="memo" style="margin:0">
+      <label>✍️ 탐구 기록 ② · 내 오렌지3에서 군집마다 나라 수, child_mort·income 중앙값을 적고, 근거를 들어 특성에 맞는 이름을 붙여요. 01에서 고른 k가 3이 아니면 그 k로 묶은 결과와 까닭도 덧붙여요. <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="c2Res" rows="4" placeholder="군집 이름(C?): ○개 나라, child_mort 중앙값 …, income 중앙값 … → 붙인 이름: …&#10;(군집마다 한 줄씩)&#10;내가 고른 k가 다르면: k = ? → …"></textarea><div class="saved"></div>
+    </div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="c2Done"></div>
+  </div>
+  <details class="card c2-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>k-Means의 실루엣 계수가 표와 달라요</b> → <b>Normalize columns</b>를 껐는지, k-Means 앞에 Preprocess를 이었는지, Select Columns의 feature가 세 지표뿐인지 확인해요.</li>
+      <li><b>Box Plot의 Variable에 child_mort가 없어요</b> → Select Columns에서 원래 속성을 지우지 않고 <b>Metas</b>로 옮겼는지 확인해요(Ignored로 옮기면 사라져요).</li>
+      <li><b>Subgroups에 Cluster가 없어요</b> → Box Plot을 k-Means 뒤에 이었는지 확인해요. Cluster 열은 k-Means가 만들어요.</li>
+      <li><b>오렌지3가 안 열려요</b> → 위 「군집에 이름 붙이기」의 요약값으로 기록 칸을 쓰고, 끝에 「(화면 자료)」라고 적어요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 병합적 군집 비교 · 한계 -->
+<section class="page" data-name="병합적 군집과 비교" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>병합적 군집과 비교하고 한계 짚기</h2><p>교과서 222~224쪽 · 평가 · 병합적 군집화(ward) · 두 모델 비교 · 지원 판단의 한계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>군집 분석에는 정해진 정답이 없어요. 같은 데이터를 <b>병합적 군집화</b>로도 묶어 보고, 두 결과가 <b>같은 나라</b>와 <b>갈리는 나라</b>를 찾아요. 갈리는 나라일수록 원래 속성을 더 들여다봐야 해요.</span></div>
+  <div class="card">
+    <h3>⚖️ 두 모델 견주어 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 167개 나라 · 두 모델 모두 k = 3 · 군집을 child_mort 중앙값 순서로 정렬한 요약 · 오렌지3로는 기록한 뒤 아래에서 직접 확인)</span></h3>
+    <p style="margin-top:0"><b>병합적 군집화</b>는 나라 하나하나를 각각 한 무리로 시작해, <b>가장 가까운 무리끼리 차례로 합치는</b> 일을 원하는 무리 수(오늘은 3개)가 될 때까지 되풀이해요. <b>Ward</b> 방식은 합쳤을 때 무리 안의 흩어짐이 가장 적게 늘어나는 두 무리를 골라 합쳐요. 같은 세 지표를 이 방법으로 묶은 결과를 k-평균과 견주어 봐요.</p>
+    <div class="grid2">
+      <div class="c2-tw"><table class="tbl c2-cmp">
+        <tr><th>무리</th><th>k-평균<br><small>나라 수 · child_mort · income 중앙값</small></th><th>병합적 군집(ward)<br><small>나라 수 · child_mort · income 중앙값</small></th></tr>
+        <tr><td>사망률 낮음</td><td>29 · 4.8 · 43200</td><td>49 · 5.5 · 36200</td></tr>
+        <tr><td>중간</td><td>102 · 18.4 · 11150</td><td>83 · 19.8 · 9720</td></tr>
+        <tr><td>사망률 높음</td><td>36 · 95.5 · 1695</td><td>35 · 97.4 · 1660</td></tr>
+      </table></div>
+      <div class="c2-tw"><table class="tbl c2-cmp">
+        <tr><th>k-평균 ↓ / 병합 →</th><th>낮음</th><th>중간</th><th>높음</th></tr>
+        <tr><td>낮음</td><td><b>29</b></td><td>0</td><td>0</td></tr>
+        <tr><td>중간</td><td>20</td><td><b>81</b></td><td>1</td></tr>
+        <tr><td>높음</td><td>0</td><td>2</td><td><b>34</b></td></tr>
+      </table>
+      <p class="note" style="margin-top:6px">굵은 칸은 두 모델이 같은 무리로 본 나라 수예요. 167개 가운데 <b>23개 나라</b>는 두 모델에서 다른 무리에 들어갔어요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🛑 군집 결과로 지원을 정하기 전에</h3>
+    <ul class="c2-tips">
+      <li><b>자료의 때</b> · 과거 어느 때에 모은 자료라 지금의 형편, 최근 재난은 담겨 있지 않아요.</li>
+      <li><b>지표의 방향</b> · Health·Finance는 방향이 다른 속성을 더한 값이라, 군집을 해석할 때는 child_mort·income 같은 <b>원래 속성</b>을 함께 봐요.</li>
+      <li><b>없는 정보</b> · 인구 수가 없어서 같은 무리라도 얼마나 많은 사람에게 지원이 필요한지는 알 수 없어요.</li>
+      <li><b>원인 추정</b> · 교과서 222쪽은 몇몇 나라의 결과를 전쟁·내전 탓으로 설명했지만, 이 데이터에는 그런 속성이 없어요. 원인은 다른 자료로 확인해야 해요.</li>
+    </ul>
+  </div>
+  <div class="memo">
+    <label>✍️ 탐구 기록 ③ · 두 모델에서 무리가 갈린 나라들을 어떻게 다룰지 쓰고, 지원할 나라를 정하기 전에 <b>더 확인할 것 두 가지</b>를 까닭과 함께 적어요. <small>질문폼 3번에 써요.</small></label>
+    <textarea data-memo="c2Limit" rows="4" placeholder="갈린 나라: …&#10;더 확인할 것 ①: … (까닭: …)&#10;더 확인할 것 ②: … (까닭: …)"></textarea><div class="saved"></div>
+  </div>
+  <div class="card">
+    <h3>🔀 병합적 군집 위젯 연결 <span class="muted" style="font-weight:400;font-size:.88rem">(02 흐름의 Preprocess에서 이어요)</span></h3>
+    <div><svg id="c2Flow2" role="img" aria-label="병합적 군집 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw"><table class="tbl" id="c2Set2">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>Preprocess</b> (Transform)</td><td>02의 4번</td><td>그대로</td><td>세 지표가 0~1</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Distances</b> (Unsupervised)</td><td>Preprocess →</td><td>Distances between <b>Rows</b>, Distance Metric <b>Euclidean</b>(기본값 Euclidean (normalized)가 아닌 것)</td><td>나라와 나라 사이 거리를 모두 재요.</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Hierarchical Clustering</b> (Unsupervised)</td><td>Distances →</td><td>Linkage: <b>Ward</b>, Selection: <b>Top N: 3</b></td><td>나무 그림(덴드로그램)이 세 무리로 색칠되는지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Box Plot (1)</b> (Visualize)</td><td>Hierarchical Clustering →</td><td>Variable: <b>child_mort</b>, 다음에 <b>income</b> · Subgroups: <b>Cluster</b></td><td>02의 k-Means 결과와 군집별 중앙값 비교</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="c2Done2"></div>
+  </div>
+  <div class="card">
+    <h3>🧩 교과서 지도 코드 점검하기 <span class="muted" style="font-weight:400;font-size:.88rem">(224쪽 · 카드를 눌러 뒤집기)</span></h3>
+    <div class="cards3" id="c2Bug"></div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) 코랩 -->
+<section class="page" data-name="(선택) 코랩으로 지도까지" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>(선택) 코랩으로 지도까지 그리기</h2><p>교과서 220~224쪽 · KMeans · silhouette_score · AgglomerativeClustering · plotly 지도</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3로 한 분석을 파이썬 코드로 다시 해 보고, 군집 결과를 세계 지도에 색으로 칠해 봐요. 시간이 남거나 집에서 해요.</span></div>
+  <div class="card">
+    <h3>🐍 코랩에서 실행하기</h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>교과서 212~224쪽 코드를 고친 사본이에요. 앞 시간 부분(전처리·세 지표)부터 차례로 실행해요.</p></li>
+      <li><b>5. 데이터 모델링 · 엘보우와 실루엣</b><p>k = 2~9의 SSE와 실루엣 계수가 표와 그래프로 나와요. 01 화면의 「실제 167개 나라」 표와 같은지 확인해요.</p></li>
+      <li><b>k = 3으로 군집화 · 상자 그림 · 이름 붙이기</b><p><span class="mono">name_clusters()</span>가 군집별 나라 수와 child_mort·income 중앙값을 보여 주고, 사망률이 낮은 군집부터 이름을 붙여요.</p></li>
+      <li><b>6. 평가 · 지도와 병합적 군집</b><p>지도 두 장(k-평균, 병합적 군집)을 비교하고, 마지막 칸에서 두 모델의 이름이 다른 나라를 확인해요.</p></li>
+    </ol>
+    <details class="c2-help" style="margin-top:8px">
+      <summary>교과서 코드와 달라진 점</summary>
+      <ul>
+        <li><b>같은 결과</b>: 모든 KMeans에 <span class="mono">n_init = 10, random_state = 42</span>를 넣어 다시 실행해도 결과가 같아요.</li>
+        <li><b>번호 짝짓기</b>: 교과서는 0·1·2를 손으로 이름에 짝지었어요. 사본은 군집별 중앙값을 보고 이름을 붙여요.</li>
+        <li><b>색 이름</b>: 이름을 'No Help Needed' 하나로 통일해 초록색이 제대로 칠해져요.</li>
+        <li><b>비교 칸</b>: 두 모델의 결과를 교차표로 비교하는 칸을 더했어요.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리 · 프로젝트 되돌아보기</h2><p>교과서 225쪽 · 핵심 문장 · 프로젝트 정리 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#c98a00">예시 나라와 실제 167개 나라에서 <b>SSE</b>와 <b>실루엣 계수</b>를 함께 비교해, 두 지표가 가리키는 k가 다를 때도 근거를 들어 군집 수를 골랐다.</div>
+    <div style="--k:#1f9d74">k-Means가 붙인 군집 번호는 순위가 아니어서, Box Plot의 <b>child_mort·income 중앙값</b>을 보고 무리마다 이름을 다시 붙였다.</div>
+    <div style="--k:#e0702b">병합적 군집과 견주니 일부 나라는 무리가 갈렸고, 자료의 때·인구·지표의 방향 같은 <b>한계</b>를 확인한 뒤에야 지원 판단에 쓸 수 있었다.</div>
+  </div>
+  <div class="card">
+    <h3>🔁 프로젝트 되돌아보기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 225쪽 · 내가 잘 해낸 과정을 모두 골라요)</span></h3>
+    <div id="c2Eval"></div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면의 내 생각(<span id="c2FirstShow">아직 고르지 않음</span>)과 비교하며, 오늘 쓴 낱말(SSE, 실루엣 계수, k-평균, 병합적 군집, 중앙값, 한계)을 넣어 답해 보세요. 프로젝트에서 배운 점이나 더 알아보고 싶은 점도 한 줄 덧붙여요.</p>
+    <b style="font-size:.93rem">나라들을 군집으로 나누면 어떤 무리가 보이고, 그 결과를 지원 판단에 어디까지 쓸 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="4"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>SSE와 실루엣 계수</b>를 모두 근거로 들어 군집 수를 어떻게 골랐는지 설명하기</li>
+      <li>Box Plot에서 읽은 <b>군집마다의 특성</b>으로 군집에 이름을 붙인 까닭 설명하기</li>
+      <li>두 모델의 비교와 <b>지원 판단 전에 더 확인할 것</b> 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

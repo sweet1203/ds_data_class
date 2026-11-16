@@ -1,0 +1,18 @@
+  /* u4-movie-2 전용 (mv2-) */
+  .mv2-vote{grid-template-columns:1fr}
+  .mv2-tb{min-width:480px;margin:0}
+  .mv2-tb th{background:#fbfaf7;text-align:left}
+  .mv2-tb td{border-top:1px solid #eef0f3;font-size:.92rem}
+  .mv2-met .kc p{font-size:.88rem}
+  #m2Err{margin-top:10px;min-width:420px}
+  #m2Err td,#m2Err th{font-size:.85rem;padding:4px 8px;text-align:right}
+  #m2Err td:first-child,#m2Err th:first-child{text-align:left}
+  .mv2-read small{color:var(--muted);font-size:.78rem}
+  .mv2-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;line-height:1.6}
+  .mv2-say:empty{display:none}
+  #m2Preset .btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .mv2-warn{font-size:.9rem;margin-top:10px}
+  .mv2-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .mv2-help ul{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .mv2-help li{margin:6px 0}
+  .mv2-help p{font-size:.93rem}

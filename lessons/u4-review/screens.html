@@ -1,0 +1,197 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#0f2742">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 단원 정리</span>
+      <h1>내가 한<br>프로젝트,<br>근거로 말하기</h1>
+      <div class="story"><b>Ⅳ단원 정리</b><br>이 단원에서 스트레스 지수 예측과 모둠 프로젝트를 했고, 반에 따라 영화 관객 수 예측이나 국가 군집 분석을 더 했어요. 결과를 말할 때 무엇을 근거로, 어디까지 말할 수 있을까요?</div>
+      <p>오늘은 내가 한 프로젝트 하나를 골라 단계별로 정리하고, 결과 주장을 <b>근거 · 한계 · 윤리</b>로 점검해 발표 메모를 만들어요.</p>
+      <ol>
+        <li>프로젝트 단계 잇기</li><li>결과 주장 점검실</li><li>발표 메모와 다음 계획</li><li>진로와 다음 탐구</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧭</i><div><b>문제 정의 · 데이터 수집</b><small>무엇을 알고 싶었나요?</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🧹</i><div><b>전처리 · 시각화와 분석</b><small>어떻게 다듬고 무엇을 봤나요?</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🧩</i><div><b>모델링 · 평가</b><small>결과는 얼마나 믿을 만한가요?</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🔍</i><div><b>결과 주장 점검</b><small>근거 · 한계 · 윤리</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 정리할 프로젝트 고르기</span>
+      <p>내가 직접 한 프로젝트 가운데 하나를 골라요. <b>【선택】 프로젝트는 우리 반이 한 경우에만</b> 골라요. 하지 않았다면 스트레스 지수 예측이나 모둠 프로젝트를 고르면 돼요.</p>
+      <div class="vote rv-vote" id="rvProj"></div>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학 프로젝트</b> · 데이터 과학 프로젝트에서 데이터 기반 문제 해결을 위해 어떤 탐구 방법과 도구를 활용하여 효과적인 분석과 창의적인 해결 방안을 도출할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">오늘의 질문</span>
+        <ul class="uses">
+          <li>내가 한 프로젝트의 결과를 근거와 한계를 갖추어 어떻게 설명할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">오늘 해 볼 것</span>
+        <ul class="can">
+          <li>프로젝트의 단계를 이어 내 프로젝트를 요약해요.</li>
+          <li>결과 주장의 근거 · 한계 · 윤리 문제를 점검해요.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 프로젝트 단계 잇기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 프로젝트 단계 잇기 -->
+<section class="page" data-name="프로젝트 단계 잇기" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>프로젝트 단계 잇기</h2><p>교과서 227쪽 · 문제 정의 → 데이터 수집 → 데이터 전처리 → 데이터 시각화와 분석 → 데이터 모델링 → 평가</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>이 단원의 프로젝트는 분석 방법이 달라도 <b>같은 단계</b>를 거쳤어요. 앞 단계의 결정이 뒤 단계의 결과를 좌우해요.</span></div>
+  <div class="card">
+    <h3>🗺️ 이 단원의 프로젝트</h3>
+    <div class="rv-tw"><table class="tbl rv-pj">
+      <tr><th>프로젝트</th><th>주로 쓴 분석 방법</th><th>단원에서의 자리</th></tr>
+      <tr><td>📉 스트레스 지수 예측</td><td>회귀분석</td><td>모두 함께 한 예제</td></tr>
+      <tr><td>🧩 우리 모둠 프로젝트</td><td>모둠이 설계 보드에서 고른 방법</td><td>협력적 프로젝트</td></tr>
+      <tr><td>🎬 【선택】 영화 관객 수 예측</td><td>텍스트 분석과 회귀분석</td><td>반에 따라 고른 프로젝트</td></tr>
+      <tr><td>🌍 【선택】 국가 군집 분석</td><td>군집 분석</td><td>반에 따라 고른 프로젝트</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h3>🍱 새 예시 · 급식 대기 줄 프로젝트의 단계 찾기 <span class="muted" style="font-weight:400;font-size:.88rem">(6장)</span></h3>
+    <div id="rvStage"></div>
+  </div>
+  <div class="card">
+    <div class="rv-hint" id="rvHint">시작 화면에서 프로젝트를 고르면 떠올릴 거리가 여기에 보여요.</div>
+    <div class="memo">
+      <label>✍️ 내가 고른 프로젝트(<span id="rvProjShow">아직 고르지 않음</span>)를 단계별로 한 줄씩 요약하기 <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="summary" rows="7" placeholder="문제 정의: …&#10;데이터 수집: …&#10;데이터 전처리: …&#10;데이터 시각화와 분석: …&#10;데이터 모델링: …&#10;평가: …&#10;결정→영향: (한 단계의 결정) … 때문에 (다음 단계에서) …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 결과 주장 점검실 -->
+<section class="page" data-name="결과 주장 점검실" data-acc="#d64535">
+  <div class="head"><div class="num">02</div><div><h2>결과 주장 점검실</h2><p>Ⅳ단원 프로젝트 종합 · 결과의 근거 · 해석의 한계 · 데이터 윤리</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>결과를 말할 때는 <b>무엇을 보고</b> 그렇게 말하는지, <b>어디까지</b> 말할 수 있는지, <b>누구에게 해가 없는지</b>를 함께 따져요.</span></div>
+  <div class="card">
+    <h3>🔍 점검실 · 새로 만든 8개의 결과 주장</h3>
+    <p class="muted" style="margin-top:0">모두 이 화면을 위해 만든 예시 프로젝트예요. 주장마다 <b>가장 직접적인 판단</b>을 하나씩 골라요.</p>
+    <div class="rv-legend">
+      <span style="--k:#1f9d74">근거에 맞는 주장</span><span style="--k:#e0702b">상관을 원인으로 단정</span><span style="--k:#2f6fd0">평가·해석이 지나침</span><span style="--k:#9b4fc4">대상을 넘어 일반화</span><span style="--k:#d64535">개인정보·공정성 문제</span>
+    </div>
+    <div class="rv-tw"><table class="tbl rv-cl"><thead><tr><th>#</th><th>예시 프로젝트와 결과 주장</th><th>판단</th><th>확인 후 설명</th></tr></thead><tbody id="rvRows"></tbody></table></div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="rvCheck">판단 확인</button><button class="btn ghost" id="rvReset">다시 하기</button></div>
+    <p id="rvFb" role="status" aria-live="polite">주장을 읽고 판단을 골라 보세요.</p>
+  </div>
+  <div class="card">
+    <div class="memo">
+      <label>✍️ 점검실에서 판단한 주장 하나와 까닭 / 내 프로젝트의 결과 주장 한 문장 · 근거(수치나 그래프) · 한계 · 윤리 점검 <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="claim" rows="6" placeholder="점검실 #?: …라고 판단, 까닭: …&#10;내 결과 주장: …&#10;근거: …&#10;한계(어디까지 말할 수 있나): …&#10;윤리 점검(개인정보·공정성): …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 발표 메모와 다음 계획 -->
+<section class="page" data-name="발표 메모 · 다음 계획" data-acc="#1f9d74">
+  <div class="head"><div class="num">03</div><div><h2>발표 메모와 다음 수정 계획</h2><p>나의 프로젝트 발표 · 짝과 질문 주고받기 · 다음에 고칠 것</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>1분 발표는 <b>문제 → 근거 있는 결과 → 한계 → 다음 계획</b> 순서로 해요. 한계를 밝히면 다음에 무엇을 고칠지가 보여요.</span></div>
+  <div class="card">
+    <h3>🎤 1분 발표 틀</h3>
+    <div class="cards4">
+      <div class="kc" style="--k:#2f6fd0"><h4>① 문제</h4><p>무엇을 알고 싶었는지 한 문장 (01 요약의 문제 정의)</p></div>
+      <div class="kc" style="--k:#1f9d74"><h4>② 결과와 근거</h4><p>찾은 것과 그렇게 말할 수 있는 수치·그래프 (02 메모)</p></div>
+      <div class="kc" style="--k:#e0702b"><h4>③ 한계</h4><p>데이터 범위 · 평가 방법 · 윤리에서 아직 부족한 점</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>④ 다음 계획</h4><p>다시 한다면 고칠 것 한 가지와 그 방법</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="memo">
+      <label>✍️ 다음에 고칠 것 한 가지 · 어떤 데이터나 방법으로 고칠지 · 고치면 무엇이 나아지는지 <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="next" rows="4" placeholder="고칠 것: …&#10;방법(데이터·전처리·모델·평가 중): …&#10;나아질 점: …&#10;(발표 뒤) 짝에게 받은 질문: …"></textarea><div class="saved"></div>
+    </div>
+    <h4 style="margin:14px 0 6px">👥 짝과 발표하기</h4>
+    <ol class="vsteps">
+      <li><b>한 사람이 1분 동안 발표해요.</b><p>발표 틀 ①~④ 순서로, 메모를 보며 말해요.</p></li>
+      <li><b>듣는 사람은 근거나 한계를 묻는 질문을 하나 해요.</b><p>예: 「그 수치는 학습에 쓰지 않은 데이터에서 나온 건가요?」 「그 결과를 다른 학교에도 쓸 수 있나요?」</p></li>
+      <li><b>역할을 바꾸고, 받은 질문을 위 메모 끝에 적어요.</b></li>
+    </ol>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 진로와 다음 탐구 -->
+<section class="page" data-name="진로 · 다음 탐구" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>진로와 다음 탐구</h2><p>교과서 226쪽 · 데이터 과학에 도전하는 사람들 · 안면 인식 기술 시스템 개발자</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터를 다듬고 모델을 평가하는 일은 보안 · 금융 · 제조처럼 여러 분야의 직업과 이어져요.</span></div>
+  <div class="card">
+    <h3>🧑‍💻 안면 인식 기술 시스템 개발자 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 226쪽 대화를 줄여 정리)</span></h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><h4>하는 일</h4><p>인공지능 안면 인식으로 바이오 인증과 전자 서명 시스템을 만들어, 여러 산업에 쓰이게 해요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><h4>프로젝트 경험</h4><p>인식률을 높이려고 데이터를 다듬는 방법을 바꿔 보며, 데이터 처리가 모델 성능을 바꾼다는 것을 경험했어요.</p></div>
+      <div class="kc" style="--k:#e0702b"><h4>필요한 역량</h4><p>프로그래밍 언어, 데이터베이스 지식, 수학과 통계, 데이터 처리 능력, 그리고 문제를 끝까지 해결하려는 의지</p></div>
+    </div>
+    <div class="callout">💡 얼굴은 한 사람을 알아볼 수 있는 정보라서, 이 기술에서는 <b>개인정보 보호</b>를 특히 무겁게 따져야 해요. 02 점검실의 윤리 판단과 이어 생각해 봐요.</div>
+  </div>
+  <div class="card">
+    <h3>🌱 이 단원에서 해 본 일 가운데 더 잘하고 싶은 것 <span class="muted" style="font-weight:400;font-size:.88rem">(여럿 골라도 돼요)</span></h3>
+    <div id="rvGrow"></div>
+    <div class="memo">
+      <label>✍️ 관심 있는 분야 · 그 분야에서 데이터로 풀어 보고 싶은 문제 · 더 기르고 싶은 역량</label>
+      <textarea data-memo="career" rows="3" placeholder="관심 분야: …&#10;데이터로 풀어 보고 싶은 문제: …&#10;더 기르고 싶은 역량과 방법: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">급식 대기 줄 예시에서 기록을 모으고 다듬은 결정이 <b>모델과 평가 결과</b>로 이어지는 것을 확인하고, 내 프로젝트도 단계별로 요약했다.</div>
+    <div style="--k:#d64535">점검실의 여덟 주장에서 <b>상관과 원인</b>, 학습에 쓴 데이터로 잰 성능, 조사 대상의 범위, 얼굴 · 이름 같은 정보의 공개를 가려냈다.</div>
+    <div style="--k:#1f9d74">1분 발표에서 결과와 함께 <b>한계와 다음 수정 계획</b>을 말하고, 짝의 질문으로 계획을 다듬었다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">내가 고른 프로젝트(<span id="rvProjShow2">아직 고르지 않음</span>)를 떠올리며, 오늘 쓴 낱말(근거, 한계, 평가 지표, 일반화, 개인정보)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">내가 한 프로젝트의 결과를 근거와 한계를 갖추어 어떻게 설명할 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>내가 고른 프로젝트를 <b>단계별로 요약</b>하고, 한 단계의 결정이 다음 단계에 준 영향 설명하기</li>
+      <li>점검실의 판단 하나와 내 프로젝트 결과 주장의 <b>근거와 한계</b> 쓰기</li>
+      <li>내 프로젝트의 <b>다음 수정 계획</b>과 그렇게 고치면 나아지는 점 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

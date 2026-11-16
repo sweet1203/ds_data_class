@@ -1,0 +1,36 @@
+<section class="page" data-name="시작" data-acc="#e0702b">
+  <div class="head"><div class="num">Ⅳ</div><div><h2>데이터 과학으로 문제 해결하기</h2><p>교과서 172~181쪽 · 질문에서 출발해 근거로 판단해요</p></div></div>
+  <div class="card"><h3>길가의 꽃에서 시작한 질문</h3><p>교과서 174~175쪽의 학생은 도시의 식물 기록을 찾아 개체 수의 변화를 살펴봐요. 관찰한 현상을 질문으로 바꾸고, 관련 데이터를 찾아 분석하는 프로젝트의 출발이에요.</p><p>개체 수가 비슷하게 유지되었다고 해서 환경에 적응한 원인까지 밝혀진 것은 아니에요. 결과가 말해 주는 범위를 함께 따져요.</p></div>
+  <div class="today"><div class="today-lead"><span class="kicker">오늘 우리는</span><p>학교에서 바꾸고 싶은 일을 정하고, 그 일을 설명할 데이터가 쓸 만한지 직접 점검해요.</p></div><div class="why3"><div class="why"><h3>핵심 질문</h3><p>데이터를 활용하여 문제를 어떻게 분석하고 해결할 수 있을까?</p></div><div class="why"><h3>배우고 나면</h3><ul><li>프로젝트의 세 단계에서 하는 일을 구분해요.</li><li>문제와 연결되는 데이터와 확인할 조건을 찾아요.</li></ul></div></div></div>
+  <div class="memo"><label for="psPlan">나의 계획 · 학교에서 바꾸고 싶은 일은 무엇인가요?</label><textarea id="psPlan" data-memo="plan" rows="2"></textarea><div class="saved"></div></div>
+  <button class="btn" onclick="go(1)">프로젝트의 흐름 살펴보기 →</button>
+</section>
+<section class="page" data-name="세 단계" data-acc="#e0702b">
+  <div class="head"><div class="num">01</div><div><h2>질문, 데이터, 모델을 연결해요</h2><p>교과서 176~177쪽 · 프로젝트의 세 단계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>무엇을 바꿀지 정하고, 관련 기록을 살핀 뒤, 분석 결과로 다음 행동을 제안해요. 중간에 문제가 보이면 앞 단계로 돌아가요.</span></div>
+  <div class="card"><table class="tbl"><thead><tr><th>단계</th><th>확인할 질문</th><th>새 예시 · 도서관 기다림 줄이기</th></tr></thead><tbody><tr><td>문제 정의</td><td>누구의 어떤 어려움을 줄일까요?</td><td>점심시간 대출 대기 시간을 줄일 수 있을까?</td></tr><tr><td>데이터 준비와 분석</td><td>기록을 모아 믿을 수 있게 정리했나요?</td><td>시간대별 이용 인원과 대기 시간의 분포를 살펴봐요.</td></tr><tr><td>데이터 모델링과 평가</td><td>결과는 근거가 있고 실제로 쓸 수 있나요?</td><td>혼잡 시간을 예측하고, 새 기록에서도 오차가 작은지 확인해요.</td></tr></tbody></table><p class="note">교과서 177쪽 단계 구성을 바탕으로 새로 만든 사례예요.</p></div>
+  <div class="card"><h3>이 일은 어느 단계일까요?</h3><div id="psStage"></div><p>예측이 잘 안 되면 속성이 부족한지 확인해 데이터를 더 준비할 수 있어요. 순서대로 한 번 끝내는 것보다 근거를 확인하며 되돌아가는 것이 중요해요.</p></div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+<section class="page" data-name="문제와 데이터" data-acc="#2f6fd0">
+  <div class="head"><div class="num">02</div><div><h2>막연한 바람을 확인 가능한 질문으로</h2><p>교과서 178~179쪽 · 학교 문제 탐색</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>「더 좋아지면 좋겠다」에서 한 걸음 나아가, 무엇을 관찰하고 어떤 값으로 비교할지 정해요.</span></div>
+  <div class="card"><h3>분야가 달라도 연결 방식은 비슷해요</h3><p>교과서는 급식, 반려동물, 해양 환경, 공유 경제, 공공 안전, 노인 복지의 문제를 소개해요. 문제마다 필요한 속성과 분석 결과의 쓰임이 달라요.</p><div id="psExamples"></div></div>
+  <div class="card"><h3>내 질문에 필요한 기록</h3><p>새 예시: 「우산 대여대의 어느 시간에 우산이 부족할까?」라면 시간대, 빌린 수, 반납한 수, 남은 수, 날씨를 기록할 수 있어요. 이용자의 이름은 이 질문에 필요하지 않아요.</p><div class="memo"><label for="psProblem">우리 학교의 문제 → 확인할 질문 → 필요한 속성 두 개 이상 → 결과를 사용할 사람</label><textarea id="psProblem" data-memo="problem" rows="4" placeholder="바꾸고 싶은 일: …&#10;데이터로 확인할 질문: …&#10;속성·단위: … / …&#10;누구에게 어떻게 제안할지: …"></textarea><div class="saved"></div></div></div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+<section class="page" data-name="데이터 점검실" data-acc="#1f9d74">
+  <div class="head"><div class="num">03</div><div><h2>기록이 있다고 바로 분석할 수 있을까요?</h2><p>교과서 180~181쪽 · 품질·출처·활용 조건</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>입력한 값이 맞는지, 형식이 같은지, 겹친 기록은 없는지 확인해요. 수집 목적과 동의, 출처도 분석 전에 살펴봐요.</span></div>
+  <div class="card"><h3>데이터 점검실 · 새로 만든 대출 대기 기록 예시</h3><p>각 상황에서 <b>가장 직접적으로 드러난 문제</b>를 골라요. 정확성은 원래 값과 맞는지, 유효성은 그 속성이 가질 수 있는 값인지를 따져요. 아홉 상황은 새로 만든 예시예요.</p><div class="ps-table"><table class="tbl"><thead><tr><th>기록에서 발견한 상황</th><th>점검 결과</th><th>확인 후 설명</th></tr></thead><tbody id="psRows"></tbody></table></div><div class="row"><button class="btn" id="psCheck">선택 확인</button><button class="btn ghost" id="psReset">다시 하기</button></div><p id="psFeedback" role="status" aria-live="polite">상황을 읽고 선택해 보세요.</p></div>
+  <div class="card"><h3>내 프로젝트에 적용하기</h3><div class="memo"><label for="psData">점검실에서 고친 판단 하나와 이유 / 내 데이터에서 확인할 조건 두 가지와 확인 방법</label><textarea id="psData" data-memo="dataCheck" rows="4" placeholder="점검실: 처음에는 …라고 생각했는데, …를 보고 …로 바꿈.&#10;내 데이터 조건 1과 확인 방법: …&#10;조건 2와 확인 방법: …"></textarea><div class="saved"></div></div><details><summary>친구와 더 생각해 보기</summary><p>형식이 깔끔한 데이터라도 한 집단의 기록에 치우쳤다면 다른 집단의 문제에 그대로 적용하기 어려워요. 내 질문에 빠진 대상이나 상황이 있는지 서로 물어봐요.</p></details></div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>나의 문제와 데이터 선택을 설명해요</p></div></div>
+  <div class="key3"><div>도서관 대기 문제에서는 <b>줄일 시간과 대상</b>을 정한 뒤 필요한 기록을 골랐어요.</div><div>점검실에서는 같은 숫자 오류라도 <b>원본과 다른 값</b>과 <b>가질 수 없는 값</b>을 구분했어요.</div><div>내 프로젝트에는 <b>데이터의 품질과 활용 조건</b>을 함께 확인하는 계획이 필요해요.</div></div>
+  <div class="card memo"><label for="psKey">핵심 질문 답 · 내 문제를 어떤 데이터로 살펴보고, 사용 전에 무엇을 확인하겠나요?</label><textarea id="psKey" data-memo="keyQ" rows="3"></textarea><div class="saved"></div></div>
+  <div class="card"><h3>마무리 퀴즈</h3><div class="quiz" data-quiz="4"></div></div>
+  <div class="card"><h3>개념 퀴즈 결과</h3><table id="result"></table><button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button></div>
+  <div class="formgo"><h3>질문폼에 내 생각 쓰기</h3><ol><li>내가 정한 문제와 필요한 데이터 설명하기</li><li>점검실의 판단 하나와 수정 방법 설명하기</li><li>내 데이터의 품질·활용 조건 확인 계획 쓰기</li></ol><p>아래 메모를 보면서 내 말로 써요.</p><a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a><div class="msum" id="msum"></div></div>
+</section>

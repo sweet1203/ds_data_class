@@ -1,0 +1,36 @@
+  /* u4-stress-2 전용 (st2-) */
+  #s2DistBtn .btn.on,#s2Set .btn.on,#s2Pick .btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .st2-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin-top:10px;line-height:1.7}
+  .st2-small{font-size:.86rem;color:var(--muted);margin:8px 0 0}
+  .st2-lab{min-width:72px;font-size:.92rem}
+  .st2-f .kc h4{margin:0 0 4px}
+  .st2-f .kc p{margin:0;font-size:.9rem}
+  .st2-tbl{min-width:640px;margin:0}
+  .st2-tbl th{background:#fbfaf7;font-size:.85rem}
+  .st2-tbl td{border-top:1px solid #eef0f3;font-size:.9rem;padding:4px 6px;text-align:center;font-variant-numeric:tabular-nums}
+  .st2-tbl td:first-child{text-align:left;font-weight:900;white-space:nowrap}
+  .st2-tbl tr.act td{background:#fbfaf7;font-weight:900}
+  .st2-tbl tr.cur td{background:#fff4d6}
+  .st2-tbl tr.err td{color:#b23a2b;font-size:.85rem}
+  .st2-in{width:52px;padding:3px 4px;text-align:center}
+  .st2-score{min-width:520px;margin:0}
+  .st2-score th{background:#fbfaf7;text-align:left}
+  .st2-score td{border-top:1px solid #eef0f3;font-size:.92rem;font-variant-numeric:tabular-nums}
+  .st2-score tr.cur td{background:#fff4d6}
+  .st2-try ol{margin:6px 0 0;padding-left:20px;font-size:.92rem}
+  .st2-try li{margin:4px 0}
+  .st2-rt{min-width:620px;margin:0}
+  .st2-rt th{background:#fbfaf7;text-align:left}
+  .st2-rt td{border-top:1px solid #eef0f3;text-align:left}
+  .st2-rt td:first-child{font-weight:700;font-size:.9rem;width:40%}
+  .st2-rt input,.st2-rt textarea{width:100%;max-width:400px}
+  .st2-rt .saved{display:inline-block;margin-left:6px}
+  .st2-list{padding-left:20px;margin:0;font-size:.93rem}
+  .st2-list li{margin:8px 0;line-height:1.65}
+  .st2-eval{min-width:640px;margin:0}
+  .st2-eval th{background:#fbfaf7;text-align:left}
+  .st2-eval td{border-top:1px solid #eef0f3;font-size:.9rem;text-align:left}
+  .st2-eval td:first-child{font-weight:900;white-space:nowrap}
+  .st2-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .st2-help ul{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .st2-help li{margin:6px 0}

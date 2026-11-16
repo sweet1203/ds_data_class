@@ -1,0 +1,238 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#e0702b">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 1. 데이터 과학과 문제 해결</span>
+      <h1>우리 모둠의<br>프로젝트,<br>설계부터!</h1>
+      <div class="story"><b>협력적 프로젝트</b><br>스트레스 지수 예측에서는 정해진 데이터로 프로젝트 단계를 밟았어요. 이번에는 모둠이 주제를 직접 고르고, 어떤 데이터로 무엇을 분석해 어떻게 평가할지 계획을 세워요.</div>
+      <p>오늘은 프로젝트의 <b>설계도</b>를 완성하는 날이에요. 실제 분석을 끝까지 하는 것은 확장 활동으로 이어서 해요.</p>
+      <ol>
+        <li>주제 고르기와 문제 정의</li><li>데이터 점검과 시각화 계획</li><li>프로젝트 설계 보드</li><li>설계 공유와 성찰</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧭</i><div><b>문제 정의</b><small>주제 고르고 질문 만들기</small></div></div>
+      <div class="ar" style="animation-delay:.5s">↓</div>
+      <div class="st" style="animation-delay:.7s"><i>🧹</i><div><b>데이터 준비</b><small>개수 · 결측치 · 이상치 점검</small></div></div>
+      <div class="ar" style="animation-delay:1s">↓</div>
+      <div class="st" style="animation-delay:1.2s"><i>📊</i><div><b>데이터 분석</b><small>어떤 그래프로 볼지 정하기</small></div></div>
+      <div class="ar" style="animation-delay:1.5s">↓</div>
+      <div class="st" style="animation-delay:1.7s"><i>🧩</i><div><b>모델링과 평가</b><small>핵심 속성 · 모델 · 평가 지표</small></div></div>
+      <div class="ar" style="animation-delay:2s">↓</div>
+      <div class="st" style="animation-delay:2.2s"><i>🪞</i><div><b>성찰</b><small>다른 모둠과 설계 비교</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>3명 내외로 모둠을 만들고 역할을 나눠요. 세 주제 가운데 하나를 골라 <b>질문 → 데이터 → 분석 방법 → 평가 지표</b>가 한 줄로 이어지는 설계를 만들어요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">모둠 역할 · 나는?</span>
+        <ul class="tp-roles">
+          <li><b>팀장</b> 질문을 정하는 토의를 이끌고 시간을 챙겨요.</li>
+          <li><b>기술자</b> 데이터 파일을 열고 오렌지3 설정을 맡아요.</li>
+          <li><b>기록자</b> 설계 보드와 결정한 까닭을 기록해요.</li>
+        </ul>
+        <div id="tpMyRole"></div>
+        <p class="note">교과서는 「팀장, 기술자, 기록자 등」이라고 했어요. 모둠 인원에 따라 역할을 합치거나 나눠도 돼요.</p>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학과 문제 해결</b> · 데이터를 활용하여 문제를 어떻게 분석하고 해결할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 우리 모둠이 고른 주제를 데이터로 풀려면 어떤 속성과 분석 방법, 평가 지표가 필요할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 과학으로 문제를 해결하기 위해 데이터를 수집하고 탐색적으로 분석할 수 있다.</li>
+          <li>문제 해결을 위해 수집한 데이터를 데이터 과학 프로젝트 단계를 바탕으로 수행할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 주제 고르기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 주제 고르기 · 문제 정의 -->
+<section class="page" data-name="주제 · 문제 정의" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>주제 고르기와 문제 정의</h2><p>교과서 194쪽 · ① 문제 정의 · 문화 · 반려동물 · 스포츠 세 주제와 데이터셋</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>좋아하는 주제인지와 함께, 그 데이터로 <b>확인할 수 있는 질문</b>이 나오는지 보고 골라요. 모둠이 함께 하나를 골라요.</span></div>
+  <div class="card">
+    <h3>🗂️ 세 주제 가운데 하나 고르기</h3>
+    <p class="muted" style="margin-top:0">행·열 수는 교과서 자료실 원본 파일을 미리 세어 본 값이에요. 파일은 선생님이 알려 주는 폴더에 있어요.</p>
+    <div class="vote tp-vote" id="tpTopic"></div>
+    <div class="tp-peek" id="tpPeek">주제를 고르면 그 데이터의 주요 속성이 여기에 보여요.</div>
+  </div>
+  <div class="card">
+    <h3>💭 막연한 바람 → 데이터로 확인할 질문 <span class="muted" style="font-weight:400;font-size:.88rem">(새 예시 · 학교 매점)</span></h3>
+    <div class="tp-tw"><table class="tbl tp-ex">
+      <tr><th>막연한 바람</th><th>데이터로 확인할 질문</th><th>필요한 속성</th><th>결과를 쓸 사람</th></tr>
+      <tr><td>매점이 덜 붐볐으면 좋겠다.</td><td>쉬는 시간마다 판매 건수가 얼마나 다를까?</td><td>시각, 판매 건수, 요일</td><td>매점 운영 담당 선생님</td></tr>
+    </table></div>
+    <p class="note">질문에는 비교할 대상(쉬는 시간마다)과 잴 수 있는 값(판매 건수)이 들어 있어요. 우리 주제에서도 이렇게 바꿔 봐요.</p>
+  </div>
+  <div class="card">
+    <div class="memo">
+      <label>✍️ 우리 모둠이 선정한 주제 · 선정 이유 · 데이터로 확인할 질문 · 결과를 쓸 사람 <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="why" rows="4" placeholder="선정한 주제: …&#10;선정 이유: …&#10;데이터로 확인할 질문: …&#10;결과를 쓸 사람과 쓰임: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 준비 · 분석 계획 -->
+<section class="page" data-name="데이터 점검 · 시각화 계획" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>데이터 점검과 시각화 계획</h2><p>교과서 194~195쪽 · ② 데이터 준비(데이터 개수 · 속성 개수 · 결측치 · 이상치) · ③ 데이터 분석(분석 내용과 시각화 방법)</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>분석을 시작하기 전에 데이터가 우리 질문에 <b>적합한지</b> 점검해요. 그리고 어떤 그래프로 무엇을 볼지 미리 정해요.</span></div>
+  <div class="card">
+    <h3>🔎 데이터 점검 카드 <span class="muted" style="font-weight:400;font-size:.88rem">(우리 주제 탭을 눌러 확인)</span></h3>
+    <p class="muted" style="margin-top:0">원본 파일의 개수·빈칸·값의 모습을 미리 세어 정리한 요약이에요. 실제 행은 싣지 않았어요. 앞 시간 데이터 점검실의 기준(정확성 · 통일성 · 중복 · 출처)도 떠올려요.</p>
+    <div class="apps tp-tabs" id="tpDsBtn"></div>
+    <div id="tpDsView"></div>
+  </div>
+  <div class="card">
+    <h3>📊 어떤 그래프로 볼까요? <span class="muted" style="font-weight:400;font-size:.88rem">(6장 · 분석 내용에 맞는 시각화 방법 고르기)</span></h3>
+    <div id="tpVizSort"></div>
+  </div>
+  <div class="card">
+    <div class="memo">
+      <label>✍️ 확인 결과(적합 / 부적합)와 근거 · 고치거나 더 확인할 것 · 시각화 계획 두 가지(분석 내용 → 시각화 방법) <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="dataCheck" rows="5" placeholder="확인 결과: 적합 / 부적합 — 근거: …&#10;고치거나 더 확인할 것: …&#10;시각화 계획 1: … → …&#10;시각화 계획 2: … → …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 프로젝트 설계 보드 -->
+<section class="page" data-name="프로젝트 설계 보드" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>프로젝트 설계 보드</h2><p>교과서 195쪽 · ④ 데이터 모델링과 평가 · 핵심 속성 · 사용할 모델 · 평가 지표 · 역할 나누기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span><b>질문 → 속성 → 분석 방법 → 평가 지표</b>가 끊기지 않고 이어져야 해요. 보드에서 고른 뒤 「연결 점검」을 누르면 끊긴 곳을 알려 줘요.</span></div>
+  <div class="card">
+    <h3>🧩 설계 보드 <span class="muted" style="font-weight:400;font-size:.88rem" id="tpBoardTopic"></span></h3>
+    <div class="tp-board">
+      <div class="tp-lane"><div class="tp-k" style="--k:#2f6fd0"><b>질문</b><small>01에서 쓴 것</small></div><div class="tp-v" id="tpQ"></div></div>
+      <div class="tp-ar" aria-hidden="true">↓</div>
+      <div class="tp-lane"><div class="tp-k" style="--k:#e0702b"><b>분석 방법</b><small>하나 고르기</small></div><div class="tp-v"><div id="tpMethod"></div></div></div>
+      <div class="tp-ar" aria-hidden="true">↓</div>
+      <div class="tp-lane"><div class="tp-k" style="--k:#d64535"><b>결과 속성</b><small>target · 하나</small></div><div class="tp-v"><div id="tpTarget"></div></div></div>
+      <div class="tp-lane"><div class="tp-k" style="--k:#1f9d74"><b>사용할 속성</b><small>feature · 여럿</small></div><div class="tp-v"><div id="tpFeat"></div><p class="note tp-legend">🔢 숫자 · 🏷️ 범주 · 🧮 집계해서 만들 숫자 · 🪪 번호·이름·주소 · 📅 날짜 · ⚠️ 대부분 비었거나 깨짐</p></div></div>
+      <div class="tp-ar" aria-hidden="true">↓</div>
+      <div class="tp-lane"><div class="tp-k" style="--k:#9b4fc4"><b>평가 지표</b><small>여럿 가능</small></div><div class="tp-v"><div id="tpMetric"></div></div></div>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="tpCheck">연결 점검</button><button class="btn ghost" id="tpReset">보드 다시 하기</button></div>
+    <div class="tp-fb" id="tpFb" role="status" aria-live="polite">보드를 고른 뒤 「연결 점검」을 눌러요.</div>
+    <details class="tp-help">
+      <summary>Ⅲ단원 분석 방법 다시 보기</summary>
+      <div class="cards3" style="margin-top:10px">
+        <div class="kc" style="--k:#e0702b"><h4>회귀분석</h4><p>원인이 되는 속성으로 <b>숫자 결과</b>(target)를 예측해요. 실젯값과 예측값의 차이로 평가해요.</p></div>
+        <div class="kc" style="--k:#2f6fd0"><h4>k-평균 군집 분석</h4><p>맞힐 결과 없이 숫자 속성 사이의 <b>거리</b>로 비슷한 데이터끼리 묶어요.</p></div>
+        <div class="kc" style="--k:#1f9d74"><h4>연관분석</h4><p>한 번의 거래처럼 <b>함께 나타난 항목 묶음</b>에서 규칙을 찾아요.</p></div>
+      </div>
+    </details>
+  </div>
+  <div class="card">
+    <div class="memo">
+      <label>✍️ 점검 뒤 우리 설계 · 핵심 속성과 고른 까닭 · 분석 방법 · 평가 지표로 확인할 것 · 점검에서 고친 것 <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="bPlan" rows="5" placeholder="핵심 속성(결과 / 원인)과 고른 까닭: …&#10;분석 방법: …&#10;평가 지표와 그것으로 확인할 것: …&#10;점검에서 고친 것: 처음에는 …였는데 …로 바꿈"></textarea><div class="saved"></div>
+    </div>
+    <div class="memo">
+      <label>👥 역할 나누기 · 이 설계를 실행할 때 누가 무엇을 맡을까요? <span class="muted" id="tpRoleShow"></span></label>
+      <textarea data-memo="roles" rows="3" placeholder="팀장 ○○: …&#10;기술자 ○○: …&#10;기록자 ○○: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 공유 · 성찰 -->
+<section class="page" data-name="공유 · 성찰" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>설계 공유와 성찰</h2><p>교과서 195쪽 · ⑤ 성찰 · 프로젝트 수행 과정 평가하기 · 새롭게 알게 된 점 정리하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>다른 모둠에게 우리 설계를 설명하고 질문을 받아요. 받은 질문에서 우리 설계의 약한 곳을 찾아 고쳐요.</span></div>
+  <div class="card">
+    <h3>🔁 모둠끼리 설계 바꿔 듣기</h3>
+    <ol class="vsteps">
+      <li><b>우리 설계를 한 줄로 설명해요.</b><p>설계 보드의 「우리 설계 한 줄」을 읽고 고른 까닭을 덧붙여요.</p></li>
+      <li><b>듣는 모둠은 질문을 하나 해요.</b><p>예: 「그 속성으로 그 질문에 답할 수 있나요?」 「그 지표가 좋게 나오면 무엇을 알 수 있나요?」 「빠진 데이터는 어떻게 하나요?」</p></li>
+      <li><b>받은 질문과 고칠 점을 기록해요.</b><p>바로 답하기 어려운 질문일수록 다음 단계에서 확인할 거리가 돼요.</p></li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>✅ 지금까지의 과정 점검 <span class="muted" style="font-weight:400;font-size:.88rem">(우리 설계가 이미 해낸 것을 모두 골라요)</span></h3>
+    <div id="tpSelf"></div>
+    <div class="memo">
+      <label>✍️ 다른 모둠에게 받은 질문과 고칠 점 · 프로젝트를 설계하며 새롭게 알게 된 점</label>
+      <textarea data-memo="reflect" rows="4" placeholder="받은 질문: …&#10;고칠 점: …&#10;새롭게 알게 된 점: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card tp-help">
+    <summary>🚀 확장 · 프로젝트 끝까지 해 보기 (오렌지3)</summary>
+    <p>설계대로 데이터를 열어 시각화하고, 모델을 만들어 평가해요. 남는 시간이나 다음 활동에서 모둠이 함께 해요. 우리 설계에 맞는 줄만 따라가요.</p>
+    <div><svg id="tpFlow" role="img" aria-label="모둠 프로젝트 오렌지3 위젯 연결 흐름도: 파일, 표, 통계, 열 고르기, 시각화, 회귀 또는 군집"></svg></div>
+    <div class="of-tw"><table class="tbl" id="tpSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td>선생님이 알려 주는 폴더의 우리 주제 파일 열기</td><td>Info의 데이터 개수와 속성 개수가 점검 카드와 맞는지</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Group by</b> (Transform)</td><td>File →</td><td><b>집계가 필요할 때만</b>. 예: 반려동물 시설을 구·시설 종류별로 묶어 개수(Count) 만들기, 공연 예매를 연령대·장르별로 묶기</td><td>새로 생긴 개수 열의 이름. 숫자가 아닌 열에 자동으로 고른 집계(Mode 등)는 필요 없으면 해제</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Column Statistics</b> (Data)<br><small>옛 이름 Feature Statistics</small></td><td>File(또는 Group by) →</td><td>속성마다 분포·빈칸 비율 보기</td><td>결측치(Missing)가 많은 열, 값이 한쪽으로 몰린 열</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Select Columns</b> (Transform)</td><td>File(또는 Group by) →</td><td>설계 보드대로 결과 속성은 Target, 사용할 속성은 Features, 번호·이름·주소는 Metas</td><td>보드에서 고른 속성과 같은지</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Distributions · Scatter Plot · Box Plot</b> (Visualize)</td><td>Select Columns →</td><td>02에서 세운 시각화 계획 두 가지 그리기</td><td>그래프에서 본 것 한 줄씩 기록</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Linear Regression</b> (Model)</td><td>회귀분석일 때</td><td>기본값 그대로</td><td>Test and Score에 연결했는지</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Test and Score</b> (Evaluate)</td><td>Select Columns(Data) · Linear Regression →</td><td><b>Test on test data</b>: Select Columns 뒤에 <b>Data Sampler</b>(Transform, 70:30)를 두고 Data Sample → Data, Remaining Data → Test Data로 연결. 또는 <b>Cross validation</b>. <b>Test on train data는 쓰지 않기</b></td><td>학습에 쓰지 않은 데이터에서 잰 MSE · R² 값과 그 뜻</td></tr>
+      <tr data-s="8"><td>8</td><td><b>k-Means</b> (Unsupervised)</td><td>군집 분석일 때</td><td>Number of Clusters: From 2 to 8, Normalize columns 체크</td><td>실루엣 점수가 가장 큰 k</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Silhouette Plot</b> (Visualize)</td><td>k-Means →</td><td>Grouping: Cluster</td><td>군집마다 실루엣 계수, 군집 특성 해석</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="tpDone"></div>
+    <ul class="tp-tips">
+      <li><b>문화 파일이 너무 커요</b> → 원본은 약 366만 행(1GB 정도)이라 열기 어려워요. 선생님이 기간을 줄여 준 파일을 써요.</li>
+      <li><b>반려동물 파일이 열리지 않아요</b> → 이름은 .xls지만 속은 .xlsx 형식이에요. 선생님이 확장자를 .xlsx로 바꿔 준 파일을 써요.</li>
+      <li><b>스포츠 파일이 둘이에요</b> → 금액·키·몸무게가 숫자로 바뀐 CLEAN 파일이 다루기 쉬워요. 금액 단위 표기가 원본과 다른 점은 점검 카드에서 확인해요.</li>
+      <li><b>Test and Score에 값이 안 나와요</b> → Select Columns에서 Target을 정했는지, 결과 속성이 숫자인지 확인해요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">매점 예시처럼 「덜 붐볐으면」이라는 바람을 <b>비교할 대상과 잴 수 있는 값</b>이 들어간 질문으로 바꾸어 모둠의 주제를 정했다.</div>
+    <div style="--k:#1f9d74">점검 카드에서 개수·빈칸·섞인 값·단위·출처를 살펴 우리 질문에 <b>쓸 수 있는 데이터인지</b> 판단하고, 그래프 계획을 세웠다.</div>
+    <div style="--k:#9b4fc4">설계 보드에서 결과 속성과 사용할 속성, <b>분석 방법과 평가 지표</b>가 서로 맞는지 점검하고 모둠의 역할을 나눴다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">우리 주제(<span id="tpTopicShow">아직 고르지 않음</span>)와 오늘 쓴 낱말(결측치, 이상치, 시각화, 핵심 속성, 모델, 평가 지표)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">우리 모둠이 고른 주제를 데이터로 풀려면 어떤 속성과 분석 방법, 평가 지표가 필요할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>우리 모둠이 고른 <b>주제와 이유</b>, 데이터로 확인할 질문 설명하기</li>
+      <li>데이터 점검에서 <b>적합 / 부적합</b>을 판단한 근거와 시각화 계획 쓰기</li>
+      <li>설계 보드의 <b>핵심 속성 · 분석 방법 · 평가 지표</b>가 어떻게 이어지는지, 점검에서 고친 것 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

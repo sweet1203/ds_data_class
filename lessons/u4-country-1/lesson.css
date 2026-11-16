@@ -1,0 +1,22 @@
+  /* u4-country-1 전용 (c1-) */
+  .c1-tw{overflow-x:auto}
+  .c1-attr{min-width:640px;margin:0}
+  .c1-attr th,.c1-mean th,.c1-calc th,.c1-rt th{background:#fbfaf7;text-align:left}
+  .c1-attr td{border-top:1px solid #eef0f3;font-size:.92rem}
+  .c1-mean{margin:0;min-width:260px}
+  .c1-mean td{font-size:.92rem}
+  .c1-calc{min-width:620px;margin:0;font-size:.9rem}
+  .c1-calc td,.c1-calc th{text-align:right;white-space:nowrap}
+  .c1-calc td:first-child,.c1-calc th:first-child{text-align:left}
+  .c1-idx .kc p{font-size:.9rem}
+  #c1Pick .btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  #c1Raw{overflow-x:auto}
+  .c1-say{background:var(--acc-soft);border-radius:10px;padding:10px 12px;font-size:.92rem;line-height:1.65}
+  .c1-tips{padding-left:18px;font-size:.92rem;margin:6px 0 0}
+  .c1-tips li{margin:6px 0}
+  .c1-rt{min-width:600px;margin:0}
+  .c1-rt td:first-child{font-weight:700;font-size:.9rem;width:42%}
+  .c1-rt input,.c1-rt textarea{width:100%;max-width:380px}
+  .c1-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .c1-help ul{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .c1-help li{margin:6px 0}

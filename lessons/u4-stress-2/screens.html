@@ -1,0 +1,292 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 1. 데이터 과학과 문제 해결</span>
+      <h1>다듬은 데이터로<br>스트레스 지수를<br>예측해 볼까?</h1>
+      <div class="story"><b>이제 분석하고 예측할 차례예요</b><br>지난 시간에 결측치와 이상치를 처리하고 0~1로 정규화한 예제 데이터가 있어요. 어떤 일상 데이터가 스트레스 지수와 함께 움직이는지 살펴보고, 스트레스 지수를 예측하는 모델을 만들어 평가해요.</div>
+      <p>오늘은 데이터 과학 프로젝트의 뒤 단계인 <b>데이터 시각화와 분석 → 데이터 모델링 → 평가</b>를 하고, 프로젝트 전체를 되돌아봐요.</p>
+      <ol>
+        <li>분포와 상관관계 해석하기</li><li>모델 비교실 · MSE와 R²</li><li>오렌지3 모델링과 평가</li><li>프로젝트 정리</li><li>(선택) 파이썬으로 해 보기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📊</i><div><b>시각화와 분석</b><small>Distributions · Correlations</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🧩</i><div><b>데이터 모델링</b><small>feature 3개 → target stress</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>⚖️</i><div><b>평가</b><small>보지 않은 데이터로 MSE · R²</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🪞</i><div><b>프로젝트 정리</b><small>과정별로 되돌아보기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간에는 설문 문항을 다듬고 예제 파일의 결측치·이상치를 처리했어요. 오늘은 그 데이터로 속성 사이의 관계를 읽고, 여러 회귀 모델을 비교해 스트레스 지수를 예측해요. 예제 데이터로 하는 연습이라 내 스트레스를 진단하는 활동은 아니에요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>스트레스 지수와 가장 관계가 클 것 같은 속성은?</b></p>
+        <div class="vote" id="s2Guess"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>교과서 질문</b> · 일상생활의 데이터 중 스트레스에 영향을 줄 수 있는 것은 무엇일까?</li>
+          <li><b>오늘의 질문</b> · 스트레스 지수를 예측하는 모델을 만든다면, 어떤 근거로 모델을 고르고 그 결과를 어디까지 믿을 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 과학으로 문제를 해결하기 위해 데이터를 수집하고 탐색적으로 분석할 수 있다.</li>
+          <li>문제 해결을 위해 수집한 데이터를 데이터 과학 프로젝트 단계를 바탕으로 수행할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 분포와 상관관계부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 분포 · 상관관계 -->
+<section class="page" data-name="분포 · 상관관계" data-acc="#c98a00">
+  <div class="head"><div class="num">01</div><div><h2>분포와 상관관계 해석하기</h2><p>교과서 190쪽 · Distributions · Correlations · 상관관계와 원인 · 일반화의 한계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span><b>분포</b>는 값이 어느 구간에 많이 모여 있는지, <b>상관계수</b>는 두 속성이 함께 커지거나 반대로 움직이는 정도를 알려 줘요. 함께 움직인다고 해서 한쪽이 다른 쪽의 <b>원인</b>이라고 단정할 수는 없어요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(지난 시간 흐름도에 이어 붙여요)</span></h3>
+    <div><svg id="s2FlowA" role="img" aria-label="분포와 상관관계 분석 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw" style="margin-top:10px"><table class="tbl" id="s2SetA">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File · Impute · Select Rows</b></td><td>지난 시간 흐름도</td><td>저장한 흐름도를 열어요. 없으면 선생님이 알려 주는 폴더의 교과서 흐름도 파일을 열어요.</td><td>Select Rows에서 65개가 나가는지</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Preprocess</b> (Transform)</td><td>Select Rows →</td><td>Normalize Features · <b>Normalize to interval [0, 1]</b></td><td>–</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Distributions</b> (Visualize)</td><td>Preprocess →</td><td>왼쪽 Variable에서 stress, sleep, exercise, electronic_device_usage를 차례로 고르기</td><td>막대가 가장 높은 구간, 0.5보다 작은 쪽과 큰 쪽 중 어디에 값이 많은지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Correlations</b> (Unsupervised)</td><td>Preprocess →</td><td>Pearson correlation(기본값)</td><td>목록 맨 위의 두 속성과 상관계수, 부호(+ / −)</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="s2DoneA"></div>
+  </div>
+  <div class="card">
+    <h3>📊 확인용 · 예제 데이터 65개의 분포와 상관계수</h3>
+    <p class="muted" style="margin-top:0">오렌지3 화면과 비교해 보세요. 교과서 예제 데이터를 이상치 처리·정규화한 뒤 계산한 값이에요(행 하나하나가 아니라 센 수와 계수만 보여 줘요).</p>
+    <div class="grid2 even">
+      <div>
+        <div class="row" id="s2DistBtn" style="margin-bottom:6px"></div>
+        <h4 style="margin:0 0 4px">0.25 간격으로 센 학생 수</h4>
+        <div class="sp-wrap"><svg id="s2Dist" role="img" aria-label="정규화한 속성값을 0.25 간격 구간으로 센 학생 수 막대그래프"></svg></div>
+        <div class="st2-say" id="s2DistSay"></div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 4px">상관계수 (절댓값이 큰 순서)</h4>
+        <div class="sp-wrap"><svg id="s2Corr" role="img" aria-label="속성 쌍별 상관계수 크기 막대그래프, 파랑은 음의 상관, 빨강은 양의 상관"></svg></div>
+        <p class="st2-small"><span style="color:#2f6fd0">■</span> 음(−): 한쪽이 클수록 다른 쪽이 작은 경향 · <span style="color:#d64535">■</span> 양(+): 함께 커지는 경향 · e_d_usage는 electronic_device_usage를 줄인 이름 · 시작 화면에서 고른 속성: <b id="s2GuessShow1">아직 고르지 않음</b></p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🗂️ 이 데이터로 말할 수 있을까? <span class="muted" style="font-weight:400;font-size:.85rem">(6장)</span></h3>
+    <div id="s2Claim"></div>
+    <p class="note" style="margin:10px 0 0">이 상관계수는 Select Rows에서 스트레스 지수 40점 두 명이 빠진(target 일부가 잘린) 65개 자료로 구한 값이에요. 스트레스가 아주 높은 학생까지 넣으면 계수가 달라질 수 있어요.</p>
+    <div class="memo" style="margin-top:12px">
+      <label>✍️ 상관관계 해석 · 가장 강한 관계 하나를 상관계수와 함께 쓰고, 이것만으로 원인이라고 말할 수 없는 까닭과 이 결과를 다른 학생들에게 넓혀 말하기 어려운 까닭 <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="s2Corr" rows="4" placeholder="가장 강한 관계: … (상관계수 …)&#10;원인이라고 말할 수 없는 까닭: …&#10;넓혀 말하기 어려운 까닭: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 모델 비교실 -->
+<section class="page" data-name="모델 비교실" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>모델 비교실 · MSE와 R²로 모델 고르기</h2><p>교과서 191~192쪽 · 회귀 모델 · 평균 제곱 오차(MSE) · RMSE · 결정 계수(R²)</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>스트레스 지수처럼 <b>숫자</b>를 예측하는 모델은 예측값이 실젯값에서 얼마나 빗나갔는지로 평가해요. <b>MSE</b>는 빗나간 정도를 제곱해 평균 낸 값이라 작을수록 좋고, <b>R²</b>는 실젯값이 흩어진 정도를 모델이 얼마나 설명하는지라 1에 가까울수록 좋아요.</span></div>
+  <div class="card">
+    <h3>🧮 계산 약속</h3>
+    <div class="cards4 st2-f">
+      <div class="kc" style="--k:#5b6776"><h4>오차</h4><p>예측값 − 실젯값</p></div>
+      <div class="kc" style="--k:#1f9d74"><h4>MSE</h4><p>오차 제곱의 합 ÷ 학생 수</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>RMSE</h4><p>√MSE · 실젯값과 같은 단위(점)</p></div>
+      <div class="kc" style="--k:#d64535"><h4>R²</h4><p>1 − (오차 제곱의 합 ÷ 실젯값이 평균에서 떨어진 거리 제곱의 합)</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>⚖️ 모델 비교실 <span class="muted" style="font-weight:400;font-size:.85rem">(예시 학생 8명 · 실젯값과 예측값 모두 새로 만든 값)</span></h3>
+    <div class="row" style="margin-bottom:6px"><b class="st2-lab">평가 자료</b><span class="row" id="s2Set"></span></div>
+    <div class="row" style="margin-bottom:10px"><b class="st2-lab">볼 모델</b><span class="row" id="s2Pick"></span></div>
+    <div class="grid2">
+      <div>
+        <div class="sp-wrap"><svg id="s2Plot" role="img" aria-label="실젯값과 예측값 산점도, 대각선에 가까울수록 정확, 점선은 오차"></svg></div>
+        <p class="st2-small">대각선(예측값 = 실젯값)에 점이 가까울수록 잘 맞힌 거예요. 세로 점선의 길이가 오차예요.</p>
+      </div>
+      <div>
+        <div class="sp-read"><div>MSE <b id="s2Mse"></b></div><div>RMSE <b id="s2Rmse"></b></div><div>R² <b id="s2R2"></b></div></div>
+        <div class="st2-say" id="s2Calc"></div>
+      </div>
+    </div>
+    <div class="of-tw" style="margin-top:10px"><table class="tbl st2-tbl" id="s2Tbl"></table></div>
+    <p class="st2-small">「내 예측」 칸의 숫자를 바꿔 보세요. 실젯값을 보고 맞히면 R²가 1에 가까워지지만, 실제 모델은 실젯값을 모르고 feature만 보고 예측해요.</p>
+    <h4 style="margin:14px 0 6px">모델별 성능 지표 <span class="muted" style="font-weight:400;font-size:.85rem">(가장 좋은 값에 ★)</span></h4>
+    <div class="of-tw"><table class="tbl st2-score" id="s2Score"></table></div>
+    <div class="callout st2-try"><b>해 보기</b>
+      <ol>
+        <li>평가 자료 ㉮에서 MSE와 R²로 보면 어느 모델이 가장 좋은가요? 모델 C는 MAE가 모델 A와 같은데 MSE는 왜 훨씬 클까요?</li>
+        <li>평가 자료를 ㉯로 바꿔 보세요. 모델의 오차는 그대로인데 MSE와 R² 가운데 무엇이 달라지나요?</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📋 모델 비교실 기록</h3>
+    <div class="of-tw"><table class="tbl st2-rt">
+      <tr><th>무엇을</th><th>내 생각</th></tr>
+      <tr><td>평가 자료 ㉮에서 고른 모델과 근거<br><small class="muted">MSE · RMSE · R² 값을 넣어서 · 질문폼 2번에 써요.</small></td><td><textarea data-memo="s2Pick" rows="3" placeholder="고른 모델: … / MSE …, R² … / 까닭: …"></textarea><div class="saved"></div></td></tr>
+      <tr><td>㉮ → ㉯로 바꿨을 때 달라진 것과 그 까닭<br><small class="muted">질문폼 3번에 써요.</small></td><td><textarea data-memo="s2Spread" rows="3" placeholder="MSE는 …, R²는 … / 까닭: …"></textarea><div class="saved"></div></td></tr>
+    </table></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 오렌지3 모델링 · 평가 -->
+<section class="page" data-name="오렌지3 모델링 · 평가" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>오렌지3로 모델링하고 평가하기</h2><p>교과서 191~192쪽 · Select Columns · Data Sampler 70% · Linear Regression · Random Forest · kNN · SVM · Test and Score</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>feature는 sleep·exercise·electronic_device_usage, target은 stress로 정해요. 데이터를 <b>훈련 데이터 70%</b>와 <b>테스트 데이터 30%</b>로 나누고, 네 모델을 훈련 데이터로 학습시킨 뒤 <b>모델이 한 번도 보지 않은 테스트 데이터</b>로 평가해요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도</h3>
+    <div><svg id="s2FlowB" role="img" aria-label="스트레스 지수 예측 모델링과 평가 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw" style="margin-top:10px"><table class="tbl" id="s2SetB">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>Select Rows</b> (Transform)</td><td>지난 시간 흐름도</td><td>그대로(이상치 처리한 65개)</td><td>–</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Preprocess</b> (Transform)</td><td>Select Rows →</td><td>01에서 쓴 Normalize to interval [0, 1]. 이 위젯에서 Test and Score로 선을 긋고, 연결 창에서 <b>Preprocessor → Preprocessor</b>로 이어요.</td><td>정규화 기준(최솟값·최댓값)을 훈련 데이터에서만 구해 테스트 데이터에 적용해요.</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Select Columns</b> (Transform)</td><td>Select Rows →<br><small class="muted">Matching Data</small></td><td>Features: <b>sleep, exercise, electronic_device_usage</b><br>Target: <b>stress</b> · grade는 Ignored로 옮기기</td><td>Target 칸에 stress 하나만 있는지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Data Sampler</b> (Transform)</td><td>Select Columns →</td><td>Fixed proportion of data <b>70%</b> · <b>Replicable (deterministic) sampling</b> 체크</td><td>Data Sample과 Remaining Data의 개수. Stratify sample은 stress가 숫자 target이라 체크해도 적용되지 않아요.</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Linear Regression</b> (Model)</td><td>→ Test and Score</td><td>기본값 그대로</td><td>–</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Random Forest</b> (Model)</td><td>→ Test and Score</td><td>기본값 · <b>Replicable training</b> 체크</td><td>다시 실행해도 같은 결과가 나오는지</td></tr>
+      <tr data-s="7"><td>7</td><td><b>kNN</b> (Model)</td><td>→ Test and Score</td><td>기본값 그대로(Neighbors 5)</td><td>–</td></tr>
+      <tr data-s="8"><td>8</td><td><b>SVM</b> (Model)</td><td>→ Test and Score</td><td>기본값 그대로</td><td>–</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Test and Score</b> (Evaluate)</td><td>Data Sampler →<br>모델 4개 →<br>Preprocess →</td><td>연결 창에서 <b>Data Sample → Data</b>, <b>Remaining Data → Test Data</b> 두 줄을 이어요. 왼쪽에서 <b>Test on test data</b> 선택</td><td>모델별 MSE · RMSE · MAE · R². MSE가 가장 작은 모델은?</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="s2DoneB"></div>
+  </div>
+  <div class="card">
+    <h3>🔎 교과서 192쪽 화면과 비교하기</h3>
+    <ul class="st2-list">
+      <li><b>평가 방법이 달라요</b> · 교과서 화면은 Data Sample(70%)만 Test and Score에 이어 <b>Cross validation</b>(5겹)으로 평가했어요(Linear Regression R² 0.475). 훈련 데이터를 다섯 묶음으로 나눠 돌려 가며 평가한 값이라, 남겨 둔 30%는 쓰이지 않았어요. 오늘은 그 30%를 <b>Test Data</b>로 이어 모델이 보지 않은 데이터로 평가해요.</li>
+      <li><b>R²가 교과서보다 훨씬 작게 나올 수 있어요</b> · 테스트 데이터는 19개뿐이고, 그 안에서 스트레스 지수가 좁게 퍼져 있으면 02의 평가 자료 ㉯처럼 R²가 작아져요. MSE와 RMSE도 함께 보고 판단해요.</li>
+      <li><b>잘린 target</b> · 이 65개는 Select Rows에서 stress가 36.5를 넘는 학생(40점 두 명)을 뺀 자료예요. 그래서 오늘 결과는 스트레스 지수가 아주 높은 학생을 뺀 자료로 만든 모델의 성능이에요.</li>
+      <li><b>정규화 순서</b> · 교과서처럼 전체 데이터를 먼저 정규화한 뒤 나누면 테스트 데이터의 최솟값·최댓값까지 미리 본 셈이에요. 오늘은 Preprocess를 Preprocessor로 이어 훈련 데이터로만 기준을 정해요. 그래서 stress는 원래 점수(0~40)로 남고, RMSE를 「평균 몇 점쯤 빗나갔는지」로 읽을 수 있어요.</li>
+      <li><b>아래쪽 비교 표의 숫자</b> · Cross validation으로 바꾸면 Test and Score 아래에 모델끼리 비교한 표가 나와요. 숫자는 두 모델 예측값 사이의 MSE가 아니라 <b>행 모델의 점수(MSE)가 열 모델보다 클 확률</b>이에요. MSE는 작을수록 좋으니, 이 값이 작을수록 행 모델이 더 나을 가능성이 커요.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기</h3>
+    <div class="of-tw"><table class="tbl st2-rt">
+      <tr><th>무엇을</th><th>내 결과</th></tr>
+      <tr><td>Test on test data에서 MSE가 가장 작은 모델과 그 MSE · RMSE</td><td><input type="text" data-memo="s2Best" placeholder="예: ????, MSE ??.??, RMSE ?.??"><div class="saved"></div></td></tr>
+      <tr><td>Linear Regression의 R² (Test on test data)<br><small class="muted">(선택) Cross validation으로 바꿨을 때의 R²도</small></td><td><input type="text" data-memo="s2R2" placeholder="예: 0.??? / (선택) 0.???"><div class="saved"></div></td></tr>
+      <tr><td>평가 결과 해석<br><small class="muted">어떤 모델을 고를지, 테스트 데이터의 R²가 교과서 값과 다르다면 그 까닭(02 ㉮ → ㉯와 연결), 이 모델을 어디까지 믿을 수 있을지</small></td><td><textarea data-memo="s2Eval" rows="4"></textarea><div class="saved"></div></td></tr>
+    </table></div>
+  </div>
+  <details class="card st2-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Test Data를 잇는 방법을 모르겠어요</b> → Data Sampler와 Test and Score 사이의 선을 두 번 눌러 연결 창을 열어요. Data Sample → Data 줄이 있는지 보고, Remaining Data에서 Test Data로 끌어 줄을 하나 더 만들어요.</li>
+      <li><b>Test on test data를 고를 수 없어요</b> → Test Data가 아직 이어지지 않았어요. 위 방법으로 Remaining Data를 이어요.</li>
+      <li><b>Preprocessor 줄이 안 생겨요</b> → Preprocess에서 Test and Score로 선을 그으면 연결 창이 열려요. 왼쪽 Preprocessor에서 오른쪽 Preprocessor로 끌어요.</li>
+      <li><b>Test and Score에 모델이 안 보여요</b> → 모델 위젯에서 Test and Score로 이은 선이 Learner → Learner인지 확인해요.</li>
+      <li><b>결과가 친구와 달라요</b> → Data Sampler의 Replicable (deterministic) sampling과 Random Forest의 Replicable training을 체크했는지 확인해요. 그래도 다르면 연결이나 조건이 다른 거예요.</li>
+      <li><b>오렌지3가 안 열려요</b> → 02 모델 비교실 결과로 해석을 쓰고, 기록 칸에 「(모델 비교실)」이라고 적어요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 프로젝트 정리 -->
+<section class="page" data-name="프로젝트 정리" data-acc="#9b4fc4">
+  <div class="head"><div class="num">04</div><div><h2>프로젝트 정리 · 나의 활동 되돌아보기</h2><p>교과서 193쪽 · 과정별 자기 평가 · 배운 점 · 더 알아보고 싶은 점</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>두 시간 동안 한 스트레스 지수 예측 프로젝트를 여섯 단계로 나눠 돌아봐요. 잘한 단계와 아쉬운 단계를 찾으면, 다음 프로젝트에서 무엇을 더 할지 보여요.</span></div>
+  <div class="card">
+    <h3>🪞 과정별로 되돌아보기</h3>
+    <div class="of-tw"><table class="tbl st2-eval">
+      <tr><th>과정</th><th>스스로 물어볼 것</th><th>이 프로젝트에서 한 일</th></tr>
+      <tr><td>문제 정의</td><td>데이터로 풀 수 있는 문제를 고르는 데 힘을 보탰나?</td><td>일상 데이터 중 스트레스와 관계있는 것 찾기</td></tr>
+      <tr><td>데이터 수집</td><td>문제와 관련된 데이터를 모으는 데 힘을 보탰나?</td><td>선택지·단위를 넣은 설문 문항 만들기</td></tr>
+      <tr><td>데이터 전처리</td><td>분석에 알맞은 형태로 데이터를 다듬을 수 있나?</td><td>결측치 행 지우기 · 이상치 확인 범위 · 정규화</td></tr>
+      <tr><td>데이터 시각화와 분석</td><td>알맞은 방법으로 시각화하고 해석할 수 있나?</td><td>분포 · 상관계수 읽기</td></tr>
+      <tr><td>데이터 모델링</td><td>필요한 모델을 고르고 학습시킬 수 있나?</td><td>feature · target 정하기, 회귀 모델 4개</td></tr>
+      <tr><td>평가</td><td>모델의 성능을 평가할 수 있나?</td><td>보지 않은 데이터로 MSE · R² 비교</td></tr>
+    </table></div>
+    <div class="memo" style="margin-top:12px">
+      <label>✍️ 되돌아보기 · ① 여섯 과정 가운데 가장 잘한 과정과 아쉬운 과정(우수 · 보통 · 미흡), 그 까닭 ② 배운 점 · 느낀 점 · 새롭게 알게 된 점 ③ 이 데이터셋과 이어서 더 알아보고 싶은 점</label>
+      <textarea data-memo="s2Reflect" rows="6" placeholder="① 잘한 과정: … (우수) / 아쉬운 과정: … (보통) — 까닭: …&#10;② 배운 점: … / 느낀 점: … / 새롭게 알게 된 점: …&#10;③ 더 알아보고 싶은 점: …"></textarea><div class="saved"></div>
+    </div>
+    <p class="note">③은 교과서의 예와 다른 나만의 질문으로 써 보세요. 예를 들어 오늘 데이터에 없던 속성을 하나 더 모으면 무엇을 알 수 있을지 생각해 봐요.</p>
+  </div>
+</section>
+
+<!-- 5 (선택) 파이썬 -->
+<section class="page" data-name="(선택) 파이썬으로 해 보기" data-acc="#c98a00">
+  <div class="head"><div class="num">05</div><div><h2>(선택) 파이썬으로 해 보기</h2><p>교과서 192쪽 파이썬 소스 파일 · 결측치 · IQR · MinMaxScaler · 회귀 모델 4개 · MSE · R²</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3로 한 전처리·분석·모델링·평가를 파이썬 코드로 똑같이 해 볼 수 있어요. 시간이 남거나 집에서 더 해 봐요.</span></div>
+  <div class="card">
+    <h3>🐍 코랩에서 실행하기</h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>교과서 노트북을 수업에 맞게 고친 사본이에요.</p></li>
+      <li><b>파일 올리기 → [3] 데이터 전처리</b><p>업로드 셀로 <span class="mono">daily_data.csv</span>를 올리고, 결측치 개수와 두 가지 비율(칸 기준 · 행 기준)을 확인해요. IQR 표와 이상치 확인 범위로 65개를 남겨요.</p></li>
+      <li><b>[4] 데이터 시각화와 분석</b><p>정규화한 값으로 히스토그램과 상관계수 표를 만들어 오렌지3 Distributions · Correlations와 비교해요.</p></li>
+      <li><b>[5] 데이터 모델링 · [6] 평가</b><p>먼저 70 : 30으로 나눈 뒤, 정규화와 모델을 묶어 훈련 데이터로만 학습해요. 교차 검증 점수와 테스트 데이터 점수를 함께 봐요.</p></li>
+    </ol>
+    <details class="st2-help" style="margin-top:8px">
+      <summary>교과서 코드와 달라진 점 · 비교할 때 주의할 점</summary>
+      <ul>
+        <li><b>업로드 셀 추가</b>: 파일 창에 이미 올렸다면 건너뛰어요.</li>
+        <li><b>정규화 순서</b>: 원래 코드는 전체 데이터를 정규화한 뒤 나누었어요. 고친 사본은 먼저 나누고, 정규화 기준을 훈련 데이터에서만 구해요.</li>
+        <li><b>교차 검증 점수</b>: 원래 코드의 5겹 반복문은 학습만 하고 점수를 계산하지 않았어요. 고친 사본은 교차 검증 평균 점수를 실제로 보여 줘요.</li>
+        <li><b>이상치 범위</b>: exercise를 교과서 표처럼 0~145.5로 맞췄어요(원래 코드 0~150, 남는 수는 65개로 같아요). 노트북의 IQR 표는 결측치를 지운 81개로 계산해서 교과서 표와 조금 달라요.</li>
+        <li><b>마지막 비교표</b>: 모델끼리 예측값이 얼마나 다른지 보여 주는 표예요. 정확도는 실젯값과 비교한 위 표로 판단해요.</li>
+        <li><b>결과 차이</b>: 노트북의 모델 설정(나무 100그루, 이웃 3개 등)과 나누는 방법이 오렌지3와 달라서 숫자가 같지 않아요.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#c98a00">예제 데이터에서 수면 시간은 스트레스 지수와 가장 강한 <b>음의 상관관계</b>를 보였지만, 이 계수만으로 잠이 스트레스를 줄인다고 단정하지는 않았다.</div>
+    <div style="--k:#1f9d74">모델 비교실에서 <b>MSE와 R²</b>를 직접 계산해 보니, 큰 오차가 있는 모델은 MSE가 크게 늘었고, 실젯값이 좁게 퍼진 평가 자료에서는 같은 오차에도 R²가 작아졌다.</div>
+    <div style="--k:#e0702b">오렌지3에서 70 : 30으로 나누고 <b>Test on test data</b>로 평가해, 교과서의 교차 검증 결과와 보지 않은 데이터로 평가한 결과를 구별해 읽었다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 속성(<span id="s2GuessShow">아직 고르지 않음</span>)과 실제 상관계수도 떠올리며, 오늘 쓴 낱말(상관계수, MSE, R², 테스트 데이터, Test on test data)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">스트레스 지수를 예측하는 모델을 만든다면, 어떤 근거로 모델을 고르고 그 결과를 어디까지 믿을 수 있을까?</b>
+    <textarea data-memo="s2KeyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>가장 강한 <b>상관관계</b>를 계수와 함께 쓰고, 원인이라고 단정할 수 없는 까닭과 일반화의 한계 설명하기</li>
+      <li>모델 비교실에서 <b>MSE · RMSE · R²</b>를 근거로 모델을 고른 까닭 설명하기</li>
+      <li>평가 자료를 ㉮에서 ㉯로 바꾸었을 때 <b>MSE와 R²</b>가 어떻게 되었는지 쓰고 그 까닭 설명하기(오렌지3 결과가 있으면 함께)</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

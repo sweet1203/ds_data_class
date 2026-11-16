@@ -1,0 +1,267 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 2. 데이터 과학 프로젝트 실제</span>
+      <h1>지원금 1천만 달러,<br>어느 나라에<br>먼저 보낼까?</h1>
+      <div class="story"><b>【선택】 국가 데이터 프로젝트</b><br>국제 NGO 헬프는 약 1천만 달러를 모았어요. 이 돈을 가장 급하게 도움이 필요한 나라에 나누어 보내려고 해요. 나라마다 건강·경제 상황이 담긴 데이터를 살펴보고, 비슷한 나라끼리 묶어 판단해 보기로 했어요.</div>
+      <p>이번 시간에는 프로젝트의 앞 단계(<b>문제 정의 → 데이터 수집 → 데이터 전처리 → 데이터 시각화와 분석</b>)를 해요. 군집으로 묶고 평가하는 일은 다음 시간에 이어서 해요.</p>
+      <ol>
+        <li>속성의 뜻·단위·결측치 확인하기</li><li>건강·무역·금융 지표 만들기</li><li>오렌지3로 분포·상관관계 살펴보기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🎯</i><div><b>문제 정의</b><small>지원금을 어디에 먼저 보낼까</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📂</i><div><b>데이터 수집 · 전처리</b><small>167개 나라, 속성 9개</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🧮</i><div><b>세 가지 지표</b><small>건강 · 무역 · 금융</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📊</i><div><b>시각화와 분석</b><small>분포 · 상관관계 · 상자 그림</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>영화 프로젝트와 국가 프로젝트 가운데 우리 모둠이 고른 쪽을 해요. 국가 프로젝트를 고른 모둠은 이 화면부터 시작해요. 오늘 쓰는 국가 데이터는 <b>과거 어느 때에 모아 공개한 자료</b>라서 지금 그 나라의 형편과 다를 수 있어요. 결과는 「이 자료로 보면」이라고 말해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각 · 문제 정의</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>급하게 도움이 필요한 나라를 고르려면 어떤 정보가 있으면 좋을까요?</b> 여러 개 골라도 돼요.</p>
+        <div id="c1Need"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학 프로젝트</b> · 데이터를 통해 문제를 해결하는 과정은 어떻게 이루어지는 것일까?</li>
+          <li><b>오늘의 질문</b> · 나라의 데이터를 어떻게 다듬고 살펴보아야 지원이 필요한 나라를 찾는 데 쓸 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>다양한 데이터 처리 기법을 활용하여 데이터 분석을 효과적으로 수행할 수 있다.</li>
+          <li>속성의 뜻과 단위를 확인하고, 여러 속성을 묶은 지표의 한계를 말할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 속성 확인부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 속성 확인 -->
+<section class="page" data-name="속성·단위·결측치" data-acc="#c98a00">
+  <div class="head"><div class="num">01</div><div><h2>속성의 뜻·단위와 결측치 확인하기</h2><p>교과서 211~214쪽 · 국가 데이터셋 · 속성 9개 · 결측치 · 범주형과 숫자형</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>숫자를 보기 전에 <b>그 숫자가 무엇을 센 값인지</b>부터 확인해요. 같은 「수출」이라도 금액인지, GDP에 대한 비율인지에 따라 읽는 법이 완전히 달라져요.</span></div>
+  <div class="card">
+    <h3>📂 준비 · 국가 데이터셋</h3>
+    <p style="margin-top:0">선생님이 알려 주는 폴더에서 <span class="mono">Country-data.csv</span>를 내려받아요. 캐글에 「Unsupervised Learning on Country Data」라는 이름으로 공개된 자료로, <b>167개 나라</b>의 속성 10개가 들어 있어요. 아래 뜻은 원래 자료의 설명을 기준으로 정리했어요.</p>
+    <div class="c1-tw"><table class="tbl c1-attr">
+      <tr><th>속성</th><th>뜻</th><th>읽을 때 주의할 점</th></tr>
+      <tr><td class="mono">country</td><td>나라 이름</td><td>글자로 된 <b>범주형</b> 속성. 분석에 쓰지 않고 이름표로 둬요(오렌지3에서는 meta).</td></tr>
+      <tr><td class="mono">child_mort</td><td>출생아 1,000명당 5세 미만 사망 수</td><td>클수록 어린이 건강 상황이 어려운 나라예요.</td></tr>
+      <tr><td class="mono">exports</td><td>1인당 상품·서비스 수출</td><td><b>금액이 아니라 1인당 GDP에 대한 비율(%)</b>이에요. 경제에서 수출이 차지하는 몫으로 읽어요.</td></tr>
+      <tr><td class="mono">health</td><td>1인당 총 의료비</td><td>이것도 <b>1인당 GDP에 대한 비율(%)</b>이에요.</td></tr>
+      <tr><td class="mono">imports</td><td>1인당 상품·서비스 수입</td><td><b>1인당 GDP에 대한 비율(%)</b>이에요.</td></tr>
+      <tr><td class="mono">income</td><td>1인당 순소득</td><td>교과서에는 「1인당 순이익」으로 적혀 있어요. 한 사람이 버는 돈으로 읽어요.</td></tr>
+      <tr><td class="mono">inflation</td><td>인플레이션(물가 상승)</td><td>원래 자료 설명에는 「총 GDP의 연간 성장률」이라고 되어 있어 이름과 어긋나요. 오늘은 이름대로 물가가 오른 정도로 읽어요.</td></tr>
+      <tr><td class="mono">life_expec</td><td>기대 수명</td><td>지금 사망률이 이어질 때 새로 태어난 아이가 살 것으로 보는 평균 나이예요.</td></tr>
+      <tr><td class="mono">total_fer</td><td>출산율</td><td>지금 출산 흐름이 이어질 때 여성 1명이 낳을 것으로 보는 자녀 수예요.</td></tr>
+      <tr><td class="mono">gdpp</td><td>1인당 GDP</td><td>총 GDP를 총인구수로 나눈 값이에요.</td></tr>
+    </table></div>
+    <p class="note">교과서 212·214쪽 표의 「1인당 상품 및 서비스 수출」, 「1인당 총 의료비」 같은 설명만 보면 금액으로 읽기 쉬워요. 원래 자료는 1인당 GDP에 대한 비율이라 위처럼 바로잡았어요.</p>
+  </div>
+  <div class="card">
+    <h3>🔎 결측치와 속성 유형 확인하기</h3>
+    <div class="grid2">
+      <ol class="vsteps">
+        <li><b>결측치 세기</b><p>교과서 213쪽처럼 속성마다 비어 있는 칸을 세면 모두 <b>0</b>이에요. 오렌지3에서는 File 위젯 아래 정보와 Data Table의 Info에서 「결측치 없음」을 확인해요.</p></li>
+        <li><b>범주형과 숫자형 나누기</b><p>country만 글자(범주형)이고, 나머지 9개는 모두 숫자형이에요. 그림과 계산에는 숫자형 9개를 써요.</p></li>
+      </ol>
+      <div class="callout" style="margin:0">💡 <b>코드로 숫자형 열만 고를 때</b><br><span class="mono">df = data.loc[:, numerical_features]</span><br>교과서 214쪽에는 리스트 뒤에 <span class="mono">:</span>이 하나 더 붙어 있어 그대로 치면 오류가 나요. 선생님이 알려 주는 노트북은 고쳐 두었어요.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🗂️ 클수록 좋은 값일까? <span class="muted" style="font-weight:400;font-size:.85rem">(6장 · 속성의 값이 커질 때 그 나라의 형편이 어떻다고 읽을지 고르기)</span></h3>
+    <div id="c1Dir"></div>
+  </div>
+  <div class="memo">
+    <label>✍️ 탐구 기록 ① · 위 표에서 <b>잘못 읽기 쉬운 속성 하나</b>를 골라 바르게 읽는 법을 쓰고, 결측치를 확인한 결과와 country를 분석에서 어떻게 다룰지 적어요. <small>질문폼 1번에 써요.</small></label>
+    <textarea data-memo="c1Unit" rows="3" placeholder="예: ○○은 금액이 아니라 … / 결측치: … / country: …"></textarea><div class="saved"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 3지표 만들기 -->
+<section class="page" data-name="3지표 만들기" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>건강·무역·금융 지표 만들기</h2><p>교과서 215쪽 · 평균으로 나누기 · 더해서 지표 만들기 · Min-Max 정규화(0~1)</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>속성 9개는 단위도 크기도 제각각이라 그대로 더할 수 없어요. 그래서 각 속성을 <b>평균으로 나눠</b>「평균의 몇 배인지」로 바꾼 뒤 <b>더해서</b> 지표 하나로 만들고, 마지막에 <b>0~1 사이</b>로 맞춰요.</span></div>
+  <div class="card">
+    <h3>🧮 교과서의 세 지표</h3>
+    <div class="cards3 c1-idx">
+      <div class="kc" style="--k:#d64535"><h4>🩺 건강지표 Health</h4><p>child_mort, health, life_expec, total_fer를 각각 평균으로 나눈 뒤 더해요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>🚢 무역지표 Trade</h4><p>imports, exports를 각각 평균으로 나눈 뒤 더해요.</p></div>
+      <div class="kc" style="--k:#c98a00"><h4>💰 금융지표 Finance</h4><p>income, inflation, gdpp를 각각 평균으로 나눈 뒤 더해요.</p></div>
+    </div>
+    <p class="note" style="margin-top:10px">평균으로 나눈 값이 1이면 167개 나라 평균과 같고, 2이면 평균의 2배예요. 마지막 단계의 Min-Max 정규화는 (값 − 최솟값) ÷ (최댓값 − 최솟값)으로, 가장 작은 나라가 0, 가장 큰 나라가 1이 돼요.</p>
+  </div>
+  <div class="card">
+    <h3>🧪 지표 만들기 체험 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 나라가 아니라 새로 만든 예시 나라 5개 · 나누는 평균은 교과서 216쪽의 167개 나라 평균)</span></h3>
+    <div class="row" id="c1Pick" style="margin-bottom:8px"></div>
+    <h4 style="margin:8px 0 4px">① 원래 값 <span class="muted" style="font-weight:400;font-size:.85rem">(칸을 눌러 값을 바꿀 수 있어요)</span></h4>
+    <div id="c1Raw"></div>
+    <h4 style="margin:12px 0 4px">② 평균으로 나눈 값과 그 합(지표)</h4>
+    <div class="c1-tw" id="c1Calc"></div>
+    <div class="grid2" style="margin-top:12px">
+      <div>
+        <h4 style="margin:0 0 4px">③ 0~1로 바꾼 지표 (예시 나라 5개 기준)</h4>
+        <div class="sp-wrap"><svg id="c1Bars" role="img" aria-label="예시 나라 다섯 곳의 0에서 1 사이로 바꾼 지표 막대그래프"></svg></div>
+      </div>
+      <div>
+        <div class="c1-say" id="c1Say"></div>
+        <div class="callout" style="margin-top:10px">🔍 <b>해 볼 일</b><ul class="c1-tips">
+          <li>건강지표에서 <b>다 나라</b>의 기대 수명(life_expec)을 10 올려 보세요. 건강지표는 커지나요, 작아지나요?</li>
+          <li>이번에는 <b>가 나라</b>의 5세 미만 사망률(child_mort)을 낮춰 보세요. 형편이 나아졌는데 지표는 어떻게 되나요?</li>
+          <li>금융지표에서 <b>라 나라</b>의 inflation을 바꿔 보세요. 물가가 많이 오른 나라는 금융지표가 어떻게 되나요?</li>
+        </ul></div>
+        <button class="btn ghost sm" id="c1Reset" style="margin-top:8px">처음 값으로 되돌리기</button>
+      </div>
+    </div>
+  </div>
+  <div class="memo">
+    <label>✍️ 탐구 기록 ② · 내가 바꾼 값과 지표가 어떻게 변했는지 쓰고, 이 지표의 값만 보고 나라의 형편을 줄 세우면 생길 수 있는 문제를 적어요. <small>질문폼 2번에 써요.</small></label>
+    <textarea data-memo="c1Index" rows="4" placeholder="예: ○ 나라의 ○○를 … 로 바꾸니 ○○지표가 … / 문제: …"></textarea><div class="saved"></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 오렌지3 탐색 -->
+<section class="page" data-name="오렌지3 탐색" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>분포·상관관계 살펴보고 지표 만들기</h2><p>교과서 214·216~219쪽 · 오렌지3 실습 · 평균 · 분포 · 상관관계 · 상자 그림 · Formula로 세 지표 만들기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>속성마다 값이 어느 쪽에 몰려 있는지(<b>분포</b>), 어떤 속성끼리 함께 커지거나 작아지는지(<b>상관관계</b>)를 그림으로 봐요. 그다음 02에서 해 본 계산을 오렌지3에서 167개 나라 전체에 적용해요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div><svg id="c1Flow" role="img" aria-label="국가 데이터 탐색과 지표 만들기 위젯 연결 흐름도"></svg></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표 <span class="muted" style="font-weight:400;font-size:.88rem">(1~5번을 먼저 하고 결과를 기록한 뒤 6번(선택) · 7~10번)</span></h3>
+    <div class="of-tw"><table class="tbl" id="c1Set">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">Country-data.csv</span> 열기. country는 글자라서 Role이 <b>meta</b>로 잡혀요.</td><td>167개 데이터, feature 9개, meta 1개, 결측치 없음</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>Visualize numeric values 체크</td><td>Info에서 결측치가 없는지</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Column Statistics</b> (Data)<br><small class="muted">옛 이름 Feature Statistics</small></td><td>File →</td><td>Mean·Median 열 보기</td><td>Mean이 아래 평균 표(교과서 216쪽)와 같은지. Missing이 모두 0인지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Distributions</b> (Visualize)</td><td>File →</td><td>왼쪽 Variable에서 속성을 하나씩 바꿔 보기. Bin width로 막대 너비 조절</td><td>값이 많이 몰린 쪽과 꼬리가 길게 뻗은 쪽</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Correlations</b> (Unsupervised)</td><td>File →</td><td><b>Pearson correlation</b> 그대로</td><td>맨 위 줄 두 속성과 상관계수(교과서 214쪽 히트맵의 0.9와 비교)</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Box Plot</b> (Visualize)<br><small class="muted">(선택) 기록 뒤에</small></td><td>File →</td><td>Variable에서 child_mort, income 등을 골라 보기. Subgroups는 None</td><td>상자(가운데 50%)의 위치, 중앙값과 평균이 얼마나 떨어져 있는지</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Formula</b> (Transform)<br><small class="muted">옛 이름 Feature Constructor</small></td><td>File →</td><td><b>New → Numeric</b>으로 세 개 만들고 <b>Send</b><br><span class="mono">Health</span> = <span class="mono">child_mort/38.27 + health/6.8157 + life_expec/70.5557 + total_fer/2.948</span><br><span class="mono">Trade</span> = <span class="mono">imports/46.89 + exports/41.109</span><br><span class="mono">Finance</span> = <span class="mono">income/17144.69 + inflation/7.7818 + gdpp/12964.16</span></td><td>나누는 수는 교과서 216쪽 평균이에요. Afghanistan의 Health가 6.24쯤(교과서 215쪽 6.239852)인지</td></tr>
+      <tr data-s="8"><td>8</td><td><b>Select Columns</b> (Transform)</td><td>Formula →</td><td>Features에 <b>Health · Trade · Finance</b>만 두고, 원래 속성 9개는 <b>Metas</b>로 옮기기</td><td>feature 3개. 원래 속성은 다음 시간 해석에 쓰려고 meta로 남겨요.</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Preprocess</b> (Transform)</td><td>Select Columns →</td><td><b>Normalize Features</b>를 오른쪽으로 끌어 놓고 <b>Normalize to interval [0, 1]</b> 고르기</td><td>Min-Max 정규화와 같은 계산이에요.</td></tr>
+      <tr data-s="10"><td>10</td><td><b>Data Table (1)</b> (Data)</td><td>Preprocess →</td><td>첫 줄 확인 뒤 <b>File → Save</b>로 흐름을 저장</td><td>Afghanistan이 Health 0.626 · Trade 0.140 · Finance 0.080(교과서 215쪽)인지. 다음 시간에 이 흐름에서 이어요.</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="c1Done"></div>
+  </div>
+  <div class="card">
+    <h3>📏 평균 표와 읽을 때 주의할 점</h3>
+    <div class="grid2">
+      <div class="c1-tw"><table class="tbl c1-mean">
+        <tr><th>속성</th><th>평균 (교과서 216쪽)</th></tr>
+        <tr><td class="mono">child_mort</td><td>38.27</td></tr><tr><td class="mono">exports</td><td>41.11</td></tr><tr><td class="mono">health</td><td>6.82</td></tr>
+        <tr><td class="mono">imports</td><td>46.89</td></tr><tr><td class="mono">income</td><td>17144.69</td></tr><tr><td class="mono">inflation</td><td>7.78</td></tr>
+        <tr><td class="mono">life_expec</td><td>70.56</td></tr><tr><td class="mono">total_fer</td><td>2.95</td></tr><tr><td class="mono">gdpp</td><td>12964.16</td></tr>
+      </table></div>
+      <ul class="c1-tips">
+        <li><b>167개 나라의 단순 평균</b>이에요. 인구가 아주 많은 나라도, 아주 적은 나라도 똑같이 1개로 세어 더했기 때문에 「세계 사람들의 평균」과는 달라요. 교과서 216쪽의 「전 세계 평균」은 이 뜻으로 읽어요.</li>
+        <li>평균은 한쪽으로 긴 꼬리가 있으면 그쪽으로 끌려가요. Column Statistics에서 <b>Mean과 Median</b>을 함께 비교해 보세요.</li>
+        <li><b>exports는 GDP에 대한 비율</b>이라, 교과서 218쪽 막대그래프의 차이는 「한 사람이 수출한 금액」이 아니라 「경제에서 수출이 차지하는 몫」의 차이로 읽어요.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📊 분포 모양 예상하고 확인하기 <span class="muted" style="font-weight:400;font-size:.88rem">(카드를 눌러 뒤집기 · Distributions에서 직접 확인)</span></h3>
+    <div class="cards3" id="c1Shape"></div>
+    <p class="note">교과서 216쪽은 기대 수명을 「오른쪽으로 치우친」, 나머지를 「왼쪽으로 치우친」 분포라고 적었어요. 이 말은 <b>값이 몰린 쪽</b>을 가리켜요. 꼬리 방향으로 말하면 반대가 되니, 「값이 몰린 쪽」과 「꼬리가 뻗은 쪽」을 나눠 말하면 헷갈리지 않아요.</p>
+  </div>
+  <div class="card">
+    <h3>🔗 5세 미만 사망률과 다른 속성의 상관계수 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 214쪽 히트맵 인쇄값 · 막대 길이는 크기, 괄호는 부호)</span></h3>
+    <div class="grid2">
+      <div class="sp-wrap"><svg id="c1Corr" role="img" aria-label="child_mort와 다른 속성 사이 상관계수의 크기 막대그래프"></svg></div>
+      <ul class="c1-tips">
+        <li>child_mort가 큰 나라일수록 life_expec는 작고 total_fer는 큰 경향이 뚜렷해요.</li>
+        <li>상관관계는 <b>함께 움직이는 경향</b>일 뿐이에요. inflation과 child_mort의 상관계수는 0.29로 약하고, 물가가 올라서 사망률이 높아졌다는 원인까지 말해 주지는 않아요.</li>
+        <li>교과서 214쪽 히트맵 코드의 <span class="mono">mask = ut</span>는 ut에서 True인 <b>위쪽 삼각형 칸을 가려요</b>. 그래서 아래쪽 삼각형만 보여요.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기 <span class="muted" style="font-weight:400;font-size:.88rem">(1~5번을 마치면 바로)</span></h3>
+    <div class="of-tw"><table class="tbl c1-rt">
+      <tr><th>무엇을</th><th>내 결과</th></tr>
+      <tr><td>Correlations 맨 위 줄 두 속성과 상관계수</td><td><input type="text" data-memo="c1Corr" placeholder="예: ○○ – ○○, 0.???"><div class="saved"></div></td></tr>
+      <tr><td>Distributions에서 고른 속성 하나 · 값이 몰린 쪽과 꼬리가 뻗은 쪽</td><td><input type="text" data-memo="c1Dist" placeholder="예: ○○ — 값은 … 쪽에 몰리고 꼬리는 …"><div class="saved"></div></td></tr>
+      <tr><td>내가 고른 그래프(분포·상관관계) 하나에서 본 것과, 지원 대상을 정할 때 그 결과만으로 부족한 점<br><small class="muted">질문폼 3번에 써요.</small></td><td><textarea data-memo="c1Vis" rows="3" placeholder="본 것: …&#10;부족한 점: …"></textarea><div class="saved"></div></td></tr>
+    </table></div>
+  </div>
+  <details class="card c1-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Formula에서 오류 표시가 떠요</b> → 속성 이름을 소문자 그대로(<span class="mono">child_mort</span>) 썼는지, 곱하기·나누기 기호가 빠지지 않았는지 확인해요. 식 오른쪽 목록에서 속성 이름을 눌러 넣어도 돼요.</li>
+      <li><b>Select Columns에서 Health가 안 보여요</b> → Select Columns를 File이 아니라 <b>Formula</b> 뒤에 이었는지, Formula에서 <b>Send</b>를 눌렀는지 확인해요.</li>
+      <li><b>Data Table (1)의 값이 0~1이 아니에요</b> → Preprocess에서 Normalize Features의 방법이 <b>Normalize to interval [0, 1]</b>인지 확인해요(기본값은 평균 0·분산 1로 바꾸는 방법이에요).</li>
+      <li><b>오렌지3가 안 열려요</b> → 02의 지표 만들기 체험과 이 화면의 평균 표·상관계수 그림으로 기록하고, 결과 칸에 「(화면 자료)」라고 적어요.</li>
+    </ul>
+  </details>
+  <details class="card c1-help">
+    <summary>🐍 (선택) 코랩으로 해 보기</summary>
+    <ol class="vsteps" style="margin-top:10px">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>교과서 212~224쪽 코드를 수업에 맞게 고친 사본이에요. 첫 칸에 고친 점이 적혀 있어요.</p></li>
+      <li><b>데이터 수집 · 전처리 칸</b><p><span class="mono">Country-data.csv</span>를 올리고 읽은 뒤 결측치·숫자형 속성·히트맵을 확인해요.</p></li>
+      <li><b>세 지표와 정규화 칸</b><p>평균으로 나눠 더한 값과 MinMaxScaler로 바꾼 값을 교과서 215쪽 표와 비교해요.</p></li>
+      <li><b>시각화와 분석 칸</b><p>평균·히스토그램·막대그래프·상자 그림을 그리고, 분포 모양을 숫자(왜도)로도 확인해요.</p></li>
+    </ol>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#c98a00">국가 데이터의 exports·health·imports는 금액이 아니라 <b>1인당 GDP에 대한 비율</b>이어서, 숫자를 읽기 전에 원래 자료의 설명부터 확인했다.</div>
+    <div style="--k:#1f9d74">예시 나라의 값을 바꿔 보니, 좋아지는 방향이 서로 다른 속성을 <b>평균으로 나눠 더한 지표</b>는 값이 크다고 형편이 좋다고도 나쁘다고도 바로 말하기 어려웠다.</div>
+    <div style="--k:#e0702b">오렌지3의 분포·상관관계 그림으로 167개 나라의 모습을 살폈고, <b>단순 평균</b>과 <b>상관관계</b>가 말해 주지 않는 것도 함께 짚었다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 정보(<span id="c1NeedShow">아직 고르지 않음</span>)도 떠올리며, 오늘 쓴 낱말(단위, 결측치, 지표, 정규화, 분포, 상관관계)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">나라의 데이터를 어떻게 다듬고 살펴보아야 지원이 필요한 나라를 찾는 데 쓸 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>잘못 읽기 쉬운 속성의 <b>단위</b>와 결측치 확인 결과로, 데이터를 쓰기 전에 무엇을 확인했는지 설명하기</li>
+      <li>지표 만들기 체험에서 바꿔 본 값으로, <b>세 지표의 계산 과정과 한계</b> 설명하기</li>
+      <li>오렌지3에서 본 <b>그래프 하나</b>의 결과와, 그것만으로 지원 대상을 정하기 어려운 까닭 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

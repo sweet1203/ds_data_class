@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>【선택】 국가 군집 분석 ② 군집화와 해석 · 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202c; --muted:#5b6776; --paper:#f3efe7; --card:#fff; --line:#e3ddd2;
+    --navy:#0f2742; --amber:#f2a516; --red:#d64535; --mint:#1f9d74;
+    --acc:#2f6fd0; --acc-soft:#e6eefb;
+    --shadow:0 18px 50px rgba(15,39,66,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.65;
+    background-image:radial-gradient(rgba(15,39,66,.07) 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column}
+  .top{position:sticky;top:0;z-index:10;background:rgba(15,39,66,.97);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+  .brand{font-family:"Black Han Sans",sans-serif;font-size:1.15rem;letter-spacing:.01em;white-space:nowrap;color:inherit;text-decoration:none}
+  .steps{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps button{flex:0 0 auto;border:0;background:transparent;color:#9fb3cc;font:inherit;font-size:.82rem;padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .steps button.on{background:var(--amber);color:var(--navy);font-weight:900}
+  .steps button.done::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fd3a5;margin-left:5px;vertical-align:middle}
+  .score{font-size:.85rem;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .progress{height:4px;background:rgba(15,39,66,.12)}
+  .progress i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+  main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:26px 20px 30px}
+  .page{display:none}
+  .page.on{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1) both}
+  .page.on.back{animation-name:enterBack}
+  @keyframes enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes enterBack{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  .head{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .num{font-family:"Black Han Sans",sans-serif;font-size:4.2rem;line-height:.85;color:var(--acc);opacity:.9}
+  .head h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:2.1rem;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .head p{margin:4px 0 0;color:var(--muted)}
+  .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;border:1px solid rgba(0,0,0,.04)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .grid2.even{grid-template-columns:1fr 1fr}
+  @media (max-width:860px){.grid2,.grid2.even{grid-template-columns:1fr}.num{font-size:3rem}.head h2{font-size:1.6rem}}
+  h3{margin:0 0 8px;font-size:1.1rem}
+  h4{margin:0 0 4px}
+  p{margin:6px 0}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .book{display:inline-block;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:center}
+  th{color:var(--muted);font-weight:700;font-size:.85rem}
+  td.l,th.l{text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .chip.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .btn{border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;transition:transform .1s, box-shadow .2s;box-shadow:0 6px 16px rgba(15,39,66,.18)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+  .btn.sm{padding:5px 12px;font-size:.88rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctrl{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:4px 10px;margin:4px 0}
+  .ctrl label{font-weight:900;font-size:.95rem}
+  .ctrl output{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  input[type=text],input[type=number]{font:inherit;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px;background:#fff;color:var(--ink)}
+  .big{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+  .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
+  .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
+  .cx>h3{margin:0 0 4px;font-size:1.15rem}
+  .cx>.lead2{color:var(--muted);margin:0 0 12px}
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media (max-width:860px){.qa{grid-template-columns:1fr}}
+  .qa>div{background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .qa b.q{display:block;color:var(--acc);margin-bottom:3px}
+  .vsteps{list-style:none;margin:0;padding:0;counter-reset:v}
+  .vsteps>li{position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line)}
+  .vsteps>li:first-child{border-top:0}
+  .vsteps>li::before{counter-increment:v;content:counter(v);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.9rem}
+  .vsteps p{margin:2px 0 0;font-size:.93rem}
+  .case{background:#fff8e6;border:2px solid #f6d58a;border-radius:16px;padding:16px 20px;margin-bottom:18px}
+  .case>h3{margin:0 0 8px;font-size:1.05rem;color:#8a5a00}
+  /* 퀴즈 */
+  .quiz{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:16px;padding:20px 22px;margin-top:6px;box-shadow:var(--shadow)}
+  .quiz .qh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .quiz .qh b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.25rem;color:var(--amber)}
+  .quiz .qh span{font-size:.85rem;color:#a9bbd2}
+  .qi{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;margin-top:10px}
+  .qi .qq{font-weight:700;margin-bottom:8px}
+  .qi .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .qi .opts button{font:inherit;font-size:.93rem;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .qi .opts button:hover:not(:disabled){border-color:var(--amber)}
+  .qi .opts button.right{background:var(--mint);border-color:var(--mint);font-weight:700}
+  .qi .opts button.wrong{background:var(--red);border-color:var(--red);text-decoration:line-through}
+  .qi .opts button:disabled{cursor:default}
+  .qi .why{margin-top:8px;font-size:.9rem;color:#d7e3f2;display:none}
+  .qi.answered .why{display:block}
+  .qi.answered.correct{box-shadow:inset 4px 0 0 var(--mint)}
+  .qi.answered.incorrect{box-shadow:inset 4px 0 0 var(--red)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(243,239,231,.94);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+  .foot .btn{min-width:110px}
+  .foot .pg{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  /* 표지 */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 20% 0%,#24507f 0%,#0f2742 55%,#0a1a2e 100%);color:#fff;min-height:520px;padding:46px 44px;box-shadow:var(--shadow)}
+  .cover canvas{position:absolute;right:0;top:0;height:100%;width:62%;image-rendering:pixelated;opacity:.95}
+  .cover .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0f2742 34%,rgba(15,39,66,.75) 50%,rgba(15,39,66,0) 70%)}
+  .cover .in{position:relative;max-width:560px}
+  .cover .tag{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.85rem;padding:4px 12px;border-radius:999px}
+  .cover h1{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:3.1rem;line-height:1.15;margin:16px 0 10px}
+  .cover p{color:#c8d6e8;font-size:1.05rem}
+  .cover ol{margin:18px 0 26px;padding-left:20px;color:#e1e9f4;columns:2;column-gap:28px;font-size:.95rem}
+  @media (max-width:700px){.cover{padding:30px 22px}.cover h1{font-size:2.2rem}.cover ol{columns:1}.cover canvas{width:100%;opacity:.3}.cover .fade{display:none}}
+  .today{margin-top:26px}
+  .kicker{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:1.15rem;color:var(--navy);margin-bottom:6px;border-bottom:4px solid var(--amber);line-height:1.2}
+  .today-lead{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+  .today-lead p{font-size:1.12rem;margin:6px 0 0}
+  .why3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  @media (max-width:900px){.why3{grid-template-columns:1fr}}
+  .why{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 22px}
+  .why ul{margin:6px 0 0;padding-left:18px;font-size:.95rem}
+  .why li{margin:6px 0}
+  .why ul.can{list-style:none;padding:0}
+  .why ul.can li{padding-left:28px;position:relative}
+  .why ul.can li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .why ul.uses{list-style:none;padding:0}
+  .why ul.uses li{border-left:3px solid var(--amber);padding-left:10px}
+  .glossary-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .glossary-head .muted{font-size:.88rem}
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.glossary{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.glossary{grid-template-columns:1fr}}
+  .gcard{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:#fff;border-radius:14px;padding:16px 16px 12px;box-shadow:var(--shadow);border-top:6px solid var(--g);position:relative;transition:transform .18s, box-shadow .18s}
+  .gcard:hover,.gcard:focus-visible{transform:translateY(-4px);box-shadow:0 22px 50px rgba(15,39,66,.16)}
+  .gcard:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+  .gcard i{position:absolute;right:14px;top:8px;font-style:normal;font-family:"Black Han Sans",sans-serif;font-size:1.9rem;color:var(--g);opacity:.25}
+  .gcard h4{margin:0 0 6px;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;color:var(--g)}
+  .gcard dl{margin:0;font-size:.88rem;line-height:1.45}
+  .gcard dt{font-weight:900;margin-top:7px}
+  .gcard dd{margin:1px 0 0;color:#3c4654}
+  .prob{display:grid;grid-template-columns:60px 1fr 46px;gap:6px;align-items:center;font-size:.88rem;min-width:200px}
+  .prob i{display:block;height:12px;border-radius:6px;background:var(--acc)}
+  .apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:860px){.apps{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:2rem;display:block}
+  .apps button b{display:block}
+  .appd{display:none}
+  .appd.on{display:block;animation:enter .35s both}
+  .ex2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:640px){.ex2{grid-template-columns:1fr}}
+  .ex2>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem;border-left:4px solid var(--acc)}
+  .try{margin-top:12px;background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+  .try ol{margin:4px 0 0;padding-left:20px}
+  /* 3단원 공통 */
+  .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
+  .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
+  .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
+  .route .st i{font-style:normal;font-size:1.6rem}
+  .route .st b{display:block;font-size:1.02rem}
+  .route .st small{color:#c8d6e8;font-size:.82rem}
+  .route .ar{color:var(--amber);text-align:center;font-weight:900;opacity:0;animation:rin .5s forwards}
+  @keyframes rin{to{opacity:1;transform:none}}
+  @media (max-width:1080px){.route{position:relative;right:auto;top:auto;width:100%;margin-top:22px}}
+  .story{background:rgba(255,255,255,.08);border-left:4px solid var(--amber);border-radius:10px;padding:10px 14px;margin:14px 0;color:#e1e9f4;font-size:.95rem}
+  .story b{color:#fff}
+  /* 카드 묶음 */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:900px){.cards3,.cards4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards3,.cards2,.cards4{grid-template-columns:1fr}}
+  .kc{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:14px 16px;border-top:6px solid var(--k,var(--acc))}
+  .kc h4{color:var(--k,var(--acc));font-size:1.05rem;margin:0 0 4px}
+  .kc p{font-size:.92rem;margin:4px 0 0}
+  .kc .ic{font-size:1.7rem;line-height:1}
+  .kc small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+  .tagt{display:inline-block;font-size:.76rem;font-weight:900;border-radius:999px;padding:1px 9px;background:color-mix(in srgb,var(--k,var(--acc)) 14%,white);color:var(--k,var(--acc));margin:6px 4px 0 0}
+  /* 연표 */
+  .tl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tl button{flex:1;min-width:92px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;font:inherit;font-weight:900;cursor:pointer;color:var(--ink)}
+  .tl button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.tlv{grid-template-columns:1fr}}
+  .tlv>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--k)}
+  .tlv h4{color:var(--k)}
+  .tlv .it{margin:6px 0 0;font-size:.93rem}
+  .tlv .it b{display:block}
+  /* 분류 게임 */
+  .sit{background:#fbfaf7;border:2px dashed var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-height:170px}
+  .sit .cnt{font-size:.82rem;color:var(--muted)}
+  .sit .sq{font-size:1.08rem;font-weight:900;margin:6px 0 12px;min-height:52px}
+  .sit .ic{font-size:2rem}
+  .sit .row{justify-content:center}
+  .sit .fb{min-height:24px;margin-top:8px;font-size:.93rem}
+  .sit .cat{border:2px solid var(--k);color:var(--k);background:#fff;font-weight:900}
+  .sit .cat:hover{background:color-mix(in srgb,var(--k) 12%,white)}
+  .board{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;margin-top:12px}
+  @media (max-width:760px){.board{grid-template-columns:1fr 1fr}}
+  .board>div{background:#fff;border-radius:12px;border-top:5px solid var(--k);padding:8px 10px;font-size:.84rem;min-height:70px}
+  .board>div b{display:block;color:var(--k);font-size:.92rem}
+  .board>div span{display:block;border-top:1px dashed var(--line);padding:3px 0}
+  .board>div span.x{color:var(--red)}
+  /* 뒤집는 카드 */
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .tcard{perspective:900px;height:172px;cursor:pointer}
+  .tcard .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .tcard.flip .in{transform:rotateY(180deg)}
+  .tcard .f,.tcard .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:12px 14px;box-shadow:0 6px 16px rgba(15,39,66,.09);overflow:auto}
+  .tcard .f{background:#fff;border-top:6px solid var(--acc);display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .tcard .f i{font-style:normal;font-size:2rem;line-height:1.1}
+  .tcard .f b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;line-height:1.25;margin-top:4px}
+  .tcard .f small{color:var(--muted);font-size:.78rem;margin-top:6px}
+  .tcard .b{background:var(--acc);color:#fff;transform:rotateY(180deg);font-size:.9rem;line-height:1.5}
+  .tcard .b .x{margin-top:6px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px;font-size:.84rem}
+  /* 사례 탭 */
+  .apps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .apps.a6{grid-template-columns:repeat(6,1fr)}
+  @media (max-width:860px){.apps,.apps.a6{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.apps,.apps.a6{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:12px 8px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s;font-size:.92rem}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:1.8rem;display:block}
+  .apps button b{display:block}
+  .cview{margin-top:14px}
+  .pr{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+  @media (max-width:760px){.pr{grid-template-columns:1fr}}
+  .pr>div{border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .pr .p{background:#fdecea;border-left:5px solid var(--red)}
+  .pr .s{background:#e7f6ef;border-left:5px solid var(--mint)}
+  .pr h4{font-size:.95rem}
+  .pr .p h4{color:#9b2c20}.pr .s h4{color:#13684d}
+  .dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:10px;background:#fbfaf7;border-radius:10px;padding:10px 12px}
+  .dl b{color:var(--acc)}
+  /* 메모 */
+  .memo{margin-top:10px}
+  .memo label{display:block;font-weight:700;font-size:.93rem;margin:10px 0 4px}
+  .memo label small{font-weight:400;color:var(--muted)}
+  .memo input[type=text]{width:100%}
+  textarea{font:inherit;width:100%;min-height:64px;padding:8px 10px;border:1px solid #c5ccd5;border-radius:8px;resize:vertical;color:var(--ink);background:#fff}
+  .saved{font-size:.8rem;color:var(--mint);min-height:1em}
+  /* 투표 */
+  .vote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:560px){.vote{grid-template-columns:1fr}}
+  .vote button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center;font-weight:900}
+  .vote button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .vote button small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+  .reveal{display:none;margin-top:12px}
+  .reveal.on{display:block;animation:fadein .4s both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .pct{display:grid;grid-template-columns:120px 1fr 50px;gap:8px;align-items:center;margin:6px 0;font-size:.93rem}
+  .pct i{display:block;height:16px;border-radius:8px;background:var(--acc);width:0;transition:width .8s}
+  /* 질문폼 연결 */
+  .formgo{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-top:18px}
+  .formgo .kicker{color:#fff;border-bottom-color:var(--amber)}
+  .formgo h3{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;margin:4px 0 8px}
+  .formgo ol{margin:6px 0 12px;padding-left:22px;color:#e1e9f4}
+  .formgo ol li{margin:6px 0}
+  .formgo p{color:#c8d6e8;font-size:.92rem}
+  .formgo .go{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:1.1rem;text-decoration:none;border-radius:12px;padding:12px 22px;margin-top:6px}
+  .formgo .go:hover{filter:brightness(1.05)}
+  .msum{background:#fff;border-radius:14px;padding:12px 16px;margin-top:12px;color:var(--ink);font-size:.9rem}
+  .msum h4{color:var(--navy)}
+  .msum dl{margin:6px 0 0}
+  .msum dt{font-weight:700;margin-top:8px;color:var(--muted);font-size:.84rem}
+  .msum dd{margin:2px 0 0;white-space:pre-wrap}
+  .msum dd.e{color:#aab2bd}
+  .key3{display:grid;gap:10px;margin-bottom:18px}
+  .key3 div{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--k);font-size:1.02rem}
+  .note{font-size:.84rem;color:var(--muted);margin-top:8px}
+  .flow2{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .flow2>div{flex:1;min-width:140px;background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .flow2>div b{display:block}
+  .flow2>div span{font-size:.88rem}
+  .flow2>.ar{flex:0 0 auto;min-width:0;background:none;border:0;align-self:center;font-weight:900;color:var(--muted);padding:0}
+  @media (max-width:640px){.flow2>.ar{flex-basis:100%;text-align:center;transform:rotate(90deg)}}
+  .chk{display:flex;flex-wrap:wrap;gap:8px}
+  .chk button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .chk button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .tbl td,.tbl th{padding:8px 10px;vertical-align:top}
+  .tbl td{text-align:left;font-size:.92rem}
+  .mx{min-width:560px}
+  .mx th{background:#fbfaf7}
+  .mx td{border:1px solid var(--line);height:74px;width:30%;font-size:.86rem;cursor:pointer;background:#fff;transition:background .2s}
+  .mx td:hover{background:var(--acc-soft)}
+  .mx td.fill{background:#e7f6ef;cursor:default}
+  .mx td.bad{background:#fdecea}
+  .mx th.r{white-space:nowrap}
+  #mxPool button{border-radius:12px;text-align:left;max-width:100%}
+  /* 4단원 */
+  .sdg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media (max-width:760px){.sdg{grid-template-columns:repeat(3,1fr)}}
+  .sdg button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;padding:8px 6px;color:#fff;background:var(--c);min-height:74px;font-size:.78rem;line-height:1.3;font-weight:700;display:flex;flex-direction:column;gap:2px;transition:transform .15s}
+  .sdg button b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.3rem;line-height:1}
+  .sdg button:hover,.sdg button.on{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .sdg button.on{outline:3px solid var(--navy)}
+  .sdgv{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:6px solid var(--c,#0f2742);min-height:60px}
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.five{grid-template-columns:1fr}}
+  .five>div{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:12px 12px;border-top:6px solid var(--k)}
+  .five b.n{font-family:"Black Han Sans",sans-serif;color:var(--k);font-size:1.2rem}
+  .five h4{margin:2px 0 4px;font-size:.98rem}
+  .five p{font-size:.86rem;margin:4px 0}
+  .five .ml{margin-top:8px;background:color-mix(in srgb,var(--k) 10%,white);border-radius:8px;padding:6px 8px;font-size:.82rem}
+  .quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:6px;margin-top:8px}
+  .quad .ax{font-size:.78rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .quad .ax.v{writing-mode:vertical-rl}
+  .quad .cell{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 8px;font-size:.84rem;cursor:pointer}
+  .quad .cell.best{border-color:var(--mint);background:#e7f6ef}
+  .quad .cell small{display:block;color:var(--muted);font-size:.74rem}
+  .quad .cell span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin:2px 2px 0 0}
+  .qbuild{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:1.08rem;font-weight:700;background:#fff8e6;border:2px solid #f6d58a;border-radius:12px;padding:12px 14px}
+  .qbuild input{flex:1;min-width:200px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px}
+  .plan{width:100%}
+  .plan td:first-child{width:150px;font-weight:700;font-size:.9rem;background:#fbfaf7}
+  .plan input{width:100%;font:inherit;padding:5px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 시뮬레이터 */
+  .sim{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.sim{grid-template-columns:1fr}}
+  .sim .cls{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .sim .cls h4{color:var(--k);display:flex;justify-content:space-between}
+  .sim .cls ul{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+  .sim .cls li.new{color:var(--k);font-weight:700}
+  .cand{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cand button{border:2px dashed var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--ink)}
+  .cand button.on{border-style:solid;background:color-mix(in srgb,var(--k) 15%,white);font-weight:700}
+  .tt td,.tt th{padding:6px 8px;font-size:.88rem}
+  .tt td.r{color:var(--mint);font-weight:900}.tt td.w{color:var(--red);font-weight:900}
+  .score2{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .score2 div{flex:1;min-width:140px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px 12px;text-align:center}
+  .score2 b{display:block;font-family:"Black Han Sans",sans-serif;font-size:1.8rem;color:var(--acc)}
+  /* 스크래치 블록 */
+  .blocks{font-family:ui-sans-serif,system-ui;font-size:.86rem;display:inline-block}
+  .blk{display:block;border-radius:6px;padding:5px 10px;margin:3px 0;color:#fff;width:max-content;max-width:100%}
+  .blk.ev{background:#ffbf00;color:#333;border-radius:14px 14px 6px 6px}
+  .blk.ctl{background:#ffab19;color:#333}
+  .blk.ml{background:#4c97ff}
+  .blk.lk{background:#9966ff}
+  .blk.in{margin-left:22px}
+  .blk i{font-style:normal;background:rgba(255,255,255,.9);color:#333;border-radius:10px;padding:0 6px;margin:0 2px}
+  .penguin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:560px){.penguin{grid-template-columns:1fr}}
+  .penguin div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .dist td,.dist th{padding:6px 8px;font-size:.88rem;text-align:center}
+  .dist tr.near{background:#fff4d6;font-weight:900}
+  .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.roles{grid-template-columns:1fr 1fr}}
+  .roles div{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px;text-align:center;font-size:.84rem}
+  .roles div i{font-style:normal;font-size:1.6rem;display:block}
+  .roles div b{display:block;font-size:.92rem}
+  .roles div em{display:block;font-style:normal;margin-top:6px;background:#e6eefb;border-radius:8px;padding:4px 6px;color:#1b3d66}
+  .types div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .types div b{display:block}
+  .types div small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+
+  /* 카드 격자 칸이 안의 긴 코드·표 때문에 늘어나지 않게 */
+  .cards2>*,.cards3>*,.cards4>*,.grid2>*{min-width:0}
+
+  /* 공용 그림·실습 부품 (charts.js) */
+  .of-box{overflow-x:auto}
+  .of-box svg{display:block;width:100%;max-width:880px;height:auto}
+  .of-box .fe{fill:none;stroke:#8a94a3;stroke-width:2}
+  .of-box .fl{font-size:11px;fill:#5b6776;text-anchor:middle}
+  .of-box .fn{cursor:pointer}
+  .of-box .fb{fill:#fff;stroke-width:2}
+  .of-box .fn.on .fb{fill:#fff4d6;stroke-width:4}
+  .of-box .fn:focus{outline:none}
+  .of-box .fn:focus .fb{stroke-width:4}
+  .of-box .fnum{font-size:14px;font-weight:900;fill:#fff;text-anchor:middle}
+  .of-box .ft{font-size:13px;font-weight:700;fill:#16202c}
+  .of-box .fs{font-size:11px;fill:#5b6776}
+  .of-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;font-size:.85rem}
+  .of-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .of-legend small{color:var(--muted)}
+  .of-tw{overflow-x:auto}
+  .of-set{min-width:760px;margin:0}
+  .of-set th{text-align:left;background:#fbfaf7;white-space:nowrap}
+  .of-set td{border-top:1px solid #eef0f3;font-size:.92rem;text-align:left}
+  .of-set td:first-child{font-weight:900;color:var(--acc);text-align:center;width:44px}
+  .of-set tr[data-s]{cursor:pointer;transition:background .3s}
+  .of-set tr.hl td{background:#fff4d6}
+  .sp-wrap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;overflow-x:auto}
+  .sp-svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+  .sp-svg .sp-pt{cursor:grab}
+  .sp-read{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .sp-read>div{background:#fbfaf7;border-radius:10px;padding:6px 12px;font-size:.9rem}
+  .sp-read b{font-size:1.15rem;color:var(--acc)}
+  .mt-wrap{overflow-x:auto}
+  .mt{margin:0}
+  .mt td{padding:4px 6px}
+  .mt .mt-in{width:5.5em;font:inherit;text-align:center;border:1px solid var(--line);border-radius:6px;padding:3px}
+  .mt tr.on td{background:#fff4d6}
+  /* 진도 보내기 */
+  .tr-gate{position:fixed;inset:0;z-index:200;background:rgba(15,39,66,.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .tr-card{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px 22px 16px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  .tr-card h2{margin:0;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+  .tr-sub{margin:-4px 0 4px;color:var(--muted);font-size:.92rem}
+  .tr-cls{display:flex;gap:8px}
+  .tr-cls label{flex:1;cursor:pointer}
+  .tr-cls input{position:absolute;opacity:0;pointer-events:none}
+  .tr-cls span{display:block;text-align:center;padding:10px 0;border:2px solid var(--line);border-radius:12px;font-weight:900;font-size:1.05rem}
+  .tr-cls input:checked+span{border-color:var(--navy);background:var(--navy);color:#fff}
+  .tr-cls input:focus-visible+span{outline:3px solid var(--amber)}
+  .tr-f{display:flex;align-items:center;gap:10px}
+  .tr-f span{width:40px;font-weight:700}
+  .tr-f input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:9px 12px;border:1px solid #c5ccd5;border-radius:10px}
+  .tr-err{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em}
+  .tr-card .btn{padding:12px;font-size:1.05rem;background:var(--navy)}
+  .tr-note{margin:2px 0 0;color:var(--muted);font-size:.8rem;line-height:1.5;text-align:center}
+  .tr-who,.tr-badge{display:flex;align-items:center;gap:6px;font-size:.82rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px 4px 3px 12px;white-space:nowrap}
+  .tr-badge{padding:3px 12px;background:var(--amber);color:#111;font-weight:700}
+  .tr-who button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px}
+  .tr-who button:hover{background:rgba(255,255,255,.3)}
+  .tr-cls[hidden]{display:none}
+  .tr-badge button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(0,0,0,.14);border-radius:999px;padding:2px 9px;margin-left:6px}
+  /* page-guard: 글자 선택·복사 막기 (입력 칸은 편집 가능) */
+  body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
+  .pg-toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0f2742;color:#fff;padding:9px 16px;border-radius:999px;font-size:.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+  .pg-toast.on{opacity:1}
+  /* u4-country-2 전용 (c2-) */
+  .c2-tw{overflow-x:auto}
+  .c2-k{min-width:560px;margin:0}
+  .c2-k th,.c2-k td{text-align:center}
+  .c2-k td:first-child,.c2-k th:first-child{text-align:left;font-weight:700}
+  .c2-cmp{min-width:300px;margin:0;font-size:.92rem}
+  .c2-cmp th{background:#fbfaf7;text-align:left}
+  .c2-cmp small{font-weight:400;color:var(--muted,#5b6776)}
+  #c2K .btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .c2-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin-top:10px;line-height:1.65}
+  .c2-warn{font-size:.9rem;margin-top:10px}
+  .c2-tips{padding-left:18px;font-size:.92rem;margin:0}
+  .c2-tips li{margin:6px 0}
+  .c2-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .c2-help ul{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .c2-help li{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">데이터 과학</span>
+  <nav class="steps" id="steps"></nav>
+  <div class="score" id="score"></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+
+<main id="main">
+
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 2. 데이터 과학 프로젝트 실제</span>
+      <h1>비슷한 나라끼리<br>묶으면 지원할 곳이<br>보일까?</h1>
+      <div class="story"><b>【선택】 국가 데이터 프로젝트 · 이어서</b><br>국제 NGO 헬프의 지원금을 나눌 차례예요. 167개 나라를 건강·무역·금융 지표로 비슷한 무리끼리 묶고, 무리마다 어떤 나라들인지 해석해요. 그런데 군집 결과만 보고 지원할 나라를 정해도 될까요?</div>
+      <p>프로젝트의 뒤 단계(<b>데이터 모델링 → 평가</b>)를 해요. k-평균으로 묶을 군집 수를 정하고, 상자 그림으로 군집의 특성을 읽고, 병합적 군집과 견주어 결과의 한계를 짚어요.</p>
+      <ol>
+        <li>군집 수 k 정하기 · SSE와 실루엣 계수</li><li>오렌지3 k-Means와 상자 그림으로 해석하기</li><li>병합적 군집과 비교 · 지원 판단의 한계</li><li>(선택) 코랩으로 지도까지 그리기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📉</i><div><b>k 정하기</b><small>SSE 그래프 · 실루엣 계수</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✕</i><div><b>k-Means</b><small>세 지표로 나라 묶기</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📦</i><div><b>Box Plot</b><small>군집마다 특성 읽고 이름 붙이기</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>⚖️</i><div><b>병합적 군집과 비교</b><small>결과가 갈린 나라 · 한계</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>앞 시간에는 속성 9개를 <b>건강(Health)·무역(Trade)·금융(Finance)</b> 세 지표로 묶고 0~1 사이로 정규화했어요. 각 속성을 평균으로 나눠 더한 값이라, 커질수록 좋은 속성과 나쁜 속성이 섞여 있다는 점도 확인했어요. 앞 시간을 놓쳤어도 괜찮아요. 02 화면의 설정 표 1~4번을 따라 하면 같은 데이터가 만들어져요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>군집으로 나눈 결과만으로 지원할 나라를 정해도 될까요?</b></p>
+        <div class="vote" id="c2First"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학 프로젝트</b> · 데이터를 통해 문제를 해결하는 과정은 어떻게 이루어지는 것일까?</li>
+          <li><b>오늘의 질문</b> · 나라들을 군집으로 나누면 어떤 무리가 보이고, 그 결과를 지원 판단에 어디까지 쓸 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>기계학습 알고리즘을 활용하여 군집 모델을 구축하고 평가할 수 있다.</li>
+          <li>군집 결과에 근거를 들어 이름을 붙이고, 다른 모델과 비교해 한계를 말할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 군집 수 정하기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 k 비교 탐색기 -->
+<section class="page" data-name="군집 수 k 정하기" data-acc="#c98a00">
+  <div class="head"><div class="num">01</div><div><h2>군집 수 k 정하기 · SSE와 실루엣 계수</h2><p>교과서 220쪽 · k-평균 · 엘보우 기법 · 오차 제곱합(SSE) · 실루엣 계수</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>k를 늘리면 무리가 잘게 쪼개져 <b>SSE</b>는 거의 늘 줄어요. 그래서 SSE가 <b>뚝 떨어지다가 완만해지는 곳(팔꿈치)</b>을 찾고, 무리끼리 얼마나 또렷하게 떨어졌는지 <b>실루엣 계수</b>로 한 번 더 확인해 k를 정해요.</span></div>
+  <div class="card">
+    <h3>📐 군집에서 SSE는 무엇을 더한 값일까?</h3>
+    <div class="grid2">
+      <div>
+        <p style="margin-top:0"><b>SSE = Σ (점과 그 점이 속한 군집 중심 사이 거리)²</b></p>
+        <p>점마다 자기 군집의 중심(✕)까지 거리를 재어 제곱하고 모두 더해요. 점들이 중심 가까이 모여 있을수록 작아요. 파이썬 <span class="mono">KMeans</span>의 <span class="mono">inertia_</span>가 이 값이에요.</p>
+        <p class="note">교과서 220쪽 옆 설명은 SSE를 「실젯값과 예측값 차이의 제곱합」으로 적었어요. 군집에는 실젯값이 따로 없어서, 위처럼 「중심까지 거리의 제곱합」으로 읽어요.</p>
+      </div>
+      <div class="callout" style="margin:0">💡 <b>실루엣 계수</b> · 점마다 (가장 가까운 다른 군집까지의 평균 거리 − 자기 군집 안 평균 거리)를 둘 중 큰 값으로 나눈 값의 평균이에요. 1에 가까울수록 무리가 또렷하게 나뉜 거예요. k = 1이면 다른 군집이 없어서 계산할 수 없어요.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧪 k 비교 탐색기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 나라가 아니라 새로 만든 예시 나라 24개 · 세 지표 가운데 두 개만 써서 평면에 그림)</span></h3>
+    <div class="row" id="c2K" style="margin-bottom:8px"></div>
+    <div class="grid2">
+      <div>
+        <div class="sp-wrap"><svg id="c2Plot" role="img" aria-label="예시 나라의 건강지표와 금융지표 산점도, 군집별 색과 중심"></svg></div>
+        <p class="muted" style="font-size:.85rem;margin:4px 0 0">점을 끌어 옮기거나, 빈 곳을 눌러 점을 더하거나, 점을 두 번 눌러 지울 수 있어요. 손을 떼면 다시 계산해요.</p>
+        <button class="btn ghost sm" id="c2Reset" style="margin-top:6px">처음 점으로 되돌리기</button>
+      </div>
+      <div>
+        <h4 style="margin:0 0 4px">k에 따른 SSE (엘보우 그래프)</h4>
+        <div class="sp-wrap"><svg id="c2Sse" role="img" aria-label="k가 2부터 6일 때의 SSE 막대그래프"></svg></div>
+        <h4 style="margin:8px 0 4px">k에 따른 평균 실루엣 계수</h4>
+        <div class="sp-wrap"><svg id="c2Sil" role="img" aria-label="k가 2부터 6일 때의 평균 실루엣 계수 막대그래프"></svg></div>
+      </div>
+    </div>
+    <div class="c2-say" id="c2Say"></div>
+    <div class="callout" style="margin-top:10px">🔍 <b>해 볼 일</b> · ① k를 하나씩 눌러 SSE가 어디서 완만해지는지, 실루엣 계수는 어디서 가장 큰지 찾아요. ② 금융지표가 높은 무리(왼쪽 위)의 점 몇 개를 가운데 무리 쪽으로 끌어 보세요. 두 지표가 고르는 k가 그대로인가요?</div>
+  </div>
+  <div class="card">
+    <h3>📋 실제 167개 나라는? <span class="muted" style="font-weight:400;font-size:.88rem">(세 지표로 계산한 값 · 선생님이 알려 주는 노트북 결과 · 반올림)</span></h3>
+    <div class="c2-tw"><table class="tbl c2-k">
+      <tr><th>k</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+      <tr><td>SSE</td><td>9.80</td><td>6.45</td><td>5.24</td><td>4.57</td><td>3.96</td><td>3.39</td><td>3.03</td><td>2.68</td></tr>
+      <tr><td>실루엣 계수</td><td>0.458</td><td>0.452</td><td>0.446</td><td>0.308</td><td>0.310</td><td>0.299</td><td>0.284</td><td>0.289</td></tr>
+    </table></div>
+    <p class="note">SSE는 k = 2→3에서 크게 줄고 그 뒤로 완만해져요. 실루엣 계수는 k = 2가 아주 조금 더 크지만 k = 3과 거의 같아요. 교과서는 엘보우 기법으로 <b>k = 3</b>을 골랐어요. 두 지표가 꼭 같은 k를 가리키지는 않으니, 내가 고른 k의 근거를 두 가지 모두로 말해요.</p>
+  </div>
+  <div class="memo">
+    <label>✍️ 탐구 기록 ① · 국가 데이터의 군집 수를 몇으로 할지 고르고, SSE 그래프와 실루엣 계수를 <b>둘 다</b> 근거로 들어 까닭을 써요. 탐색기에서 점을 옮겨 본 결과도 한 줄 덧붙여요. <small>질문폼 1번에 써요.</small></label>
+    <textarea data-memo="c2K" rows="4" placeholder="내가 고른 k: … / SSE: … / 실루엣 계수: … / 점을 옮겨 보니 …"></textarea><div class="saved"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 k-Means 해석 -->
+<section class="page" data-name="k-Means와 상자 그림" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>k-Means로 묶고 상자 그림으로 해석하기</h2><p>교과서 220~221쪽 · 오렌지3 실습 · k-Means · Box Plot · 군집 특성 읽고 이름 붙이기</p></div></div>
+  <div class="callout c2-warn" style="margin-top:0">📌 <b>여기서는 k = 3으로 묶어 봐요.</b> 교과서 결과, 그리고 03의 병합적 군집(3개)과 견주기 위해서예요. 01에서 내가 고른 k가 3이 아니라면, 그 k로도 한 번 묶어 보고 결과 기록에 「내가 고른 k와 그 결과」를 함께 적어요.</div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>k-평균은 군집에 <b>번호</b>만 붙여 줘요. 번호는 순위가 아니에요. 군집마다 <b>5세 미만 사망률(child_mort)</b>과 <b>1인당 소득(income)</b>이 어떤지 상자 그림으로 보고, 그 특성에 맞는 <b>이름</b>을 우리가 붙여요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div><svg id="c2Flow" role="img" aria-label="국가 데이터 k-평균 군집 분석 위젯 연결 흐름도"></svg></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표 <span class="muted" style="font-weight:400;font-size:.88rem">(앞 시간에 저장한 흐름이 있으면 열어서 5번부터)</span></h3>
+    <div class="of-tw"><table class="tbl" id="c2Set">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td>선생님이 알려 주는 폴더의 <span class="mono">Country-data.csv</span> 열기</td><td>167개 데이터, feature 9개, meta 1개(country)</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Formula</b> (Transform)<br><small class="muted">옛 이름 Feature Constructor</small></td><td>File →</td><td><b>New → Numeric</b>으로 세 개 만들고 <b>Send</b><br><span class="mono">Health</span> = <span class="mono">child_mort/38.27 + health/6.8157 + life_expec/70.5557 + total_fer/2.948</span><br><span class="mono">Trade</span> = <span class="mono">imports/46.89 + exports/41.109</span><br><span class="mono">Finance</span> = <span class="mono">income/17144.69 + inflation/7.7818 + gdpp/12964.16</span></td><td>나누는 수는 167개 나라의 평균(교과서 216쪽)</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Select Columns</b> (Transform)</td><td>Formula →</td><td>Features에 <b>Health · Trade · Finance</b>만, 원래 속성 9개는 <b>Metas</b>로</td><td>feature 3개. child_mort·income은 meta로 남아 해석에 써요.</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Preprocess</b> (Transform)</td><td>Select Columns →</td><td><b>Normalize Features</b> → <b>Normalize to interval [0, 1]</b></td><td>교과서 215쪽 MinMaxScaler와 같은 계산</td></tr>
+      <tr data-s="5"><td>5</td><td><b>k-Means</b> (Unsupervised)</td><td>Preprocess →</td><td>Number of Clusters: <b>From 2 to 9</b><br><b>Normalize columns 끄기</b>(이미 0~1로 맞춤), Initialize with KMeans++, Re-runs 10, Maximum iterations 300(기본값)</td><td>Silhouette Scores 목록: k = 2가 0.458로 가장 커서 자동으로 골라져 있어요. <b>k = 3 줄을 눌러</b> 골라요(0.452). 내가 고른 k가 다르면 그 줄도 눌러 비교해요.</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Box Plot</b> (Visualize)</td><td>k-Means →</td><td>Variable: <b>child_mort</b>, Subgroups: <b>Cluster</b>. 다음에는 Variable을 <b>income</b>으로 바꾸기</td><td>군집마다 중앙값. child_mort가 높은 군집과 income이 높은 군집이 어디인지</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Distributions</b> (Visualize)</td><td>k-Means →</td><td>Variable: <b>Cluster</b></td><td>군집마다 나라가 몇 개인지(막대 높이)</td></tr>
+    </table></div>
+    <div class="callout c2-warn">💡 <b>군집 이름(C1~C3)은 교과서 번호(0~2)와 다르게 붙어요.</b> 오렌지3는 C1부터, 파이썬은 0부터 번호를 붙이고, 같은 무리라도 실행·프로그램마다 번호가 바뀌어요. 번호 대신 「child_mort가 높고 income이 낮은 무리」처럼 <b>특성</b>으로 말해요.</div>
+  </div>
+  <div class="card">
+    <h3>🏷️ 군집에 이름 붙이기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 167개 나라를 k = 3으로 묶은 요약값 · 카드는 섞여서 나와요)</span></h3>
+    <div id="c2Name"></div>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기</h3>
+    <div class="memo" style="margin:0">
+      <label>✍️ 탐구 기록 ② · 내 오렌지3에서 군집마다 나라 수, child_mort·income 중앙값을 적고, 근거를 들어 특성에 맞는 이름을 붙여요. 01에서 고른 k가 3이 아니면 그 k로 묶은 결과와 까닭도 덧붙여요. <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="c2Res" rows="4" placeholder="군집 이름(C?): ○개 나라, child_mort 중앙값 …, income 중앙값 … → 붙인 이름: …&#10;(군집마다 한 줄씩)&#10;내가 고른 k가 다르면: k = ? → …"></textarea><div class="saved"></div>
+    </div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="c2Done"></div>
+  </div>
+  <details class="card c2-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>k-Means의 실루엣 계수가 표와 달라요</b> → <b>Normalize columns</b>를 껐는지, k-Means 앞에 Preprocess를 이었는지, Select Columns의 feature가 세 지표뿐인지 확인해요.</li>
+      <li><b>Box Plot의 Variable에 child_mort가 없어요</b> → Select Columns에서 원래 속성을 지우지 않고 <b>Metas</b>로 옮겼는지 확인해요(Ignored로 옮기면 사라져요).</li>
+      <li><b>Subgroups에 Cluster가 없어요</b> → Box Plot을 k-Means 뒤에 이었는지 확인해요. Cluster 열은 k-Means가 만들어요.</li>
+      <li><b>오렌지3가 안 열려요</b> → 위 「군집에 이름 붙이기」의 요약값으로 기록 칸을 쓰고, 끝에 「(화면 자료)」라고 적어요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 병합적 군집 비교 · 한계 -->
+<section class="page" data-name="병합적 군집과 비교" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>병합적 군집과 비교하고 한계 짚기</h2><p>교과서 222~224쪽 · 평가 · 병합적 군집화(ward) · 두 모델 비교 · 지원 판단의 한계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>군집 분석에는 정해진 정답이 없어요. 같은 데이터를 <b>병합적 군집화</b>로도 묶어 보고, 두 결과가 <b>같은 나라</b>와 <b>갈리는 나라</b>를 찾아요. 갈리는 나라일수록 원래 속성을 더 들여다봐야 해요.</span></div>
+  <div class="card">
+    <h3>⚖️ 두 모델 견주어 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 167개 나라 · 두 모델 모두 k = 3 · 군집을 child_mort 중앙값 순서로 정렬한 요약 · 오렌지3로는 기록한 뒤 아래에서 직접 확인)</span></h3>
+    <p style="margin-top:0"><b>병합적 군집화</b>는 나라 하나하나를 각각 한 무리로 시작해, <b>가장 가까운 무리끼리 차례로 합치는</b> 일을 원하는 무리 수(오늘은 3개)가 될 때까지 되풀이해요. <b>Ward</b> 방식은 합쳤을 때 무리 안의 흩어짐이 가장 적게 늘어나는 두 무리를 골라 합쳐요. 같은 세 지표를 이 방법으로 묶은 결과를 k-평균과 견주어 봐요.</p>
+    <div class="grid2">
+      <div class="c2-tw"><table class="tbl c2-cmp">
+        <tr><th>무리</th><th>k-평균<br><small>나라 수 · child_mort · income 중앙값</small></th><th>병합적 군집(ward)<br><small>나라 수 · child_mort · income 중앙값</small></th></tr>
+        <tr><td>사망률 낮음</td><td>29 · 4.8 · 43200</td><td>49 · 5.5 · 36200</td></tr>
+        <tr><td>중간</td><td>102 · 18.4 · 11150</td><td>83 · 19.8 · 9720</td></tr>
+        <tr><td>사망률 높음</td><td>36 · 95.5 · 1695</td><td>35 · 97.4 · 1660</td></tr>
+      </table></div>
+      <div class="c2-tw"><table class="tbl c2-cmp">
+        <tr><th>k-평균 ↓ / 병합 →</th><th>낮음</th><th>중간</th><th>높음</th></tr>
+        <tr><td>낮음</td><td><b>29</b></td><td>0</td><td>0</td></tr>
+        <tr><td>중간</td><td>20</td><td><b>81</b></td><td>1</td></tr>
+        <tr><td>높음</td><td>0</td><td>2</td><td><b>34</b></td></tr>
+      </table>
+      <p class="note" style="margin-top:6px">굵은 칸은 두 모델이 같은 무리로 본 나라 수예요. 167개 가운데 <b>23개 나라</b>는 두 모델에서 다른 무리에 들어갔어요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🛑 군집 결과로 지원을 정하기 전에</h3>
+    <ul class="c2-tips">
+      <li><b>자료의 때</b> · 과거 어느 때에 모은 자료라 지금의 형편, 최근 재난은 담겨 있지 않아요.</li>
+      <li><b>지표의 방향</b> · Health·Finance는 방향이 다른 속성을 더한 값이라, 군집을 해석할 때는 child_mort·income 같은 <b>원래 속성</b>을 함께 봐요.</li>
+      <li><b>없는 정보</b> · 인구 수가 없어서 같은 무리라도 얼마나 많은 사람에게 지원이 필요한지는 알 수 없어요.</li>
+      <li><b>원인 추정</b> · 교과서 222쪽은 몇몇 나라의 결과를 전쟁·내전 탓으로 설명했지만, 이 데이터에는 그런 속성이 없어요. 원인은 다른 자료로 확인해야 해요.</li>
+    </ul>
+  </div>
+  <div class="memo">
+    <label>✍️ 탐구 기록 ③ · 두 모델에서 무리가 갈린 나라들을 어떻게 다룰지 쓰고, 지원할 나라를 정하기 전에 <b>더 확인할 것 두 가지</b>를 까닭과 함께 적어요. <small>질문폼 3번에 써요.</small></label>
+    <textarea data-memo="c2Limit" rows="4" placeholder="갈린 나라: …&#10;더 확인할 것 ①: … (까닭: …)&#10;더 확인할 것 ②: … (까닭: …)"></textarea><div class="saved"></div>
+  </div>
+  <div class="card">
+    <h3>🔀 병합적 군집 위젯 연결 <span class="muted" style="font-weight:400;font-size:.88rem">(02 흐름의 Preprocess에서 이어요)</span></h3>
+    <div><svg id="c2Flow2" role="img" aria-label="병합적 군집 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw"><table class="tbl" id="c2Set2">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>Preprocess</b> (Transform)</td><td>02의 4번</td><td>그대로</td><td>세 지표가 0~1</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Distances</b> (Unsupervised)</td><td>Preprocess →</td><td>Distances between <b>Rows</b>, Distance Metric <b>Euclidean</b>(기본값 Euclidean (normalized)가 아닌 것)</td><td>나라와 나라 사이 거리를 모두 재요.</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Hierarchical Clustering</b> (Unsupervised)</td><td>Distances →</td><td>Linkage: <b>Ward</b>, Selection: <b>Top N: 3</b></td><td>나무 그림(덴드로그램)이 세 무리로 색칠되는지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Box Plot (1)</b> (Visualize)</td><td>Hierarchical Clustering →</td><td>Variable: <b>child_mort</b>, 다음에 <b>income</b> · Subgroups: <b>Cluster</b></td><td>02의 k-Means 결과와 군집별 중앙값 비교</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="c2Done2"></div>
+  </div>
+  <div class="card">
+    <h3>🧩 교과서 지도 코드 점검하기 <span class="muted" style="font-weight:400;font-size:.88rem">(224쪽 · 카드를 눌러 뒤집기)</span></h3>
+    <div class="cards3" id="c2Bug"></div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) 코랩 -->
+<section class="page" data-name="(선택) 코랩으로 지도까지" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>(선택) 코랩으로 지도까지 그리기</h2><p>교과서 220~224쪽 · KMeans · silhouette_score · AgglomerativeClustering · plotly 지도</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3로 한 분석을 파이썬 코드로 다시 해 보고, 군집 결과를 세계 지도에 색으로 칠해 봐요. 시간이 남거나 집에서 해요.</span></div>
+  <div class="card">
+    <h3>🐍 코랩에서 실행하기</h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>교과서 212~224쪽 코드를 고친 사본이에요. 앞 시간 부분(전처리·세 지표)부터 차례로 실행해요.</p></li>
+      <li><b>5. 데이터 모델링 · 엘보우와 실루엣</b><p>k = 2~9의 SSE와 실루엣 계수가 표와 그래프로 나와요. 01 화면의 「실제 167개 나라」 표와 같은지 확인해요.</p></li>
+      <li><b>k = 3으로 군집화 · 상자 그림 · 이름 붙이기</b><p><span class="mono">name_clusters()</span>가 군집별 나라 수와 child_mort·income 중앙값을 보여 주고, 사망률이 낮은 군집부터 이름을 붙여요.</p></li>
+      <li><b>6. 평가 · 지도와 병합적 군집</b><p>지도 두 장(k-평균, 병합적 군집)을 비교하고, 마지막 칸에서 두 모델의 이름이 다른 나라를 확인해요.</p></li>
+    </ol>
+    <details class="c2-help" style="margin-top:8px">
+      <summary>교과서 코드와 달라진 점</summary>
+      <ul>
+        <li><b>같은 결과</b>: 모든 KMeans에 <span class="mono">n_init = 10, random_state = 42</span>를 넣어 다시 실행해도 결과가 같아요.</li>
+        <li><b>번호 짝짓기</b>: 교과서는 0·1·2를 손으로 이름에 짝지었어요. 사본은 군집별 중앙값을 보고 이름을 붙여요.</li>
+        <li><b>색 이름</b>: 이름을 'No Help Needed' 하나로 통일해 초록색이 제대로 칠해져요.</li>
+        <li><b>비교 칸</b>: 두 모델의 결과를 교차표로 비교하는 칸을 더했어요.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리 · 프로젝트 되돌아보기</h2><p>교과서 225쪽 · 핵심 문장 · 프로젝트 정리 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#c98a00">예시 나라와 실제 167개 나라에서 <b>SSE</b>와 <b>실루엣 계수</b>를 함께 비교해, 두 지표가 가리키는 k가 다를 때도 근거를 들어 군집 수를 골랐다.</div>
+    <div style="--k:#1f9d74">k-Means가 붙인 군집 번호는 순위가 아니어서, Box Plot의 <b>child_mort·income 중앙값</b>을 보고 무리마다 이름을 다시 붙였다.</div>
+    <div style="--k:#e0702b">병합적 군집과 견주니 일부 나라는 무리가 갈렸고, 자료의 때·인구·지표의 방향 같은 <b>한계</b>를 확인한 뒤에야 지원 판단에 쓸 수 있었다.</div>
+  </div>
+  <div class="card">
+    <h3>🔁 프로젝트 되돌아보기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 225쪽 · 내가 잘 해낸 과정을 모두 골라요)</span></h3>
+    <div id="c2Eval"></div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면의 내 생각(<span id="c2FirstShow">아직 고르지 않음</span>)과 비교하며, 오늘 쓴 낱말(SSE, 실루엣 계수, k-평균, 병합적 군집, 중앙값, 한계)을 넣어 답해 보세요. 프로젝트에서 배운 점이나 더 알아보고 싶은 점도 한 줄 덧붙여요.</p>
+    <b style="font-size:.93rem">나라들을 군집으로 나누면 어떤 무리가 보이고, 그 결과를 지원 판단에 어디까지 쓸 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="4"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>SSE와 실루엣 계수</b>를 모두 근거로 들어 군집 수를 어떻게 골랐는지 설명하기</li>
+      <li>Box Plot에서 읽은 <b>군집마다의 특성</b>으로 군집에 이름을 붙인 까닭 설명하기</li>
+      <li>두 모델의 비교와 <b>지원 판단 전에 더 확인할 것</b> 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="../forms/data-u4-country-2.html" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="foot">
+  <button class="btn ghost" id="prev">← 이전</button>
+  <span class="pg" id="pg"></span>
+  <button class="btn" id="next">다음 →</button>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toLocaleString('ko-KR');
+
+
+
+const LESSON='u4-country-2', PEP='';
+
+/* 진도 보내기 ①: 누가 쓰는지 확인 (반·학번마다 퀴즈·메모를 따로 저장) */
+const WHO=(function(){
+  if(!PEP) return {off:true,sfx:''};
+  if(/[?&]preview(=|&|$)/.test(location.search)) return {preview:true,sfx:'@preview'};
+  let w=null; try{w=JSON.parse(sessionStorage.getItem('aiw-who')||'null');}catch(e){}
+  if(w&&w.teacher) return {preview:true,teacher:true,sfx:'@preview'};
+  if(!w||!/^\d{5}$/.test(w.no||'')) return {need:true,sfx:'@none'};
+  return {cls:w.cls,no:w.no,name:w.name,sfx:'@'+w.no};
+})();
+/* 퀴즈 (교과서 220~225쪽) — 보기는 짧은 것 → 긴 것, 극단어 피하기 */
+const QUIZ={
+ 1:[{q:'k-평균 군집에서 SSE(오차 제곱합)는 무엇을 모두 더한 값일까?',o:['군집 크기의 제곱','군집 중심끼리 거리의 제곱','각 점과 소속 중심 사이 거리의 제곱'],a:2,w:'점마다 자기 군집 중심까지의 거리를 제곱해 더한 값이라, 점들이 중심 가까이 모일수록 작아져요.'},
+    {q:'k를 2에서 9까지 늘렸더니 SSE가 계속 줄었다. 이것만 보고 k = 9를 고르지 않는 까닭은?',o:['실루엣 계수는 k와 상관없어서','k가 커지면 SSE는 대개 줄어서','SSE가 클수록 좋은 군집이라서'],a:1,w:'무리를 잘게 나눌수록 점과 중심이 가까워져 SSE는 거의 늘 줄어요. 그래서 줄어드는 폭이 완만해지는 곳을 찾아요.'},
+    {q:'실제 국가 데이터에서 실루엣 계수는 k = 2일 때 0.458, k = 3일 때 0.452였다. 교과서처럼 k = 3을 고를 때 함께 들 수 있는 근거는?',o:['k = 3이면 SSE가 0이 됨','k = 3의 실루엣 계수가 가장 큼','k = 3 뒤로 SSE 감소가 완만해짐'],a:2,w:'SSE가 k = 2에서 3으로 갈 때 크게 줄고 그 뒤로는 조금씩 줄어서, 엘보우 기법으로는 k = 3이 팔꿈치예요.'}],
+ 2:[{q:'오렌지3 k-Means의 Silhouette Scores 목록에서 k = 2가 가장 높아 자동으로 골라져 있다. 교과서와 견주려고 k = 3으로 묶으려면 어떻게 할까?',o:['k = 3 줄을 누른다','Re-runs를 늘린다','Normalize columns를 켠다'],a:0,w:'목록에서 줄을 누르면 그 k로 묶은 결과가 다음 위젯으로 넘어가요.'},
+    {q:'내 오렌지3에서는 child_mort가 가장 높은 군집이 C1이었고, 교과서 코드에서는 2번이었다. 알맞은 해석은?',o:['내 결과가 틀렸다','번호는 이름표일 뿐이다','C1이 가장 먼저 도울 순위다'],a:1,w:'군집 번호는 프로그램과 실행마다 다르게 붙는 이름표라서, 특성을 보고 같은 무리인지 판단해요.'},
+    {q:'k-Means 뒤에 Box Plot을 이어 군집별 child_mort와 income을 보는 까닭은?',o:['k를 정하려고','군집 특성을 보려고','결측치 개수를 세려고'],a:1,w:'세 지표로 묶은 군집이 실제로 어떤 나라들인지 원래 속성으로 확인해야 이름을 붙이고 해석할 수 있어요.'}],
+ 3:[{q:'k-평균과 병합적 군집의 결과를 견주어 보니 23개 나라의 무리가 달랐다. 알맞은 태도는?',o:['갈린 나라를 더 살핀다','한 결과만 골라 믿는다','군집 수를 크게 늘린다'],a:0,w:'군집 분석에는 정해진 정답이 없어서, 모델마다 갈리는 나라는 원래 속성을 다시 보고 신중하게 판단해요.'},
+    {q:'지도 코드에서 Class 값은 \'No Need Help\'로 바꾸고, 색은 \'No Help Needed\'에 지정했다. 지도에서 생길 일은?',o:['나라 이름이 지워진다','지도가 그려지지 않는다','정한 초록색이 안 칠해진다'],a:2,w:'색을 정한 이름과 실제 값의 이름이 달라서, 그 무리에는 정해 둔 초록색 대신 다른 색이 칠해져요.'},
+    {q:'병합적 군집화(ward)는 어떤 방식으로 무리를 만들까?',o:['가까운 무리를 차례로 합친다','중심 k개를 정해 옮겨 가며 묶는다','나라를 이름 순서로 3개씩 나눈다'],a:0,w:'데이터 하나하나를 무리로 시작해, 가까운 무리를 합치는 일을 원하는 무리 수가 될 때까지 되풀이해요.'}],
+ 5:[{q:'국가 군집 결과만 보고 지원 금액을 나누기 어려운 까닭으로 알맞은 것은?',o:['군집 수가 3개라서','오렌지3로 계산해서','자료에 인구·최근 상황이 없어서'],a:2,w:'이 자료는 과거 어느 때의 모습이고 인구 수도 없어서, 지금 얼마나 많은 사람에게 지원이 필요한지는 알 수 없어요.'},
+    {q:'Preprocess로 0~1로 바꾼 세 지표를 k-Means에 넣을 때 Normalize columns를 끄는 까닭은?',o:['이미 0~1로 맞춰서','군집 수를 줄이려고','실루엣 계수를 키우려고'],a:0,w:'세 지표의 범위를 이미 같게 맞췄으니, 교과서처럼 그 값 그대로 거리를 재려고 다시 정규화하지 않아요.'},
+    {q:'같은 데이터를 k-평균과 병합적 군집으로 모두 묶어 비교한 것은 프로젝트의 어느 단계일까?',o:['문제 정의','평가 단계','데이터 수집 단계'],a:1,w:'모델의 결과를 확인하고 다른 방법을 적용해 비교·수정하는 일은 평가 단계에서 해요.'}]
+};
+
+const QK='ds-u4-country-2-quiz'+WHO.sfx;
+const MK='ds-u4-country-2-memo'+WHO.sfx;
+let QS={}; try{QS=JSON.parse(localStorage.getItem(QK)||'{}')||{};}catch(e){QS={};}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(QS));}catch(e){}}
+const TOTALQ=Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+function qperm(n,key){ let h=2166136261; for(const c of key){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}
+  const p=[...Array(n).keys()]; for(let i=n-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0; h=(h+0x6D2B79F5)>>>0; const j=h%(i+1); [p[i],p[j]]=[p[j],p[i]];} return p; }
+function renderQuiz(box){
+  const k=box.dataset.quiz; box.innerHTML=`<div class="qh"><b>개념 퀴즈</b><span>${QUIZ[k].length}문제 · 고르면 바로 채점</span></div>`;
+  QUIZ[k].forEach((it,i)=>{
+    const id=k+'-'+i, d=document.createElement('div'); d.className='qi';
+    /* 보기 순서는 학생마다 섞되(새로 고쳐도 같은 순서), 저장·채점은 원래 번호로 */
+    const perm=qperm(it.o.length, QK+'|'+id);
+    d.innerHTML=`<div class="qq">${i+1}. ${it.q}</div><div class="opts">${perm.map(j=>`<button data-j="${j}">${it.o[j]}</button>`).join('')}</div><div class="why"></div>`;
+    const btn=j=>d.querySelector(`button[data-j="${j}"]`);
+    const mark=(j,anim)=>{
+      const bs=d.querySelectorAll('button'); bs.forEach(b=>b.disabled=true);
+      btn(it.a).classList.add('right'); if(j!==it.a){btn(j).classList.add('wrong'); if(anim) d.classList.add('shake');}
+      d.classList.add('answered', j===it.a?'correct':'incorrect');
+      d.querySelector('.why').textContent=(j===it.a?'정답. ':'정답은 「'+it.o[it.a]+'」. ')+it.w;
+    };
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;QS[id]=j;saveQ();mark(j,true);updScore();});
+    if(QS[id]!=null && QS[id]<it.o.length) mark(QS[id],false);
+    box.appendChild(d);
+  });
+}
+
+/* 페이지 이동 */
+const pages=[...document.querySelectorAll('.page')];
+const stepBtns=pages.map((p,i)=>{const b=document.createElement('button');b.textContent=i?`${i}. ${p.dataset.name}`:'시작';b.onclick=()=>go(i);$('steps').appendChild(b);return b;});
+function updScore(){
+  let ok=0; for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{if(QS[k+'-'+i]===it.a) ok++;});
+  $('score').textContent=`퀴즈 ${ok} / ${TOTALQ}`;
+  pages.forEach((p,i)=>{const q=p.querySelector('[data-quiz]'); if(!q) return; const k=q.dataset.quiz; stepBtns[i].classList.toggle('done',QUIZ[k].every((_,j)=>QS[k+'-'+j]!=null));});
+  let h='<tr><th class="l">개념</th><th>맞힌 문제</th></tr>';
+  for(const k in QUIZ){const n=QUIZ[k].length, c=QUIZ[k].filter((it,i)=>QS[k+'-'+i]===it.a).length, a=QUIZ[k].filter((_,i)=>QS[k+'-'+i]!=null).length;
+    h+=`<tr><td class="l">${k}. ${pages[k].dataset.name}</td><td>${a?`<b class="${c===n?'ok':''}">${c} / ${n}</b>`:'<span class="muted">아직 안 풂</span>'}</td></tr>`;}
+  h+=`<tr><td class="l"><b>합계</b></td><td><b>${ok} / ${TOTALQ}</b></td></tr>`;
+  $('result').innerHTML=h;
+}
+let cur=-1;
+const onShow={};
+function go(i){
+  i=Math.max(0,Math.min(pages.length-1,i)); if(i===cur) return;
+  const back=i<cur; if(cur>=0) pages[cur].classList.remove('on','back');
+  pages[i].classList.add('on'); pages[i].classList.toggle('back',back);
+  document.documentElement.style.setProperty('--acc',pages[i].dataset.acc);
+  document.documentElement.style.setProperty('--acc-soft',pages[i].dataset.acc+'1a');
+  stepBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sb=$('steps'), btn=stepBtns[i]; sb.scrollLeft=btn.offsetLeft-sb.clientWidth/2+btn.clientWidth/2;
+  $('prog').style.width=(i/(pages.length-1)*100)+'%';
+  $('pg').textContent=`${i} / ${pages.length-1}`;
+  $('prev').style.visibility=i?'visible':'hidden'; $('next').style.visibility=i<pages.length-1?'visible':'hidden';
+  cur=i; try{history.replaceState(null,'','#p'+i);}catch(e){} window.scrollTo(0,0);
+  if(onShow[i]) onShow[i]();
+}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.defaultPrevented)return; if(e.target.matches&&e.target.matches('input,select,textarea'))return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+document.querySelectorAll('.gcard').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.click();}}));
+document.querySelectorAll('[data-quiz]').forEach(renderQuiz);
+$('quizReset').onclick=()=>{QS={};saveQ();document.querySelectorAll('[data-quiz]').forEach(renderQuiz);updScore();};
+
+
+/* 공용 부품: 메모·카드·분류 게임·탭·투표·칩 */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* 메모: data-memo가 있는 입력칸은 이 기기에 저장 */
+let MEMO=store.get(MK,{});
+function bindMemos(){
+  document.querySelectorAll('[data-memo]').forEach(t=>{
+    const k=t.dataset.memo; if(MEMO[k]!=null) t.value=MEMO[k];
+    let tm; t.addEventListener('input',()=>{MEMO[k]=t.value; clearTimeout(tm); tm=setTimeout(()=>{store.set(MK,MEMO); const s=t.parentElement.querySelector('.saved'); if(s){s.textContent='이 기기에 저장됨'; setTimeout(()=>s.textContent='',1400);} t.dispatchEvent(new Event('memo'));},300);});
+  });
+}
+function memoSummary(box,list){
+  const h=list.map(([k,label])=>{const v=(MEMO[k]||'').trim(); return `<dt>${esc(label)}</dt><dd class="${v?'':'e'}">${v?esc(v):'(아직 안 씀)'}</dd>`;}).join('');
+  $(box).innerHTML=`<h4>오늘 화면에 적어 둔 내 메모</h4><dl>${h}</dl>`;
+}
+
+/* 뒤집는 카드 */
+function flipCards(box,items){
+  $(box).innerHTML=items.map(c=>`<div class="tcard" tabindex="0"><div class="in"><div class="f"><i>${c.ic||''}</i><b>${c.f}</b>${c.s?`<small>${c.s}</small>`:''}</div><div class="b">${c.b}${c.x?`<div class="x">${c.x}</div>`:''}</div></div></div>`).join('');
+  $(box).querySelectorAll('.tcard').forEach(t=>{const f=()=>t.classList.toggle('flip'); t.onclick=f; t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+}
+
+/* 분류 게임: 문장을 보고 알맞은 묶음 고르기 */
+function sorter(box,cfg){
+  const B=$(box);
+  function start(){
+    const order=shuffle(cfg.items.map((_,i)=>i)); let pos=0, ok=0; const placed=cfg.cats.map(()=>[]);
+    B.innerHTML=`<div class="sit"><div class="cnt"></div><div class="ic"></div><div class="sq"></div><div class="row btns">${cfg.cats.map((c,j)=>`<button class="btn sm cat" style="--k:${c.k}" data-j="${j}">${c.n}</button>`).join('')}</div><div class="fb"></div><div class="row nx" style="margin-top:8px"></div></div><div class="board" style="--n:${cfg.cats.length}">${cfg.cats.map(c=>`<div style="--k:${c.k}"><b>${c.n}</b></div>`).join('')}</div>`;
+    const sq=B.querySelector('.sq'), ic=B.querySelector('.ic'), cnt=B.querySelector('.cnt'), fb=B.querySelector('.fb'), nx=B.querySelector('.nx'), btns=[...B.querySelectorAll('.cat')], cols=[...B.querySelectorAll('.board>div')];
+    function show(){
+      if(pos>=order.length){cnt.textContent=''; ic.textContent='🎉'; sq.innerHTML=`${order.length}개 중 <b>${ok}개</b>를 바로 맞혔어요.`; fb.innerHTML=cfg.end||''; btns.forEach(b=>b.style.display='none'); nx.innerHTML='<button class="btn ghost sm">처음부터 다시</button>'; nx.firstChild.onclick=start; return;}
+      const it=cfg.items[order[pos]]; cnt.textContent=`${pos+1} / ${order.length}`; ic.textContent=it.ic||''; sq.innerHTML=it.t; fb.textContent=''; nx.innerHTML=''; btns.forEach(b=>{b.disabled=false;b.style.display='';});
+    }
+    btns.forEach(b=>b.onclick=()=>{
+      const it=cfg.items[order[pos]], j=+b.dataset.j, right=j===it.c; if(right) ok++;
+      btns.forEach(x=>x.disabled=true);
+      fb.innerHTML=(right?'<span class="ok">맞아요!</span> ':`<span class="ng">아쉬워요.</span> 정답은 <b>${cfg.cats[it.c].n}</b>. `)+(it.w||'');
+      const s=document.createElement('span'); s.innerHTML=it.short||it.t; if(!right) s.className='x'; cols[it.c].appendChild(s);
+      nx.innerHTML='<button class="btn sm">다음 →</button>'; nx.firstChild.onclick=()=>{pos++;show();}; nx.firstChild.focus();
+    });
+    show();
+  }
+  start();
+}
+
+/* 탭 보기: 버튼을 누르면 내용 바꾸기 */
+function tabs(btnBox,viewBox,items,render){
+  $(btnBox).innerHTML=items.map((it,i)=>`<button data-i="${i}"><span class="e">${it.ic||''}</span><b>${it.n}</b></button>`).join('');
+  const bs=[...$(btnBox).querySelectorAll('button')];
+  const pick=i=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); $(viewBox).innerHTML=render(items[i],i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i)); pick(0);
+}
+
+/* 투표: 고르면 결과 보이기 (이 기기에만 저장) */
+function vote(box,key,opts,onPick){
+  const B=$(box); B.innerHTML=opts.map((o,i)=>`<button data-i="${i}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')];
+  const pick=(i,save)=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); if(save){MEMO[key]=opts[i][0]; store.set(MK,MEMO);} onPick&&onPick(i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i,true));
+  const prev=opts.findIndex(o=>o[0]===MEMO[key]); if(prev>=0) pick(prev,false);
+}
+function chips(box,key,opts,multi){
+  const B=$(box); B.classList.add('chk'); B.innerHTML=opts.map(o=>`<button>${o}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')]; let sel=(MEMO[key]||'').split(' · ').filter(Boolean);
+  const draw=()=>bs.forEach(b=>b.classList.toggle('on',sel.includes(b.textContent)));
+  bs.forEach(b=>b.onclick=()=>{const t=b.textContent; if(multi) sel=sel.includes(t)?sel.filter(x=>x!==t):[...sel,t]; else sel=sel.includes(t)?[]:[t]; MEMO[key]=sel.join(' · '); store.set(MK,MEMO); draw(); B.dispatchEvent(new Event('memo'));});
+  draw();
+}
+
+/* ===== 공용 그림·실습 부품 (framework/charts.js) =====
+   차시는 설정값만 넘긴다. 쓰는 법은 docs/widgets.md
+   orangeFlow · scatter · bars · boxes · miniTable · stat(평균·표준편차·상관·회귀·k-평균) · memoOf */
+
+/* 다른 차시에서 적어 둔 메모 읽기 (check.py 가 차시·키가 있는지 확인) */
+function memoOf(lid,key){ try{ return String((store.get('ds-'+lid+'-memo'+WHO.sfx,{})||{})[key]||'').trim(); }catch(e){ return ''; } }
+
+/* 통계 계산 */
+const stat={
+  mean:a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:NaN,
+  sd(a,sample){const m=stat.mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-(sample?1:0)));},
+  q(a,p){const s=a.slice().sort((x,y)=>x-y),i=(s.length-1)*p,lo=Math.floor(i);return s[lo]+(s[Math.min(lo+1,s.length-1)]-s[lo])*(i-lo);},
+  r(P){const n=P.length;if(n<2)return null;const mx=stat.mean(P.map(p=>p[0])),my=stat.mean(P.map(p=>p[1]));let sxy=0,sxx=0,syy=0;P.forEach(([x,y])=>{sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2;syy+=(y-my)**2;});return sxx&&syy?sxy/Math.sqrt(sxx*syy):null;},
+  /* 최소제곱 직선 y = a + b·x, 결정 계수 r2, 평균 제곱 오차 mse */
+  fit(P){const n=P.length;if(n<2)return null;const mx=stat.mean(P.map(p=>p[0])),my=stat.mean(P.map(p=>p[1]));let sxy=0,sxx=0;P.forEach(([x,y])=>{sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2;});if(!sxx)return null;const b=sxy/sxx,a=my-b*mx;return {a,b,...stat.err(P,a,b)};},
+  err(P,a,b){let se=0,st=0;const my=stat.mean(P.map(p=>p[1]));P.forEach(([x,y])=>{se+=(y-(a+b*x))**2;st+=(y-my)**2;});return {mse:se/P.length,rmse:Math.sqrt(se/P.length),r2:st?1-se/st:NaN};},
+  /* k-평균 한 단계: 점마다 가까운 중심 → 중심을 그 점들의 평균으로 */
+  assign:(P,C)=>P.map(p=>{let bi=0,bd=Infinity;C.forEach((c,i)=>{const d=(p[0]-c[0])**2+(p[1]-c[1])**2;if(d<bd){bd=d;bi=i;}});return bi;}),
+  center:(P,L,C)=>C.map((c,i)=>{const m=P.filter((_,j)=>L[j]===i);return m.length?[stat.mean(m.map(p=>p[0])),stat.mean(m.map(p=>p[1]))]:c.slice();}),
+  /* 군집 안 거리 제곱합(SSE)과 평균 실루엣 점수 */
+  sse:(P,L,C)=>P.reduce((s,p,j)=>s+(p[0]-C[L[j]][0])**2+(p[1]-C[L[j]][1])**2,0),
+  silhouette(P,L){const k=Math.max(...L)+1;if(k<2)return NaN;const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);let s=0;P.forEach((p,i)=>{const avg=c=>{const m=P.filter((_,j)=>L[j]===c&&j!==i);return m.length?stat.mean(m.map(q=>d(p,q))):NaN;};const a=avg(L[i]);let b=Infinity;for(let c=0;c<k;c++)if(c!==L[i]){const v=avg(c);if(v<b)b=v;}s+=(isNaN(a)||!isFinite(b))?0:(b-a)/Math.max(a,b);});return s/P.length;},
+  fmt:(v,d=2)=>v==null||isNaN(v)?'—':(v<0?'−':'')+Math.abs(v).toFixed(d)
+};
+const PAL=['#2f6fd0','#d64535','#1f9d74','#f2a516','#9b4fc4','#e0702b','#5b6776'];
+
+/* 오렌지3 위젯 연결 흐름도 + 설정 표 + (선택) 진행 칩
+   orangeFlow({svg:'id', table:'id', nodes:[{s:1,t:'File',sub:'파일.csv',c:'Data',x,y}], edges:[[1,2]], w, h, done:{box,key,items}})
+   c: Data · Transform · Visualize · Model · Evaluate · Unsupervised · Associate · Explore
+   설정 표는 화면에 <table class="tbl of-set" id="…"><tr data-s="1">…</tr></table> 로 두면 위젯을 누를 때 그 줄이 강조된다. */
+const OF_COL={Data:'#f2b84b',Transform:'#f0875a',Visualize:'#fdb3a0',Model:'#f6a3c6',Evaluate:'#c5a1e8',Unsupervised:'#7fb2e0',Associate:'#8fd3c1',Explore:'#a7d36f'};
+function orangeFlow(o){
+  const S=$(o.svg), BW=o.bw||180, BH=48, N={}, id=o.svg;
+  o.nodes.forEach(n=>N[n.s]=n);
+  const W=o.w||Math.max(...o.nodes.map(n=>n.x))+BW+10, H=o.h||Math.max(...o.nodes.map(n=>n.y))+BH+10;
+  let g=`<defs><marker id="${id}A" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a94a3"/></marker></defs>`;
+  o.edges.forEach(([a,b,lab])=>{const p=N[a],q=N[b],x1=p.x+BW,y1=p.y+BH/2,x2=q.x-2,y2=q.y+BH/2;
+    g+=`<path d="M${x1} ${y1}C${x1+40} ${y1} ${x2-40} ${y2} ${x2} ${y2}" class="fe" marker-end="url(#${id}A)"/>`;
+    if(lab) g+=`<text x="${(x1+x2)/2}" y="${(y1+y2)/2-6}" class="fl">${esc(lab)}</text>`;});
+  o.nodes.forEach(n=>{const k=OF_COL[n.c]||'#ccc';
+    g+=`<g class="fn" data-s="${n.s}" tabindex="0" role="button" aria-label="${n.s}번 ${esc(n.t)}"><rect x="${n.x}" y="${n.y}" width="${BW}" height="${BH}" rx="10" class="fb" style="stroke:${k}"/><rect x="${n.x}" y="${n.y}" width="28" height="${BH}" rx="10" fill="${k}"/><rect x="${n.x+18}" y="${n.y}" width="10" height="${BH}" fill="${k}"/><text x="${n.x+14}" y="${n.y+29}" class="fnum">${n.s}</text><text x="${n.x+36}" y="${n.y+(n.sub?20:29)}" class="ft">${esc(n.t)}</text>${n.sub?`<text x="${n.x+36}" y="${n.y+37}" class="fs">${esc(n.sub)}</text>`:''}</g>`;});
+  S.setAttribute('viewBox',`0 0 ${W} ${H}`); S.innerHTML=g;
+  S.parentElement.classList.add('of-box'); S.style.minWidth=Math.min(W,o.minw||640)+'px';
+  const T=o.table?$(o.table):null;
+  const pick=s=>{S.querySelectorAll('.fn').forEach(x=>x.classList.toggle('on',x.dataset.s==s));
+    if(T){T.querySelectorAll('tr[data-s]').forEach(tr=>tr.classList.toggle('hl',tr.dataset.s==s)); const tr=T.querySelector(`tr[data-s="${s}"]`); if(tr) tr.scrollIntoView({behavior:'smooth',block:'nearest'});}};
+  S.querySelectorAll('.fn').forEach(x=>{x.onclick=()=>pick(x.dataset.s); x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(x.dataset.s);}};});
+  if(T){T.classList.add('of-set'); T.querySelectorAll('tr[data-s]').forEach(tr=>tr.onclick=()=>pick(tr.dataset.s));}
+  if(o.legend!==false){const used=[...new Set(o.nodes.map(n=>n.c))]; const L=document.createElement('div'); L.className='of-legend';
+    L.innerHTML=used.map(c=>`<span style="--k:${OF_COL[c]}">${c}</span>`).join('')+'<small>색은 오렌지3 왼쪽 위젯 카테고리예요.</small>'; S.parentElement.after(L);}
+  if(o.done) chips(o.done.box,o.done.key,o.done.items,true);
+  return {pick};
+}
+
+/* 산점도 탐색기
+   const sp=scatter({svg:'id', x:[0,10,2], y:[0,100,20], xl:'x 이름', yl:'y 이름', edit:true, max:40, onChange(P){…}})
+   onChange 는 set()과 학생이 점을 옮길 때만 불림(line·centers·resid 는 안 부름 → onChange 안에서 sp.line 해도 됨)
+   sp.set([[x,y,색 또는 군집번호],…]) · sp.line(a,b,'색',점선?) · sp.lines([...]) · sp.centers([[x,y],…]) · sp.resid(true) · sp.points() */
+function scatter(o){
+  const S=$(o.svg), W=o.w||460, H=o.h||340, L=52, R=14, T=12, B=46, pw=W-L-R, ph=H-T-B;
+  const [x0,x1,xs]=o.x, [y0,y1,ys]=o.y;
+  const X=v=>L+(v-x0)/(x1-x0)*pw, Y=v=>T+ph-(v-y0)/(y1-y0)*ph, IX=x=>x0+(x-L)/pw*(x1-x0), IY=y=>y0+(T+ph-y)/ph*(y1-y0);
+  const cl=(v,a,b)=>Math.max(a,Math.min(b,v)), dg=o.dec??1, rd=v=>+v.toFixed(dg), lab=v=>String(+v.toFixed(2)).replace('-','−');
+  let P=[], LN=[], C=[], RES=false, drag=-1;
+  S.setAttribute('viewBox',`0 0 ${W} ${H}`); S.classList.add('sp-svg');
+  let g=`<rect x="${L}" y="${T}" width="${pw}" height="${ph}" fill="#fbfaf7"/>`;
+  for(let v=x0;v<=x1+1e-9;v+=xs) g+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${T+ph}" stroke="#eceae4"/><text x="${X(v)}" y="${T+ph+16}" text-anchor="middle" font-size="11" fill="#5b6776">${lab(v)}</text>`;
+  for(let v=y0;v<=y1+1e-9;v+=ys) g+=`<line x1="${L}" y1="${Y(v)}" x2="${L+pw}" y2="${Y(v)}" stroke="#eceae4"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#5b6776">${lab(v)}</text>`;
+  g+=`<path d="M${L} ${T}V${T+ph}H${L+pw}" fill="none" stroke="#16202c" stroke-width="2"/><text x="${L+pw/2}" y="${H-6}" text-anchor="middle" font-size="12.5" font-weight="700" fill="#16202c">${o.xl} →</text><text x="14" y="${T+ph/2}" text-anchor="middle" font-size="12.5" font-weight="700" fill="#16202c" transform="rotate(-90 14 ${T+ph/2})">${o.yl} →</text><defs><clipPath id="${o.svg}C"><rect x="${L}" y="${T}" width="${pw}" height="${ph}"/></clipPath></defs><g class="ln" clip-path="url(#${o.svg}C)"></g><g class="pts"></g><g class="cs"></g>`;
+  S.innerHTML=g;
+  const col=p=>typeof p[2]==='number'?PAL[p[2]%PAL.length]:(p[2]||o.color||'#1f9d74');
+  function draw(fin,quiet){
+    let lg='';
+    if(RES&&LN[0]) P.forEach(p=>{const yh=LN[0].a+LN[0].b*p[0]; lg+=`<line x1="${X(p[0])}" y1="${Y(p[1])}" x2="${X(p[0])}" y2="${Y(yh)}" stroke="#d64535" stroke-width="1.5" stroke-dasharray="3 3"/>`;});
+    LN.forEach(l=>lg+=`<line x1="${X(x0)}" y1="${Y(l.a+l.b*x0)}" x2="${X(x1)}" y2="${Y(l.a+l.b*x1)}" stroke="${l.c||'#16202c'}" stroke-width="2.5"${l.dash?' stroke-dasharray="7 5"':''}/>`);
+    S.querySelector('.ln').innerHTML=lg;
+    S.querySelector('.pts').innerHTML=P.map((p,i)=>`<circle data-i="${i}" cx="${X(p[0])}" cy="${Y(p[1])}" r="${o.edit?7:5.5}" fill="${col(p)}" fill-opacity=".82" stroke="#fff" stroke-width="1.5"${o.edit?' class="sp-pt"':''}/>`).join('');
+    S.querySelector('.cs').innerHTML=C.map((c,i)=>`<g transform="translate(${X(c[0])} ${Y(c[1])})"><path d="M-9 -9L9 9M9 -9L-9 9" stroke="#fff" stroke-width="7"/><path d="M-9 -9L9 9M9 -9L-9 9" stroke="${PAL[i%PAL.length]}" stroke-width="4"/></g>`).join('');
+    if(o.onChange&&!quiet) o.onChange(P,fin);
+  }
+  const pt=e=>{const m=S.getScreenCTM(); if(!m) return [0,0]; const q=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()); return [q.x,q.y];};
+  if(o.edit){
+    S.style.touchAction='none';
+    S.addEventListener('pointerdown',e=>{const c=e.target.closest('circle[data-i]');
+      if(c){drag=+c.dataset.i; S.setPointerCapture(e.pointerId); return;}
+      const [x,y]=pt(e); if(x<L||x>L+pw||y<T||y>T+ph) return;
+      if(P.length>=(o.max||40)) return;
+      P.push([rd(cl(IX(x),x0,x1)),rd(cl(IY(y),y0,y1))]); draw(true);});
+    S.addEventListener('pointermove',e=>{if(drag<0)return; const [x,y]=pt(e); P[drag]=[rd(cl(IX(x),x0,x1)),rd(cl(IY(y),y0,y1)),P[drag][2]]; draw(false);});
+    const up=()=>{if(drag>=0){drag=-1; draw(true);}}; S.addEventListener('pointerup',up); S.addEventListener('pointercancel',up);
+    S.addEventListener('dblclick',e=>{const c=e.target.closest('circle[data-i]'); if(c){P.splice(+c.dataset.i,1); draw(true);}});
+  }
+  draw(false);
+  return {set(pts){P=pts.map(p=>p.slice()); draw(false); return this;}, points:()=>P.map(p=>p.slice()),
+    line(a,b,c,dash){LN=a==null?[]:[{a,b,c,dash}]; draw(false,1); return this;}, lines(ls){LN=ls; draw(false,1); return this;},
+    centers(cs){C=cs||[]; draw(false,1); return this;}, resid(on){RES=on; draw(false,1); return this;}, X, Y};
+}
+
+/* 막대그래프  bars('svgId',[['이름',값,'색'?],…],{max, unit, dec, w, h, horiz}) */
+function bars(id,data,o={}){
+  const S=$(id), W=o.w||460, n=data.length, horiz=o.horiz, rowH=30, H=o.h||(horiz?n*rowH+20:260);
+  const mx=o.max||Math.max(...data.map(d=>d[1]))*1.1||1, dec=o.dec??0, u=o.unit||'';
+  let g='';
+  if(horiz){const L=o.left||120, pw=W-L-60;
+    data.forEach(([k,v,c],i)=>{const y=10+i*rowH; g+=`<text x="${L-8}" y="${y+18}" text-anchor="end" font-size="12.5" fill="#16202c">${esc(k)}</text><rect x="${L}" y="${y+4}" width="${Math.max(0,v/mx*pw)}" height="${rowH-10}" rx="5" fill="${c||PAL[0]}"/><text x="${L+v/mx*pw+6}" y="${y+18}" font-size="12" font-weight="700" fill="#16202c">${(+v).toFixed(dec)}${u}</text>`;});
+  }else{const L=36, B=40, T=18, ph=H-B-T, bw=(W-L-10)/n;
+    g+=`<path d="M${L} ${T}V${T+ph}H${W-6}" fill="none" stroke="#16202c" stroke-width="1.5"/>`;
+    data.forEach(([k,v,c],i)=>{const x=L+i*bw+bw*.15, h=Math.max(0,v/mx*ph); g+=`<rect x="${x}" y="${T+ph-h}" width="${bw*.7}" height="${h}" rx="4" fill="${c||PAL[i%PAL.length]}"/><text x="${x+bw*.35}" y="${T+ph-h-5}" text-anchor="middle" font-size="12" font-weight="700" fill="#16202c">${(+v).toFixed(dec)}${u}</text><text x="${x+bw*.35}" y="${T+ph+16}" text-anchor="middle" font-size="12" fill="#16202c">${esc(k)}</text>`;});
+  }
+  S.setAttribute('viewBox',`0 0 ${W} ${H}`); S.classList.add('sp-svg'); S.innerHTML=g;
+}
+
+/* 상자 그림  boxes('svgId',[['이름',[값…],'색'?],…],{min,max,step,unit,w}) — 가로 상자, 1.5×IQR 밖 값은 점 */
+function boxes(id,groups,o={}){
+  const S=$(id), W=o.w||460, rowH=44, L=o.left||90, R=16, H=groups.length*rowH+34, pw=W-L-R;
+  const all=groups.flatMap(g=>g[1]), lo=o.min??Math.min(...all), hi=o.max??Math.max(...all), X=v=>L+(v-lo)/(hi-lo)*pw;
+  let g=''; const st=o.step||(hi-lo)/5;
+  for(let v=lo;v<=hi+1e-9;v+=st) g+=`<line x1="${X(v)}" y1="6" x2="${X(v)}" y2="${H-26}" stroke="#eceae4"/><text x="${X(v)}" y="${H-10}" text-anchor="middle" font-size="11" fill="#5b6776">${+v.toFixed(2)}${o.unit||''}</text>`;
+  groups.forEach(([k,a,c],i)=>{const y=8+i*rowH+rowH/2-4, q1=stat.q(a,.25), q2=stat.q(a,.5), q3=stat.q(a,.75), iq=q3-q1, fl=a.filter(v=>v>=q1-1.5*iq), fh=a.filter(v=>v<=q3+1.5*iq), wl=Math.min(...fl), wh=Math.max(...fh), k2=c||PAL[i%PAL.length];
+    g+=`<text x="${L-8}" y="${y+4}" text-anchor="end" font-size="12.5" fill="#16202c">${esc(k)}</text><line x1="${X(wl)}" y1="${y}" x2="${X(wh)}" y2="${y}" stroke="${k2}" stroke-width="2"/><rect x="${X(q1)}" y="${y-12}" width="${Math.max(1,X(q3)-X(q1))}" height="24" rx="4" fill="${k2}" fill-opacity=".25" stroke="${k2}" stroke-width="2"/><line x1="${X(q2)}" y1="${y-12}" x2="${X(q2)}" y2="${y+12}" stroke="${k2}" stroke-width="3"/>`+a.filter(v=>v<wl||v>wh).map(v=>`<circle cx="${X(v)}" cy="${y}" r="4" fill="#fff" stroke="#d64535" stroke-width="2"/>`).join('');});
+  S.setAttribute('viewBox',`0 0 ${W} ${H}`); S.classList.add('sp-svg'); S.innerHTML=g;
+}
+
+/* 작은 표  miniTable('boxId',{cols:['이름',…], rows:[[…],…], edit:[열번호…], pick:true, onChange(rows), onPick(i)}) — 칸을 고치거나 줄을 고를 수 있음 */
+function miniTable(box,o){
+  const B=$(box); B.classList.add('mt-wrap'); let rows=o.rows.map(r=>r.slice()), sel=new Set();
+  function draw(){
+    B.innerHTML=`<table class="tbl mt"><tr>${o.pick?'<th></th>':''}${o.cols.map(c=>`<th>${c}</th>`).join('')}</tr>${rows.map((r,i)=>`<tr data-i="${i}" class="${sel.has(i)?'on':''}">${o.pick?`<td><input type="checkbox" aria-label="${i+1}번째 줄 고르기" ${sel.has(i)?'checked':''}></td>`:''}${r.map((v,j)=>(o.edit||[]).includes(j)?`<td><input class="mt-in" data-j="${j}" value="${esc(v)}" inputmode="decimal" aria-label="${esc(o.cols[j])}"></td>`:`<td>${v}</td>`).join('')}</tr>`).join('')}</table>`;
+    B.querySelectorAll('.mt-in').forEach(inp=>inp.oninput=()=>{const i=+inp.closest('tr').dataset.i, j=+inp.dataset.j, v=inp.value.trim(); rows[i][j]=v===''||isNaN(+v)?v:+v; o.onChange&&o.onChange(rows);});
+    B.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.onchange=()=>{const i=+cb.closest('tr').dataset.i; cb.checked?sel.add(i):sel.delete(i); cb.closest('tr').classList.toggle('on',cb.checked); o.onPick&&o.onPick([...sel].sort((a,b)=>a-b));});
+  }
+  draw();
+  return {rows:()=>rows.map(r=>r.slice()), set(r){rows=r.map(x=>x.slice()); sel.clear(); draw();}, picked:()=>[...sel]};
+}
+/* u4-country-2 전용 (c2-) — 공용 부품 vote · sorter · flipCards · chips · scatter · stat · bars · orangeFlow 사용 */
+
+/* 0 시작 · 처음 생각 */
+vote('c2First','c2First',[['바로 정해도 돼요','비슷한 나라끼리 묶었으니까'],['더 확인해야 해요','군집만으로는 부족할 것 같아요'],['잘 모르겠어요','해 보고 정할래요']]);
+
+/* 01 k 비교 탐색기 — 예시 나라 24개 [건강지표, 금융지표] (0~1, 지어낸 고정값) */
+const C2_P=[
+  [0.12,0.10],[0.15,0.18],[0.18,0.12],[0.20,0.22],[0.22,0.09],[0.25,0.16],[0.14,0.24],[0.28,0.20],[0.17,0.07],[0.24,0.26],[0.30,0.12],[0.11,0.16],
+  [0.52,0.08],[0.58,0.04],[0.63,0.12],[0.68,0.06],[0.72,0.10],[0.78,0.03],[0.60,0.14],
+  [0.10,0.55],[0.15,0.70],[0.08,0.48],[0.20,0.62],[0.13,0.80]
+];
+const C2_KS=[2,3,4,5,6];
+/* 시작 중심을 「가장 먼 점부터 고르기」로 점마다 한 번씩 정해 돌리고, SSE가 가장 작은 결과를 씀 → 늘 같은 결과 */
+function c2Run(P,C){ let L=stat.assign(P,C); for(let n=0;n<100;n++){ const C2=stat.center(P,L,C), L2=stat.assign(P,C2); C=C2; if(L2.every((v,i)=>v===L[i])) break; L=L2; } return {L,C}; }
+function c2Best(P,k){
+  let best=null;
+  P.forEach((_,s)=>{
+    const C=[P[s].slice(0,2)];
+    while(C.length<k){ let bi=0,bd=-1; P.forEach((p,i)=>{const d=Math.min(...C.map(c=>(p[0]-c[0])**2+(p[1]-c[1])**2)); if(d>bd){bd=d;bi=i;}}); C.push(P[bi].slice(0,2)); }
+    const r=c2Run(P,C), e=stat.sse(P,r.L,r.C);
+    if(!best||e<best.e-1e-12) best={...r,e};
+  });
+  /* 군집 번호를 중심의 (건강지표, 금융지표) 순서로 다시 붙여 k가 바뀌어도 색이 덜 뒤섞이게 */
+  const ord=best.C.map((c,i)=>i).sort((a,b)=>best.C[a][0]-best.C[b][0]||best.C[b][1]-best.C[a][1]), re={}; ord.forEach((o,n)=>re[o]=n);
+  return {L:best.L.map(v=>re[v]), C:ord.map(o=>best.C[o]), e:best.e};
+}
+let c2Pts=C2_P.map(p=>p.slice()), c2KNow=3, c2Res={}, c2Busy=false;
+function c2Compute(){
+  c2Res={};
+  if(c2Pts.length<7){ return; }
+  C2_KS.forEach(k=>{ const r=c2Best(c2Pts,k); c2Res[k]={...r,sil:stat.silhouette(c2Pts,r.L)}; });
+}
+function c2Draw(){
+  const R=c2Res[c2KNow];
+  $('c2K').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.k===c2KNow));
+  if(!R){ c2Busy=true; c2Plot.set(c2Pts.map(p=>[p[0],p[1]])).centers([]); c2Busy=false; $('c2Say').innerHTML='점이 7개 이상 있어야 k = 2~6을 비교할 수 있어요. 빈 곳을 눌러 점을 더해 보세요.'; return; }
+  c2Busy=true; c2Plot.set(c2Pts.map((p,i)=>[p[0],p[1],R.L[i]])).centers(R.C); c2Busy=false;
+  const bestSil=C2_KS.reduce((a,b)=>c2Res[b].sil>c2Res[a].sil?b:a);
+  bars('c2Sse',C2_KS.map(k=>[`k=${k}`,c2Res[k].e,k===c2KNow?'#c98a00':'#ecd9a6']),{dec:3,h:190});
+  bars('c2Sil',C2_KS.map(k=>[`k=${k}`,Math.max(0,c2Res[k].sil),k===c2KNow?'#1f9d74':'#a9dcc8']),{dec:3,max:1,h:190});
+  const prev=c2Res[c2KNow-1], drop=prev?prev.e-R.e:null;
+  const sizes=R.C.map((c,i)=>`<span style="color:${PAL[i%PAL.length]}">●</span> ${R.L.filter(v=>v===i).length}개`).join(' · ');
+  $('c2Say').innerHTML=`k = ${c2KNow} · SSE <b>${stat.fmt(R.e,3)}</b>${drop!=null?` (k = ${c2KNow-1}보다 ${stat.fmt(drop,3)} 줄어듦)`:''} · 평균 실루엣 계수 <b>${stat.fmt(R.sil,3)}</b>${bestSil===c2KNow?' — 지금 점들에서 가장 커요!':` (가장 큰 것은 k = ${bestSil})`}<br>군집별 나라 수: ${sizes}`;
+}
+const c2Plot=scatter({svg:'c2Plot', x:[0,1,0.2], y:[0,1,0.2], xl:'건강지표 (0~1, 예시)', yl:'금융지표 (0~1, 예시)', edit:true, max:40, dec:2,
+  onChange(P,fin){ if(c2Busy||!fin) return; c2Pts=P.map(p=>[p[0],p[1]]); c2Compute(); c2Draw(); }});  /* 손을 뗄 때만 다시 계산(처음 만들 때 부르는 onChange는 fin이 없어 건너뜀) */
+$('c2K').innerHTML=C2_KS.map(k=>`<button class="btn ghost sm" data-k="${k}">k = ${k}</button>`).join('');
+$('c2K').querySelectorAll('button').forEach(b=>b.onclick=()=>{c2KNow=+b.dataset.k; c2Draw();});
+$('c2Reset').onclick=()=>{c2Pts=C2_P.map(p=>p.slice()); c2Compute(); c2Draw();};
+c2Compute(); c2Draw();
+
+/* 02 오렌지3 흐름도 + 설정 표 + 진행 칩 */
+orangeFlow({svg:'c2Flow', table:'c2Set',
+  nodes:[
+    {s:1,t:'File',sub:'Country-data.csv',c:'Data',x:10,y:70},
+    {s:2,t:'Formula',sub:'Health · Trade · Finance',c:'Transform',x:230,y:70},
+    {s:3,t:'Select Columns',sub:'feature 3개',c:'Transform',x:450,y:70},
+    {s:4,t:'Preprocess',sub:'[0, 1] 정규화',c:'Transform',x:670,y:70},
+    {s:5,t:'k-Means',sub:'From 2 to 9 · k 고르기',c:'Unsupervised',x:890,y:70},
+    {s:6,t:'Box Plot',sub:'Subgroups: Cluster',c:'Visualize',x:1110,y:20},
+    {s:7,t:'Distributions',sub:'Cluster별 나라 수',c:'Visualize',x:1110,y:120}
+  ],
+  edges:[[1,2],[2,3],[3,4],[4,5],[5,6],[5,7]],
+  done:{box:'c2Done', key:'c2Done', items:['세 지표 만들기','0~1 정규화','실루엣 목록에서 k 고르기','child_mort 상자 그림','income 상자 그림','군집별 나라 수','이름 붙여 기록']}});
+
+/* 02 군집에 이름 붙이기 — 실제 167개 나라를 세 지표로 k = 3 묶은 요약값(집계값) */
+sorter('c2Name',{
+  cats:[{n:'사망률 높고 소득 낮은 무리',k:'#d64535'},{n:'사망률·소득이 중간인 무리',k:'#c98a00'},{n:'사망률 낮고 소득 높은 무리',k:'#1f9d74'}],
+  items:[
+    {t:'군집 ㉠ · 102개 나라 · child_mort 중앙값 <b>18.4</b> · income 중앙값 <b>11150</b>',short:'㉠ 102개',c:1,ic:'🟡',w:'child_mort와 income이 모두 다른 두 무리의 사이에 있어요. 나라 수가 가장 많아 안쪽 차이도 커서, 지원을 검토할 때 원래 속성을 나라마다 더 살펴봐야 해요.'},
+    {t:'군집 ㉡ · 36개 나라 · child_mort 중앙값 <b>95.5</b> · income 중앙값 <b>1695</b>',short:'㉡ 36개',c:0,ic:'🔴',w:'5세 미만 사망률이 가장 높고 1인당 소득이 가장 낮은 무리예요. 지원 검토는 이 특성과 함께 기대 수명 같은 원래 속성, 인구·최근 상황을 더 보고 판단해요.'},
+    {t:'군집 ㉢ · 29개 나라 · child_mort 중앙값 <b>4.8</b> · income 중앙값 <b>43200</b>',short:'㉢ 29개',c:2,ic:'🟢',w:'사망률이 가장 낮고 소득이 가장 높은 무리예요. 다만 이것도 이 자료가 모인 때의 모습이라, 지원 여부는 원래 속성과 함께 판단해요.'}
+  ],
+  end:'<b>정리</b> 이름은 군집 번호가 아니라 <b>요약값</b>을 보고 특성대로 붙였어요. 군집 이름이 곧 지원 순위는 아니에요. 내 오렌지3의 군집도 나라 수와 중앙값을 견주어 어느 무리인지 찾아요.'
+});
+
+/* 03 병합적 군집 흐름도 */
+orangeFlow({svg:'c2Flow2', table:'c2Set2',
+  nodes:[
+    {s:1,t:'Preprocess',sub:'02의 4번',c:'Transform',x:10,y:10},
+    {s:2,t:'Distances',sub:'Rows · Euclidean',c:'Unsupervised',x:230,y:10},
+    {s:3,t:'Hierarchical Clustering',sub:'Ward · Top N 3',c:'Unsupervised',x:450,y:10},
+    {s:4,t:'Box Plot (1)',sub:'Subgroups: Cluster',c:'Visualize',x:670,y:10}
+  ],
+  edges:[[1,2],[2,3],[3,4]],
+  done:{box:'c2Done2', key:'c2Done2', items:['거리 재기','Ward · Top N 3','상자 그림 비교']}});
+
+/* 03 교과서 지도 코드 점검 카드 */
+flipCards('c2Bug',[
+  {ic:'🔢',f:'번호 → 이름 짝짓기',s:'224쪽은 1을 무엇으로 바꿨나?',b:'223쪽 병합적 군집에서는 <b>1번이 「도움이 필요함」</b>인데, 224쪽 코드는 1을 \'Might Need Help\'로 바꿔요. 손으로 짝지으면 지도가 엉뚱하게 칠해져요.',x:'고치기 · 군집별 중앙값을 보고 이름 붙이기'},
+  {ic:'🎨',f:'색 이름표',s:'바꾼 이름과 색을 지정한 이름은 같을까?',b:'값은 \'No Need Help\'로 바꾸고, 색은 \'No Help Needed\'에 지정했어요. 이름이 달라서 그 무리에 <b>초록색이 칠해지지 않아요</b>.',x:'고치기 · 이름을 하나로 통일하기'},
+  {ic:'🏷️',f:'군집 번호의 뜻',s:'0·1·2는 순위일까?',b:'번호는 실행·모델마다 바뀌는 <b>이름표</b>일 뿐이에요. k-평균과 병합적 군집은 같은 무리에도 다른 번호를 붙였어요.',x:'고치기 · 번호 대신 특성으로 말하기'}
+]);
+
+/* 05 마무리 · 프로젝트 되돌아보기(교과서 225쪽 평가 과정) */
+chips('c2Eval','c2Eval',['문제 정의','데이터 수집','데이터 전처리','데이터 시각화와 분석','데이터 모델링','평가'],true);
+const MEMOLIST=[['c2First','처음 생각: 군집만으로 정해도 될까'],['c2K','탐구 기록 ① 군집 수와 근거'],['c2Done','오렌지3 진행 체크 (k-Means)'],['c2Res','탐구 기록 ② 군집별 특성과 이름'],['c2Done2','오렌지3 진행 체크 (병합적 군집)'],['c2Limit','탐구 기록 ③ 두 모델 비교와 더 확인할 것'],['c2Eval','잘 해낸 프로젝트 과정'],['keyQ','오늘의 질문에 대한 내 답']];
+onShow[5]=()=>{
+  $('c2FirstShow').textContent=MEMO.c2First?'「'+MEMO.c2First+'」':'아직 고르지 않음';
+  memoSummary('msum',MEMOLIST);
+};
+
+/* 진도 보내기 ②: 화면 이동·퀴즈·메모·창 이탈을 선생님 시트로 */
+(function(){
+  if(WHO.off) return;
+  const box=document.createElement('div');
+  if(WHO.preview){
+    box.className='tr-badge';
+    box.innerHTML=WHO.teacher?'교사 모드 · 전송 안 함 <button type="button">끝내기</button>':'미리보기 · 진도 전송 안 함';
+    (document.querySelector('.top')||document.body).appendChild(box);
+    const b=box.querySelector('button'); if(b) b.onclick=()=>{ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); };
+    return;
+  }
+
+  if(WHO.need){
+    let last={}; try{last=JSON.parse(localStorage.getItem('aiw-last')||'{}')||{};}catch(e){}
+    box.className='tr-gate';
+    box.innerHTML=`<form class="tr-card" autocomplete="off">
+      <h2>수업 시작 전에</h2>
+      <p class="tr-sub">학번과 이름을 써 주세요.</p>
+      <label class="tr-f"><span>학번</span><input name="no" inputmode="numeric" maxlength="5" placeholder="예: 20101" value="${esc(last.no||'')}"></label>
+      <label class="tr-f"><span>이름</span><input name="name" maxlength="10" placeholder="이름" value="${esc(last.name||'')}"></label>
+      <div class="tr-cls" hidden>${[].map(c=>`<label><input type="radio" name="cls" value="${c}"><span>${c}</span></label>`).join('')}</div>
+      <div class="tr-err"></div>
+      <button class="btn" type="submit">시작하기 →</button>
+      <p class="tr-note">어느 화면까지 왔는지, 퀴즈와 메모가 선생님께 전달돼요.<br>다른 친구 이름으로 들어가지 마세요.</p>
+    </form>`;
+    document.body.appendChild(box);
+    const f=box.querySelector('form'), err=box.querySelector('.tr-err'), go2=f.querySelector('button[type=submit]'), clsBox=box.querySelector('.tr-cls');
+    f.no.addEventListener('input',()=>{f.no.value=f.no.value.replace(/\D/g,'').slice(0,5);});
+    const TEACH=t=>{let h=2166136261;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return h.toString(36);}, TEACH_H='853zuh';
+    const enter=w=>{ try{sessionStorage.setItem('aiw-who',JSON.stringify(w)); if(!w.teacher) localStorage.setItem('aiw-last',JSON.stringify({no:w.no,name:w.name}));}catch(e){} location.reload(); };
+    const busy=on=>{ go2.disabled=on; go2.textContent=on?'명단에서 확인하는 중…':'시작하기 →'; };
+    f.onsubmit=async e=>{
+      e.preventDefault(); err.textContent='';
+      const no=f.no.value.trim(), name=f.name.value.replace(/\s+/g,'').trim();
+      if(TEACH(no+'|'+name)===TEACH_H) return enter({teacher:true});
+      if(!/^\d{5}$/.test(no)){err.textContent='학번 다섯 자리를 숫자로 써 주세요.';f.no.focus();return;}
+      if(name.length<2){err.textContent='이름을 써 주세요.';f.name.focus();return;}
+      /* 명단에서 확인이 안 될 때만 반을 직접 고른다 */
+      if(!clsBox.hidden){
+        const cls=(f.querySelector('input[name=cls]:checked')||{}).value;
+        if(!cls){err.textContent='반을 골라 주세요.';return;}
+        return enter({cls,no,name});
+      }
+      busy(true);
+      try{
+        const r=await fetch(PEP,{method:'POST',body:JSON.stringify({op:'who',no,name})});
+        const d=await r.json();
+        if(d.ok) return enter({cls:d.cls,no,name});
+        busy(false);
+        if(d.err==='notfound'){ err.textContent='명단에서 찾지 못했어요. 학번과 이름을 다시 확인해 주세요. 계속 안 되면 선생님께 말해 주세요.'; return; }
+        throw new Error(d.err);
+      }catch(x){
+        busy(false);
+        if(clsBox.hidden){ clsBox.hidden=false; err.textContent='명단을 확인하지 못했어요. 내 반을 골라 주세요.'; }
+      }
+    };
+    setTimeout(()=>{ (f.no.value?(f.name.value?go2:f.name):f.no).focus(); },50);
+    return;
+  }
+
+  /* 이름 표시 + 바꾸기 */
+  box.className='tr-who';
+  box.innerHTML=`<span>${esc(WHO.cls)} ${esc(WHO.no)} <b>${esc(WHO.name)}</b></span><button type="button" title="다른 학생으로 바꾸기">바꾸기</button>`;
+  (document.querySelector('.top')||document.body).appendChild(box);
+  box.querySelector('button').onclick=()=>{ if(confirm('다른 학생으로 바꿀까요? (지금까지 한 것은 이 학번으로 저장돼 있어요)')){ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); } };
+
+  const SK=QK+'-seen', AK=QK+'-away';
+  const seen=new Set(store.get(SK,[]));
+  const A=store.get(AK,{n:0,s:0});
+  let awayAt=null, lastAct=Date.now(), sent=0, lastSent=0, tmr=null, dirty=false;
+
+  function snap(){
+    let ok=0, done=0;
+    for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{const v=QS[k+'-'+i]; if(v!=null){done++; if(v===it.a) ok++;}});
+    const ML=(typeof MEMOLIST!=='undefined')?MEMOLIST:[];
+    return {op:'put',lesson:LESSON,title:document.title,cls:WHO.cls,no:WHO.no,name:WHO.name,
+      scr:cur,names:pages.map((p,i)=>i?p.dataset.name:'시작'),seen:[...seen].sort((a,b)=>a-b),
+      qOk:ok,qDone:done,qTot:TOTALQ,
+      memo:ML.map(([k,l])=>[l,String(MEMO[k]==null?'':MEMO[k]).slice(0,1500)]),
+      away:awayAt?1:0,leaves:A.n,awaySec:Math.round(A.s+(awayAt?(Date.now()-awayAt)/1000:0)),idle:Math.round((Date.now()-lastAct)/1000),n:++sent};
+  }
+  function flush(){
+    if(!dirty) return; dirty=false; lastSent=Date.now();
+    const body=JSON.stringify(snap());
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(PEP,new Blob([body],{type:'text/plain'}))) return; }catch(e){}
+    try{ fetch(PEP,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  /* 너무 자주 보내지 않기: 보통 15초, 창 이탈·복귀는 3초 간격 */
+  function send(urgent){
+    dirty=true; clearTimeout(tmr);
+    const gap=urgent?3000:15000, wait=Math.max(0,gap-(Date.now()-lastSent));
+    tmr=setTimeout(flush,wait);
+  }
+
+  const _go=go; go=function(i){ _go(i); if(!seen.has(cur)){seen.add(cur); store.set(SK,[...seen]);} send(true); };
+  const _upd=updScore; updScore=function(){ _upd(); send(); };
+  const _set=store.set; store.set=function(k,v){ _set(k,v); if(k===MK) send(); };
+
+  function leave(){ if(awayAt) return; awayAt=Date.now(); A.n++; _set(AK,A); send(true); }
+  function back(){ if(!awayAt) return; A.s+=(Date.now()-awayAt)/1000; awayAt=null; _set(AK,A); send(true); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?leave():(document.hasFocus()&&back()); });
+  window.addEventListener('blur',()=>setTimeout(()=>{ if(!document.hasFocus()) leave(); },300));
+  window.addEventListener('focus',back);
+  window.addEventListener('pagehide',()=>{ dirty=true; flush(); });
+  ['pointerdown','keydown','input','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now();},{capture:true,passive:true}));
+  /* 화면에 머물러 있으면 2분마다 한 번 신호 */
+  setInterval(()=>{ if(!document.hidden) send(); },120000);
+})();
+
+/* 시작 */
+bindMemos();
+updScore();
+const h0=parseInt((location.hash.match(/^#p(\d+)$/)||[])[1],10);
+go(isNaN(h0)?0:h0);
+</script>
+<script>
+/* page-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 (복사 버튼은 그대로 동작) */
+(function(){
+  var t=null, tm=null, MSG='수업 자료는 복사할 수 없어요. 내 말로 정리해 보세요.';
+  function say(){ if(!t){t=document.createElement('div');t.className='pg-toast';document.body.appendChild(t);} t.textContent=MSG; t.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){t.classList.remove('on');},1800); }
+  function inField(e){ return e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'); }
+  ['copy','cut'].forEach(function(type){ document.addEventListener(type,function(e){ e.preventDefault(); say(); },true); });
+  document.addEventListener('contextmenu',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('selectstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('keydown',function(e){ var k=(e.key||'').toLowerCase(); if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x')){ e.preventDefault(); say(); } if((e.ctrlKey||e.metaKey)&&k==='a'&&!inField(e)) e.preventDefault(); },true);
+})();
+</script>
+</body>
+</html>

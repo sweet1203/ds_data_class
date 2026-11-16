@@ -1,0 +1,39 @@
+  /* u4-team-project 전용 (tp-) */
+  .tp-roles{list-style:none;padding:0;margin:4px 0 10px;font-size:.92rem}
+  .tp-roles li{margin:4px 0}
+  .tp-roles b{display:inline-block;min-width:52px;color:var(--acc)}
+  .tp-vote{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:860px){.tp-vote{grid-template-columns:1fr}}
+  .tp-vote button{font-size:1rem;line-height:1.45}
+  .tp-vote button small{margin-top:6px}
+  .tp-peek{margin-top:12px;background:var(--acc-soft);border-radius:10px;padding:10px 14px;font-size:.92rem}
+  .tp-tw{overflow-x:auto}
+  .tp-ex,.tp-ck{min-width:620px;margin:0}
+  .tp-ex th,.tp-ck th{background:#fbfaf7;text-align:left}
+  .tp-ex td,.tp-ck td{border-top:1px solid #eef0f3;font-size:.9rem}
+  .tp-ck td:first-child{font-weight:700;white-space:nowrap}
+  .tp-tabs{margin-bottom:10px}
+  .tp-board{display:grid;gap:6px}
+  .tp-lane{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:start;background:#fbfaf7;border-radius:12px;padding:10px 12px}
+  @media (max-width:700px){.tp-lane{grid-template-columns:1fr}}
+  .tp-k{border-left:5px solid var(--k);padding-left:10px}
+  .tp-k b{display:block;color:var(--k)}
+  .tp-k small{color:var(--muted);font-size:.8rem}
+  .tp-v{font-size:.92rem;min-width:0}
+  .tp-v .chk button{font-size:.85rem}
+  .tp-legend{margin:8px 0 0}
+  .tp-ar{text-align:center;color:var(--muted);font-weight:900;line-height:1}
+  .tp-fb{margin-top:12px;border-radius:12px;padding:10px 14px;background:#fbfaf7;border:2px dashed var(--line);font-size:.92rem}
+  .tp-fb.all{border:2px solid var(--mint);background:#eaf7f1}
+  .tp-fb.some{border:2px solid var(--amber);background:#fff8e8}
+  .tp-fb ul{list-style:none;padding:0;margin:6px 0 0}
+  .tp-fb li{margin:4px 0;display:flex;gap:6px}
+  .tp-fb li.ok{color:var(--ink)}
+  .tp-fb li.ng{color:#9a2f22}
+  .tp-fb li.in{color:var(--muted)}
+  .tp-sc{font-size:1rem}
+  .tp-line{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+  .tp-line b:first-child{display:block;font-size:.85rem;color:var(--muted)}
+  .tp-help summary{cursor:pointer;font-weight:900}
+  .tp-tips{padding-left:20px;font-size:.92rem;margin:12px 0 0}
+  .tp-tips li{margin:6px 0}

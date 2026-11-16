@@ -1,0 +1,260 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#c2410c">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅳ. 데이터 과학 프로젝트 · 2. 데이터 과학 프로젝트 실제</span>
+      <h1>관객 수,<br>리뷰 속에<br>힌트가 있을까?</h1>
+      <div class="story"><b>영화 데이터로 프로젝트를 해 볼까?</b><br>어떤 영화는 개봉 전부터 온라인 반응을 꼼꼼히 분석해 홍보 전략을 세웠다고 해요. 평점, 평점에 참여한 사람 수, 평론가가 쓴 리뷰 같은 데이터가 관객 수와 어떤 관계가 있는지 살펴봐요.</div>
+      <p>이번 프로젝트는 모둠별로 <b>영화</b>와 <b>국가</b> 가운데 하나를 골라 해요. 영화를 고른 모둠은 오늘 데이터를 준비하고 시각화하며, 다음 시간에 관객 수를 예측하는 모델을 만들어요.</p>
+      <ol>
+        <li>문제 정의와 데이터 살펴보기</li><li>영화 단위로 묶기 · 관객 수로 나누기</li><li>리뷰 전처리 체험</li><li>오렌지3 산점도 · 워드 클라우드</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🎯</i><div><b>문제 정의</b><small>무엇을 알고 싶은가</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📂</i><div><b>데이터 수집 · 전처리</b><small>영화별로 묶기 · 리뷰 다듬기</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📊</i><div><b>시각화와 분석</b><small>산점도 · 워드 클라우드</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🔮</i><div><b>다음 시간</b><small>모델링과 평가</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지금까지 배운 프로젝트 단계(문제 정의 → 데이터 준비와 분석 → 데이터 모델링과 평가)를 영화 데이터로 직접 해 봐요. 오늘은 숫자 데이터와 글(리뷰) 데이터를 각각 알맞게 다듬고 그림으로 살펴봐요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">우리 모둠의 역할</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>이번 프로젝트에서 내가 맡을 역할을 골라요.</b> 여러 개 골라도 돼요.</p>
+        <div id="mvRole"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 과학 프로젝트 실제</b> · 데이터 과학 프로젝트를 실제로 수행하여 어떻게 문제를 해결할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 영화 데이터의 숫자와 리뷰를 어떻게 다듬어야 관객 수와의 관계를 살펴볼 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>웹크롤링 등 다양한 방법을 통해 데이터를 수집하고, 효과적으로 분석할 수 있다.</li>
+          <li>문제 해결을 위해 기계학습 방법을 활용하여 예측 모델을 구축하고 평가할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memo" style="margin-top:16px">
+      <label>✍️ 우리 모둠이 데이터로 풀고 싶은 문제를 한 문장으로 쓰고, 그 문제를 풀면 누구에게 어떤 도움이 될지 적어요. <small>교과서 199쪽 해 보기</small></label>
+      <textarea data-memo="mvPlan" rows="3" placeholder="문제: …&#10;도움이 되는 사람과 쓰임: …"></textarea><div class="saved"></div>
+    </div>
+    <p class="note">국가 프로젝트를 고른 모둠도 이 화면을 둘러볼 수 있어요. 다음 시간과 단원 정리는 각자 고른 프로젝트로 이어져요.</p>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 살펴보기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 수집 · 그룹화 -->
+<section class="page" data-name="데이터 수집과 그룹화" data-acc="#c98a00">
+  <div class="head"><div class="num">01</div><div><h2>영화 데이터 모으고 영화별로 묶기</h2><p>교과서 199~201쪽 · 데이터셋 구성 · 한 줄의 단위 · Group by · 관객 수로 두 묶음 나누기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>영화 데이터 파일은 <b>한 줄에 평론가 리뷰가 하나</b>씩 들어 있어서, 같은 영화가 여러 줄에 나와요. 영화끼리 숫자를 비교하려면 <b>영화명으로 묶어</b> 한 영화를 한 줄로 만들고, 리뷰 글을 분석할 때는 <b>리뷰 한 줄 한 줄</b>을 그대로 써요.</span></div>
+  <div class="card">
+    <h3>📂 영화 데이터셋은 이렇게 만들었어요</h3>
+    <div class="grid2 even">
+      <div class="kc" style="--k:#c98a00"><h4>① 영화 목록 내려받기</h4><p>영화관 입장권 통합전산망의 연도별 개봉 영화 목록(2022~2024년)에서 순위, 영화명, 관객 수, 상영 횟수, 매출액, 스크린 수, 개봉일, 대표 국적, 배급사를 얻어요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>② 영화명으로 웹크롤링하기</h4><p>영화명으로 검색해 실관람객 평점과 참여자 수, 네티즌 평점과 참여자 수, 평론가 평점과 평론가 리뷰를 모아요. 영화 한 편에 평론가 리뷰가 여러 개예요.</p></div>
+    </div>
+    <p class="note">수업에서는 직접 웹크롤링하지 않고, 미리 합쳐 둔 <span class="mono">영화 데이터.xlsx</span>를 선생님이 알려 주는 폴더에서 내려받아 써요. 웹크롤링 코드는 다음 시간에 (선택)으로 살펴봐요.</p>
+  </div>
+  <div class="card">
+    <h3>🧩 한 줄은 무엇을 뜻할까? <span class="muted" style="font-weight:400;font-size:.88rem">(지어낸 예시 영화 두 편)</span></h3>
+    <div class="grid2 even">
+      <div>
+        <h4 style="margin:0 0 6px">파일 그대로 · 리뷰 한 줄 = 한 줄</h4>
+        <div class="of-tw"><table class="tbl mv1-ex">
+          <tr><th>영화명</th><th>관객 수</th><th>평론가 평점</th><th>평론가 리뷰</th></tr>
+          <tr><td>예시 영화 가</td><td>4,200,000</td><td>8</td><td>리뷰 ①</td></tr>
+          <tr><td>예시 영화 가</td><td>4,200,000</td><td>6</td><td>리뷰 ②</td></tr>
+          <tr><td>예시 영화 가</td><td>4,200,000</td><td>7</td><td>리뷰 ③</td></tr>
+          <tr><td>예시 영화 나</td><td>650,000</td><td>5</td><td>리뷰 ④</td></tr>
+          <tr><td>예시 영화 나</td><td>650,000</td><td>7</td><td>리뷰 ⑤</td></tr>
+        </table></div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 6px">Group by(영화명) 뒤 · 영화 한 편 = 한 줄</h4>
+        <div class="of-tw"><table class="tbl mv1-ex">
+          <tr><th>영화명</th><th>관객 수 - Mean</th><th>평론가 평점 - Mean</th></tr>
+          <tr><td>예시 영화 가</td><td>4,200,000</td><td>7</td></tr>
+          <tr><td>예시 영화 나</td><td>650,000</td><td>6</td></tr>
+        </table></div>
+        <p style="font-size:.92rem">같은 영화의 관객 수는 줄마다 같아서 평균(<b>Mean</b>)을 내도 그대로예요. 평론가 평점은 리뷰마다 달라서 <b>평론가들의 평균 평점</b>이 돼요.</p>
+      </div>
+    </div>
+    <div class="callout">💡 교과서 데이터는 <b>877줄</b>이고, 영화명으로 묶으면 <b>143개의 그룹</b>(영화 143편)이 생겨요(교과서 201쪽). 묶지 않고 관객 수와 평점의 산점도를 그리면 리뷰가 많은 영화는 같은 점이 여러 번 찍혀 더 무겁게 보여요.</div>
+    <h4 style="margin:14px 0 6px">🗂️ 이 분석은 어느 단위로 할까? <span class="muted" style="font-weight:400;font-size:.85rem">(5장)</span></h4>
+    <div id="mvUnitSort"></div>
+  </div>
+  <div class="card">
+    <h3>✂️ 관객 수로 두 묶음 나누기</h3>
+    <p style="margin-top:0">흥행 경향을 비교하려고 관객 수가 <b>300만 명이 넘는 영화</b>는 <b>고관객군 영화</b>, <b>100만 명이 안 되는 영화</b>는 <b>저관객군 영화</b>로 나눠요. 오렌지3에서는 Select Rows 위젯 두 개로 리뷰 줄을 걸러요.</p>
+    <div class="of-tw"><table class="tbl mv1-ex">
+      <tr><th>묶음</th><th>Select Rows 조건</th><th>영화 수</th><th>리뷰 줄 수</th></tr>
+      <tr><td><b>고관객군 영화</b></td><td><span class="mono">관객 수 is greater than 3000000</span></td><td>21편</td><td>189줄</td></tr>
+      <tr><td><b>저관객군 영화</b></td><td><span class="mono">관객 수 is below 1000000</span></td><td>80편</td><td>385줄</td></tr>
+      <tr><td class="muted">사이(100만~300만)</td><td class="muted">두 조건 모두 아님</td><td class="muted">42편</td><td class="muted">비교에서 빠짐</td></tr>
+    </table></div>
+    <p class="note">영화 수와 리뷰 줄 수는 교과서 실습 파일을 집계한 값이에요. 리뷰 줄 수 189는 교과서 202쪽 Corpus 화면의 수와 같아요. 두 묶음은 영화 수도 리뷰 수도 달라요(리뷰 189줄 대 385줄). 낱말이 나온 횟수를 그대로 견주면 리뷰가 많은 저관객군 쪽이 커 보이기 쉬워요. 이 점은 03에서 다시 써요.</p>
+  </div>
+  <div class="memo">
+    <label>✍️ 산점도를 그리기 전에 영화명으로 묶는 까닭과, 리뷰를 분석할 때는 묶지 않은 줄을 쓰는 까닭을 내 말로 써요. 두 묶음의 리뷰 수가 다르다는 점이 낱말 비교에 어떤 영향을 줄지도 한 줄 덧붙여요. <small>질문폼 1·3번에 써요.</small></label>
+    <textarea data-memo="mvGroup" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 리뷰 전처리 체험 -->
+<section class="page" data-name="리뷰 전처리 체험" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>리뷰 글 다듬기 체험</h2><p>교과서 202쪽 · 자연어 전처리 · Corpus · Preprocess Text · Stopwords(불용어) · Regexp(특수 문자)</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>리뷰 같은 글을 낱말(토큰)로 나누면 「!」「.」 같은 문장부호도 토큰이 되고, 「그리고」처럼 뜻이 적은 낱말이 많이 나와요. 그래서 <b>특수 문자로 된 토큰을 걸러 내고</b>(Regexp), <b>뜻이 적은 낱말을 빼는</b>(Stopwords) 전처리를 한 뒤 낱말을 세요.</span></div>
+  <div class="card">
+    <h3>🧰 오렌지3에서는 이렇게 해요</h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#7aa6d6"><h4>Corpus</h4><p>표 데이터를 글 묶음으로 바꿔요. <b>Used text features</b>로 <b>평론가 리뷰</b>를 옮겨, 리뷰 글만 분석하게 해요. 영화명은 Title variable로 두어요.</p></div>
+      <div class="kc" style="--k:#7aa6d6"><h4>Preprocess Text</h4><p>Filtering에서 <b>Stopwords</b>를 체크하고 <span class="mono">불용어.txt</span>를 불러와 한국어 불용어를 빼요. <b>Regexp</b>를 체크하면 정해 둔 패턴(문장부호 목록)에 맞는 토큰, 곧 특수 문자 토큰을 걸러요.</p></div>
+      <div class="kc" style="--k:#7aa6d6"><h4>Word Cloud</h4><p>전처리한 낱말을 많이 나온 것일수록 크게 보여 줘요. 고관객군·저관객군에 하나씩 연결해 비교해요.</p></div>
+    </div>
+    <p class="note">불용어는 조사나 수사처럼 의미가 적은 낱말이에요. 이 위젯들은 오렌지3 <b>Text 애드온</b>을 설치해야 보여요(03 화면).</p>
+  </div>
+  <div class="card">
+    <h3>🧪 새 리뷰로 전처리 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(실제 리뷰가 아니라 지어낸 예시 리뷰)</span></h3>
+    <div class="row" id="mvPick" style="margin-bottom:8px"></div>
+    <textarea id="mvIn" rows="3" class="mv1-in" aria-label="전처리할 리뷰 글"></textarea>
+    <div class="mv1-opts">
+      <label><input type="checkbox" id="mvOptRe" checked> <b>Regexp</b> · 특수 문자 토큰 걸러 내기</label>
+      <label><input type="checkbox" id="mvOptSw" checked> <b>Stopwords</b> · 불용어 빼기</label>
+    </div>
+    <label class="mv1-swl" for="mvSw">불용어 목록 <small class="muted">(예시 · 쉼표로 낱말을 더하거나 지워 보세요)</small></label>
+    <input type="text" id="mvSw" class="mv1-sw">
+    <div class="grid2" style="margin-top:12px">
+      <div>
+        <h4 style="margin:0 0 6px">낱말(토큰) 나누기 결과 <small class="muted">· 회색 줄은 빠진 낱말</small></h4>
+        <div class="mv1-tok" id="mvTok"></div>
+        <div class="sp-read" id="mvCount"></div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 6px">많이 나온 낱말</h4>
+        <div class="sp-wrap"><svg id="mvFreq" role="img" aria-label="전처리 뒤 많이 나온 낱말 막대그래프"></svg></div>
+        <div class="mv1-cloud" id="mvCloud" aria-label="전처리 뒤 낱말 구름"></div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:10px">🔎 띄어쓰기로 낱말을 나누면 「영화가」와 「영화를」처럼 <b>뒤에 붙은 말이 다른 낱말</b>은 따로 세어져요. 오렌지3 워드 클라우드에도 이런 낱말이 함께 보여요. 무엇을 불용어에 넣을지는 분석하는 사람이 정해요. 이 체험은 낱말과 문장부호를 따로 나누는 방식이라, 오렌지3 결과는 토큰 나누기 설정에 따라 조금 다를 수 있어요.</div>
+  </div>
+  <div class="memo">
+    <label>✍️ 리뷰 하나를 골라(또는 직접 써서) 전처리 전과 후를 비교해요. 토큰 수와 종류 수가 어떻게 바뀌었는지, 어떤 낱말이 빠지고 무엇이 가장 많이 남았는지 써요. <small>질문폼 2번에 써요.</small></label>
+    <textarea data-memo="mvPre" rows="3" placeholder="고른 리뷰: …&#10;전: 토큰 ?개, 종류 ?개 → 후: 토큰 ?개, 종류 ?개&#10;빠진 낱말: … / 가장 많이 남은 낱말: …"></textarea><div class="saved"></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 오렌지3 시각화 -->
+<section class="page" data-name="오렌지3 시각화" data-acc="#2f6fd0">
+  <div class="head"><div class="num">03</div><div><h2>산점도와 워드 클라우드로 살펴보기</h2><p>교과서 201~204쪽 · 오렌지3 실습 · Group by · Scatter Plot · Select Rows · Corpus · Preprocess Text · Word Cloud</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>먼저 영화별로 묶은 데이터로 <b>산점도</b>를 그려 평점·참여자 수와 관객 수의 관계를 봐요(Text 애드온 없이 돼요). 그다음 두 묶음의 리뷰를 전처리해 <b>워드 클라우드</b>로 비교해요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div><svg id="mvFlow" role="img" aria-label="영화 데이터 그룹화, 산점도, 리뷰 워드 클라우드 위젯 연결 흐름도"></svg></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표</h3>
+    <div class="of-tw"><table class="tbl" id="mvSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">영화 데이터.xlsx</span> 열기. 영화명·평론가 리뷰는 글(text)이라 meta로 들어와요.</td><td>877개의 데이터</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>표로 데이터 확인</td><td>같은 영화가 여러 줄, 줄마다 평론가 리뷰가 다른지</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Group by</b> (Transform)</td><td>File →</td><td>왼쪽 Group by 목록에서 <b>영화명</b>을 눌러 골라요. 오른쪽 목록에서 <b>대표 국적·배급사</b>를 골라 아래 Aggregations의 <b>Mode</b> 체크를 해제해요(오늘은 숫자 속성과 리뷰만 써요). 숫자 속성은 <b>Mean</b>, 평론가 리뷰는 <b>Concatenate</b> 그대로.</td><td>아래쪽 출력 수 <b>143</b>. 열 이름이 <span class="mono">관객 수 - Mean</span>처럼 바뀌었는지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Scatter Plot</b> (Visualize)</td><td>Group by →</td><td>Axis y: <b>관객 수 - Mean</b>. Axis x: <b>실관람객 평점 - Mean</b> → 다음에 <b>실관람객 평점 참여자 수 - Mean</b>으로 바꿔 보기. <b>Show regression line</b> 체크</td><td>두 그림에서 점이 추세선에 얼마나 모여 있는지, 선 옆의 r 값</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Select Rows</b> (Transform)</td><td>File →</td><td>Conditions: <b>관객 수 · is greater than · 3000000</b></td><td>고관객군 리뷰 줄 189</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Select Rows (1)</b> (Transform)</td><td>File →</td><td>Conditions: <b>관객 수 · is below · 1000000</b></td><td>저관객군 리뷰 줄 385</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Corpus</b> (Text Mining)</td><td>Select Rows →<br><small>(Matching Data)</small></td><td>Used text features: <b>평론가 리뷰</b>(영화명은 Ignored 쪽), Title variable: 영화명, Language: Korean</td><td>문서 189개</td></tr>
+      <tr data-s="8"><td>8</td><td><b>Corpus (1)</b> (Text Mining)</td><td>Select Rows (1) →</td><td>7번과 같게 설정</td><td>문서 385개</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Preprocess Text</b> (Text Mining)</td><td>Corpus →</td><td>Filtering: <b>Stopwords</b> 체크 → 오른쪽 폴더 단추로 <span class="mono">불용어.txt</span> 불러오기, <b>Regexp</b> 체크(기본 식 그대로)</td><td>왼쪽 아래 Tokens · Types 수가 줄었는지</td></tr>
+      <tr data-s="10"><td>10</td><td><b>Preprocess Text (1)</b> (Text Mining)</td><td>Corpus (1) →</td><td>9번과 같게 설정</td><td>Tokens · Types 수</td></tr>
+      <tr data-s="11"><td>11</td><td><b>Word Cloud</b> (Text Mining)</td><td>Preprocess Text →</td><td>위젯 이름을 <b>고관객군 영화 Word Cloud</b>로 바꾸기</td><td>크게 보이는 낱말 서너 개</td></tr>
+      <tr data-s="12"><td>12</td><td><b>Word Cloud</b> (Text Mining)</td><td>Preprocess Text (1) →</td><td>위젯 이름을 <b>저관객군 영화 Word Cloud</b>로 바꾸기</td><td>11번과 겹치는 낱말, 다른 낱말</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="mvDone"></div>
+  </div>
+  <div class="card">
+    <h3>🔢 개수로 비교할까, 비율로 비교할까?</h3>
+    <p style="margin-top:0">교과서 203쪽은 고관객군 워드 클라우드에서 「새로운」이 가장 크게 보였다고 해요. 그런데 두 묶음은 리뷰 수가 달라요. 아래는 교과서 실습 파일의 리뷰를 9·10번처럼 전처리해 센 값이에요.</p>
+    <div class="of-tw"><table class="tbl mv1-ex">
+      <tr><th>묶음</th><th>리뷰 줄 수</th><th>「새로운」이 나온 횟수</th><th>리뷰 100개당</th></tr>
+      <tr><td>고관객군 영화</td><td>189</td><td>24</td><td id="mvRateH">?</td></tr>
+      <tr><td>저관객군 영화</td><td>385</td><td>27</td><td id="mvRateL">?</td></tr>
+    </table></div>
+    <button class="btn ghost sm" id="mvRateBtn" style="margin-top:8px">리뷰 100개당 횟수 계산하기</button>
+    <div class="mv1-say" id="mvRateSay"></div>
+    <p class="note">세는 방법(낱말 나누기·불용어 목록)에 따라 내 오렌지3의 수와 조금 다를 수 있어요.</p>
+  </div>
+  <div class="card">
+    <h3>📋 관찰 기록하기</h3>
+    <div class="memo">
+      <label>두 산점도 가운데 관객 수와 더 밀접해 보이는 x는 무엇이었나요? 그렇게 본 근거(점이 모인 모양, r 값)와 함께, 이 그림만으로 말할 수 <b>없는</b> 것도 한 가지 써요. 워드 클라우드를 봤다면 눈에 띈 낱말과 비교할 때 주의할 점도 덧붙여요. <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="mvViz" rows="4" placeholder="더 밀접한 x: … (근거: …)&#10;이 그림만으로 말할 수 없는 것: …&#10;워드 클라우드: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card mv1-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Text Mining 카테고리가 없어요</b> → Options 메뉴 → <b>Add-ons</b>에서 <b>Text</b>를 찾아 체크하고 설치한 뒤 오렌지3를 다시 열어요. 설치가 안 되는 컴퓨터라면 1~4번(산점도)만 하고, 리뷰 분석은 02 화면 체험으로 대신해 기록 칸에 「(체험)」이라고 적어요.</li>
+      <li><b>Group by 출력이 143이 아니에요</b> → 왼쪽 목록에서 <b>영화명 하나만</b> 골랐는지 확인해요. 평론가 리뷰까지 고르면 리뷰마다 그룹이 생겨 줄 수가 거의 줄지 않아요.</li>
+      <li><b>Scatter Plot 축에 「- Mean」 이름이 없어요</b> → Scatter Plot을 File이 아니라 <b>Group by</b> 뒤에 이었는지 확인해요.</li>
+      <li><b>Corpus에 문서 수가 877이에요</b> → Corpus를 File이 아니라 <b>Select Rows</b> 뒤에 이었는지, 연결 이름이 <b>Matching Data</b>인지 확인해요.</li>
+      <li><b>불용어.txt를 못 찾겠어요</b> → 영화 데이터.xlsx와 같은 폴더에 있어요. Stopwords 줄 오른쪽 폴더 단추를 눌러 열어요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#c98a00">리뷰마다 한 줄인 877줄 파일을 <b>영화명으로 묶어</b> 143편의 표로 만든 뒤에야, 영화끼리 평점·참여자 수·관객 수를 견주는 산점도를 그릴 수 있었다.</div>
+    <div style="--k:#1f9d74">리뷰 글은 묶지 않은 줄을 Corpus로 바꾸고, <b>Regexp</b>로 특수 문자 토큰을, <b>Stopwords</b>로 뜻이 적은 낱말을 걸러 낸 다음 낱말을 셌다.</div>
+    <div style="--k:#2f6fd0">산점도의 추세선과 두 워드 클라우드는 관계를 살피는 출발점일 뿐, 흥행의 <b>원인</b>을 알려 주지는 않는다. 리뷰 수가 다른 묶음은 비율로 견주어야 한다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에 쓴 우리 모둠의 문제(<span id="mvPlanShow">아직 쓰지 않음</span>)를 떠올리며, 오늘 쓴 낱말(Group by, 리뷰 줄, 불용어, Regexp, 산점도, 워드 클라우드)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">영화 데이터의 숫자와 리뷰를 어떻게 다듬어야 관객 수와의 관계를 살펴볼 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>산점도를 그리기 전 <b>영화명으로 묶은 까닭</b>과 리뷰 분석에는 묶지 않은 줄을 쓴 까닭 설명하기</li>
+      <li>내가 고른 리뷰의 <b>전처리 전과 후</b>를 비교하고 각 설정이 한 일 설명하기</li>
+      <li>산점도·워드 클라우드에서 <b>관찰한 것과 그 한계</b> 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

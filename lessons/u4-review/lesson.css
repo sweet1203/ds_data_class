@@ -1,0 +1,21 @@
+  /* u4-review 전용 (rv-) */
+  .rv-vote{grid-template-columns:repeat(4,1fr);margin-top:12px}
+  @media (max-width:900px){.rv-vote{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.rv-vote{grid-template-columns:1fr}}
+  .rv-vote button{font-size:.98rem;line-height:1.4}
+  .rv-tw{overflow-x:auto}
+  .rv-pj,.rv-cl{min-width:640px;margin:0}
+  .rv-pj th,.rv-cl th{background:#fbfaf7;text-align:left}
+  .rv-pj td,.rv-cl td{border-top:1px solid #eef0f3;font-size:.92rem}
+  .rv-cl td:first-child{font-weight:900;width:32px}
+  .rv-cl td:nth-child(3){width:180px}
+  .rv-cl td:nth-child(4){width:34%;font-size:.86rem}
+  .rv-cl select{width:100%;font:inherit;font-size:.86rem;padding:4px 6px;border:2px solid var(--line);border-radius:8px;background:#fff}
+  .rv-cl tr.right td{background:#eaf7f1}
+  .rv-cl tr.wrong td{background:#fdeeec}
+  .rv-p{display:inline-block;background:#eef1f5;color:var(--muted);border-radius:999px;padding:0 8px;font-size:.78rem;font-weight:700;margin-right:4px}
+  .rv-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .rv-legend span{border:2px solid var(--k);color:var(--k);border-radius:999px;padding:2px 10px;font-size:.82rem;font-weight:700;background:#fff}
+  .rv-fb{background:var(--acc-soft);border-radius:10px;padding:8px 12px}
+  .rv-hint{background:var(--acc-soft);border-radius:10px;padding:10px 14px;font-size:.92rem}
+  .rv-hint b{display:block}
