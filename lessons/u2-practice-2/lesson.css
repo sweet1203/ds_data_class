@@ -73,6 +73,8 @@
   .pb-seg button.on{background:var(--acc);color:#fff;font-weight:700}
   /* 03 산점도 */
   .pb-axes{gap:10px 18px;font-size:.9rem}
+  .pb-axes label{display:flex;align-items:center;gap:6px;min-width:0;max-width:100%}
+  .pb-axes label select{min-width:0;flex:1 1 auto}
   .pb-axes select,#pbGeoSize{font:inherit;font-size:.88rem;padding:3px 6px;border:2px solid var(--line);border-radius:8px;max-width:100%}
   .pb-scwrap{overflow-x:auto}
   .pb-scwrap svg{display:block;width:100%;max-width:620px;min-width:440px;height:auto;margin:8px auto 0;background:#fff;border:1px solid var(--line);border-radius:10px}

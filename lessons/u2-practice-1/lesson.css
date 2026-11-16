@@ -51,6 +51,7 @@
   /* 값 읽기 확인 칸 */
   .pa-chk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px}
   @media (max-width:900px){.pa-chk{grid-template-columns:1fr 1fr}}
+  @media (max-width:600px){.pa-chk{grid-template-columns:minmax(0,1fr)}}
   .pa-ci{display:grid;grid-template-columns:1fr 100px 70px;align-items:center;gap:6px;background:#fbfaf7;border:2px solid var(--line);border-radius:10px;padding:5px 8px;font-size:.86rem}
   .pa-ci input{width:100%;font:inherit;border:1px solid var(--line);border-radius:6px;padding:3px 6px;text-align:right}
   .pa-ci em{font-style:normal;font-weight:900;font-size:.8rem}

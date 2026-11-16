@@ -70,7 +70,8 @@
   .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
   .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
   svg{display:block;width:100%;height:auto}
-  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  select{max-width:100%}
+  .mono{overflow-wrap:anywhere;font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
   .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
   .cx>h3{margin:0 0 4px;font-size:1.15rem}
   .cx>.lead2{color:var(--muted);margin:0 0 12px}
@@ -161,6 +162,7 @@
   .try ol{margin:4px 0 0;padding-left:20px}
   /* 3단원 공통 */
   .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy>span{min-width:0;overflow-wrap:anywhere}
   .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
   .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
   .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
@@ -479,6 +481,7 @@
   /* 값 읽기 확인 칸 */
   .pa-chk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px}
   @media (max-width:900px){.pa-chk{grid-template-columns:1fr 1fr}}
+  @media (max-width:600px){.pa-chk{grid-template-columns:minmax(0,1fr)}}
   .pa-ci{display:grid;grid-template-columns:1fr 100px 70px;align-items:center;gap:6px;background:#fbfaf7;border:2px solid var(--line);border-radius:10px;padding:5px 8px;font-size:.86rem}
   .pa-ci input{width:100%;font:inherit;border:1px solid var(--line);border-radius:6px;padding:3px 6px;text-align:right}
   .pa-ci em{font-style:normal;font-weight:900;font-size:.8rem}
