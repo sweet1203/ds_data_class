@@ -1,0 +1,125 @@
+
+  /* u2-practice-2 전용 (pb-) */
+  .pb-ready{margin:0 0 16px;font-size:.95rem}
+  .pb-tw{overflow-x:auto;max-width:100%}
+  .pb-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0;min-height:2.4em}
+  .pb-msg:empty{display:none}
+  .pb-det{margin-top:10px;background:#fbfaf7;border-radius:10px;padding:8px 12px;color:var(--ink)}
+  .pb-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .pb-det p,.pb-det li{font-size:.92rem}
+  .pb-ol{margin:8px 0 0;padding-left:22px;font-size:.92rem}
+  .pb-ol li{margin:4px 0}
+  .pb-warn{font-size:.9rem;margin-top:12px}
+  .pb-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .pb-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .pb-prev span{white-space:pre-wrap}
+  .pb-opt{display:inline-block;vertical-align:middle;font-family:"Noto Sans KR",sans-serif;font-size:.8rem;font-weight:900;background:var(--amber);color:var(--navy);border-radius:999px;padding:2px 10px;margin-left:6px}
+  .pb-tag{display:inline-block;font-size:.72rem;font-weight:900;background:#fff4d6;color:#8a5a00;border-radius:999px;padding:0 7px}
+  /* 01 속성 */
+  .pb-attrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  @media (max-width:860px){.pb-attrs{grid-template-columns:1fr 1fr}}
+  .pb-attrs>div{background:#fbfaf7;border-left:4px solid var(--acc);border-radius:8px;padding:6px 10px;font-size:.86rem;line-height:1.4;min-width:0}
+  .pb-attrs b{margin-right:6px}
+  .pb-attrs .mono{font-size:.76rem;word-break:break-word}
+  .pb-attrs small{display:block;color:var(--muted);font-size:.78rem}
+  /* 흐름도 */
+  .pb-flowbox{overflow-x:auto}
+  .pb-flowbox svg{display:block;width:100%;height:auto}
+  .pb-f1{max-width:560px;min-width:440px}
+  .pb-f2{max-width:760px;min-width:620px}
+  .pb-f3{max-width:600px;min-width:480px}
+  .pb-f4{max-width:780px;min-width:640px}
+  .pb-flowbox .fe{fill:none;stroke:#8a94a3;stroke-width:2}
+  .pb-flowbox .fl{font-size:11px;fill:#5b6776;text-anchor:end;font-weight:700}
+  .pb-flowbox .fn{cursor:pointer}
+  .pb-flowbox .fb{fill:#fff;stroke-width:2}
+  .pb-flowbox .fn.dn{opacity:.55}
+  .pb-flowbox .fn.on{opacity:1}
+  .pb-flowbox .fn.on .fb{fill:#fff4d6;stroke-width:4}
+  .pb-flowbox .fn:focus{outline:none}
+  .pb-flowbox .fn:focus .fb{stroke-width:4}
+  .pb-flowbox .fnum{font-size:13px;font-weight:900;fill:#fff;text-anchor:middle}
+  .pb-flowbox .ft{font-size:13px;font-weight:700;fill:#16202c}
+  .pb-flowbox .fs{font-size:11px;fill:#5b6776}
+  .pb-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;font-size:.85rem}
+  .pb-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .pb-legend small{color:var(--muted)}
+  .pb-set{min-width:860px;margin:10px 0 0;font-size:.9rem}
+  .pb-set th{text-align:left;background:#fbfaf7;white-space:nowrap}
+  .pb-set td{border-top:1px solid #eef0f3;vertical-align:top}
+  .pb-set td:first-child{font-weight:900;color:var(--acc);text-align:center;width:44px}
+  .pb-set tr[data-s]{cursor:pointer;transition:background .3s}
+  .pb-set tr.hl td{background:#fff4d6}
+  /* 02 통합 */
+  .pb-mg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+  @media (max-width:860px){.pb-mg{grid-template-columns:1fr}}
+  .pb-mt{overflow-x:auto}
+  .pb-mt>b{display:block;font-size:.92rem;margin-bottom:4px}
+  .pb-mt table,.pb-mres{border-collapse:collapse;font-size:.84rem;width:100%;background:#fff}
+  .pb-mt th,.pb-mt td,.pb-mres th,.pb-mres td{border:1px solid var(--line);padding:3px 7px;text-align:right;white-space:nowrap}
+  .pb-mt th,.pb-mres th{background:#fbfaf7;font-size:.78rem;text-align:center;line-height:1.25}
+  .pb-mt td:first-child,.pb-mres td:first-child{text-align:left;font-weight:700}
+  .pb-mt tr.ex td{color:#9aa3ae}
+  .pb-mt td.al{background:#fde8e6;color:var(--red)}
+  .pb-mt input{width:80px;font:inherit;border:2px solid #b9cdea;border-radius:6px;padding:1px 6px;text-align:right}
+  .pb-mres{margin-top:6px;min-width:600px}
+  .pb-mres tr.nm td{background:#fde8e6}
+  .pb-mgctl{margin-top:10px;gap:10px 16px}
+  .pb-chkl{font-size:.9rem;cursor:pointer}
+  .pb-chkl small{color:var(--muted)}
+  .pb-seg{display:inline-flex;flex-wrap:wrap;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+  .pb-seg button{font:inherit;font-size:.84rem;border:0;background:#fff;padding:4px 12px;cursor:pointer;color:var(--ink)}
+  .pb-seg button+button{border-left:1px solid var(--line)}
+  .pb-seg button.on{background:var(--acc);color:#fff;font-weight:700}
+  /* 03 산점도 */
+  .pb-axes{gap:10px 18px;font-size:.9rem}
+  .pb-axes select,#pbGeoSize{font:inherit;font-size:.88rem;padding:3px 6px;border:2px solid var(--line);border-radius:8px;max-width:100%}
+  .pb-scwrap{overflow-x:auto}
+  .pb-scwrap svg{display:block;width:100%;max-width:620px;min-width:440px;height:auto;margin:8px auto 0;background:#fff;border:1px solid var(--line);border-radius:10px}
+  #pbSc .gl{stroke:#eef0f3;stroke-width:1}
+  #pbSc .tk{font-size:10px;fill:#8a94a3}
+  #pbSc .axl{font-size:11px;font-weight:700;fill:#5b6776}
+  #pbSc .pt{fill:#e0702b;stroke:#fff;stroke-width:2}
+  #pbSc .lb{font-size:11px;fill:#16202c;font-weight:700}
+  .pb-rline{display:grid;grid-template-columns:24px 1fr 24px;align-items:center;gap:6px;max-width:520px;margin:10px auto 0;font-size:.82rem;color:var(--muted);text-align:center}
+  .pb-rline div{position:relative;height:10px;border-radius:999px;background:linear-gradient(90deg,#2a6fb8,#eef0f3 50%,#8fd16a)}
+  .pb-rline i{position:absolute;top:-5px;width:4px;height:20px;margin-left:-2px;background:#0f2742;border-radius:2px}
+  .pb-rline em{position:absolute;top:-2px;width:1px;height:14px;background:#8a94a3}
+  .pb-selftbl{min-width:620px;font-size:.9rem}
+  .pb-selftbl th,.pb-selftbl td{border:1px solid var(--line);padding:6px 10px;vertical-align:middle}
+  .pb-selftbl th{background:#fbfaf7}
+  .pb-selftbl .memo{margin:0}
+  .pb-selftbl input{width:100%;font:inherit;border:2px solid #f0c9a8;border-radius:6px;padding:3px 8px}
+  .pb-care ul{margin:6px 0 0;padding-left:20px}
+  /* 04 히트맵 */
+  .pb-hpick{display:flex;flex-wrap:wrap;gap:6px}
+  .pb-hpick label{border:2px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.86rem;cursor:pointer;background:#fff}
+  .pb-hpick label.on{border-color:var(--acc);background:var(--acc-soft);font-weight:700}
+  .pb-hpick label.dis{opacity:.55;cursor:not-allowed}
+  .pb-hpick small{font-weight:400;color:var(--muted)}
+  .pb-heat{border-collapse:separate;border-spacing:2px;font-size:.85rem;margin-top:4px;min-width:560px}
+  .pb-heat th{background:#fbfaf7;padding:4px 8px;font-size:.8rem;text-align:center;line-height:1.25;vertical-align:bottom}
+  .pb-heat th small{display:block;font-weight:400;color:var(--muted);font-size:.7rem}
+  .pb-heat tr th:first-child{text-align:left;white-space:nowrap}
+  .pb-heat td{padding:5px 8px;text-align:center;font-variant-numeric:tabular-nums;border-radius:4px;min-width:74px;font-weight:700}
+  .pb-heat td.sc{background:#0f2742;color:#fff}
+  .pb-dir{display:block;margin:4px auto 0;font:inherit;font-size:.72rem;border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:999px;padding:1px 8px;cursor:pointer;white-space:nowrap}
+  .pb-hlegend{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);margin-top:6px;max-width:360px}
+  .pb-hlegend i{flex:1;height:10px;border-radius:999px}
+  .pb-book>summary{cursor:pointer}
+  .pb-book ul{margin:8px 0 0;padding-left:20px;font-size:.93rem}
+  .pb-book li{margin:5px 0}
+  /* 05 (선택) */
+  .pb-optc>summary{cursor:pointer;font-weight:900;font-size:1.02rem}
+  .pb-optc>summary small{font-weight:400;color:var(--muted);font-size:.85rem}
+  .pb-geowrap{overflow-x:auto}
+  .pb-geowrap svg{display:block;width:100%;max-width:640px;min-width:480px;height:auto;margin:8px auto 0;background:#f4f8fb;border:1px solid var(--line);border-radius:10px}
+  #pbGeo .gl{stroke:#dde5ec;stroke-width:1}
+  #pbGeo .tk{font-size:10px;fill:#8a94a3}
+  #pbGeo .ct{cursor:pointer}
+  #pbGeo .ct circle{fill:#1f9d74;fill-opacity:.75;stroke:#fff;stroke-width:2}
+  #pbGeo .ct.on circle{fill:#e0702b;fill-opacity:.95;stroke:#0f2742}
+  #pbGeo .ct:focus{outline:none}
+  #pbGeo .ct:focus circle{stroke:#0f2742;stroke-width:3}
+  #pbGeo .lb{font-size:11px;font-weight:700;fill:#16202c}
+  #pbGeo .lk{stroke:#e0702b;stroke-width:2;stroke-dasharray:5 4}

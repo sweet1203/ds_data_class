@@ -1,0 +1,94 @@
+
+  /* u2-integrate 전용 (ig-) */
+  .ig-scroll{overflow-x:auto;max-width:100%}
+  .ig-tbl{font-size:.9rem;margin:6px 0;background:#fff}
+  .ig-tbl th,.ig-tbl td{border:1px solid var(--line);padding:5px 9px;font-variant-numeric:tabular-nums}
+  .ig-tbl th{background:#fbfaf7}
+  .ig-tbl td.nan{color:var(--red);font-weight:700;background:#fdecea}
+  .ig-tbl tr.del td{text-decoration:line-through;color:#aab2bd;background:#f6f4ef}
+  .ig-tbl tr.dup td{background:#fff4d6}
+  .ig-tbl .yb{font:inherit;font-variant-numeric:tabular-nums;border:2px solid var(--line);background:#fff;border-radius:8px;padding:1px 8px;cursor:pointer;color:var(--ink);min-width:72px}
+  .ig-tbl .yb:hover{border-color:var(--acc)}
+  .ig-tbl .yb.fixed{border-color:var(--mint);background:#e7f6ef;color:#13684d;font-weight:700}
+  .ig-tbl .yb:disabled{cursor:default}
+  .ig-tbl .tag{display:inline-block;font-size:.72rem;border-radius:6px;padding:0 5px;margin-left:4px;background:#eceae4;color:var(--muted);text-decoration:none}
+  .ig-t6 td.ig-arr{font-size:1.4rem;color:var(--muted);border:0;background:none}
+  .ig-mini{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0}
+  .ig-mini table{width:auto;margin:0;font-size:.74rem;background:#fff}
+  .ig-mini th,.ig-mini td{border:1px solid var(--line);padding:1px 6px}
+  .ig-mini th{background:color-mix(in srgb,var(--k) 12%,white);color:var(--ink)}
+  .ig-mini>b{color:var(--k)}
+  .ig-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+  @media (max-width:860px){.ig-steps{grid-template-columns:1fr}}
+  .ig-steps>div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.88rem;border-top:4px solid var(--acc)}
+  .ig-steps b{display:block;margin-bottom:4px}
+  .ig-cnt{font-weight:700;color:var(--acc)}
+  .ig-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0;display:none}
+  .ig-msg.on{display:block}
+  .ig-msg:empty{display:none}
+  .ig-result:empty{display:none}
+  .ig-result{background:#fff;border:2px dashed var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+  .ig-result.good{border-style:solid;border-color:var(--mint);background:#f3fbf7}
+  .ig-result h4{margin:0 0 4px}
+  .ig-result ul{margin:6px 0 0;padding-left:20px;font-size:.9rem}
+  .ig-side{background:#fbfaf7;border-radius:12px;padding:10px 14px;font-size:.93rem}
+  .ig-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .ig-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .ig-prev span{white-space:pre-wrap}
+  /* 02 수식 */
+  .ig-fx{font-family:"Times New Roman",serif;font-size:1.15rem;display:flex;align-items:center;gap:6px;margin:8px 0;background:#fbfaf7;border-radius:10px;padding:6px 10px;width:max-content;max-width:100%}
+  .ig-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle}
+  .ig-frac>span{padding:0 4px}
+  .ig-frac>span:first-child{border-bottom:1.5px solid var(--ink)}
+  .ig-pill{font:inherit;font-size:.88rem;border:2px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--ink)}
+  .ig-pill:hover{border-color:var(--acc)}
+  .ig-pill.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .ig-svg{max-width:820px;margin:8px auto 0}
+  .ig-svg text{font-family:"Noto Sans KR",system-ui,sans-serif}
+  .ig-svg .tk{font-size:11px;fill:var(--muted)}
+  .ig-svg .axl{font-size:12px;font-weight:700;fill:var(--muted)}
+  .ig-svg .rl{font-size:12.5px;font-weight:900}
+  .ig-svg .ax{stroke:#9aa3ad;stroke-width:1.2}
+  .ig-svg .gl{stroke:#eceae4;stroke-width:1}
+  .ig-svg .zero{stroke:#0f2742;stroke-width:1.2;stroke-dasharray:4 4}
+  .ig-svg .ph{fill:#2f6fd0;stroke:#fff;stroke-width:1.5}
+  .ig-svg .pt{fill:#e0702b;stroke:#fff;stroke-width:1.5}
+  .ig-svg .sel{stroke:#0f2742;stroke-width:3}
+  .ig-svg .ring{fill:none;stroke:#d64535;stroke-width:2}
+  .ig-ctrl{grid-template-columns:70px 1fr 56px;max-width:620px;margin-top:6px}
+  .ig-ctrl label{font-size:.85rem;line-height:1.2}
+  .ig-click tr:not(:first-child){cursor:pointer}
+  .ig-click tr:not(:first-child):hover td{background:var(--acc-soft)}
+  .ig-click tr.on td{background:#fff4d6;font-weight:700}
+  .ig-stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .ig-stat>div{background:#fbfaf7;border-radius:10px;padding:6px 10px;font-size:.84rem;border-left:4px solid var(--k)}
+  .ig-stat b{display:block}
+  .ig-det{margin-top:12px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .ig-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .ig-vote{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:760px){.ig-vote{grid-template-columns:1fr}}
+  .ig-svg .hb{fill:#2f6fd0;opacity:.85}
+  .ig-svg .hb2{fill:#1f9d74;opacity:.85}
+  .ig-svg .mean{stroke:#d64535;stroke-width:2;stroke-dasharray:5 4}
+  .ig-svg .ml{font-size:11px;font-weight:900;fill:#d64535}
+  /* 03 시각화 */
+  .ig-four .kc h4{font-size:1rem}
+  .ig-th{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+  .ig-th figure{margin:0;background:#fbfaf7;border-radius:8px;padding:4px 4px 2px;text-align:center}
+  .ig-th figcaption{font-size:.74rem;font-weight:700;color:var(--k)}
+  .ig-th svg{max-width:120px;margin:0 auto}
+  .ig-tabs{grid-template-columns:repeat(5,1fr)}
+  @media (max-width:860px){.ig-tabs{grid-template-columns:repeat(3,1fr)}}
+  .ig-vz{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:center}
+  @media (max-width:860px){.ig-vz{grid-template-columns:1fr}}
+  .ig-vz .k{display:inline-block;font-size:.78rem;font-weight:900;border-radius:999px;padding:1px 10px;color:#fff;background:var(--k)}
+  .ig-vz p{font-size:.93rem}
+  .ig-svg .vl{fill:none;stroke:#2f6fd0;stroke-width:2}
+  .ig-svg .vd{fill:#2f6fd0}
+  .ig-svg .vb{fill:#2f6fd0}
+  .ig-svg .vbox{fill:#fde3c9;stroke:#e0702b;stroke-width:1.5}
+  .ig-svg .vmed{stroke:#0f2742;stroke-width:2.5}
+  .ig-svg .vwh{stroke:#e0702b;stroke-width:1.5}
+  .ig-svg .vs{fill:#e0702b;opacity:.85}
+  .ig-more summary{cursor:pointer}
+  .ig-more[open] summary{margin-bottom:8px}

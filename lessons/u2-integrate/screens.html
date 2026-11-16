@@ -1,0 +1,261 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 1. 데이터 준비</span>
+      <h1>따로 모은 데이터,<br>함께<br>비교하려면?</h1>
+      <div class="story"><b>지난 시간에 한 일</b><br>해수면 높이 편차 데이터에서 빈칸(1986~1988년)과 이상치(2012년, 2020년)를 찾아 처리했어요. 이제 <b>해수면 온도 편차</b> 데이터와 합쳐 두 속성을 함께 보고 싶어요. 그런데 두 표는 연도를 적는 방식이 다르고, 높이와 온도는 <b>값의 범위</b>도 달라요.</div>
+      <p>오늘은 여러 데이터를 하나로 합치는 <b>데이터 통합</b>, 범위가 다른 값을 나란히 비교할 수 있게 맞추는 <b>데이터 스케일링</b>, 그리고 목적에 맞게 그래프를 고르는 <b>데이터 시각화</b>를 배워요.</p>
+      <ol>
+        <li>데이터 통합</li><li>데이터 스케일링</li><li>데이터 시각화</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🔗</i><div><b>데이터 통합</b><small>공통된 열(연도)로 두 표 합치기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📏</i><div><b>데이터 스케일링</b><small>Min-Max 정규화 · Z-Score 표준화</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🔍</i><div><b>분포 모양 확인</b><small>표준화하면 모양이 바뀔까?</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📊</i><div><b>데이터 시각화</b><small>시간 · 분포 · 관계 · 공간</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>해수면 높이 표와 온도 표를 <b>연도를 기준으로 직접 합쳐 보고</b>, 합칠 때 생기는 문제(형식이 다른 연도, 중복, 결측치)를 해결해요. 그리고 범위가 다른 두 속성을 <b>정규화·표준화</b>로 바꾸어 보며 무엇이 바뀌고 무엇이 그대로인지 확인해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <div class="ig-prev" id="igPrev"></div>
+        <div class="memo" style="margin-top:0"><label>따로 있는 해수면 높이 표와 온도 표를 하나로 합쳐 한 그래프로 비교하려면, 무엇부터 해야 할까요?</label><textarea data-memo="firstThought" rows="3"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>교과서 70쪽</b> · 수면의 질이 우리의 건강과 행복에 미치는 영향은 얼마나 클까?</li>
+          <li><b>오늘의 질문 ①</b> · 여러 데이터를 어떻게 하나로 합치고, 범위가 다른 값을 어떻게 비교할까?</li>
+          <li><b>오늘의 질문 ②</b> · 데이터 시각화는 무엇이고 어떤 방법이 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>이상치와 결측치를 탐색하고 정규화를 통해 데이터를 가공할 수 있다.</li>
+          <li>데이터를 분석하기 위해 시각화할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 통합부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 통합 -->
+<section class="page" data-name="데이터 통합" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 통합은 어떻게 할까?</h2><p>교과서 74쪽 · 데이터 통합 · 공통된 열 · 표 Ⅱ-5 · 수평적·수직적 통합 · 표 Ⅱ-6 형식 변환</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>따로 있는 두 표를 <b>공통된 열</b>(예: 연도)을 기준으로 한 표로 합치는 것이 <b>데이터 통합</b>이에요. 그런데 연도를 적는 방식이 다르거나, 같은 줄이 두 번 있거나, 빈칸이 있으면 줄이 엉뚱하게 맞춰져요. 그래서 합치기 전에 정리부터 해요.</span></div>
+  <div class="card">
+    <h3>🔗 데이터 통합</h3>
+    <div class="callout" style="margin-top:4px">여러 개의 데이터셋 또는 파일을 통합하는 작업을 <b>데이터 통합</b>이라고 한다.</div>
+    <p>각 데이터셋이 <b>다른 정보나 속성</b>을 담고 있을 때 두 데이터를 합치면 더 많은 정보를 얻을 수 있어요. 그러면 통계적으로 더 의미 있는 결과를 얻고 더 정확하게 분석할 수 있어요. 데이터는 주로 <b>공통된 열</b>을 기준으로 통합해요.</p>
+    <div class="cards2">
+      <div class="kc" style="--k:#2f6fd0"><h4>↔ 수평적 통합 <small style="display:inline;margin:0">(행을 기준으로)</small></h4>
+        <div class="ig-mini">
+          <table><tr><th>연도</th><th>높이</th></tr><tr><td>1989</td><td>0.0</td></tr><tr><td>1990</td><td>−0.9</td></tr></table><b>+</b>
+          <table><tr><th>연도</th><th>온도</th></tr><tr><td>1989</td><td>−0.5</td></tr><tr><td>1990</td><td>0.1</td></tr></table><b>→</b>
+          <table><tr><th>연도</th><th>높이</th><th>온도</th></tr><tr><td>1989</td><td>0.0</td><td>−0.5</td></tr><tr><td>1990</td><td>−0.9</td><td>0.1</td></tr></table>
+        </div>
+        <p>같은 연도의 행끼리 옆으로 붙여 <b>한 행에 두 속성</b>을 표시해요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>↕ 수직적 통합 <small style="display:inline;margin:0">(열을 기준으로)</small></h4>
+        <div class="ig-mini">
+          <table><tr><th>반</th><th>수면</th></tr><tr><td>1반</td><td>6.5</td></tr></table><b>+</b>
+          <table><tr><th>반</th><th>수면</th></tr><tr><td>2반</td><td>7.0</td></tr></table><b>→</b>
+          <table><tr><th>반</th><th>수면</th></tr><tr><td>1반</td><td>6.5</td></tr><tr><td>2반</td><td>7.0</td></tr></table>
+        </div>
+        <p>열이 같은 두 표를 <b>아래로 이어 붙여</b> 행을 늘려요. <small style="display:inline">(예시 값)</small></p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧩 연도로 두 표 합치기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 74쪽 표 Ⅱ-5 · 온도 표의 연도 표기는 지어낸 예시)</span></h3>
+    <p class="muted" style="margin-top:0">먼저 <b>「두 표 합치기」</b>를 그냥 눌러 보세요. 그다음 ①~③으로 표를 정리하고 다시 합쳐요. 순서는 바꿔도 돼요.</p>
+    <div class="grid2 even">
+      <div><h4>(a) 해수면 높이 편차</h4><div class="ig-scroll"><table class="ig-tbl" id="igTA"></table></div></div>
+      <div><h4>(b) 해수면 온도 편차</h4><div class="ig-scroll"><table class="ig-tbl" id="igTB"></table></div></div>
+    </div>
+    <div class="ig-steps">
+      <div><b>① 연도 형식 맞추기</b><span>(b)에서 YYYY 형식이 아닌 연도 칸을 눌러 고쳐요. <span id="igFixCnt" class="ig-cnt"></span></span></div>
+      <div><b>② 중복 줄 지우기</b><button class="btn ghost sm" id="igDedup">중복 줄 찾아 지우기</button></div>
+      <div><b>③ 결측치 연도 정리</b><button class="btn ghost sm" id="igDropNa">결측치가 있는 연도 지우기</button></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="igMerge">두 표 합치기 →</button><button class="btn ghost sm" id="igMergeReset">처음부터</button></div>
+    <div class="ig-msg" id="igStepMsg"></div>
+    <div class="ig-result" id="igResult"></div>
+    <div class="memo"><label>① 형식을 맞추지 않고 합쳤을 때 무슨 일이 생겼나요? ② 중복 줄과 결측치 연도는 왜 정리해야 했나요?</label><textarea data-memo="mergeMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>📝 통합할 때 필요한 정리</h3>
+    <p style="margin-top:0">데이터를 통합할 때는 <b>중복 제거, 결측값 처리, 형식 변환</b> 등이 필요할 수 있어요. 표 Ⅱ-5에서는 1986~1988년 해수면 높이가 결측치라서 그 기간의 해수면 온도 데이터도 지우고, 연도가 일치하는 데이터만 통합해요.</p>
+    <div class="grid2">
+      <div>
+        <h4>표 Ⅱ-6 데이터 형식 변환 예시 <span class="muted" style="font-weight:400;font-size:.85rem">(교과서 74쪽)</span></h4>
+        <div class="ig-scroll"><table class="ig-tbl ig-t6">
+          <tr><th>학생 이름</th><th>졸업 연도</th><th></th><th>졸업 연도</th></tr>
+          <tr><td>김민혁</td><td>2024</td><td rowspan="4" class="ig-arr">⇨</td><td>2024</td></tr>
+          <tr><td>이수진</td><td>‘24’</td><td>2024</td></tr>
+          <tr><td>최서연</td><td>2024년</td><td>2024</td></tr>
+          <tr><td>한지민</td><td>24</td><td>2024</td></tr>
+        </table></div>
+        <p class="note">숫자 형식(2024)과 문자 형식(‘24’, 2024년)이 섞여 있으면 같은 연도로 맞춰지지 않아요. 모두 YYYY 형식으로 바꾸어요.</p>
+      </div>
+      <div class="ig-side">
+        <p style="margin-top:0">두 데이터의 <b>형식이나 범위가 다르면</b> 통합하면서 일관성을 유지하는 데 시간과 노력이 많이 들어요. 또 <b>잘못된 매핑</b>(엉뚱한 줄끼리 짝짓기)이나 <b>중복 처리</b> 오류가 생길 수 있어 조심해야 해요.</p>
+        <p class="note">Ⅰ단원에서 날짜를 기준으로 VLOOKUP으로 날씨 정보를 찾아 붙인 것도 공통된 열을 기준으로 한 통합이에요. 다음 시간에는 오렌지3의 <b>Merge Data</b> 위젯으로 수면 데이터와 건강 데이터를 합쳐요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 스케일링 -->
+<section class="page" data-name="데이터 스케일링" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>값의 범위가 다르면 어떻게 비교할까?</h2><p>교과서 75쪽 · 데이터 스케일링 · Min-Max 정규화 · Z-Score 표준화 · 이상치의 영향</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>1989~1996년 해수면 높이 편차는 −2.5~0.5쯤, 온도 편차는 −1.0~0.1쯤이라 범위가 달라요. 이대로 함께 분석하면 범위가 큰 속성의 영향이 너무 커질 수 있어요. <b>데이터 스케일링</b>은 여러 속성의 값을 비슷한 범위로 맞추는 일이에요. 값의 순서는 그대로 두고 <b>눈금만 바꾸어요</b>.</span></div>
+  <div class="card">
+    <h3>📏 데이터 스케일링</h3>
+    <p style="margin-top:0">데이터셋에 다양한 데이터가 있을 때 각 값의 범위가 다르면 특정 데이터의 영향이 과도하게 커질 수 있어요. 이때 필요한 것이 데이터 스케일링이에요. <span class="muted">(데이터 스케일: 데이터 값의 크기나 범위, 데이터 간의 상대적 크기)</span></p>
+    <div class="cards2">
+      <div class="kc" style="--k:#e0702b"><h4>정규화 · 최소-최대 정규화(Min-Max Scaling)</h4>
+        <div class="ig-fx"><i>x</i><sub>scaled</sub> = <span class="ig-frac"><span><i>x</i> − <i>x</i><sub>min</sub></span><span><i>x</i><sub>max</sub> − <i>x</i><sub>min</sub></span></span></div>
+        <p>각 값에서 <b>최솟값을 뺀 뒤</b> 최댓값과 최솟값의 차이로 나누어요. 최솟값은 <b>0</b>, 최댓값은 <b>1</b>이 되어 모든 값이 0~1 사이에 놓여요.</p>
+        <small>이상치가 있으면 정규화된 값의 분포가 왜곡될 수 있어요. 그래서 정규화 전에 이상치를 먼저 처리해요.</small></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>표준화 · Z-Score 표준화</h4>
+        <div class="ig-fx"><i>x</i><sub>scaled</sub> = <span class="ig-frac"><span><i>x</i> − <i>x̄</i></span><span><i>σ</i></span></span></div>
+        <p>각 값에서 <b>평균(<i>x̄</i>)을 뺀 뒤</b> 표준편차(<i>σ</i>)로 나누어요. 평균은 <b>0</b>, 표준편차는 <b>1</b>이 돼요.</p>
+        <small>표준편차는 값들이 평균에서 얼마나 흩어져 있는지 나타내는 값이에요(뒤에서 자세히 배워요). 표준화도 이상치의 영향을 받을 수 있지만, 정규화에 비해 이상치로 인한 영향이 적은 경우가 많아요. Min-Max는 최솟값·최댓값 두 값으로 정해져 이상치 하나에 범위 전체가 좌우되고, 표준화는 모든 값의 평균·표준편차로 정해져 데이터가 많으면 영향이 덜해요.</small></div>
+    </div>
+    <p class="note">오렌지3에서는 Preprocess 위젯의 <b>Normalize Features</b> 안에 <b>Standardize</b>가 들어 있어요. 다음 시간에 수면 데이터를 표준화할 때 써요.</p>
+  </div>
+  <div class="card">
+    <h3>⚖️ 스케일링 비교기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 75쪽 1989~1996년 값)</span></h3>
+    <p class="muted" style="margin-top:0">방법을 바꾸며 두 속성의 점이 어떻게 옮겨 가는지 보세요. 표의 줄을 누르면 그 연도의 계산식이 나와요. 아래 막대로 1996년 높이를 이상치로 만들어 볼 수도 있어요.</p>
+    <div class="row" id="igMode"><button class="ig-pill on" data-m="0">원래 값</button><button class="ig-pill" data-m="1">Min-Max 정규화</button><button class="ig-pill" data-m="2">표준화</button></div>
+    <svg viewBox="0 0 720 210" id="igScaleSvg" class="ig-svg" role="img" aria-label="해수면 높이 편차와 온도 편차 점그래프"></svg>
+    <div class="ctrl ig-ctrl"><label for="igOut">1996년<br>높이</label><input type="range" id="igOut" min="-3" max="20" step="0.1" value="-2.4"><output id="igOutVal">−2.4</output></div>
+    <div class="row"><button class="btn ghost sm" id="igOutMake">1996년 높이를 12.0으로 (이상치 만들기)</button><button class="btn ghost sm" id="igOutBack">원래대로 (−2.4)</button></div>
+    <div class="grid2" style="margin-top:10px">
+      <div class="ig-scroll"><table class="ig-tbl ig-click" id="igScaleTbl"></table></div>
+      <div>
+        <div class="ig-msg on" id="igFormula">표의 줄을 눌러 보세요.</div>
+        <div class="ig-stat" id="igScaleStat"></div>
+      </div>
+    </div>
+    <div class="ig-msg on" id="igScaleMsg"></div>
+    <details class="ig-det"><summary>교과서 75쪽 정규화 전·후 표와 비교하기</summary>
+      <div class="ig-scroll"><table class="ig-tbl">
+        <tr><th rowspan="2">연도</th><th colspan="2">정규화 전</th><th colspan="2">정규화 후</th></tr>
+        <tr><th>해수면 높이</th><th>해수면 온도</th><th>해수면 높이</th><th>해수면 온도</th></tr>
+        <tr><td>1989</td><td>0.0</td><td>−0.5</td><td>0.200</td><td>0.25</td></tr>
+        <tr><td>1990</td><td>−0.9</td><td>0.1</td><td>0.128</td><td>0.55</td></tr>
+        <tr><td>1991</td><td>−0.1</td><td>−0.6</td><td>0.192</td><td>0.20</td></tr>
+        <tr><td>1992</td><td>0.5</td><td>−0.4</td><td>0.240</td><td>0.30</td></tr>
+        <tr><td>1993</td><td>−2.5</td><td>−1.0</td><td>0.000</td><td>0.00</td></tr>
+        <tr><td>1994</td><td>−0.9</td><td>−0.1</td><td>0.128</td><td>0.45</td></tr>
+        <tr><td>1995</td><td>−2.1</td><td>−0.3</td><td>0.032</td><td>0.35</td></tr>
+        <tr><td>1996</td><td>−2.4</td><td>−0.2</td><td>0.008</td><td>0.40</td></tr>
+      </table></div>
+      <p class="note">교과서 표는 보이는 8개 연도만이 아니라 <b>전체 연도</b>의 최솟값과 최댓값(높이 −2.5와 10.0, 온도 −1.0과 1.0)으로 계산한 값이에요(이상치 2개를 처리한 뒤의 데이터로 보여요). 예: 1989년 높이 (0.0 − (−2.5)) ÷ (10.0 − (−2.5)) = 0.200. 비교기는 보이는 8개 값만으로 계산해서 값이 달라요.</p>
+    </details>
+    <div class="memo"><label>① Min-Max 정규화와 표준화는 값을 어떻게 바꾸었나요? ② 1996년 높이를 이상치로 만들었더니 나머지 값들은 어떻게 되었나요?</label><textarea data-memo="scaleMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🔍 표준화하면 분포의 모양이 바뀔까?</h3>
+    <p style="margin-top:0">히스토그램은 값을 일정한 구간으로 나누어, 구간마다 값이 몇 개 있는지 막대로 나타낸 그래프예요. 아래 예시 데이터를 표준화하면 히스토그램의 모양은 어떻게 될까요? <b>먼저 예상을 골라요.</b></p>
+    <div class="vote ig-vote" id="igShapeVote"></div>
+    <div class="reveal" id="igShapeAfter">
+      <div class="row" id="igSet" style="margin-top:6px"></div>
+      <div class="grid2 even">
+        <div><h4>표준화 전</h4><svg viewBox="0 0 340 190" id="igHistA" class="ig-svg" role="img" aria-label="표준화 전 히스토그램"></svg><p class="note" id="igHistAS"></p></div>
+        <div><h4>표준화 후</h4><svg viewBox="0 0 340 190" id="igHistB" class="ig-svg" role="img" aria-label="표준화 후 히스토그램"></svg><p class="note" id="igHistBS"></p></div>
+      </div>
+      <div class="callout"><b>📌 바로잡기</b> 교과서 75쪽 「디지털 샘의 Tip」에는 표준화를 하면 데이터가 「정규 분포(종 모양 분포)에 가까운 형태로 변한다」고 적혀 있어요. 하지만 표준화는 <b>모든 값에서 같은 수(평균)를 빼고 같은 수(표준편차)로 나누는</b> 계산이라 값들의 순서와 간격의 비율이 그대로예요. 그래서 히스토그램의 <b>모양은 바뀌지 않고</b>, 가운데가 0으로 옮겨 가고 눈금만 바뀌어요. 교과서 75쪽 그림에서도 표준화 전과 후의 히스토그램 모양이 같아요.</div>
+    </div>
+    <div class="memo"><label>내 예상과 실제 결과를 비교하고, 모양이 그대로인 까닭을 표준화 계산(빼기·나누기)과 연결해 적어요.</label><textarea data-memo="shapeMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 데이터 시각화 -->
+<section class="page" data-name="데이터 시각화" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터 시각화는 무엇이고 어떤 방법이 있을까?</h2><p>교과서 76~77쪽 · 시간 시각화 · 분포 시각화 · 관계 시각화 · 공간 시각화</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>숫자 표만 보고는 의미를 찾기 어려워요. 그래프로 바꾸면 <b>흐름, 퍼진 모양, 두 값의 관계, 위치</b>가 한눈에 보여요. 무엇을 알고 싶은지(분석 목적)에 따라 알맞은 그래프를 골라요.</span></div>
+  <div class="card">
+    <h3>📊 데이터 시각화</h3>
+    <div class="callout" style="margin-top:4px">수치나 통계 데이터를 그래픽으로 표현하여 분석 결과를 직관적으로 이해할 수 있도록 돕는 기술을 <b>데이터 시각화</b>라고 한다.</div>
+    <p>데이터의 패턴, 추세, 상관관계 등을 쉽게 파악하고, 분석 목적에 따라 다양한 시각화 방법을 골라 의사 결정에 활용할 수 있어요.</p>
+    <div class="cards4 ig-four">
+      <div class="kc" style="--k:#2f6fd0"><h4>01 시간 시각화</h4><div class="ig-th" id="igTh1"></div><p>시간의 흐름에 따라 데이터가 어떻게 변하는지 보여 줘요. 일정한 시간 간격으로 모은 <b>시계열 데이터</b>에 써요.</p><small>예: 분기별 물가 변동, 연도별 해수면 높이 · 추세와 패턴 파악, 이상치 감지</small></div>
+      <div class="kc" style="--k:#1f9d74"><h4>02 분포 시각화</h4><div class="ig-th" id="igTh2"></div><p>데이터의 전체적인 구조나 분포를 보여 줘요. 데이터가 일정 간격에 걸쳐 어떻게 퍼져 있는지 알 수 있어요.</p><small>예: 시험 점수 분포(히스토그램), 여러 그룹의 키 분포(박스 플롯)</small></div>
+      <div class="kc" style="--k:#e0702b"><h4>03 관계 시각화</h4><div class="ig-th" id="igTh3"></div><p>두 개 이상의 변수 사이의 연관성이나 규칙을 탐색해요. 히트맵은 상관관계를 색상의 강도로 나타내요.</p><small>예: 키와 몸무게(산점도), 판매량과 광고비(히트맵) · 산점도 행렬, 평행좌표 플롯</small></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>04 공간 시각화</h4><div class="ig-th" id="igTh4"></div><p>정보를 지도 위에 나타내 지점마다 데이터를 비교하거나 구분해요. 위치와 거리를 바탕으로 이해해요.</p><small>예: 인구 분포·밀집도(점 지도), 지역별 출산율(등치 지역도)</small></div>
+    </div>
+    <p class="note">그림은 모양을 보여 주려고 새로 그린 예시예요. 히스토그램은 연속된 값을 구간으로 나누어 막대 사이에 빈칸이 없고, 막대그래프는 항목마다 막대를 따로 세워 막대 사이에 빈칸이 있어요.</p>
+  </div>
+  <div class="card">
+    <h3>🎯 이 질문엔 어떤 시각화? <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 질문 8개)</span></h3>
+    <p class="muted" style="margin-top:0">질문을 읽고, 그 질문에 답하기 알맞은 시각화 방법을 골라요.</p>
+    <div id="igSort"></div>
+  </div>
+  <details class="card ig-more">
+    <summary><b>🏪 (선택) 같은 데이터, 다른 그래프</b> <span class="muted" style="font-weight:400;font-size:.88rem">(학교 매점 4주 판매 기록 · 지어낸 예시 · 시간이 남으면)</span></summary>
+    <p class="muted" style="margin-top:0">같은 매점 데이터도 어떤 그래프로 그리느냐에 따라 보이는 것이 달라요. 그래프를 하나씩 눌러 보세요.</p>
+    <div class="apps ig-tabs" id="igVizBtn"></div>
+    <div class="cview" id="igVizView"></div>
+    <div class="memo"><label>내가 매점 주인이라면 이 데이터로 무엇이 궁금할까요? 질문 하나와, 그 질문에 알맞은 그래프와 까닭을 적어요.</label><textarea data-memo="vizMemo" rows="2"></textarea><div class="saved"></div></div>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">해수면 높이 표와 온도 표는 연도를 <b>YYYY 형식</b>으로 맞추고 <b>중복 줄</b>과 <b>결측치가 있는 연도</b>를 정리한 뒤에야 연도마다 한 줄씩 맞게 합쳐졌다. 공통된 열로 묶으면 한 행에서 두 속성을 함께 볼 수 있다.</div>
+    <div style="--k:#e0702b">범위가 다른 높이 편차와 온도 편차도 <b>Min-Max 정규화</b>로 0~1에, <b>표준화</b>로 평균 0·표준편차 1에 맞추면 나란히 비교할 수 있다. 한 값이 이상치가 되면 나머지 값이 한쪽으로 몰리므로 스케일링 전에 이상치부터 처리한다.</div>
+    <div style="--k:#9b4fc4">표준화를 해도 히스토그램의 <b>모양은 그대로</b>이고 가운데 위치와 눈금만 바뀐다. 그래프는 알고 싶은 것에 맞춰 고른다. 흐름은 선 그래프, 퍼진 모양은 히스토그램과 박스 플롯, 두 값이 함께 변하는지는 산점도, 지역 사이의 차이는 지도가 잘 보여 준다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에 적은 처음 생각을 다시 보고, 오늘 배운 낱말(데이터 통합, 공통된 열, 형식 변환, 정규화, 표준화, 시각화)을 넣어 답해 보세요.</p>
+    <div class="ig-prev" id="igPrev2"></div>
+    <b style="font-size:.93rem">여러 데이터를 어떻게 하나로 합치고, 범위가 다른 값을 어떻게 비교할까?</b>
+    <div class="memo" style="margin-top:4px"><textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="callout"><b>다음 시간 준비</b> 오렌지3로 수면 데이터에 오늘까지 배운 전처리(결측치·이상치 처리, 표준화, 통합)를 직접 해 보고 시각화해요. 노트북에서 오렌지3가 열리는지 확인하고, 선생님이 알려 주는 폴더에서 <b>Sleep.csv</b>와 <b>Health.csv</b>를 내려받을 준비를 해요.</div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>연도로 두 표 합치기</b>에서 형식을 맞추지 않았을 때 생긴 일과, 형식 맞추기·중복 지우기·결측치 연도 정리가 필요한 까닭 설명하기</li>
+      <li><b>스케일링 비교기</b>에서 Min-Max 정규화와 표준화를 비교하고, 이상치를 만들었을 때 생긴 일과 이상치를 먼저 처리하는 까닭 설명하기</li>
+      <li><b>표준화 전후 히스토그램</b>에서 내 예상과 결과를 비교하고, 모양이 그대로인 까닭 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

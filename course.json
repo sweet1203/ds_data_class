@@ -93,7 +93,7 @@
      "title": "데이터 수집과 편향",
      "pages": "58~66",
      "form": "data-u2-collect",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "10",
@@ -101,7 +101,7 @@
      "title": "요약 통계량으로 데이터 파악하기",
      "pages": "67~69",
      "form": "data-u2-summary",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "11",
@@ -109,7 +109,7 @@
      "title": "결측치와 이상치 처리",
      "pages": "70~73",
      "form": "data-u2-clean",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "12",
@@ -117,7 +117,7 @@
      "title": "데이터 통합과 스케일링",
      "pages": "74~77",
      "form": "data-u2-integrate",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "13",
@@ -125,7 +125,7 @@
      "title": "전처리 실습과 시각화 · 정리",
      "pages": "78~85",
      "form": "data-u2-preprocess-lab",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "14",
@@ -133,7 +133,7 @@
      "title": "기술 통계: 대푯값과 산포도",
      "pages": "86~95",
      "form": "data-u2-descriptive",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "15",
@@ -141,7 +141,7 @@
      "title": "상관분석",
      "pages": "96~101",
      "form": "data-u2-correlation",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "16",
@@ -149,7 +149,7 @@
      "title": "데이터 분석의 실제 ① 데이터 준비",
      "pages": "102~107",
      "form": "data-u2-practice-1",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "17",
@@ -157,7 +157,7 @@
      "title": "데이터 분석의 실제 ② 분석과 해석 · 정리",
      "pages": "108~115",
      "form": "data-u2-practice-2",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "18",
@@ -165,7 +165,7 @@
      "title": "협력적 창의·융합 활동 · Ⅱ단원 정리",
      "pages": "116~119",
      "form": "data-u2-review",
-     "status": "todo"
+     "status": "ready"
     }
    ]
   },

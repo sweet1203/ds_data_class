@@ -1,0 +1,281 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 1. 데이터 준비</span>
+      <h1>빈칸과 튀는 값,<br>어떻게<br>다룰까?</h1>
+      <div class="story"><b>수현이 이야기</b><br>기말고사 준비로 몇 주째 밤늦게까지 공부한 수현이는 피로가 쌓이고 집중력이 떨어졌어요. 아침 수업에는 꾸벅꾸벅 졸기 일쑤예요. 연구에 따르면 한국 청소년의 평일 평균 수면 시간은 <b>7시간 32분</b>으로, 적정 수면 시간(8시간 30분)을 기준으로 보면 <b>75.3%</b>가 잠이 부족해요. 청소년 <b>48.1%</b>는 수면의 질이 좋지 않다고 답했어요.</div>
+      <p>수면의 질과 스트레스의 관계를 분석하려면 먼저 데이터를 분석할 수 있게 다듬어야 해요. 오늘은 데이터 속 <b>빈칸(결측치)</b>과 <b>동떨어진 값(이상치)</b>을 찾아 처리하는 방법을 배워요.</p>
+      <ol>
+        <li>데이터 전처리</li><li>결측치 처리</li><li>이상치 판별과 처리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧹</i><div><b>데이터 전처리</b><small>정제 · 통합 · 축소 · 변환</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🕳️</i><div><b>결측치 처리</b><small>지울까, 채울까? 소득 조사 실험</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📦</i><div><b>이상치 판별</b><small>사분위수와 IQR로 경계선 긋기</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🛠️</i><div><b>이상치 처리</b><small>제거 · 대체 · 맥락 따지기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>수집한 데이터를 그대로 분석하면 결과를 믿기 어려울 때가 많아요. 데이터를 분석하기 좋게 다듬는 <b>데이터 전처리</b>가 무엇인지 알아보고, 빠진 값(<b>결측치</b>)과 동떨어진 값(<b>이상치</b>)을 직접 찾아 처리하며 <b>처리 방법에 따라 분석 결과가 어떻게 달라지는지</b> 실험해 봐요.</p>
+    </div>
+    <div class="card">
+      <h3>😴 어느 학생의 한 주 수면 기록 <span class="muted" style="font-weight:400;font-size:.88rem">(예시)</span></h3>
+      <div class="cl-scroll"><table class="cl-tbl cl-log">
+        <tr><th>요일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th>일</th></tr>
+        <tr><th>수면 시간(시간)</th><td>6.5</td><td class="cl-miss"></td><td>7.0</td><td>65</td><td>6.0</td><td>9.5</td><td>8.0</td></tr>
+      </table></div>
+      <div class="row"><button class="btn sm" id="clLogAvg">이대로 한 주 평균 내 보기</button></div>
+      <div class="cl-msg" id="clLogMsg"></div>
+      <div class="memo"><label>이 기록에서 이상한 곳은 어디이고, 어떻게 고치면 좋을까요? <small>처음 생각을 적어요. 마무리에서 다시 봐요</small></label><textarea data-memo="firstThought" rows="2" placeholder="예: ○요일 칸이 … / ○요일 값은 …"></textarea><div class="saved"></div></div>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">나의 계획</span>
+        <div class="memo" style="margin-top:0"><label>나는 「데이터 전처리와 시각화」에서 다음과 같은 내용을 배우고 싶다. <small>(교과서 70쪽)</small></label><textarea data-memo="plan" rows="3"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>교과서 70쪽</b> · 수면의 질이 우리의 건강과 행복에 미치는 영향은 얼마나 클까?</li>
+          <li><b>오늘의 질문</b> · 데이터 전처리는 무엇이고, 결측치와 이상치는 어떻게 처리할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>이상치와 결측치를 탐색하고 정규화를 통해 데이터를 가공할 수 있다. <small class="muted">(정규화는 다음 시간)</small></li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 전처리부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 전처리 -->
+<section class="page" data-name="데이터 전처리" data-acc="#1f9d74">
+  <div class="head"><div class="num">01</div><div><h2>데이터 전처리는 무엇이고 어떤 방법이 있을까?</h2><p>교과서 71쪽 · 원시 데이터 · 데이터 전처리 · 정제 · 통합 · 축소 · 변환</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>수집한 그대로의 데이터(<b>원시 데이터</b>)에는 빈칸, 잘못 적힌 값, 서로 다른 형식이 섞여 있어요. 요리하기 전에 재료를 씻고 다듬듯이, 분석하기 전에 데이터를 다듬는 일이 <b>데이터 전처리</b>예요.</span></div>
+  <div class="card">
+    <h3>🧹 데이터 전처리</h3>
+    <div class="callout" style="margin-top:4px">원시 데이터를 가공하여 분석하기 적합한 형태로 만드는 모든 과정을 <b>데이터 전처리</b>라고 한다.</div>
+    <p>결측치 처리, 이상치 제거, 정규화, 데이터 형 변환 같은 작업이 여기에 들어가요. 전처리는 <b>시간이 많이 걸리지만</b> 분석 결과에 큰 영향을 미치기 때문에 데이터 분석에서 꼭 거쳐야 하는 단계예요.</p>
+    <div class="cards4 cl-four">
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🧽</div><h4>데이터 정제</h4><p>데이터의 오류, 불일치, 누락된 데이터를 제거하거나 수정해요.</p><small>결측치 처리, 이상치 제거 등</small></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🔗</div><h4>데이터 통합</h4><p>서로 비슷하거나 동질성을 가진 데이터를 하나의 데이터로 합쳐요.</p><small>데이터 연계, 데이터 속성 통합 등</small></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">✂️</div><h4>데이터 축소</h4><p>데이터가 너무 크면 분석이 어려우므로 데이터를 줄여요.</p><small>샘플링, 차원 축소, 속성 선택 등</small></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">🔄</div><h4>데이터 변환</h4><p>데이터를 분석에 적합한 형태로 바꾸어요.</p><small>정규화, 집계, 데이터 형 변환 등</small></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🗂️ 어떤 전처리일까? <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 상황 8개)</span></h3>
+    <p class="muted" style="margin-top:0">상황을 읽고 네 가지 전처리 방법 가운데 알맞은 것을 골라요. 위 카드의 괄호 속 예를 떠올리면 쉬워요.</p>
+    <div id="clSort"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 결측치 처리 -->
+<section class="page" data-name="결측치 처리" data-acc="#2f6fd0">
+  <div class="head"><div class="num">02</div><div><h2>결측치는 지울까, 채울까?</h2><p>교과서 71~72쪽 · 결측치 · 표 Ⅱ-3 · 결측치 제거와 대체 · 대표성 · 표 Ⅱ-4</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터에서 값이 비어 있는 칸이 <b>결측치</b>예요. 빈칸이 있는 줄을 지울지(<b>제거</b>), 다른 값으로 채울지(<b>대체</b>)는 데이터의 특성과 분석 목적에 따라 신중하게 정해요. 정답이 하나로 정해져 있지 않아요.</span></div>
+  <div class="card">
+    <h3>🕳️ 결측치</h3>
+    <div class="callout" style="margin-top:4px">데이터셋에서 기록되지 않거나 누락된 값을 <b>결측치</b>라고 한다.</div>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🙊</div><h4>응답하지 않음</h4><p>설문 조사나 실험에서 응답자가 특정 문항에 답하지 않았어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">⌨️</div><h4>입력 오류·누락</h4><p>데이터를 입력하다가 실수하거나 빠뜨렸어요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">📡</div><h4>전송·저장 손실</h4><p>데이터를 보내거나 저장하는 과정에서 값이 사라졌어요.</p></div>
+    </div>
+    <p>결측치를 처리하지 않으면 분석 결과의 <b>신뢰성과 정확성</b>이 떨어질 수 있어요.</p>
+    <div class="grid2 even">
+      <div>
+        <h4>표 Ⅱ-3 결측치 확인 <span class="muted" style="font-weight:400;font-size:.85rem">(교과서 71쪽)</span></h4>
+        <div class="cl-scroll"><table class="cl-tbl cl-t3">
+          <tr><th></th><th>연도</th><th>해수면 높이 편차</th></tr>
+          <tr><td>0</td><td>1986</td><td class="cl-nan">NaN</td></tr>
+          <tr><td>1</td><td>1987</td><td class="cl-nan">NaN</td></tr>
+          <tr><td>2</td><td>1988</td><td class="cl-nan">NaN</td></tr>
+          <tr><td>3</td><td>1989</td><td>0.0</td></tr>
+          <tr><td>4</td><td>1990</td><td>−0.9</td></tr>
+          <tr><td>5</td><td>1991</td><td>−0.1</td></tr>
+        </table></div>
+        <p class="note">1986~1988년의 해수면 높이 편차값이 누락되어 NaN으로 표현되었어요.</p>
+      </div>
+      <div class="cl-side">
+        <h4>결측치 표기 방법</h4>
+        <p>결측치는 <span class="mono">NaN</span>, <span class="mono">N/A</span>, <span class="mono">None</span>, <span class="mono">Null</span> 등 여러 가지로 나타내요.</p>
+        <div class="cl-two">
+          <div><b>오렌지3</b><span class="mono">?</span></div>
+          <div><b>파이썬</b><span class="mono">NaN</span></div>
+        </div>
+        <p class="note">값이 0이라는 뜻이 아니에요. 「모르는 값」이라는 표시예요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧰 결측치를 처리하는 방법</h3>
+    <div class="cards2">
+      <div class="kc" style="--k:#d64535"><div class="ic">🗑️</div><h4>결측치 제거</h4><p>데이터의 양이 충분하고 결측치가 전체에 비해 적을 때 효과적이에요. 남은 데이터 표본이 <b>대표성</b>을 유지한다면 결측치가 포함된 <b>행 또는 열</b>을 삭제할 수 있어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🩹</div><h4>결측치 대체</h4><p><b>평균값, 중앙값, 최빈값</b> 등 특정 값으로 결측치를 채워요. 행을 지우지 않으니 결측치 때문에 생기는 데이터 손실을 줄이고, 분석 결과의 왜곡을 줄이는 데 유용해요. 데이터의 특성에 맞는 방법을 골라요.</p></div>
+    </div>
+    <div class="callout"><b>대표성 유지</b> 남은 데이터가 전체 집단의 특성을 잘 반영한다는 뜻이에요. 일부 학생의 점수가 빠졌어도 남은 데이터가 전체 성적 분포와 비슷하면 대표성이 유지돼요. 하지만 <b>특정 그룹의 데이터만</b> 빠지면 대표성이 떨어져요.</div>
+    <div class="cl-sub"><h4>표 Ⅱ-4 해수면 높이의 결측치를 지우거나 채우면? <span class="muted" style="font-weight:400;font-size:.85rem">(교과서 72쪽 · 해수면 높이 열)</span></h4>
+      <div class="cl-scroll"><table class="cl-tbl cl-t4">
+        <tr><th></th><th>원본 데이터</th><th>삭제</th><th>대체</th></tr>
+        <tr><th>행 수</th><td>37</td><td>34</td><td>37</td></tr>
+        <tr><th>count (값이 있는 칸)</th><td>34</td><td>34</td><td>37</td></tr>
+        <tr><th>mean (평균)</th><td>3.085294</td><td>3.085294</td><td class="cl-hl">3.085294</td></tr>
+        <tr><th>min (최솟값)</th><td>−6.700000</td><td>−6.700000</td><td>−6.700000</td></tr>
+        <tr><th>50% (중앙값)</th><td>3.150000</td><td>3.150000</td><td class="cl-hl">3.085294</td></tr>
+        <tr><th>max (최댓값)</th><td>19.100000</td><td>19.100000</td><td>19.100000</td></tr>
+      </table></div>
+      <p class="note">교과서 표에는 연도 열과 표준편차(std)·25%·75% 줄도 있어요. 여기서는 해수면 높이 열의 일부 줄만 옮겼어요. 대체 열은 결측치 3칸을 평균값 3.085294로 채운 결과예요. 평균은 그대로이고 중앙값이 평균 쪽으로 옮겨 갔어요.</p>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧪 결측치 처리 실험 · 「결측치는 삭제해도 될까?」 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 72쪽 옆 설명을 실험으로)</span></h3>
+    <p class="muted" style="margin-top:0">어느 마을 12가구의 월 소득을 조사했는데 3가구가 답하지 않았어요(값은 지어낸 예시, 단위 만 원). 결측치를 처리하는 방법을 바꾸어 가며 평균을 구한 뒤, <b>숨겨 둔 실제 소득</b>과 비교해 봐요.</p>
+    <div class="cl-ctl">
+      <div><b>누가 답하지 않았나?</b><div class="row" id="clScen"><button class="cl-pill on" data-s="0">소득이 낮은 3가구</button><button class="cl-pill" data-s="1">아무 3가구나</button><button class="btn ghost sm" id="clReroll" style="display:none">다른 3가구 뽑기</button></div></div>
+      <div><b>어떻게 처리할까?</b><div class="row" id="clMeth"><button class="cl-pill on" data-m="0">그대로 보기</button><button class="cl-pill" data-m="1">결측치 삭제</button><button class="cl-pill" data-m="2">평균값으로 대체</button><button class="cl-pill" data-m="3">중앙값으로 대체</button></div></div>
+    </div>
+    <svg viewBox="0 0 760 270" id="clMissSvg" class="cl-svg" role="img" aria-label="12가구 소득 막대그래프"></svg>
+    <div class="cl-scroll"><table class="cl-tbl cl-res" id="clMissTbl"></table></div>
+    <div class="row"><button class="btn sm" id="clReveal">숨긴 실제 소득 보기</button></div>
+    <div class="cl-msg on" id="clMissMsg"></div>
+    <div class="memo"><label>실험 결과를 정리해요. ① 소득이 낮은 3가구가 빠졌을 때와 아무 3가구나 빠졌을 때, 세 방법의 평균은 실제와 어떻게 달랐나요? ② 그렇다면 결측치를 삭제해도 괜찮은 때는 언제일까요?</label><textarea data-memo="missMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 이상치 처리 -->
+<section class="page" data-name="이상치 처리" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>이상치는 어떻게 찾고 처리할까?</h2><p>교과서 72~73쪽 · 이상치 · 사분위수 · IQR · 하한값·상한값 · 박스 플롯 · 그림 Ⅱ-2~Ⅱ-4</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>다른 값들과 동떨어진 아주 작거나 큰 값이 <b>이상치</b>예요. 가운데 절반이 모인 폭(<b>IQR</b>)을 재고, 그 폭의 <b>1.5배</b>보다 더 바깥에 있는 값을 이상치로 봐요. 찾은 뒤에는 지울지, 바꿀지, 남겨서 살펴볼지 상황에 맞게 정해요.</span></div>
+  <div class="card">
+    <h3>📍 이상치</h3>
+    <div class="callout" style="margin-top:4px">데이터셋 내 데이터의 범위에서 많이 벗어난 아주 작은 값이나 큰 값을 <b>이상치</b>라고 한다.</div>
+    <div class="cards2">
+      <div class="kc" style="--k:#d64535"><div class="ic">✍️</div><h4>잘못 들어간 값</h4><p>데이터를 수집할 때 실수나 예외적인 상황 때문에 잘못된 값이 입력될 수 있어요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🌪️</div><h4>실제로 있는 값</h4><p>특정 상황이나 환경에서 실제로 존재하지만 일반적인 범주를 벗어나는 값이 쌓일 수도 있어요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📦 사분위수로 이상치 판별하기 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅱ-2를 다시 그림)</span></h3>
+    <p style="margin-top:0">이상치는 <b>박스 플롯</b>이나 <b>산점도</b>로 찾을 수 있어요. 박스 플롯은 사분위수(Q1, Q3)와 사분위수 범위(IQR)로 데이터의 분포를 보여 줘요. 산점도에서는 다른 점들과 뚜렷하게 떨어져 있는 점이 이상치예요.</p>
+    <div class="grid2">
+      <div>
+        <svg viewBox="0 0 440 150" id="clBoxFig" class="cl-svg" role="img" aria-label="박스 플롯과 이상치 경계"></svg>
+      </div>
+      <dl class="cl-dl">
+        <dt>Q1 (제1사분위수)</dt><dd>데이터의 하위 25% 지점에 해당하는 값</dd>
+        <dt>Q2 (중앙값, 제2사분위수)</dt><dd>하위 50% 지점에 해당하는 값</dd>
+        <dt>Q3 (제3사분위수)</dt><dd>하위 75% 지점에 해당하는 값</dd>
+        <dt>IQR (사분위수 범위)</dt><dd>Q3 − Q1</dd>
+        <dt>하한값</dt><dd>Q1 − 1.5 × IQR · 이보다 <b>작은</b> 값은 이상치</dd>
+        <dt>상한값</dt><dd>Q3 + 1.5 × IQR · 이보다 <b>큰</b> 값은 이상치</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🎯 IQR 이상치 탐지기 <span class="muted" style="font-weight:400;font-size:.88rem">(15명의 어젯밤 수면 시간 · 예시)</span></h3>
+    <p class="muted" style="margin-top:0">점을 좌우로 끌거나, 점을 누르고 ← → 키로 옮겨 보세요(0.5시간 단위). 사분위수·IQR·하한값·상한값과 박스 플롯이 바로 다시 계산되고, 범위를 벗어난 점은 <b style="color:var(--red)">빨간색</b>이 돼요.</p>
+    <svg viewBox="0 0 680 250" id="clIqrSvg" class="cl-svg cl-drag" role="img" aria-label="수면 시간 점그래프와 박스 플롯"></svg>
+    <div class="cl-stats" id="clIqrStats"></div>
+    <div class="cl-mis" id="clMission"></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="clIqrReset">처음 값으로</button></div>
+    <p class="note">사분위수는 교과서·파이썬(pandas)과 같은 방법으로 계산했어요. 15개 값을 작은 순서로 놓고, 25% 지점이 두 값 사이에 오면 두 값 사이를 비율대로 나누어요. 프로그램마다 계산 방법이 달라 값이 조금 다를 수 있어요(오렌지3 Box Plot은 가운데 두 값의 한가운데를 써요).</p>
+    <div class="memo"><label>탐지기를 해 보고 적어요. ① 이상치를 찾는 순서 ② 가장 큰 값을 더 멀리 끌었을 때 평균과 Q3는 어떻게 달랐나요?</label><textarea data-memo="iqrMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🛠️ 이상치를 처리하는 방법</h3>
+    <p style="margin-top:0">이상치는 평균이나 분산 같은 통곗값을 왜곡해 잘못된 해석으로 이어질 수 있어요. 그래서 <b>제거, 대체, 변환</b> 등의 방법으로 처리해요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#d64535"><div class="ic">🗑️</div><h4>이상치 제거</h4><p>쉽고 간단하며, 불필요한 값이 사라져 정확성을 높일 수 있어요.</p><small>하지만 유용한 정보가 담긴 데이터까지 잃고 데이터의 양이 줄어들 수 있어요.</small></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🩹</div><h4>이상치 대체</h4><p>평균값, 중앙값, 최빈값으로 바꾸면 데이터 손실을 줄이고 분석의 일관성을 높일 수 있어요.</p><small>하지만 데이터의 실제 분포를 반영하지 못해요.</small></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">📏</div><h4>대체가 어려울 때</h4><p>평균이나 중앙값으로 바꾸기 어렵다면, 이상치의 영향을 줄이는 알맞은 정규화 방법을 쓸 수 있어요.</p><small>정규화는 다음 시간에 배워요(교과서 75쪽).</small></div>
+    </div>
+    <div class="cl-pred">
+      <div><b>그림 Ⅱ-4</b> 해수면 높이에 추세선을 그어 2050년 값을 예측하면</div>
+      <div class="cl-pv"><span>이상치 포함</span><b>17.65</b></div>
+      <div class="cl-pv"><span>이상치 제거 후</span><b>16.39</b></div>
+    </div>
+    <p class="note">이상치가 있는지에 따라 예측 결과가 달라져요(교과서 73쪽 값). 상황에 알맞은 처리 방법을 골라야 하는 까닭이에요.</p>
+    <details class="cl-det"><summary>(선택) 추세선 실험 · 이상치를 어떻게 처리하느냐에 따라 2050년 예측값이 얼마나 달라질까?</summary>
+      <p class="muted" style="font-size:.9rem;margin:6px 0">1989~2022년 값은 지어낸 예시예요(2012년 −6.7, 2020년 19.1만 교과서 73쪽과 같게). 그래서 예측값도 교과서와 달라요.</p>
+      <div class="row" id="clTrBtn"><button class="cl-pill on" data-t="0">이상치 포함</button><button class="cl-pill" data-t="1">이상치 제거</button><button class="cl-pill" data-t="2">중앙값으로 대체</button></div>
+      <svg viewBox="0 0 680 260" id="clTrendSvg" class="cl-svg" role="img" aria-label="연도별 해수면 높이 편차 예시와 추세선"></svg>
+      <div class="cl-msg on" id="clTrendMsg"></div>
+    </details>
+  </div>
+  <div class="card">
+    <h3>🤔 이 이상치, 어떻게 할까? <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 사례)</span></h3>
+    <p class="muted" style="margin-top:0">이상치라고 모두 잘못된 값은 아니에요. 사례마다 처리 방법을 고르고 설명을 읽어 봐요. 골랐던 것을 바꿔도 돼요.</p>
+    <div id="clCases"></div>
+    <div class="memo"><label>사례 하나를 골라, 내가 고른 처리 방법과 까닭을 적어요. 분석 목적이 바뀌면 처리 방법도 바뀔까요?</label><textarea data-memo="caseMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🧮 교과서 73쪽 해수면 높이로 계산하기 <span class="muted" style="font-weight:400;font-size:.88rem">(그림 Ⅱ-3)</span></h3>
+    <p style="margin-top:0">1989~2022년 해수면 높이 편차 34개의 <b>Q1은 0.125</b>, <b>Q3는 4.575</b>예요(표 Ⅱ-4). IQR과 경계값을 직접 계산해 봐요.</p>
+    <div class="cl-calc">
+      <label>IQR = Q3 − Q1 = <input type="number" step="any" id="clT73iqr" aria-label="IQR"></label>
+      <label>하한값 = Q1 − 1.5 × IQR = <input type="number" step="any" id="clT73lo" aria-label="하한값"></label>
+      <label>상한값 = Q3 + 1.5 × IQR = <input type="number" step="any" id="clT73hi" aria-label="상한값"></label>
+    </div>
+    <p style="margin:10px 0 4px"><b>이 값들은 이상치일까?</b> <span class="muted" style="font-size:.88rem">(교과서 표 Ⅱ-5와 73쪽에 나온 해수면 높이 편차)</span></p>
+    <div class="cl-judge" id="clT73judge"></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="clT73ok">확인하기</button><button class="btn ghost sm" id="clT73re">다시 하기</button></div>
+    <div class="cl-msg" id="clT73msg"></div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#1f9d74">수면 기록의 빈칸과 「65시간」처럼, 막 수집한 데이터에는 고칠 곳이 섞여 있다. 이런 데이터를 <b>정제·통합·축소·변환</b>으로 다듬어야 믿을 만한 분석을 할 수 있고, 이 일을 통틀어 <b>데이터 전처리</b>라고 한다.</div>
+    <div style="--k:#2f6fd0">소득이 낮은 가구만 답하지 않은 조사라면, 그 칸을 지우든 평균으로 채우든 마을 평균 소득이 실제보다 높게 나온다. 결측치를 처리하기 전에 <b>빠진 값이 한쪽에 몰려 있는지(대표성)</b>부터 살핀다.</div>
+    <div style="--k:#e0702b">수면 시간 15개의 Q1이 6.25, Q3가 7.75라면 IQR은 1.5이고, <b>4.0보다 작거나 10.0보다 큰 값</b>이 이상치이다. 이상치는 지울지, 바꿀지, 남겨서 살펴볼지 <b>분석 목적과 맥락</b>에 따라 정한다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면의 수면 기록에 적은 처음 생각을 다시 보고, 오늘 배운 낱말(전처리, 결측치, 이상치, 제거, 대체, IQR)을 넣어 답해 보세요.</p>
+    <div class="cl-prev" id="clPrev"></div>
+    <b style="font-size:.93rem">데이터 전처리는 무엇이고, 결측치와 이상치는 어떻게 처리할까?</b>
+    <div class="memo" style="margin-top:4px"><textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>결측치 처리 실험</b>에서 세 방법의 평균이 실제와 어떻게 달랐는지, 결측치를 삭제해도 되는 때는 언제인지 설명하기</li>
+      <li><b>IQR 이상치 탐지기</b>(또는 73쪽 계산)로 이상치를 찾는 순서, 이상치가 평균을 어떻게 왜곡하는지 설명하기</li>
+      <li><b>「이 이상치, 어떻게 할까?」</b>에서 고른 처리 방법과 까닭, 맥락을 따져야 하는 까닭 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

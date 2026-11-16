@@ -1,0 +1,326 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 2. 데이터 분석</span>
+      <h1>숙박비와 물가를<br>함께 보면<br>어디가 좋을까?</h1>
+      <div class="story"><b>지난 시간에 한 일</b><br>숙소 데이터 51,707줄을 불러와 속성을 파악하고, <b>1인당 숙박비(charge)</b>를 만들어 도시별 평균을 구했어요. 오늘은 여기에 <b>생활비 데이터</b>를 합쳐 두 데이터 속성 사이의 관계를 찾고, 여러 기준을 한눈에 보며 여행지를 골라요.</div>
+      <p>여행을 계획할 때는 숙박비 말고도 교통비, 식비 같은 부대 비용이 들어요. 도시별 생활비 데이터를 숙소 데이터와 <b>도시</b>를 기준으로 통합하면, 「숙박비가 비싼 도시는 물가도 비쌀까?」 같은 질문에 답할 수 있어요.</p>
+      <ol>
+        <li>생활비 데이터 살펴보기</li><li>두 데이터 통합하기</li><li>관계 시각화와 상관관계</li>
+        <li>정규화와 히트맵</li><li>(선택) 함께 해결하기 · 정리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🛒</i><div><b>생활비 데이터</b><small>174개 도시 · 9개 속성</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🔗</i><div><b>도시 기준으로 통합</b><small>Merge Data · city ↔ City</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📈</i><div><b>속성 간의 관계</b><small>Scatter Plot · Correlations</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🟨</i><div><b>정규화와 히트맵</b><small>0~1로 맞춰 한눈에 비교</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="callout pb-ready">🍊 <b>오렌지3를 실행하고 지난 시간에 저장한 「여행지 분석」 흐름을 열어요</b>(File → Open). 📁 <b>선생님이 알려 주는 폴더</b>에서 <span class="mono">Europe Cost of Living Index by City 2024.csv</span>도 준비해요.
+      <details class="pb-det"><summary>저장한 흐름이 없다면 · 5분 안에 다시 만들기</summary>
+        <ol class="pb-ol">
+          <li><b>File</b>로 <span class="mono">airbnb_european-cities.csv</span> 열기 (F2로 이름을 <b>숙소 정보</b>로)</li>
+          <li><b>Formula</b> 연결 → New → Numeric, 이름 <b>charge</b>, 식 <span class="mono">realSum/person_capacity</span> → Send</li>
+          <li>Formula에 <b>Group by</b> 연결 → Group by 목록에서 <b>city</b>, 수치형 속성은 <b>Mean</b> 그대로, 범주형 속성(room_type, weekends 등)은 <b>Mode</b> 체크 풀기</li>
+          <li>Group by에 <b>Data Table</b>을 이어 10줄이 나오면 준비 끝 (<b>- Mode</b> 열이 보이면 3번의 Mode 체크를 풀어요. Box Plot · Bar Plot은 오늘 필요 없어요)</li>
+        </ol>
+      </details>
+    </div>
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>생활비 데이터를 불러와 속성을 확인하고, 지난 시간의 <b>도시별 평균</b>과 <b>도시를 기준으로 수평 통합</b>해요. 통합한 데이터로 산점도와 상관계수를 구해 <b>속성 간의 관계</b>를 파악하고, 단위가 다른 속성을 <b>0~1로 정규화</b>해 히트맵으로 도시를 비교해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">학습 계획 세우기</span>
+        <div class="pb-prev" id="pbPrev"></div>
+        <div class="memo"><label>오늘 두 데이터를 합쳐서 꼭 확인하고 싶은 질문 하나</label><textarea data-memo="planToday" rows="2" placeholder="예: ○○가 싼 도시는 △△도 …할까?"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 분석</b> · 데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까?</li>
+          <li><b>오늘의 질문</b> · 데이터 분석으로 실제 문제를 해결하려면 어떻게 해야 할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터를 수집하여 전처리하고 시각화할 수 있다.</li>
+          <li>데이터를 서로 다른 방법으로 분석하여 분석 결과를 비교할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 생활비 데이터부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 생활비 데이터 -->
+<section class="page" data-name="생활비 데이터" data-acc="#9b4fc4">
+  <div class="head"><div class="num">01</div><div><h2>생활비 데이터는 무엇을 알려 줄까?</h2><p>교과서 108쪽 · 유럽 도시별 생활비 데이터 분석 · File · Data Table · Box Plot</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>생활비 데이터는 도시마다 물가가 <b>기준 도시(뉴욕)를 100</b>으로 놓았을 때 얼마쯤인지 지수로 알려 줘요. 생활비·임대료·식료품·레스토랑 지수는 숫자가 클수록 그 항목이 비싼 도시예요. 오렌지3로 불러와 속성과 결측치를 먼저 확인해요.</span></div>
+  <div class="card">
+    <h3>🏷️ 생활비 데이터 속성 9개 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 108쪽)</span></h3>
+    <div class="pb-attrs">
+      <div><b>순위</b><span class="mono">Rank</span><small>생활비 지수가 높은 순서(1이 가장 높음)</small></div>
+      <div><b>생활비 지수</b><span class="mono">Cost of Living Index</span><small>식료품·외식·교통·공공요금 등의 가격 수준(주거비 제외)</small></div>
+      <div><b>임대료 지수</b><span class="mono">Rent Index</span><small>집을 빌리는 값의 수준</small></div>
+      <div><b>생활비+임대료 지수</b><span class="mono">Cost of Living Plus Rent Index</span><small>두 가지를 함께 본 값</small></div>
+      <div><b>식료품 지수</b><span class="mono">Groceries Index</span><small>장을 보는 값의 수준</small></div>
+      <div><b>레스토랑 가격 지수</b><span class="mono">Restaurant Price Index</span><small>식당에서 사 먹는 값의 수준</small></div>
+      <div><b>지역 구매력 지수</b><span class="mono">Local Purchasing Power Index</span><small>그 도시 소득으로 살 수 있는 정도</small></div>
+      <div><b>도시</b><span class="mono">City</span><small>도시 이름(text)</small></div>
+      <div><b>국가</b><span class="mono">Country</span><small>나라 이름</small></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 ③ <span class="muted" style="font-weight:400;font-size:.88rem">(번호는 지난 시간 1~9번에 이어서)</span></h3>
+    <div class="pb-flowbox"><svg id="pbFlow1" class="pb-f1" role="img" aria-label="생활비 데이터 불러오기 위젯 연결 흐름도"></svg></div>
+    <div class="pb-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span><span style="--k:#8fb4e8">Unsupervised</span><small>색은 오렌지3 왼쪽 카테고리를 나타내요.</small></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet1">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="10"><td>10</td><td><b>File (1)</b> (Data)</td><td>새 위젯</td><td><span class="mono">Europe Cost of Living Index by City 2024.csv</span> 열기 → F2로 이름을 <b>생활비</b>로<br>Columns 목록에서 <b>Country</b>의 Type 칸을 더블 클릭해 <b>categorical</b>로 바꾸고 <b>Apply</b></td><td>City는 text, Country는 categorical(둘 다 meta)</td></tr>
+      <tr data-s="11"><td>11</td><td><b>Data Table (3)</b> (Data)</td><td>생활비 →</td><td>더블 클릭해 보기</td><td>174개의 데이터 행, 9개 속성, 결측치 없음</td></tr>
+      <tr data-s="12"><td>12</td><td><b>Box Plot (1)</b> (Visualize) <small class="pb-tag">선택</small></td><td>생활비 →</td><td><b>Variable</b>을 <b>Cost of Living Index</b>, <b>Subgroups</b>를 <b>Country</b></td><td>나라별 도시들의 생활비 지수 분포. 상자 위의 숫자는 평균과 표준편차</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone1"></div>
+  </div>
+  <div class="card">
+    <h3>🔢 지수 읽기 연습 <span class="muted" style="font-weight:400;font-size:.88rem">(카드를 눌러 뒤집어요 · 지수 값은 새로 만든 예시)</span></h3>
+    <div class="tcards" id="pbIdx"></div>
+    <div class="memo"><label>(선택) Box Plot (1)에서 스위스(Switzerland) 도시들의 생활비 지수 평균과 표준편차를 찾아 적고, 다른 나라와 비교해 보세요.</label><textarea data-memo="swissNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 두 데이터 통합 -->
+<section class="page" data-name="두 데이터 통합" data-acc="#2f6fd0">
+  <div class="head"><div class="num">02</div><div><h2>두 데이터를 어떻게 하나로 합칠까?</h2><p>교과서 109쪽 · Merge Data · city ↔ City · 수평 통합 · LINK 74쪽 데이터 통합</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>숙소 데이터(도시별 평균)와 생활비 데이터에는 <b>도시</b>라는 같은 속성이 있어요. 도시 이름이 같은 줄끼리 옆으로 이어 붙이면(<b>수평 통합</b>) 한 줄에 숙박비와 물가가 함께 놓여 둘 사이의 관계를 분석할 수 있어요.</span></div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 통합하기</h3>
+    <div class="pb-flowbox"><svg id="pbFlow2" class="pb-f2" role="img" aria-label="Merge Data로 두 데이터를 통합하는 위젯 연결 흐름도"></svg></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet2">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="13"><td>13</td><td><b>Merge Data</b> (Transform)</td><td>Group by → <b>Data</b><br>생활비 → <b>Extra Data</b></td><td><b>Merging</b>: <b>Find matching pairs of rows</b><br><b>Row matching</b>: 왼쪽 <b>city</b> matches 오른쪽 <b>City</b> (처음에 Row index로 되어 있으면 바꿔요)</td><td>연결선 글자가 Data · Extra Data로 맞게 들어갔는지</td></tr>
+      <tr data-s="14"><td>14</td><td><b>Data Table (4)</b> (Data)</td><td>Merge Data →</td><td>더블 클릭해 보기</td><td><b>10줄</b>, 숙소 정보 8개 + 생활비 7개 = <b>15개 속성</b>(<b>- Mode</b> 열이 보이면 빼고 세어요). 열은 city 다음에 숙소 정보, 생활비 순서</td></tr>
+    </table></div>
+    <div class="callout pb-warn">💡 생활비 7개 속성에는 <b>Rank(순위)</b>도 들어가요. Rank는 값이 작을수록 생활비 지수가 높은 도시라, 다음 화면의 상관계수와 히트맵에서 다른 지수와 <b>반대 방향</b>으로 나타나요. 순위는 크기를 재는 값이 아니라는 점에 주의해서 읽어요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone2"></div>
+  </div>
+  <div class="card">
+    <h3>🧩 통합 따라 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3에서 읽은 값을 넣어 직접 합쳐 봐요)</span></h3>
+    <p class="muted" style="margin-top:0">① 오른쪽 생활비 표의 빈칸에 오렌지3에서 <b>Merge Data 뒤에 붙인 Data Table</b>(통합 결과 10줄)에서 찾은 도시별 <b>Cost of Living Index</b>를 적어요. 위젯 번호(예: Data Table (4))는 내 화면과 달라도 괜찮아요. 이 화면에는 생활비 값을 싣지 않아요. 오렌지3가 안 되면 빈칸인 채로 합쳐 봐도 돼요. ② 「합치기」를 눌러요. ③ 「이름이 다르게 적혀 있다면?」도 켜 보세요.</p>
+    <div class="pb-mg" id="pbMg"></div>
+    <div class="row pb-mgctl">
+      <label class="pb-chkl"><input type="checkbox" id="pbMgName"> 이름이 다르게 적혀 있다면? <small>(Rome → Roma, Vienna → Wien, 예시)</small></label>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="btn sm" id="pbMgDo">합치기 (Merge Data)</button>
+      <button class="btn ghost sm" id="pbMgFix" disabled>이름 표기 맞추기</button>
+      <button class="btn ghost sm" id="pbMgReset">결과 지우기</button>
+    </div>
+    <details class="pb-det"><summary>(더 알아보기) 합치는 방법을 Append columns from Extra data로 바꾸면?</summary>
+      <p>Merge Data의 다른 방법으로 바꿔 「합치기」를 다시 눌러 보세요. 이름이 다른 도시가 있을 때 결과가 어떻게 다른지 비교해요.</p>
+      <span class="pb-seg" id="pbMgMode"></span>
+    </details>
+    <div class="pb-msg" id="pbMgMsg"></div>
+    <div class="pb-tw" id="pbMgOut"></div>
+    <p class="note">숙소 표 출처: 캐글 「Airbnb Prices European Cities(Merged)」를 도시별로 묶은 평균. 생활비 표는 174줄 가운데 일부 도시 이름만 보여요.</p>
+  </div>
+  <div class="memo"><label>✍️ 174줄짜리 생활비 데이터와 합쳤는데 왜 10줄만 남았을까요? 도시 이름이 다르게 적혀 있으면 어떻게 되고, 어떻게 해결해야 할까요?</label><textarea data-memo="mergeNote" rows="3"></textarea><div class="saved"></div></div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 관계 시각화·상관 -->
+<section class="page" data-name="관계와 상관" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>숙박비가 비싼 도시는 물가도 비쌀까?</h2><p>교과서 110~111쪽 · Scatter Plot · Correlations · 스스로 해결하기 · LINK 96쪽 상관관계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>통합한 데이터에서 두 속성을 골라 <b>산점도</b>에 찍으면 함께 커지는지, 반대로 움직이는지 눈으로 보여요. <b>상관계수</b>는 그 방향과 강도를 −1~1 사이의 숫자로 알려 줘요.</span></div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 관계 보기</h3>
+    <div class="pb-flowbox"><svg id="pbFlow3" class="pb-f3" role="img" aria-label="산점도와 상관계수 위젯 연결 흐름도"></svg></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet3">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="15"><td>15</td><td><b>Scatter Plot</b> (Visualize)</td><td>Merge Data →</td><td><b>Axis x</b>: <b>charge - Mean</b>, <b>Axis y</b>: <b>Cost of Living Index</b>, <b>Label</b>: <b>city</b></td><td>왼쪽 아래에 모인 도시, 오른쪽 위에 놓인 도시. 점들이 놓인 방향</td></tr>
+      <tr data-s="16"><td>16</td><td><b>Correlations</b> (Unsupervised)</td><td>Merge Data →</td><td><b>Pearson correlation</b> 그대로, 그 아래 선택 상자(처음에는 <b>(All combinations)</b>)에서 <b>guest_satisfaction_overall - Mean</b> 고르기</td><td>막대 색(연두색 = 양의 상관, 파란색 = 음의 상관)과 막대 길이, 앞의 숫자</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone3"></div>
+  </div>
+  <div class="grid2 even">
+    <div class="memo"><label>✍️ Scatter Plot: 왼쪽 아래와 오른쪽 위에 놓인 도시, 그리고 두 속성의 관계에 대한 내 짐작</label><textarea data-memo="scatterNote" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>✍️ Correlations: 고객 만족도와 양의 상관이 가장 뚜렷한 속성, 음의 상관이 가장 뚜렷한 속성과 그 뜻</label><textarea data-memo="corrNote" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card pb-self">
+    <h3>🙋 스스로 해결하기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 111쪽)</span></h3>
+    <p style="margin-top:0">1인당 평균 숙박비(<b>charge - Mean</b>)와 아래 두 속성 사이의 상관계수를 알아보고 결과를 분석해요. Correlations 창의 Pearson correlation 아래 선택 상자를 <b>charge - Mean</b>으로 바꾸면 찾을 수 있어요.</p>
+    <div class="pb-tw"><table class="tbl pb-selftbl">
+      <tr><th>구분</th><th>생활비 물가(Cost of Living Index)</th><th>고객 평균 만족도(guest_satisfaction_overall - Mean)</th></tr>
+      <tr><th>상관계수</th><td><div class="memo"><input type="text" data-memo="rCol" placeholder="예: 0.○○"><div class="saved"></div></div></td><td><div class="memo"><input type="text" data-memo="rSat" placeholder="예: −0.○○"><div class="saved"></div></div></td></tr>
+    </table></div>
+    <div class="memo"><label>상관관계 분석 <small>두 상관계수의 방향과 0·1(−1) 중 어디에 가까운지를 넣어서</small></label><textarea data-memo="selfCorr" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>📈 화면 안 산점도 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3가 안 될 때 · 다른 속성끼리도 해 보기)</span></h3>
+    <p class="muted" style="margin-top:0">x축과 y축 속성을 고르면 10개 도시의 점과 상관계수 r이 나와요. 생활비 지수는 02에서 내가 입력한 값을 써요.</p>
+    <div class="row pb-axes"><label>x축 <select id="pbSx"></select></label><label>y축 <select id="pbSy"></select></label></div>
+    <div class="pb-scwrap"><svg id="pbSc" role="img" aria-label="두 속성의 산점도"></svg></div>
+    <div class="pb-rbar" id="pbRbar"></div>
+    <div class="pb-msg" id="pbScMsg"></div>
+  </div>
+  <div class="card pb-care">
+    <h3>⚠️ 상관계수를 해석할 때 조심할 점</h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#e0702b"><div class="ic">🔟</div><h4>도시는 10개뿐</h4><p>숙소 5만여 개가 아니라 <b>10개 도시의 평균</b>끼리 구한 상관계수예요. 점이 10개뿐이면 무슨 일이 생길지, 산점도에서 한 도시를 가려 보며 생각해 봐요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🔁</div><h4>상관관계 ≠ 인과관계</h4><p>두 속성이 함께 움직여도 하나가 다른 하나의 원인이라고 할 수는 없어요(97쪽 더 알아보기).</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🏅</div><h4>Rank 줄은 따로</h4><p>Rank는 순위라 작을수록 비싼 도시예요. 다른 지수와 부호가 반대로 나와요.</p></div>
+    </div>
+    <details class="pb-det"><summary>교과서는 고객 만족도를 어떻게 해석했을까? (내 메모를 쓴 뒤에 펼쳐요)</summary>
+      <ul>
+        <li>고객 만족도는 <b>청결도</b>, <b>숙박 인원</b>과 양의 상관관계를 보여, 청결하고 넓은 숙소가 만족도의 주요 평가 대상이라고 짐작해요. 다만 숙박 인원의 상관계수는 청결도보다 0에 훨씬 가까워 「높다」기보다는 중간 정도예요.</li>
+        <li>고객 만족도는 <b>임대료 지수</b>, <b>생활비+임대료 지수</b>와 음의 상관관계를 보여, 임대료가 높은 도시에서 숙소의 만족도가 떨어지는 경향이 있다고 해석해요.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 정규화와 히트맵 -->
+<section class="page" data-name="정규화와 히트맵" data-acc="#1f9d74">
+  <div class="head"><div class="num">04</div><div><h2>여러 기준을 한눈에 보려면?</h2><p>교과서 112쪽 · Preprocess(Normalize to interval [0, 1]) · Heat Map · 여행지 판단</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>총 숙박비는 수백, 청결도는 10 아래, 도심 거리는 한 자릿수라 그대로 색칠하면 큰 숫자만 눈에 띄어요. 속성마다 <b>최솟값은 0, 최댓값은 1</b>이 되도록 바꾸는 <b>정규화</b>(최소-최대 정규화, 75쪽)를 하면 단위가 달라도 한 판에서 비교할 수 있어요.</span></div>
+  <div class="card">
+    <div class="callout pb-warn" style="margin-top:0">📌 <b>오렌지3 Heat Map(아래 17·18번)과 이 화면 히트맵 중 하나는 꼭</b> 해요. 다른 하나는 시간이 되면 해요. 아래 메모는 어느 쪽을 보고 써도 돼요.</div>
+    <h3>🟨 여행지 히트맵 만들기 <span class="muted" style="font-weight:400;font-size:.88rem">(10개 도시 집계값으로 계산)</span></h3>
+    <p class="muted" style="margin-top:0">내 기준이 될 속성을 고르고, 보기 방식을 차례로 바꿔 보세요. 「좋은 쪽으로 맞추기」에서는 속성마다 <b>클수록 좋은지 · 작을수록 좋은지</b>를 정하면 1에 가까울수록 내 기준에 맞는 도시가 돼요.</p>
+    <div class="pb-hpick" id="pbHPick"></div>
+    <div class="row" style="margin:8px 0"><span class="muted" style="font-size:.86rem">보기</span><span class="pb-seg" id="pbHMode"></span></div>
+    <div class="pb-tw"><table class="pb-heat" id="pbHeat"></table></div>
+    <div class="pb-hlegend" id="pbHLegend"></div>
+    <div class="pb-msg" id="pbHMsg"></div>
+    <div class="row"><button class="btn sm" id="pbHSave">이 기준의 순위를 메모에 담기</button></div>
+    <div class="memo"><label>✍️ 내 기준(고른 속성과 방향)으로 본 1~3위 도시와, 그렇게 판단한 까닭 <small>오렌지3 히트맵이나 화면 히트맵을 보고</small></label><textarea data-memo="heatWhy" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 정규화하고 히트맵 그리기</h3>
+    <div class="pb-flowbox"><svg id="pbFlow4" class="pb-f4" role="img" aria-label="정규화와 히트맵 위젯 연결 흐름도"></svg></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet4">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="17"><td>17</td><td><b>Preprocess</b> (Transform)</td><td>Merge Data →</td><td>왼쪽 목록의 <b>Normalize Features</b>를 오른쪽으로 끌어 놓고 <b>Normalize to interval [0, 1]</b> 고르기</td><td>–</td></tr>
+      <tr data-s="18"><td>18</td><td><b>Heat Map</b> (Visualize)</td><td>Preprocess →<br><small class="muted">(Preprocessed Data → Data)</small></td><td><b>Row Annotations</b>의 <b>Text</b>를 <b>city</b>로</td><td>오른쪽에 도시 이름이 붙고, 칸이 범례의 0~1 색으로 칠해졌는지(기본 색에서는 1에 가까울수록 밝은 노란색, 0에 가까울수록 짙은 파란색)</td></tr>
+    </table></div>
+    <div class="callout pb-warn">💡 오렌지3 히트맵에는 생활비 7개 속성이 함께 들어가요. <b>Rank</b> 열은 생활비가 낮은 도시일수록 1에 가깝게 칠해져 다른 지수와 반대예요. 또 0~1로 바꾼 값은 「10개 도시 안에서 몇 번째쯤」을 보여 줄 뿐, 실제 차이가 큰지 작은지는 정규화 전 값으로 확인해요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone4"></div>
+  </div>
+  <details class="card pb-book">
+    <summary><b>📖 교과서는 어떻게 판단했을까?</b> <span class="muted">(내 순위를 정한 뒤 비교해요)</span></summary>
+    <ul>
+      <li><b>숙소를 중심으로 보면</b> 청결도와 고객 만족도가 높고 도심 거리와 1인당 숙박비가 낮은 <b>아테네</b>가 알맞은 여행지예요.</li>
+      <li><b>생활비와 숙소를 모두 보면</b> 생활비 지수와 1인당 숙박비가 낮고 고객 만족도도 높은 편인 <b>부다페스트</b>가 알맞아요.</li>
+      <li>반면 <b>런던</b>은 생활비 지수와 도심 거리가 높고 청결도와 고객 만족도가 낮아, 꼭 가야 할 관광지가 있는 것이 아니라면 그리 추천할 만한 여행지는 아니라고 판단해요.</li>
+    </ul>
+    <p class="note">같은 데이터라도 <b>무엇을 기준으로 삼는지</b>에 따라 결론이 달라져요. 분석 목적에 맞는 방법을 골라 적용하면 문제를 효과적으로 해결할 수 있어요.</p>
+  </details>
+  <div class="callout">시간이 부족하면 다음 「(선택)」 화면은 건너뛰고 <button class="btn sm" onclick="go(6)">마무리로 가기 →</button></div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 (선택) 함께 해결하기 · 정리 -->
+<section class="page" data-name="(선택) 함께 해결하기 · 정리" data-acc="#c98a00">
+  <div class="head"><div class="num">05</div><div><h2>모둠 여행지 정하기 · 「데이터 분석」 정리 <span class="pb-opt">선택</span></h2><p>교과서 113~115쪽 · 시간이 남거나 다음 시간에 더 해요</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>앞서 조사한 도시 중 <b>세 곳</b>을 골라 모둠원과 함께 여행을 간다면 어디가 좋을까요? 각자의 기준을 나누고, 도시들이 지도에서 얼마나 떨어져 있는지 보며 정해요. 이어서 「데이터 분석」 단원을 정리해요.</span></div>
+  <details class="card pb-optc" open>
+    <summary>🤝 함께 해결하기 · 모둠 여행지 3곳 정하기 <small>(교과서 113쪽)</small></summary>
+    <div class="memo"><label>1. 모둠원이 각자 우선순위로 두는 기준과 그 이유 <small>이름 / 기준 / 이유 순서로 한 줄씩</small></label><textarea data-memo="geoCrit" rows="3"></textarea><div class="saved"></div></div>
+    <h4 style="margin:12px 0 6px">2. 도시를 지도에 나타내 보기</h4>
+    <p style="margin:0 0 6px;font-size:.92rem">교과서는 오렌지3 <b>Geo</b> 애드온의 <b>Geocoding</b>(지역명을 위도·경도 좌표로 바꿈)과 <b>Geo Map</b> 위젯을 써요. 애드온을 설치하려면 인터넷과 설치 권한이 필요하니 선생님과 함께 해요. 설치가 어렵다면 아래 <b>화면 안 좌표 지도</b>로 해요.</p>
+    <details class="pb-det"><summary>오렌지3 Geo 애드온으로 하기</summary>
+      <ol class="pb-ol">
+        <li>메뉴 <b>Options → Add-ons…</b>에서 <b>Geo</b>를 체크하고 설치한 뒤 오렌지3를 다시 열어요.</li>
+        <li>Merge Data에 <b>Geocoding</b>을 연결 → <b>Encode region names into geographical coordinates</b>, Region identifier는 <b>city</b>, Identifier type은 <b>Major city (Europe)</b></li>
+        <li>Geocoding에 <b>Geo Map</b>을 연결(Coded Data → Data) → Color는 <b>city</b>, <b>Size</b>에 모둠원 기준 속성을 한 번씩 넣어 비교해요.</li>
+      </ol>
+    </details>
+    <div class="row" style="margin-top:8px"><span class="muted" style="font-size:.86rem">점 크기</span><select id="pbGeoSize"></select><span class="muted" style="font-size:.84rem">도시를 눌러 세 곳까지 고르면 서로 떨어진 거리가 나와요.</span></div>
+    <div class="pb-geowrap"><svg id="pbGeo" role="img" aria-label="10개 도시의 위도 경도 좌표 지도"></svg></div>
+    <div class="pb-msg" id="pbGeoMsg"></div>
+    <p class="note">점 위치는 도시 중심의 위도·경도(널리 알려진 값)를 가로·세로 좌표로 찍은 것이고, 거리는 두 좌표 사이의 직선거리를 대략 계산한 값이에요. 실제 이동 거리와는 달라요.</p>
+    <div class="memo"><label>3. 모둠이 정한 여행지 3곳(1~3순위)과 그 이유 <small>다른 모둠과 비교한 점도</small></label><textarea data-memo="geoPick" rows="3"></textarea><div class="saved"></div></div>
+  </details>
+  <details class="card pb-optc">
+    <summary>🧠 역량 키우기 · 「데이터 분석」 정리 <small>(교과서 114~115쪽)</small></summary>
+    <div class="memo"><label><span class="tagt" style="--k:#2f6fd0">지식·이해</span> 지난 시간과 오늘 한 여행지 분석에서 <b>탐색적 데이터 분석</b>, <b>기술 통계</b>, <b>상관분석</b>에 해당하는 단계를 하나씩 찾아 무엇을 했는지 설명해 보세요.</label><textarea data-memo="capEda" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label><span class="tagt" style="--k:#1f9d74">과정·기능</span> 궁금한 두 속성이 있는 데이터(예: 우리 반의 하루 운동 시간과 잠든 시각)를 정해, 오렌지3나 파이썬으로 산점도와 상관계수를 구했다면 무엇을 골랐고 어떤 관계가 나왔는지 적어 보세요.</label><textarea data-memo="capCorr" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label><span class="tagt" style="--k:#d64535">가치·태도</span> 도시마다 숙박비를 평균 하나로만 비교하면 무엇을 놓칠 수 있을까요? 그래서 데이터를 분석할 때 어떤 자세가 필요한지 내 생각을 적어 보세요.</label><textarea data-memo="capMean" rows="3"></textarea><div class="saved"></div></div>
+    <h4 style="margin:12px 0 6px">📊 내 실력 점검하기</h4>
+    <p class="muted" style="margin-top:0">「예」라고 답할 수 있는 것을 모두 골라요. 모두 고를 수 있으면 <b>심화</b>, 아니면 <b>보충</b> 활동을 해 봐요.</p>
+    <div id="pbLevel"></div>
+    <div class="grid2 even" style="margin-top:12px">
+      <details class="pb-det"><summary>🧩 보충 · 심장 질환 데이터의 상관관계</summary>
+        <p>오렌지3 <b>Datasets</b> 위젯에서 내장 데이터 <b>Heart Disease</b>를 불러와 <b>Correlations</b>로 속성 간 상관계수를 구해요. 상관계수는 1이나 −1에 가까울수록 강하고, 0에 가까울수록 약한 상관관계예요.</p>
+        <div class="memo"><label>가장 강한 상관관계를 가진 두 속성과 그렇게 판단한 이유</label><textarea data-memo="extraHeart" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+      <details class="pb-det"><summary>🚀 심화 · 나라별 물가 지도 (Geo 애드온 필요)</summary>
+        <p><b>생활비</b> File → <b>Geocoding</b>(Country로 좌표 찾기) → <b>Choropleth Map</b>으로 나라별 생활비 지수를 색으로 칠해요. 짝을 못 찾은 나라(UnitedKingdom처럼 붙여 쓴 이름 등)는 Geocoding 창 오른쪽 목록에서 직접 골라 줘요. 데이터값에 따라 해당 영역의 색을 다르게 칠하는 위젯이에요.</p>
+        <div class="memo"><label>물가와 지리적 특성 사이에서 찾은 관계와 그 원인에 대한 내 생각</label><textarea data-memo="extraMap" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+    </div>
+    <h4 style="margin:14px 0 6px">📒 내 계획 점검하기</h4>
+    <div class="grid2 even">
+      <div class="memo"><label>「데이터 분석」을 시작할 때 세운 나의 계획 점검</label><textarea data-memo="planCheck" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>새롭게 알게 된 점</label><textarea data-memo="newLearn" rows="3"></textarea><div class="saved"></div></div>
+    </div>
+  </details>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">숙소 데이터와 생활비 데이터는 <b>도시</b>라는 공통 속성으로 이어 붙였어요. 이름이 일치하는 도시만 짝지어져 10줄이 되었고, 표기가 다르면 짝을 찾지 못하니 형식을 먼저 맞춰야 해요.</div>
+    <div style="--k:#e0702b">합친 데이터의 산점도에서 1인당 숙박비가 높은 도시는 생활비 지수도 높은 쪽에 모였고, 상관계수로 그 방향과 강도를 숫자로 확인했어요. 도시가 10개뿐이고 상관이 원인을 뜻하지는 않는다는 점도 함께 따졌어요.</div>
+    <div style="--k:#1f9d74">단위가 다른 속성을 0~1로 바꾸어 히트맵으로 색칠하니 도시마다 강점과 약점이 한눈에 보였어요. 어떤 속성을 기준으로 삼느냐에 따라 고른 여행지가 달라졌어요.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">지난 시간과 오늘 한 일(데이터 수집 → 속성 파악 → 새 속성 → 통합 → 관계 분석 → 정규화·히트맵)을 떠올리며 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터 분석으로 실제 문제를 해결하려면 어떻게 해야 할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+    <p class="note">05는 (선택) 화면이라 퀴즈가 없어요.</p>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>두 데이터를 <b>무엇을 기준으로 통합</b>했는지, 왜 <b>10줄</b>만 남았는지, 이름 표기가 다를 때의 문제 설명하기</li>
+      <li><b>1인당 숙박비와 생활비 지수</b>의 산점도에서 짐작한 관계와 상관계수 쓰기</li>
+      <li><b>고객 만족도</b>와 상관이 뚜렷한 속성을 해석하고, 해석할 때 조심할 점 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

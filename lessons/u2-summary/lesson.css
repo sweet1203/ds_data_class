@@ -1,0 +1,138 @@
+
+  /* u2-summary 전용 (su-) */
+  .su-ready{margin:0 0 16px;font-size:.95rem}
+  .su-slow{font-size:.92rem;margin:-6px 0 16px}
+  .su-scroll,.su-tw{overflow-x:auto;max-width:100%}
+  .su-tbl{font-size:.9rem;margin:6px 0}
+  .su-tbl th,.su-tbl td{border:1px solid var(--line);padding:5px 9px}
+  .su-tbl th{background:#fbfaf7}
+  .su-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0;min-height:2.4em}
+  .su-msg:empty{display:none}
+  .su-det{margin-top:12px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .su-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .su-det p{font-size:.92rem}
+  .su-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .su-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .su-prev span{white-space:pre-wrap}
+  .su-n,.su-c{display:inline-block;width:18px;height:18px;line-height:18px;border-radius:4px;text-align:center;font-size:.72rem;font-weight:900;color:#fff;vertical-align:1px}
+  .su-n{background:#d64535}
+  .su-c{background:#1f9d74}
+  .su-key{display:inline-block;border-radius:6px;padding:0 6px}
+  .su-key.amb{background:#fff4d6;border:2px solid #e6b84a}
+  /* 01 속성 형 */
+  .su-trows{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media (max-width:900px){.su-trows{grid-template-columns:1fr}}
+  .su-trows>*{min-width:0}
+  .su-tr{background:#fbfaf7;border:2px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+  .su-tr.good{border-color:var(--mint)}
+  .su-tr.bad{border-color:var(--red)}
+  .su-tr.amb{border-color:#e6b84a;background:#fffaf0}
+  .su-tn{min-width:0}
+  .su-tn b{font-family:ui-monospace,Menlo,monospace;font-size:.86rem;word-break:break-all}
+  .su-tn span{margin-left:6px;font-size:.9rem}
+  .su-tn small{display:block;color:var(--muted);font-size:.8rem}
+  .su-tb{display:flex;gap:4px}
+  .su-tb button{font:inherit;font-size:.85rem;border:2px solid var(--line);background:#fff;border-radius:8px;padding:3px 10px;cursor:pointer;color:var(--ink)}
+  .su-tb button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .su-tb button:disabled{cursor:default}
+  .su-tw2{grid-column:1/-1;font-size:.86rem;margin:2px 0 0}
+  /* 02 용어 · 계산기 */
+  .su-terms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:860px){.su-terms{grid-template-columns:1fr 1fr}}
+  .su-terms>div{background:#fbfaf7;border-radius:10px;padding:8px 10px;border-left:5px solid var(--k);font-size:.88rem}
+  .su-terms b{display:block;color:var(--k);font-size:.95rem}
+  .su-terms i{font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:.8rem;color:var(--muted);font-weight:400}
+  .su-calc{display:grid;grid-template-columns:1fr 230px;gap:12px;align-items:start}
+  @media (max-width:860px){.su-calc{grid-template-columns:1fr}}
+  .su-calc>*{min-width:0}
+  .su-plot{overflow-x:auto}
+  #suBars{min-width:520px;touch-action:none;user-select:none}
+  .su-gl{stroke:#eceae4;stroke-width:1}
+  .su-tk{font-size:10px;fill:var(--muted)}
+  .su-b{cursor:ns-resize;outline:none}
+  .su-b.miss{cursor:pointer}
+  .su-hit{fill:transparent}
+  .su-bar{fill:#f0b27a;transition:fill .15s}
+  .su-b:hover .su-bar{fill:#e8954f}
+  .su-b.on .su-bar{fill:#e0702b}
+  .su-b:focus .su-hit,.su-b.on .su-hit{fill:rgba(224,112,43,.08)}
+  .su-mb{fill:#fff;stroke:#aab2bd;stroke-width:1.5;stroke-dasharray:4 3}
+  .su-b.on .su-mb{stroke:#e0702b}
+  .su-q{font-size:14px;font-weight:900;fill:#aab2bd}
+  .su-bv{font-size:10px;font-weight:700;fill:#5b3a1a}
+  .su-mean{stroke:#d64535;stroke-width:2;stroke-dasharray:6 4}
+  .su-med{stroke:#2f6fd0;stroke-width:2}
+  .su-ml{font-size:11px;font-weight:900;fill:#d64535}
+  .su-dl{font-size:11px;font-weight:900;fill:#2f6fd0}
+  .su-stats{background:#fbfaf7;border-radius:12px;padding:8px 12px;font-size:.9rem}
+  .su-stats>div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding:4px 0}
+  .su-stats>div span{color:var(--muted)}
+  .su-stats>div b{font-variant-numeric:tabular-nums}
+  .su-stats .me b{color:#d64535}
+  .su-stats .md b{color:#2f6fd0}
+  .su-stats .mi b{color:#5b6776}
+  .su-stats .di b{color:#9b4fc4}
+  .su-note{font-size:.78rem;color:var(--muted);margin:6px 0 0}
+  .su-ctl{margin-top:8px}
+  .su-ctl .btn:disabled{opacity:.4;cursor:default;box-shadow:none}
+  .su-sel{display:inline-block;min-width:150px;font-size:.9rem;background:#fff4d6;border-radius:8px;padding:3px 10px}
+  .su-hist{margin-top:10px;background:#fbfaf7;border-radius:12px;padding:8px 12px}
+  .su-hist small{color:var(--muted)}
+  .su-hb{display:flex;gap:10px;align-items:flex-end;height:96px;margin-top:4px}
+  .su-hb>div{flex:1;max-width:80px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:.8rem}
+  .su-hb i{display:block;width:100%;background:#9b4fc4;border-radius:4px 4px 0 0;transition:height .25s}
+  .su-hb small{color:var(--muted)}
+  .su-mis{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.88rem;margin-top:10px;align-items:center}
+  .su-mis span{color:var(--muted)}
+  .su-mis span.ok{color:var(--mint)}
+  /* 03 오렌지3 */
+  .su-flowbox{overflow-x:auto}
+  .su-flowbox svg{display:block;width:100%;max-width:640px;min-width:460px;height:auto;margin:0 auto}
+  .su-flowbox .fe{fill:none;stroke:#8a94a3;stroke-width:2}
+  .su-flowbox .fe.opt{stroke-dasharray:6 4}
+  .su-flowbox .fl{font-size:11px;fill:#5b6776;font-weight:700}
+  .su-flowbox .fn{cursor:pointer}
+  .su-flowbox .fb{fill:#fff;stroke-width:2}
+  .su-flowbox .fn.on .fb{fill:#fff4d6;stroke-width:4}
+  .su-flowbox .fn:focus{outline:none}
+  .su-flowbox .fn:focus .fb{stroke-width:4}
+  .su-flowbox .fnum{font-size:14px;font-weight:900;fill:#fff}
+  .su-flowbox .ft{font-size:13px;font-weight:700;fill:#16202c}
+  .su-flowbox .fs{font-size:11px;fill:#5b6776}
+  .su-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;font-size:.85rem}
+  .su-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .su-legend small{color:var(--muted)}
+  .su-set{min-width:760px;margin:0}
+  .su-set th{text-align:left;background:#fbfaf7;white-space:nowrap}
+  .su-set td{border-top:1px solid #eef0f3}
+  .su-set td:first-child{font-weight:900;color:var(--acc);text-align:center;width:44px}
+  .su-set tr[data-s]{cursor:pointer;transition:background .3s}
+  .su-set tr.hl td{background:#fff4d6}
+  .su-ask{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.95rem;margin-bottom:8px;min-height:2.4em}
+  .su-qn{display:inline-block;background:var(--acc);color:#fff;border-radius:999px;padding:0 8px;font-size:.8rem;font-weight:900;margin-right:4px}
+  .su-fs{min-width:760px;font-size:.84rem;margin:0;background:#fff;border:1px solid #c5ccd5}
+  .su-fs th{background:#eef0f3;color:#16202c;font-weight:700;font-size:.8rem;border:1px solid #d5dae0;padding:4px 8px}
+  .su-fs td{border:1px solid #e3e6ea;padding:4px 8px;text-align:right;font-variant-numeric:tabular-nums}
+  .su-fs td.nm{text-align:left;font-weight:700;white-space:nowrap}
+  .su-fs td.cl{cursor:pointer;transition:background .15s}
+  .su-fs td.cl:hover,.su-fs td.cl:focus{background:#fff4d6;outline:none}
+  .su-fs td.cl.good{background:#e7f6ef}
+  .su-fs td.cl.bad{background:#fdecea}
+  .su-sp{width:96px;height:24px;display:block}
+  .su-sp rect{fill:#9aa5b1}
+  .su-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .su-help ul,.su-help ol{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .su-help li{margin:6px 0}
+  .su-code{background:#0f2742;color:#e1e9f4;border-radius:10px;padding:10px 14px;font-family:ui-monospace,Menlo,monospace;font-size:.86rem;overflow-x:auto;line-height:1.6}
+  .su-code .k{color:#f2a516}
+  .su-code .s{color:#8fd3b6}
+  .su-code .c{color:#9fb3cc}
+  .su-desc{min-width:460px;font-size:.88rem}
+  /* 04 함께 해결하기 */
+  .su-mq{font-size:.88rem;margin:6px 0;width:auto}
+  .su-mq th,.su-mq td{border:1px solid var(--line);padding:4px 8px}
+  .su-mq th{background:#f4eefa;color:#5b3d8a}
+  .su-mq td.l{text-align:left}
+  .su-mq2{min-width:860px;width:100%}
+  .su-in{width:72px;font:inherit;font-size:.86rem;padding:3px 6px;border:1px solid #c5ccd5;border-radius:6px}
+  .su-in.w{width:130px}

@@ -1,0 +1,315 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 2. 데이터 분석</span>
+      <h1>스트레스와 잠,<br>정말 관계가<br>있을까?</h1>
+      <div class="story"><b>속성들 사이에 관계를 어떻게 파악할 수 있을까?</b><br>스트레스를 받으면 잠도 잘 자지 못한다고들 해요. 정말 그럴까요? 확인하려면 스트레스 수준에 따라 <b>수면의 질</b>과 <b>수면 시간</b>이 어떻게 달라지는지 살펴봐야 해요.</div>
+      <p>오늘은 두 속성의 관계를 <b>그림(산점도)</b>과 <b>숫자(상관계수)</b>로 확인해요. 그리고 지난 시간에 쓴 수면·건강 데이터로 오렌지3에서 직업별 상관관계를 직접 계산해 봐요.</p>
+      <ol>
+        <li>상관관계와 상관계수</li><li>상관계수를 해석할 때 주의할 점</li><li>오렌지3로 상관분석</li><li>(선택) 파이썬 히트맵</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>⚬⚬</i><div><b>산점도</b><small>두 속성을 가로축·세로축에 놓기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>r</i><div><b>상관계수</b><small>−1에서 1 사이의 숫자로 방향과 강도</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>⚠️</i><div><b>해석할 때 주의할 점</b><small>직선 모양 가정 · 인과관계와 구별</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🍊</i><div><b>오렌지3 상관분석</b><small>간호사와 회계사는 어떻게 다를까?</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간에는 속성 <b>하나</b>의 특징을 대푯값과 산포도로 살펴보았어요. 오늘은 속성 <b>두 개</b>를 함께 놓고, 한 속성이 커질 때 다른 속성이 어떻게 변하는지 알아봐요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>스트레스 수준이 높은 사람일수록 수면의 질은 어떨까요?</b> 데이터를 보기 전에 골라 두세요. 오렌지3 결과와 비교해요.</p>
+        <div class="vote co-vote" id="predictVote"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 분석</b> · 데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까?</li>
+          <li><b>오늘의 질문</b> · 속성들 사이에 관계를 어떻게 파악할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 분석 방법을 비교할 수 있다.</li>
+          <li>서로 다른 방법으로 데이터를 분석하고 그 결과를 비교할 수 있다.</li>
+        </ul>
+        <div class="memo" style="margin-top:8px"><label>궁금한 두 속성 <small>「○○가 늘면 △△는?」처럼 하나 적어 보세요.</small></label><input type="text" data-memo="myPair" placeholder="예: 운동 시간이 늘면 수면 시간은?"><div class="saved"></div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 상관관계와 상관계수부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 상관관계와 상관계수 -->
+<section class="page" data-name="상관관계와 상관계수" data-acc="#1f9d74">
+  <div class="head"><div class="num">01</div><div><h2>상관관계와 상관계수</h2><p>교과서 96쪽 · 상관관계 · 산점도 · 양의 상관관계 · 음의 상관관계 · 상관계수 r</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>한 속성이 커질 때 다른 속성도 <b>함께 커지거나</b>, 반대로 <b>작아지는</b> 관계가 상관관계예요. 두 속성을 점으로 찍어 그 모양을 보는 그림이 <b>산점도</b>, 그 관계의 방향과 강도를 −1에서 1 사이의 숫자 하나로 나타낸 것이 <b>상관계수</b>예요.</span></div>
+  <div class="card">
+    <h3>📈 산점도와 상관관계</h3>
+    <div class="callout" style="margin-top:4px">두 속성 중 한 속성이 증가함에 따라 다른 속성이 증가 또는 감소할 때 두 속성 사이의 관계를 <b>상관관계</b>라고 한다.</div>
+    <p>데이터의 두 속성을 골라 하나는 <b>가로축</b>, 하나는 <b>세로축</b>에 놓고 데이터마다 점을 찍은 그림이 <b>산점도</b>예요. 점들이 어떻게 퍼져 있는지 보면 관계가 보여요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#d64535"><div class="ic"><svg viewBox="0 0 60 44" class="co-kcsvg" aria-hidden="true"><path d="M4 2V40H58" fill="none" stroke="#16202c" stroke-width="2"/><g fill="#d64535"><circle cx="10" cy="36" r="2.4"/><circle cx="17" cy="31" r="2.4"/><circle cx="22" cy="33" r="2.4"/><circle cx="28" cy="25" r="2.4"/><circle cx="34" cy="22" r="2.4"/><circle cx="40" cy="17" r="2.4"/><circle cx="46" cy="15" r="2.4"/><circle cx="52" cy="8" r="2.4"/></g></svg></div><h4>양의 상관관계</h4><p>가로축 속성이 커질 때 세로축 속성도 <b>함께 커져요</b>. 점들이 오른쪽 위로 올라가요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic"><svg viewBox="0 0 60 44" class="co-kcsvg" aria-hidden="true"><path d="M4 2V40H58" fill="none" stroke="#16202c" stroke-width="2"/><g fill="#2f6fd0"><circle cx="10" cy="7" r="2.4"/><circle cx="16" cy="12" r="2.4"/><circle cx="22" cy="11" r="2.4"/><circle cx="28" cy="19" r="2.4"/><circle cx="34" cy="22" r="2.4"/><circle cx="40" cy="26" r="2.4"/><circle cx="46" cy="31" r="2.4"/><circle cx="52" cy="35" r="2.4"/></g></svg></div><h4>음의 상관관계</h4><p>가로축 속성이 커질 때 세로축 속성은 <b>작아져요</b>. 점들이 오른쪽 아래로 내려가요.</p></div>
+      <div class="kc" style="--k:#5b6776"><div class="ic"><svg viewBox="0 0 60 44" class="co-kcsvg" aria-hidden="true"><path d="M4 2V40H58" fill="none" stroke="#16202c" stroke-width="2"/><g fill="#5b6776"><circle cx="10" cy="12" r="2.4"/><circle cx="18" cy="30" r="2.4"/><circle cx="24" cy="8" r="2.4"/><circle cx="30" cy="22" r="2.4"/><circle cx="37" cy="34" r="2.4"/><circle cx="43" cy="10" r="2.4"/><circle cx="50" cy="27" r="2.4"/><circle cx="54" cy="17" r="2.4"/></g></svg></div><h4>상관관계 없음</h4><p>가로축 속성이 커져도 세로축 속성이 커지거나 작아지는 <b>경향을 찾을 수 없어요</b>.</p></div>
+    </div>
+    <p class="note">그림 Ⅱ-7(교과서 96쪽)과 같은 뜻으로 새로 그렸어요.</p>
+  </div>
+  <div class="card">
+    <h3>🔢 상관계수 r</h3>
+    <p style="margin-top:0">두 속성 사이에 있는 상관관계의 <b>방향과 강도</b>를 숫자로 표현한 것을 <b>상관계수</b>라고 해요. 상관계수는 <b>r</b>로 나타내며 <b>−1에서 1 사이</b>의 값을 가져요.</p>
+    <div class="co-scale">
+      <div><b>r = −1</b><span>점들이 오른쪽 아래로 향하는 한 직선 위에</span></div>
+      <div><b>−1 &lt; r &lt; 0</b><span>−1에 가까울수록 음의 상관관계</span></div>
+      <div><b>r = 0</b><span>0에 가까우면 상관관계가 없음</span></div>
+      <div><b>0 &lt; r &lt; 1</b><span>1에 가까울수록 양의 상관관계</span></div>
+      <div><b>r = 1</b><span>점들이 오른쪽 위로 향하는 한 직선 위에</span></div>
+    </div>
+    <p class="note">오렌지3의 Correlations 위젯은 두 속성 간의 선형 관계를 측정하는 <b>피어슨 상관계수</b>(Pearson correlation)를 기본값으로 써요.</p>
+  </div>
+  <div class="card">
+    <h3>🎯 상관계수 탐색기 <span class="muted" style="font-weight:400;font-size:.88rem">(점의 값은 연습용 예시예요)</span></h3>
+    <p class="muted" style="margin-top:0">빈 곳을 누르면 점이 생기고, 점을 끌면 옮겨져요. 「점 지우기」를 켜고 점을 누르면 지워져요. 점이 바뀔 때마다 r이 다시 계산돼요.</p>
+    <div class="grid2 co-ex">
+      <div>
+        <div class="co-plotbox"><svg id="exPlot" role="img" aria-label="점을 놓아 상관계수를 바꾸는 산점도"></svg></div>
+        <div class="row" style="margin-top:6px;gap:6px">
+          <button class="btn ghost sm" id="exNeg">음의 상관 예시</button>
+          <button class="btn ghost sm" id="exPos">양의 상관 예시</button>
+          <button class="btn ghost sm" id="exNone">상관없음 예시</button>
+          <button class="btn ghost sm" id="exClear">모두 지우기</button>
+          <button class="btn ghost sm" id="exDel">점 지우기: 꺼짐</button>
+        </div>
+      </div>
+      <div>
+        <div class="co-rbox"><span class="muted">상관계수</span><b id="exR">–</b><small id="exN"></small></div>
+        <div class="co-gauge"><i id="exG"></i></div>
+        <div class="co-gl"><span>−1</span><span>0</span><span>1</span></div>
+        <p class="co-word" id="exW"></p>
+        <p class="note">「뚜렷한·보여요·거의 없음」은 이 화면에서 읽기 쉽게 붙인 대략적인 말이에요(0.7, 0.3을 기준으로 나눔). 교과서의 용어가 아니에요.</p>
+        <h4 style="margin:12px 0 6px">미션 <span class="muted" style="font-weight:400;font-size:.85rem">(점을 놓거나 옮긴 뒤 이루면 ✓가 붙고 기록돼요)</span></h4>
+        <ul class="co-mis" id="exMis"></ul>
+        <button class="btn ghost sm" id="exMisReset">미션 기록 지우기</button>
+      </div>
+    </div>
+    <div class="memo">
+      <label>✍️ r을 0.8쯤으로 만들 때와 −0.5쯤으로 만들 때 점들을 어떻게 놓았나요? <small>점들이 「한 줄에 가까울 때」와 「넓게 퍼질 때」 r이 어떻게 달랐는지 넣어 적어요. 질문폼 1번에 써요.</small></label>
+      <textarea data-memo="missionHow" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 해석할 때 주의할 점 -->
+<section class="page" data-name="해석할 때 주의할 점" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>상관계수를 해석할 때 주의할 점</h2><p>교과서 97쪽 · 선형 관계의 가정 · 그림 Ⅱ-9 · 더 알아보기: 인과관계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>상관계수는 두 속성의 관계가 <b>직선 모양</b>이라고 보고 계산한 숫자예요. 그래서 관계가 곡선 모양이면 r만 보고는 알 수 없어요. 그리고 두 값이 함께 변한다고 해서 <b>한쪽이 다른 쪽을 변하게 했다</b>고 말할 수는 없어요.</span></div>
+  <div class="card">
+    <h3>📐 r = 0인 두 산점도</h3>
+    <p style="margin-top:0">상관계수는 두 속성 간의 관계가 <b>선형적</b>(직선 모양)이라는 가정을 바탕으로 해요. 두 속성 간의 관계가 선형적인 관계가 아닐 때는 상관계수만으로 관계를 정확하게 파악할 수 없어요. 아래 두 데이터의 r을 직접 확인해 보세요.</p>
+    <div class="grid2 co-ex">
+      <div>
+        <div class="co-plotbox"><svg id="abPlot" role="img" aria-label="그림 Ⅱ-9처럼 r이 0에 가까운 두 산점도를 바꿔 보는 그래프"></svg></div>
+        <div class="row" style="margin-top:6px;gap:6px">
+          <button class="btn ghost sm" id="abA">A 모양</button>
+          <button class="btn ghost sm" id="abB">B 모양</button>
+          <button class="btn ghost sm" id="abDel">점 지우기: 꺼짐</button>
+        </div>
+        <p class="note">그림 Ⅱ-9(교과서 97쪽)와 닮게 새로 만든 점이에요. 점을 끌어 모양을 바꿔 봐도 돼요.</p>
+      </div>
+      <div>
+        <div class="co-rbox"><span class="muted">상관계수</span><b id="abR">–</b><small id="abN"></small></div>
+        <div class="co-gauge"><i id="abG"></i></div>
+        <div class="co-gl"><span>−1</span><span>0</span><span>1</span></div>
+        <p class="co-word" id="abW"></p>
+        <div class="co-say" id="abSay">A와 B를 차례로 눌러 r과 점의 모양을 비교해 보세요.</div>
+      </div>
+    </div>
+    <div class="memo">
+      <label>✍️ A와 B는 r이 둘 다 0에 가깝지만 무엇이 다른가요? r만 보고 「관계가 없다」고 하면 어떤 문제가 생길까요? <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="shapeNote" rows="2"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🔎 더 알아보기 · 인과관계</h3>
+    <p style="margin-top:0"><b>인과관계</b>란 어떤 속성과 다른 속성 사이의 <b>원인과 결과</b> 관계예요. 하나의 속성이 원인이 되어 다른 속성이 변화할 때 「인과관계가 있다」고 말해요.</p>
+    <div class="grid2">
+      <div class="co-fan">
+        <b>교과서의 예</b> 선풍기 판매량이 늘 때 아이스크림 판매량도 함께 늘었다면 두 속성에는 양의 상관관계가 있어요. 하지만 선풍기가 팔려서 아이스크림이 팔렸다고 보기는 어려워요. <b>날씨가 더워지면서</b> 둘 다 함께 늘었다고 보는 것이 더 합리적이에요.
+      </div>
+      <svg viewBox="0 0 320 120" class="co-tri" role="img" aria-label="더운 날씨가 선풍기 판매량과 아이스크림 판매량을 함께 늘리는 관계 그림">
+        <defs><marker id="coArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e0702b"/></marker></defs>
+        <rect x="110" y="6" width="100" height="34" rx="10" fill="#fff4d6" stroke="#e0702b" stroke-width="2"/><text x="160" y="28" text-anchor="middle" font-size="14" font-weight="700">☀️ 더운 날씨</text>
+        <rect x="6" y="78" width="120" height="34" rx="10" fill="#fff" stroke="#5b6776" stroke-width="2"/><text x="66" y="100" text-anchor="middle" font-size="13" font-weight="700">선풍기 판매량</text>
+        <rect x="194" y="78" width="120" height="34" rx="10" fill="#fff" stroke="#5b6776" stroke-width="2"/><text x="254" y="100" text-anchor="middle" font-size="13" font-weight="700">아이스크림 판매량</text>
+        <path d="M140 40L90 76" stroke="#e0702b" stroke-width="2.5" marker-end="url(#coArr)"/><path d="M180 40L230 76" stroke="#e0702b" stroke-width="2.5" marker-end="url(#coArr)"/>
+        <path d="M128 95H192" stroke="#8a94a3" stroke-width="2" stroke-dasharray="5 4"/><text x="160" y="90" text-anchor="middle" font-size="11" fill="#5b6776">함께 늘 뿐</text>
+      </svg>
+    </div>
+    <h4 style="margin:14px 0 6px">🗂️ 함께 변한 것뿐일까, 원인과 결과일까? <span class="muted" style="font-weight:400;font-size:.85rem">(새로 만든 사례 7장)</span></h4>
+    <div id="causeSort"></div>
+    <div class="memo">
+      <label>✍️ 두 값이 함께 늘지만 한쪽이 다른 쪽의 원인이라고 보기 어려운 예를 <b>하나 새로</b> 떠올려 보세요. 두 값을 함께 움직이게 했을 다른 까닭은 무엇일까요? <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="causeNote" rows="2" placeholder="예: ○○와 △△가 함께 늘었다 → 사실은 □□ 때문일 수 있다"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 오렌지3 상관분석 -->
+<section class="page" data-name="오렌지3 상관분석" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>스트레스 수준과 다른 속성들의 상관관계</h2><p>교과서 98쪽 · 오렌지3 실습 · Correlations · Select Rows</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>지난 시간에 쓴 <b>수면·건강 데이터</b>로 스트레스 수준과 다른 속성들의 상관계수를 한꺼번에 구해요. 그다음 <b>간호사</b>와 <b>회계사</b>만 골라 다시 구하고, 결과가 어떻게 다른지 비교해요.</span></div>
+  <div class="card">
+    <h3>📂 준비</h3>
+    <p style="margin-top:0">선생님이 알려 주는 폴더에서 <span class="mono">Sleep_Health_merge.csv</span>를 내려받아요(78쪽 실습에서 저장한 파일과 같아요). 지난 시간에 저장한 직업별 스트레스 흐름(.ows)이 있으면 그 화면에 이어 붙여도 돼요.</p>
+    <div class="callout co-z">💡 이 파일의 스트레스 수준·수면 시간·수면의 질·신체 활동 수준·일일 걸음 수는 81쪽에서 <b>표준화한 값</b>이에요(0보다 크면 전체 평균보다 높다는 뜻). 표준화는 값의 위치와 눈금만 바꾸고 점들의 모양은 그대로 두므로, <b>표준화해도 상관계수는 바뀌지 않아요</b>.</div>
+  </div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div class="co-flowbox"><svg id="coFlow" role="img" aria-label="수면 건강 데이터 상관분석 위젯 연결 흐름도"></svg></div>
+    <div class="co-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#7fb2e0">Unsupervised</span><small>색은 오렌지3 왼쪽 카테고리를 나타내요. Select Rows 위젯 이름은 F2 키로 바꿔요.</small></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표</h3>
+    <div class="co-tw"><table class="tbl co-set" id="coSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">Sleep_Health_merge.csv</span> 열기<br><b>Person ID</b>의 Role 칸을 더블 클릭해 <b>skip</b>으로 바꾸고 <b>Apply</b></td><td>373개의 데이터. Person ID는 사람을 구별하는 번호라 상관계수 계산에서 빼요. meta로 바꾸면 Correlations에 그대로 들어가니 꼭 <b>skip</b>으로 해요.</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Correlations</b> (Unsupervised)</td><td>File →</td><td>맨 위 칸 <b>Pearson correlation</b> 확인, 그 아래 칸에서 속성 <b>Stress Level</b> 고르기</td><td>1번 줄이 <b>Quality of Sleep</b> −0.898이면 맞게 한 거예요. 나머지 줄은 직접 읽어요.</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Select Rows</b> → 이름 <b>간호사</b> (Transform)</td><td>File →</td><td>조건: <b>Occupation</b> <span class="mono">is</span> <b>Nurse</b></td><td>창 아래쪽에 72개가 나오는지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Correlations (1)</b> (Unsupervised)</td><td>간호사 →</td><td>Pearson correlation, 속성 <b>Stress Level</b></td><td><b>Daily Steps</b> 줄의 상관계수</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Select Rows</b> → 이름 <b>회계사</b> (Transform)</td><td>File →</td><td>조건: <b>Occupation</b> <span class="mono">is</span> <b>Accountant</b></td><td>창 아래쪽에 37개가 나오는지</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Correlations (2)</b> (Unsupervised)</td><td>회계사 →</td><td>Pearson correlation, 속성 <b>Stress Level</b></td><td><b>Daily Steps</b> 줄의 상관계수</td></tr>
+    </table></div>
+    <div class="callout co-warn">💡 <b>Person ID를 skip으로 바꾸지 않았다면</b> Correlations 결과에 Person ID 줄이 함께 나와요(교과서 98쪽 그림에도 있어요). 사람마다 붙인 번호와의 상관계수는 의미가 없으니 그 줄은 <b>읽지 않고 건너뛰어요</b>. Role 목록에 skip이 보이지 않는 오렌지3 버전에서도 그 줄을 건너뛰면 돼요. Correlations는 숫자형(numeric) 속성끼리 계산해요.</div>
+    <p class="note">속성 이름 읽기: Quality of Sleep 수면의 질 · Sleep Duration 수면 시간 · Heart Rate 심박수 · Age 나이 · Daily Steps 일일 걸음 수 · Physical Activity Level 신체 활동 수준 · Stress Level 스트레스 수준</p>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="coDone"></div>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기</h3>
+    <p class="muted" style="margin-top:0">오렌지3 Correlations 창에서 <b>Daily Steps(일일 걸음 수)</b> 줄의 상관계수를 찾아 적어요. 부호(+, −)도 함께 적어요.</p>
+    <div class="co-tw"><table class="tbl co-rt">
+      <tr><th>데이터</th><th>스트레스 수준과 일일 걸음 수의 상관계수</th></tr>
+      <tr><td>전체 (373개)</td><td><input type="text" data-memo="rAll" placeholder="예: +0.00"><div class="saved"></div></td></tr>
+      <tr><td>간호사 (72개)</td><td><input type="text" data-memo="rNurse" placeholder="예: +0.00"><div class="saved"></div></td></tr>
+      <tr><td>회계사 (37개)</td><td><input type="text" data-memo="rAcc" placeholder="예: +0.00"><div class="saved"></div></td></tr>
+    </table></div>
+    <div class="memo">
+      <label>✍️ 해석하기 · ① 시작 화면에서 고른 내 예상과 전체 결과(수면의 질)는 같았나요? ② 전체에서는 걸음 수와 스트레스의 상관관계가 거의 없는데, 간호사와 회계사로 나누면 어떻게 달라지나요? 왜 그럴지 추측해 보세요.</label>
+      <textarea data-memo="coCompare" rows="3"></textarea><div class="saved"></div>
+    </div>
+    <p class="note">교과서는 「신체 활동이 많은 간호사는 걸음 수가 늘수록 스트레스가 높아지고, 주로 앉아서 일하는 회계사는 걸음 수가 늘면 스트레스가 줄어드는 경향이 있다」고 <b>유추</b>해요. 상관관계로 원인을 단정할 수는 없다는 02의 내용도 함께 떠올려요. 또 회계사 37명의 자료에는 값이 똑같은 줄이 많아, 산점도에 찍히는 서로 다른 점은 몇 개뿐이에요. 데이터가 적을 때는 상관계수를 더 조심해서 읽어요.</p>
+  </div>
+  <details class="card co-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Correlations 위젯이 안 보여요</b> → 왼쪽 <b>Unsupervised</b> 카테고리에 있어요. 캔버스 빈 곳을 마우스 오른쪽 버튼으로 누르고 「Correlations」를 입력해도 돼요.</li>
+      <li><b>속성을 고르는 칸이 비어 있어요</b> → File에서 데이터를 열고 연결선이 이어졌는지 확인해요. 연결선이 점선이면 아직 데이터가 넘어가지 않은 거예요.</li>
+      <li><b>Select Rows에서 Nurse가 안 보여요</b> → 첫 칸에서 <b>Occupation</b>을 고른 뒤, 두 번째 칸 <span class="mono">is</span>, 세 번째 칸에서 직업을 골라요.</li>
+      <li><b>오렌지3가 안 열리거나 너무 느려요</b> → 아래 화면 안 체험으로 같은 비교를 해 보고, 위의 결과 기록 칸 대신 해석 칸을 채워요.</li>
+    </ul>
+    <h4 style="margin:12px 0 6px">화면 안 체험 · 직업별로 나누어 보면? <span class="muted" style="font-weight:400;font-size:.85rem">(교과서 데이터가 아니라 모양을 닮게 새로 만든 예시 값)</span></h4>
+    <div class="apps co-jobs" id="jobTabs"></div>
+    <div class="grid2 co-ex" style="margin-top:8px">
+      <div class="co-plotbox"><svg id="jobPlot" role="img" aria-label="일일 걸음 수와 스트레스 수준 산점도(예시)"></svg></div>
+      <div>
+        <div class="co-rbox"><span class="muted">상관계수</span><b id="jobR">–</b><small id="jobN"></small></div>
+        <div class="co-gauge"><i id="jobG"></i></div>
+        <div class="co-gl"><span>−1</span><span>0</span><span>1</span></div>
+        <p class="co-word" id="jobW"></p>
+        <div class="co-say" id="jobSay"></div>
+      </div>
+    </div>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) 파이썬 히트맵 -->
+<section class="page" data-name="(선택) 파이썬 히트맵" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>(선택) 파이썬으로 해 보기 · 상관계수 히트맵</h2><p>교과서 99~101쪽 · value_counts · groupby · violinplot · select_dtypes · heatmap</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3에서 한 분석을 파이썬 코드로 똑같이 해 볼 수 있어요. 여러 속성의 상관계수를 한 번에 구해 표로 늘어놓고 <b>색</b>으로 칠한 그림이 <b>히트맵</b>이에요. 시간이 남거나 다음 시간에 더 해요.</span></div>
+  <div class="card">
+    <h3>🟥🟦 히트맵 읽기 체험 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 100쪽 히트맵의 값)</span></h3>
+    <p class="muted" style="margin-top:0">가로축과 세로축에는 속성들이 놓이고, 두 속성이 만나는 칸에 그 둘의 상관계수가 적혀요. 1에 가까울수록 붉은색, −1에 가까울수록 파란색이에요. 칸을 눌러 보세요.</p>
+    <div class="co-heatbox"><table class="co-heat" id="heat"></table></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="heatPid">Person ID 넣어 보기</button></div>
+    <div class="co-say" id="heatSay">칸을 누르면 두 속성과 상관계수를 말로 풀어 줘요.</div>
+    <p class="note">「뚜렷한·보여요·거의 없음」은 이 화면에서 읽기 쉽게 붙인 대략적인 말이에요(0.7, 0.3을 기준으로 나눔). 교과서의 용어가 아니에요.</p>
+    <div class="memo">
+      <label>(선택) 히트맵에서 가장 눈에 띄는 칸 하나를 골라 두 속성의 관계를 한 문장으로 적어 보세요.</label>
+      <textarea data-memo="heatNote" rows="2"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🐍 코랩에서 실행하기</h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>교과서 노트북을 수업에 맞게 고친 사본이에요.</p></li>
+      <li><b>왼쪽 파일 창에 <span class="mono">Sleep_Health_merge.csv</span>를 끌어다 놓아요.</b><p>코드는 <span class="mono">/content/Sleep_Health_merge.csv</span>에서 파일을 읽어요. 런타임이 끝나면 올린 파일이 사라지니 다시 올려요.</p></li>
+      <li><b>➊ 데이터 불러오기 → ➋ 30개 미만 직업 제외하기 → ➌ 직업별 대푯값 구하기</b><p>지난 시간에 오렌지3에서 한 Group by · Select Rows · Bar Plot과 같은 일이에요. <span class="mono">value_counts()</span>는 같은 값이 몇 개인지, <span class="mono">groupby()</span>는 열의 값에 따라 묶어 줘요.</p></li>
+      <li><b>➍ 산포도와 상관계수 확인하기</b><p>직업별 스트레스 수준 산점도와 바이올린 플롯을 그린 뒤, <span class="mono">select_dtypes()</span>로 숫자 열만 골라 <span class="mono">heatmap()</span>으로 히트맵을 그려요.</p></li>
+      <li><b>➎ 직업별 속성 간 상관관계 분석하기</b><p>간호사와 회계사의 히트맵을 각각 그려 비교해요. 03에서 오렌지3로 구한 값과 같은지 확인해요.</p></li>
+    </ol>
+    <details class="co-help" style="margin-top:8px">
+      <summary>교과서 코드와 달라진 점</summary>
+      <ul>
+        <li><b>Person ID 빼기</b>: 숫자 열만 고를 때 Person ID도 들어가서, 상관계수를 구하기 전에 <span class="mono">drop(columns='Person ID')</span>로 뺐어요.</li>
+        <li><b>None 읽기</b>: 수면 장애 열의 None은 「장애 없음」이라는 값이에요. 그대로 읽으면 파이썬이 결측치로 바꾸므로 <span class="mono">keep_default_na=False</span>를 넣었어요.</li>
+        <li><b>마지막 셀</b>: 교과서 101쪽처럼 회계사(Accountant)의 히트맵을 그려요. 숫자 열을 고르는 줄이 두 번 있던 것은 한 번으로 줄였어요.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#1f9d74">스트레스 수준과 수면의 질처럼 <b>두 속성이 함께 변하는 모습</b>은 산점도로 먼저 보고, 그 방향과 강도는 <b>상관계수 r</b>(−1~1)로 나타낸다. 점들이 한 직선에 가깝게 모일수록 r은 1이나 −1에 가까워진다.</div>
+    <div style="--k:#e0702b">r이 0에 가까워도 곡선 모양의 관계가 숨어 있을 수 있으니 <b>산점도를 함께</b> 본다. 선풍기와 아이스크림처럼 함께 늘어난 두 값도 <b>원인과 결과</b>라고 단정하지 않고 다른 까닭을 찾는다.</div>
+    <div style="--k:#9b4fc4">오렌지3 <b>Correlations</b>는 한 속성과 다른 숫자형 속성들의 상관계수를 한 번에 보여 준다. <b>Select Rows</b>로 간호사·회계사처럼 집단을 나누면 전체와 다른 관계가 드러나기도 한다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 예상(<span id="predShow">아직 고르지 않음</span>)을 떠올리며, 오늘 배운 낱말(산점도, 상관계수, 양·음의 상관관계, 선형, 인과관계)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">속성들 사이에 관계를 어떻게 파악할 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>상관계수 탐색기에서 r을 <b>0.8쯤, −0.5쯤</b>으로 만든 방법을 바탕으로, 점들의 배치에 따라 r이 어떻게 달라지는지 설명하기</li>
+      <li>그림 Ⅱ-9의 B처럼 <b>r이 0에 가까운데도 관계가 있는</b> 경우를 설명하고, 산점도를 함께 봐야 하는 까닭 쓰기</li>
+      <li>두 값이 함께 변하지만 <b>원인과 결과로 보기 어려운</b> 새로운 예와 그 다른 까닭 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

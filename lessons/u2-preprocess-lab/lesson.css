@@ -1,0 +1,133 @@
+
+  /* u2-preprocess-lab 전용 (pl-) */
+  .pl-scroll,.pl-tw,.pl-tscroll{overflow-x:auto;max-width:100%}
+  .pl-tbl{font-size:.88rem;margin:6px 0;border-collapse:collapse}
+  .pl-tbl th,.pl-tbl td{border:1px solid var(--line);padding:4px 8px}
+  .pl-tbl th{background:#fbfaf7}
+  .pl-attr td{text-align:left}
+  .pl-attr td:first-child{font-family:ui-monospace,Menlo,monospace;font-size:.84rem}
+  .pl-list{margin:4px 0 0;padding-left:18px;font-size:.92rem}
+  .pl-list li{margin:4px 0}
+  .pl-pick{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.75rem;border-radius:999px;padding:0 8px;margin-left:4px}
+  .pl-opt{display:inline-block;vertical-align:middle;font-family:"Noto Sans KR",sans-serif;font-size:.8rem;font-weight:900;background:var(--amber);color:var(--navy);border-radius:999px;padding:2px 10px;margin-left:6px}
+  .pl-ready h3{margin-top:0}
+  .pl-det{margin-top:12px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .pl-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .pl-det p{font-size:.92rem;margin:8px 0 2px}
+  .pl-sel{margin-top:0}
+  .pl-more summary{cursor:pointer}
+  .pl-more[open] summary{margin-bottom:8px}
+  .pl-blanks li{margin:8px 0;line-height:1.9}
+  .pl-blanks .blank{font:inherit;font-weight:700;border:0;border-bottom:2px dashed var(--acc);background:var(--acc-soft);color:var(--acc);border-radius:6px 6px 0 0;padding:0 10px;min-width:64px;cursor:pointer}
+  .pl-blanks .blank.on{border-bottom-style:solid;background:#fff4d6;color:var(--ink)}
+  .pl-fix{font-size:.93rem}
+
+  /* 흐름도 · 설정 표 (정보 u2-preprocess와 같은 방식) */
+  .pl-flowbox{overflow-x:auto}
+  .pl-flowbox svg{display:block;width:100%;min-width:860px;height:auto}
+  .pl-flowbox .fe{fill:none;stroke:#8a94a3;stroke-width:2}
+  .pl-flowbox .fl{font-size:11px;fill:#5b6776;text-anchor:end;font-weight:700}
+  .pl-flowbox .fn{cursor:pointer}
+  .pl-flowbox .fn.prev{cursor:default}
+  .pl-flowbox .fn.prev .ft{fill:#6b7480}
+  .pl-flowbox .fb{fill:#fff;stroke-width:2}
+  .pl-flowbox .fn.on .fb{fill:#fff4d6;stroke-width:4}
+  .pl-flowbox .fn:focus{outline:none}
+  .pl-flowbox .fn:focus .fb{stroke-width:4}
+  .pl-flowbox .fnum{font-size:14px;font-weight:900;fill:#fff;text-anchor:middle}
+  .pl-flowbox .ft{font-size:13px;font-weight:700;fill:#16202c}
+  .pl-flowbox .fs{font-size:11px;fill:#5b6776}
+  .pl-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;font-size:.85rem}
+  .pl-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .pl-legend small{color:var(--muted)}
+  .pl-set{min-width:860px;margin:0}
+  .pl-set th{text-align:left;background:#fbfaf7;white-space:nowrap}
+  .pl-set td{border-top:1px solid #eef0f3}
+  .pl-set td:first-child{font-weight:900;color:var(--acc);text-align:center;width:44px}
+  .pl-set tr[data-s]{cursor:pointer;transition:background .3s}
+  .pl-set tr.hl td{background:#fff4d6}
+  .pl-cells{min-width:640px}
+  .pl-cells td:first-child{font-weight:900;color:var(--acc);text-align:center;width:48px}
+  .pl-warn{font-size:.9rem;margin-top:12px}
+  .pl-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .pl-help ul{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .pl-help li{margin:6px 0}
+
+  /* 02 IQR 계산 · Formula 식 읽기 */
+  .pl-calc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+  .pl-calc>div{background:#fbfaf7;border-radius:10px;padding:8px 10px;border-top:4px solid var(--acc)}
+  .pl-calc span{display:block;font-size:.8rem;color:var(--muted)}
+  .pl-calc b{font-variant-numeric:tabular-nums}
+  @media (max-width:760px){.pl-calc{grid-template-columns:1fr}}
+  .pl-code{background:#fbfaf7;border-radius:10px;padding:8px 12px;font-size:.95rem}
+  .pl-fx{display:grid;gap:6px;margin-top:6px}
+  .pl-fxr{display:grid;grid-template-columns:90px 110px 1fr;align-items:center;gap:8px;background:#fbfaf7;border-radius:8px;padding:5px 10px;font-size:.9rem}
+  .pl-fxr span{color:var(--muted);font-size:.84rem}
+  .pl-fxr b{font-size:1.05rem;font-variant-numeric:tabular-nums}
+  .pl-fxr em{font-style:normal;font-size:.86rem}
+  .pl-fxr em.t{color:var(--red);font-weight:700}
+  .pl-fxr em.f{color:var(--mint);font-weight:700}
+
+  /* 화면 안 작은 수면 표 (단계 체험) */
+  .pl-pipe{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;padding:10px 12px}
+  .pl-steps{margin-bottom:8px}
+  .pl-steps .pl-ok{border-color:#9fd8c4;color:#13684d}
+  .pl-auto{font-size:.82rem;color:#8a5a00;background:#fff4d6;border-radius:8px;padding:3px 10px;margin:0 0 6px;display:inline-block}
+  .pl-out{background:#fff;border-radius:10px;padding:8px 12px;font-size:.92rem;margin-bottom:8px}
+  .pl-out p{margin:4px 0}
+  .pl-tscroll{max-height:290px;overflow:auto;border-radius:8px}
+  .pl-mini{font-size:.82rem;min-width:620px;background:#fff;margin:0}
+  .pl-mini th{position:sticky;top:0;z-index:1;font-size:.78rem;color:var(--muted)}
+  .pl-mini td{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pl-mini td:nth-child(2){text-align:left}
+  .pl-mini th.z,.pl-mini td.z{background:#f4effa}
+  .pl-mini td.miss{background:#fde8e6;color:var(--red);font-weight:900;text-align:center}
+  .pl-mini td.fill{background:#fff4d6;font-weight:700}
+  .pl-mini tr.outrow td{background:#fdeceb}
+  .pl-mini td.ycell{color:var(--red);font-weight:900}
+  .pl-stat{font-size:.82rem;min-width:520px}
+  .pl-stat td{text-align:right;font-variant-numeric:tabular-nums}
+  .pl-stat td:first-child{text-align:left}
+  .pl-stat td.z{background:#f4effa;font-weight:700}
+  .pl-k{display:inline-block;border-radius:6px;padding:0 6px;font-size:.84rem}
+  .pl-k.miss{background:#fde8e6;color:var(--red);font-weight:900}
+  .pl-k.fill{background:#fff4d6}
+  .pl-k.out{background:#fdeceb;color:var(--red)}
+  .pl-cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0}
+  .pl-cmp>div{background:#fbfaf7;border-radius:8px;padding:6px 10px}
+  .pl-cmp span{display:block;font-size:.8rem;color:var(--muted)}
+  .pl-bars{display:grid;grid-template-columns:22px 1fr;gap:3px 6px;align-items:center;margin-top:4px}
+  .pl-bars em{font-style:normal;font-size:.76rem;color:var(--muted)}
+  .pl-bars i{display:block;height:9px;border-radius:5px;background:var(--acc)}
+  .pl-bars i:nth-of-type(1){opacity:.45}
+  .pl-svg{width:100%;height:auto;display:block;background:#fff;border-radius:10px;border:1px solid var(--line);margin-top:4px}
+  .pl-svg .gl{stroke:#eef0f3;stroke-width:1}
+  .pl-svg .tk{font-size:10px;fill:#8a94a3}
+  .pl-svg .axl{font-size:11px;font-weight:700;fill:#5b6776}
+  .pl-svg .pl-bound{stroke:var(--red);stroke-width:1.5;stroke-dasharray:4 3}
+  .pl-svg .pl-bl{font-size:10px;fill:var(--red);font-weight:700}
+  .pl-svg .pl-wh{stroke:#5b6776;stroke-width:2}
+  .pl-svg .pl-bx{fill:#dfe9fb;stroke:#2f6fd0;stroke-width:2}
+  .pl-svg .pl-md{stroke:#f2a516;stroke-width:3}
+  .pl-svg .pl-op{fill:var(--red)}
+  .pl-svg .pl-pt{fill:#9b4fc4;fill-opacity:.7}
+  .pl-svg .pl-dot{fill:#5b6776;fill-opacity:.6}
+  .pl-person{margin-top:8px}
+  .pl-person select{font:inherit;margin-left:6px;padding:2px 6px}
+  .pl-ph,.pl-pr{display:grid;grid-template-columns:110px 100px 1fr 56px;gap:8px;align-items:center;font-size:.86rem;padding:3px 0}
+  .pl-ph{color:var(--muted);font-size:.78rem;border-bottom:1px solid var(--line);margin-top:6px}
+  .pl-pr b{font-variant-numeric:tabular-nums}
+  .pl-pr b.z{color:#6b2fa0;text-align:right}
+  .pl-zb{position:relative;height:14px;background:#f1f3f6;border-radius:7px}
+  .pl-zb em{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:#5b6776}
+  .pl-zb i{position:absolute;top:2px;height:10px;border-radius:5px;background:#9b4fc4}
+  .pl-zb i.neg{background:#e0702b}
+  .pl-merge{display:grid;grid-template-columns:200px 1fr;gap:14px}
+  @media (max-width:760px){.pl-merge{grid-template-columns:1fr}}
+  .pl-hsc{max-height:200px}
+  .pl-merge .pl-mini{min-width:0}
+  .pl-mbtn{margin:6px 0}
+  .pl-plots b{font-size:.88rem}
+  .pl-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .pl-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .pl-prev span{white-space:pre-wrap;display:block;margin-bottom:4px}

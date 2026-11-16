@@ -1,0 +1,413 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 1. 데이터 준비</span>
+      <h1>수면 데이터,<br>분석할 준비가<br>되었을까?</h1>
+      <div class="story"><b>지난 시간까지 배운 것</b><br>결측치와 이상치를 찾아 처리하는 방법, 두 데이터를 합치는 통합, 단위를 맞추는 표준화를 개념으로 배웠어요. 오늘은 시험 기간에 잠이 모자란 수현이의 고민(70쪽)처럼 <b>수면의 질과 스트레스</b>를 살펴보려고, 실제 수면 데이터에 이 방법을 <b>오렌지3로 직접</b> 적용해 봐요.</div>
+      <p>수면 데이터에는 비어 있는 칸도, 다른 값과 동떨어진 값도 있어요. 하나씩 손본 뒤 건강 데이터와 합쳐 그래프로 그려 보면, 다음 시간에 쓸 「분석할 준비가 된 데이터」가 만들어져요.</p>
+      <ol>
+        <li>불러오기 · 결측치 처리</li><li>이상치 처리</li><li>표준화 후 통합 · 시각화</li>
+        <li>(선택) 파이썬으로 해 보기</li><li>(선택) 정리 · 역량 키우기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📂</i><div><b>불러오기</b><small>File · Data Table · Column Statistics</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🩹</i><div><b>결측치 → 이상치</b><small>Impute · Box Plot · Formula · Select Rows</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>⚖️</i><div><b>표준화 후 통합</b><small>Select Columns · Preprocess · Merge Data</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📊</i><div><b>시각화 · 저장</b><small>Scatter Plot · Box Plot · Save Data</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>교과서 78~81쪽 실습을 따라 <b>수면 데이터(Sleep.csv)</b>의 결측치와 이상치를 처리하고, 단위가 서로 다른 속성을 <b>표준화</b>한 뒤 <b>건강 데이터(Health.csv)</b>와 합쳐 산점도와 박스 플롯으로 시각화해요. 화면마다 <b>먼저 화면 안의 작은 표(예시 20명)</b>로 같은 단계를 해 보고, 오렌지3에서 실제 데이터로 해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">학습 계획 세우기</span>
+        <div class="memo"><label>빈칸 5개와 동떨어진 값 1개가 섞인 데이터를 받았다면, 무엇을 어떤 순서로 손볼지 지금 생각을 적어 보세요. <small>마무리에서 오늘 한 순서와 비교해요.</small></label><textarea data-memo="planOrder" rows="2" placeholder="예: 먼저 … 을 찾고, 그다음 …"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 준비</b> · 데이터를 편향되지 않도록 수집하고 전처리하는 방법은 무엇이며, 데이터 분석을 위해 어떻게 시각화해야 할까?</li>
+          <li><b>오늘의 질문</b> · 수면의 질이 우리의 건강과 행복에 미치는 영향은 얼마나 클까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>이상치와 결측치를 탐색하고 정규화를 통해 데이터를 가공할 수 있다.</li>
+          <li>데이터를 분석하기 위해 시각화할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card pl-ready">
+      <h3>🧰 실습 준비 <span class="muted" style="font-weight:400;font-size:.88rem">(처음 3분)</span></h3>
+      <p style="margin-top:0">오렌지3를 미리 실행해 두고, 선생님이 알려 주는 폴더에서 두 파일을 내려받아 찾기 쉬운 곳(바탕 화면 등)에 저장해요. 준비가 끝난 것을 눌러 표시해요.</p>
+      <div id="plReady"></div>
+      <p class="note">오렌지3가 열리지 않거나 파일을 받지 못해도 괜찮아요. 화면마다 있는 <b>화면 안 작은 표</b>로 같은 단계를 모두 해 볼 수 있어요.</p>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 불러오기 · 결측치부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 불러오기 · 결측치 -->
+<section class="page" data-name="불러오기 · 결측치" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터를 불러오고 결측치를 처리해 보자</h2><p>교과서 78~79쪽 · File · Data Table · Column Statistics · Impute</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터를 열면 먼저 <b>몇 줄, 몇 개 속성인지</b>와 <b>비어 있는 칸(결측치)</b>을 살펴요. 오렌지3는 결측치를 <b>?</b>로 보여 줘요. 이번에는 빈칸을 그 속성의 <b>평균값</b>으로 채워요.</span></div>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>😴 수면 데이터(Sleep.csv)의 속성</h3>
+      <div class="pl-scroll"><table class="pl-tbl pl-attr">
+        <tr><th>속성</th><th>뜻</th><th>오렌지3가 읽는 형</th></tr>
+        <tr><td>Person ID</td><td>ID</td><td>numeric</td></tr>
+        <tr><td>Gender</td><td>성별</td><td>categorical</td></tr>
+        <tr><td>Age</td><td>나이</td><td>numeric</td></tr>
+        <tr><td>Occupation</td><td>직업</td><td>categorical</td></tr>
+        <tr><td>Sleep Duration</td><td>수면 시간</td><td>numeric</td></tr>
+        <tr><td>Quality of Sleep</td><td>수면의 질 (1~10 점수)</td><td>numeric</td></tr>
+        <tr><td>Physical Activity Level</td><td>신체 활동 수준 (분)</td><td>numeric</td></tr>
+        <tr><td>Stress Level</td><td>스트레스 수준 (1~10 점수)</td><td>numeric</td></tr>
+        <tr><td>Daily Steps</td><td>일일 걸음 수</td><td>numeric</td></tr>
+        <tr><td>Sleep Disorder</td><td>수면 장애 (None = 없음)</td><td>categorical</td></tr>
+      </table></div>
+      <p class="note">교과서 78쪽. 이 데이터는 10개의 속성, 374개의 행으로 이루어져 있어요. 수면의 질과 스트레스 수준은 1부터 10까지의 척도로 매긴 점수예요.</p>
+    </div>
+    <div class="card">
+      <h3>🩹 결측치를 채우는 방법</h3>
+      <p style="margin-top:0">오렌지3의 <b>Impute</b> 위젯은 결측치를 여러 방법으로 처리할 수 있어요. 오늘은 <b>Average/Most frequent</b>(평균값 또는 최빈값)로 채워요. 수치형 속성은 평균값, 범주형 속성은 최빈값으로 채워져요.</p>
+      <details class="pl-det"><summary>Default Method 7가지 모두 보기 (펼쳐 보기)</summary>
+      <ul class="pl-list">
+        <li><b>Don’t Impute</b> · 아무것도 입력하지 않음</li>
+        <li><b>Average/Most frequent</b> · 평균값 또는 최빈값 사용 <span class="pl-pick">오늘 쓸 방법</span></li>
+        <li><b>As a distinct value</b> · 새로운 값으로 대체</li>
+        <li><b>Fixed values</b> · 고정된 값으로 대체</li>
+        <li><b>Model-based imputer</b> · 다른 측정으로 예측 모델을 만들어 가장 비슷한 값을 고름</li>
+        <li><b>Random values</b> · 속성의 분포를 계산한 뒤 그 분포에서 무작위로 고름</li>
+        <li><b>Remove instances with unknown values</b> · 결측치가 있는 데이터(줄) 제거</li>
+      </ul>
+      <p class="note">아래쪽 <b>Individual Attribute Settings</b>에서는 속성마다 처리 방법을 다르게 정할 수 있어요.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔬 먼저 화면에서 해 보기 · 작은 수면 표 <span class="muted" style="font-weight:400;font-size:.88rem">(예시 20명 · 실제 데이터 아님)</span></h3>
+    <p class="muted" style="margin-top:0">오렌지3에서 할 일을 작은 표로 먼저 해 봐요. 단추를 차례로 누르세요. 여기서 손본 표는 02·03 화면에서 이어서 써요.</p>
+    <div class="pl-pipe" id="plA"></div>
+  </div>
+
+  <div class="card">
+    <h3>🔀 오렌지3 흐름도 ① 불러오기 · 결측치 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div class="pl-flowbox"><svg id="plFlow1" role="img" aria-label="데이터 불러오기와 결측치 처리 위젯 연결 흐름도"></svg></div>
+    <div class="pl-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span><small>색은 오렌지3 왼쪽 카테고리를 나타내요.</small></div>
+    <div class="pl-tw" style="margin-top:12px"><table class="tbl pl-set" id="plSet1">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td>선생님이 알려 주는 폴더에서 내려받은 <span class="mono">Sleep.csv</span> 열기</td><td>374 instances · 10 features · 결측치(missing data) 0.1%</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>더블 클릭해 표 보기. 96~100번 줄까지 내려 보기</td><td>Sleep Duration 칸에 <b>?</b>로 표시된 결측치. 막대 길이로 값의 크고 작음도 비교해 봐요(93번과 104번 줄의 수면 시간)</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Column Statistics</b> (Data)<br><small>교과서·옛 버전 이름은 Feature Statistics</small></td><td>File →</td><td>창을 옆으로 넓혀 오른쪽 <b>Missing</b> 열까지 보기</td><td>결측치가 있는 속성은 Sleep Duration 하나(5개)</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Impute</b> (Transform)</td><td>File → <small>(교과서처럼 Data Table을 거쳐도 돼요)</small></td><td>Default Method: <b>Average/Most frequent</b></td><td>–</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Data Table (1)</b> (Data)</td><td>Impute →</td><td>96~100번 줄 다시 보기</td><td>?였던 수면 시간이 평균값 <b>7.132</b>로 채워졌는지</td></tr>
+    </table></div>
+    <div class="callout pl-warn">💡 교과서 그림은 Data Table의 <b>Selected Data</b>를 다음 위젯으로 이어요. 그렇게 해도 되지만, Data Table에서 줄을 눌러 고르면 <b>고른 줄만</b> 다음 위젯으로 넘어가요. 표를 볼 때는 줄을 누르지 말고 스크롤만 해요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="plDone1"></div>
+    <div class="memo">
+      <label>✍️ 실습하면서 적기 · 결측치를 <b>평균값으로 채운 과정</b>을 위젯 이름을 넣어 적고, 결측치가 있는 줄을 <b>지웠다면</b> 무엇이 달라졌을지 써 보세요. <small>오렌지3를 못 열었다면 위의 작은 표로 한 일을 적어요.</small></label>
+      <textarea data-memo="missWhy" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card pl-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>위젯을 못 찾겠어요</b> → 캔버스 빈 곳을 마우스 오른쪽 버튼으로 누르고 위젯 이름을 입력해요. 왼쪽 목록 위의 검색 칸을 써도 돼요. Column Statistics는 검색 칸에 <span class="mono">feature</span>라고 쳐도 나와요.</li>
+      <li><b>연결선은 어떻게 만들어요?</b> → 위젯 오른쪽의 둥근 끝을 끌어 다음 위젯 왼쪽에 놓아요. 빈 곳에 놓으면 이어 붙일 위젯을 고르는 창이 떠요.</li>
+      <li><b>파일이 안 열려요</b> → File 위젯 창의 폴더 단추를 눌러 내려받은 위치를 다시 찾아요. 파일 이름이 <span class="mono">Sleep.csv</span>인지 확인해요.</li>
+      <li><b>오렌지3가 안 열리거나 너무 느려요</b> → 위의 <b>작은 수면 표</b>로 ①·② 단계를 해 보고, 단계마다 어떤 위젯이 같은 일을 하는지 떠올리며 메모를 채워요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 이상치 -->
+<section class="page" data-name="이상치 처리" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>이상치를 찾아 처리해 보자</h2><p>교과서 79~80쪽 · Box Plot · Formula · Select Rows · Column Statistics</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>박스 플롯으로 <b>사분위수 범위(IQR)</b>를 구해 하한값·상한값을 정하고, 그 범위를 벗어난 값을 이상치로 봐요. <b>Formula</b>로 줄마다 「이상치인가?」 표시(Y/N)를 붙이고, <b>Select Rows</b>로 N인 줄만 남겨요.</span></div>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>📦 박스 플롯으로 범위 정하기</h3>
+      <p style="margin-top:0">신체 활동 수준(Physical Activity Level)의 박스 플롯을 그리면 제1사분위수(Q1)는 <b>45</b>, 제3사분위수(Q3)는 <b>75</b>예요(교과서 79쪽).</p>
+      <div class="pl-calc">
+        <div><span>사분위수 범위(IQR)</span><b>75 − 45 = 30</b></div>
+        <div><span>하한값</span><b>45 − (30 × 1.5) = 0</b></div>
+        <div><span>상한값</span><b>75 + (30 × 1.5) = 120</b></div>
+      </div>
+      <p class="note">하한값(0)과 상한값(120)의 범위를 벗어난 데이터를 이상치로 볼 수 있어요. 박스 플롯은 범주별로 수치 데이터를 비교할 수 있도록 분포(중앙값, 사분위수 등)를 보여 주는 그래프예요.</p>
+    </div>
+    <div class="card">
+      <h3>🧮 Formula 식 읽기</h3>
+      <p style="margin-top:0">outlier라는 새 범주형 속성을 만들고, 식과 Values를 이렇게 넣어요.</p>
+      <div class="pl-code"><span class="mono">0 if Physical_Activity_Level &gt; 120 else 1</span><br><small>Values: <span class="mono">Y, N</span> → 0번 값 = <b>Y</b>, 1번 값 = <b>N</b></small></div>
+      <p class="muted" style="font-size:.9rem;margin:8px 0 4px">신체 활동 수준을 바꾸어 보며 어떤 값에 Y가 붙는지 확인해요.</p>
+      <div class="ctrl"><label for="plFx">활동(분)</label><input type="range" id="plFx" min="0" max="250" step="5" value="60"><output id="plFxOut">60</output></div>
+      <div class="pl-fx" id="plFxBox"></div>
+    </div>
+  </div>
+  <div class="callout pl-fix">📌 <b>교과서 80쪽 설명 바로잡기</b> · 교과서 문장은 「120을 넘지 않으면 0번 값」이라고 적혀 있지만, 식 <span class="mono">0 if … &gt; 120 else 1</span>은 <b>120을 넘으면 0번 값(Y = 이상치)</b>, 넘지 않으면 1번 값(N)이에요. 위의 막대로 확인해 보세요.</div>
+
+  <div class="card">
+    <h3>🔬 먼저 화면에서 해 보기 · 작은 수면 표 이어서 <span class="muted" style="font-weight:400;font-size:.88rem">(예시 20명)</span></h3>
+    <p class="muted" style="margin-top:0">01에서 결측치를 채운 표로 이어서 해요. ③ 박스 플롯 → ④ Formula → ⑤ Select Rows 순서로 눌러요.</p>
+    <div class="pl-pipe" id="plB"></div>
+  </div>
+
+  <div class="card">
+    <h3>🔀 오렌지3 흐름도 ② 이상치 처리</h3>
+    <div class="pl-flowbox"><svg id="plFlow2" role="img" aria-label="이상치 처리 위젯 연결 흐름도"></svg></div>
+    <div class="pl-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span><span style="--k:#c4c9d1">앞 흐름도에서 만든 위젯</span></div>
+    <div class="pl-tw" style="margin-top:12px"><table class="tbl pl-set" id="plSet2">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>Box Plot</b> (Visualize)</td><td>Impute → <small>(교과서처럼 Data Table (1)을 거쳐도 돼요. 표에서 줄을 누르지 말기)</small></td><td>Variable: <b>Physical Activity Level</b></td><td>상자가 45~75, 가운데 60 근처. 오른쪽으로 <b>점선이 240까지 길게</b> 뻗어 있어요(오렌지3는 동떨어진 값을 점 대신 점선으로 보여 줘요). 진한 파란 세로선은 평균, 노란 세로선은 중앙값이에요</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Formula</b> (Transform)</td><td>Impute →</td><td>Variable Definitions에서 <b>New → Categorical</b>, 이름 <b>outlier</b><br>식: <span class="mono">0 if Physical_Activity_Level &gt; 120 else 1</span> (속성 이름은 <b>Select Feature</b>에서 골라 넣기)<br>Values: <span class="mono">Y, N</span> → <b>Send</b></td><td>표 맨 오른쪽에 outlier 열이 생김</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Data Table (2)</b> (Data)</td><td>Formula →</td><td>outlier 열 머리글을 눌러 정렬하기 (정렬은 괜찮아요. 줄을 눌러 고르지만 않으면 돼요)</td><td>Y로 표시된 이상치 <b>1개</b> (신체 활동 수준 240)</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Select Rows</b> (Transform)</td><td>Formula → <small>(교과서는 Data Table (2) →)</small></td><td>Conditions: <b>outlier</b> <span class="mono">is</span> <b>N</b></td><td>창 아래 숫자가 374 → <b>373</b></td></tr>
+      <tr data-s="5"><td>5</td><td><b>Data Table (3)</b> (Data)</td><td>Select Rows →</td><td>–</td><td>373개 줄 확인</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Column Statistics (1)</b> (Data)</td><td>Select Rows →</td><td>Physical Activity Level 줄을 01의 Column Statistics와 비교</td><td>Mean 59.61 → <b>59.13</b> · 흩어진 정도(Dispersion) 0.38 → <b>0.35</b></td></tr>
+    </table></div>
+    <details class="pl-det"><summary>Dispersion은 분산일까? (펼쳐 보기)</summary>
+      <p>교과서 80쪽은 Dispersion 값을 「분산」이라고 적었지만, <b>오렌지3의 Dispersion은 표준편차를 평균으로 나눈 값이라 분산과 달라요.</b> 그래서 이 화면에서는 「흩어진 정도(Dispersion)」라고 불러요. 어느 쪽이든 이상치를 빼면 값이 작아져요. 큰 이상치가 흩어진 정도를 부풀리고 있었다는 뜻이에요.</p>
+    </details>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="plDone2"></div>
+    <div class="memo">
+      <label>✍️ 실습하면서 적기 · ① 이상치를 정한 <b>기준(하한값 0 · 상한값 120)</b>과 그 값을 구한 방법 ② Formula 식이 <b>어떤 값에 Y를 붙이는지</b> 예 하나 ③ 이상치를 뺀 뒤 평균과 흩어진 정도가 <b>어떻게 달라졌는지</b></label>
+      <textarea data-memo="outlierSteps" rows="4"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card pl-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Formula 식에 오류가 나요</b> → 속성 이름은 직접 치지 말고 <b>Select Feature</b> 목록에서 골라 넣어요. 「Physical Activity Level」은 식 안에서 <span class="mono">Physical_Activity_Level</span>로 바뀌어 들어가요.</li>
+      <li><b>outlier 열이 숫자(0, 1)로 보여요</b> → New에서 <b>Categorical</b>을 골랐는지, Values 칸에 <span class="mono">Y, N</span>을 넣었는지 확인해요.</li>
+      <li><b>Select Rows에서 outlier가 안 보여요</b> → Formula에서 <b>Send</b>를 눌렀는지, Select Rows가 Formula 뒤에 이어졌는지 확인해요.</li>
+      <li><b>오렌지3가 안 되면</b> → 위의 작은 수면 표로 ③~⑤를 하고 메모를 채워요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 표준화 후 통합 · 시각화 -->
+<section class="page" data-name="표준화 · 통합 · 시각화" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>표준화한 뒤 통합하고 시각화해 보자</h2><p>교과서 80~81쪽 · Select Columns · Preprocess · Merge Data · Save Data · Scatter Plot · Box Plot</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>수면의 질과 스트레스 수준은 <b>1~10 점수</b>, 신체 활동 수준은 <b>분</b>, 걸음 수는 <b>걸음</b>이라 크기를 바로 비교하기 어려워요. <b>표준화</b>하면 속성마다 평균은 0, 표준편차는 1이 되어 「평균보다 얼마나 높고 낮은지」로 나란히 비교할 수 있어요.</span></div>
+  <div class="card">
+    <h3>⚖️ 먼저 화면에서 해 보기 · 표준화 전과 후 <span class="muted" style="font-weight:400;font-size:.88rem">(예시 20명, 이상치를 뺀 19명)</span></h3>
+    <p class="muted" style="margin-top:0">⑥을 누르면 다섯 속성(수면 시간 · 수면의 질 · 신체 활동 수준 · 스트레스 수준 · 걸음 수)을 표준화해요. 한 사람을 골라 표준화 전과 후를 비교해 보세요.</p>
+    <div class="pl-pipe" id="plC"></div>
+    <div class="memo" style="margin-top:12px">
+      <label>✍️ 표준화 전과 후를 비교해 적어요. ① 고른 사람의 <b>수면의 질</b>과 <b>걸음 수</b>를 표준화 전에는 왜 견주기 어려웠는지 ② 표준화한 뒤에는 무엇을 알 수 있게 되었는지</label>
+      <textarea data-memo="stdWhy" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔀 오렌지3 흐름도 ③-1 표준화 후 통합하기 <span class="muted" style="font-weight:400;font-size:.88rem">(80~81쪽)</span></h3>
+    <p class="muted" style="margin-top:0">표준화할 속성 5개와 표준화가 필요 없는 속성 6개를 <b>Select Columns 두 개</b>로 나눈 뒤, 5개만 표준화해서 <b>Merge Data</b>로 다시 합쳐요. <b>오늘은 여기 7번(Sleep_clean.csv 저장)까지가 필수</b>예요.</p>
+    <div class="pl-flowbox"><svg id="plFlow3" role="img" aria-label="표준화 후 통합 위젯 연결 흐름도"></svg></div>
+    <div class="pl-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#c4c9d1">앞 흐름도에서 만든 위젯</span></div>
+    <div class="pl-tw" style="margin-top:12px"><table class="tbl pl-set" id="plSet3">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>Select Columns</b> (Transform)</td><td>Select Rows →</td><td>Features에 <b>Sleep Duration, Quality of Sleep, Physical Activity Level, Stress Level, Daily Steps</b> 5개만 남기고 나머지는 Ignored로 옮기기</td><td>Features 5개</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Preprocess</b> (Transform)</td><td>Select Columns →</td><td>왼쪽 목록의 <b>Normalize Features</b>를 오른쪽으로 끌어다 놓고 <b>Standardize to μ=0, σ²=1</b> 고르기. 아래 <b>Apply</b> 누르기</td><td>–</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Data Table (4)</b> (Data)</td><td>Preprocess →</td><td>–</td><td>값이 −1.297, 0.344처럼 0 근처의 소수로 바뀌었는지</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Select Columns (1)</b> (Transform)</td><td>Select Rows →</td><td>Features에 <b>Person ID, Gender, outlier, Occupation, Sleep Disorder, Age</b> 6개, 표준화할 5개는 Ignored로</td><td>Features 6개</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Merge Data</b> (Transform)</td><td>Select Columns (1) → <b>Data</b><br>Preprocess → <b>Extra Data</b></td><td>Merging: <b>Append columns from Extra data</b>. Row matching은 <b>Row index</b> 그대로 (같은 표에서 나눈 두 조각이라 줄 순서가 같아요)</td><td>373줄, 11개 속성. Select Columns (1)을 <b>먼저</b> 이어야 Data로 들어가요</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Data Table (5)</b> (Data)</td><td>Merge Data →</td><td>–</td><td>표준화 안 한 6개 + 표준화한 5개</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Save Data</b> (Data)</td><td>Merge Data →</td><td><b>Save as…</b>로 <span class="mono">Sleep_clean.csv</span> 저장. <b>Add type annotations to header</b>는 체크 해제</td><td>저장한 위치 기억하기</td></tr>
+      <tr data-s="8"><td>8</td><td><b>Column Statistics (2)</b> (Data)</td><td>Merge Data →</td><td>표준화한 5개 속성 줄 보기</td><td>Mean이 0. 표준화 전과 비교해 보기</td></tr>
+    </table></div>
+    <details class="pl-det"><summary>표준화한 속성의 Dispersion이 이상해요 (펼쳐 보기)</summary>
+      <p>표준화한 속성은 평균이 0이에요. 오렌지3의 Dispersion은 표준편차를 평균으로 나눈 값이라, 0이나 0에 아주 가까운 수로 나누면 <b>∞(inf)</b>나 아주 큰 수, 음수로 보여요. 표준화가 잘못된 것이 아니니 걱정하지 않아도 돼요. 표준편차가 1인지는 Box Plot 위젯을 이어 보면 「평균 ± 표준편차」 표시로 확인할 수 있어요.</p>
+    </details>
+    <p class="note">교과서 80~81쪽 그림에서는 표준화할 5개를 고른 위젯이 <b>Select Columns</b>, 나머지 6개를 고른 위젯이 <b>Select Columns (1)</b>이에요(교과서 ows 파일에는 이름이 반대로 저장되어 있어요). 위젯 이름 뒤 번호는 만든 순서대로 붙으니 내 화면과 달라도 괜찮아요.</p>
+    <div class="callout pl-warn">💡 교과서 그림은 Data Table (3)·Data Table (4)를 거쳐 다음 위젯으로 이어요. 그렇게 해도 되지만 Data Table에서 <b>줄을 눌러 고르면 고른 줄만</b> 넘어가요. 이 흐름도처럼 Select Rows·Preprocess에서 바로 이으면 더 안전해요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="plDone3"></div>
+  </div>
+
+  <div class="card">
+    <h3>🔬 화면에서 이어서 · 건강 표와 합쳐 그래프 그리기 <span class="muted" style="font-weight:400;font-size:.88rem">(81쪽 「5 시각화하기」를 작은 표로)</span></h3>
+    <p class="muted" style="margin-top:0">표준화한 작은 표에 건강 표(BMI 범주)를 <b>Person ID</b>로 합치고, 수면의 질과 스트레스 수준의 산점도, BMI 범주별 수면의 질 박스 플롯을 그려요. 오렌지3에서 건강 데이터와 합치는 실습(아래 ③-2)은 시간이 되면 하거나 다음 시간 처음에 해요.</p>
+    <div class="pl-pipe" id="plD"></div>
+    <div class="memo" style="margin-top:12px">
+      <label>✍️ 그래프를 보고 적기 · 산점도에서 수면의 질과 스트레스 수준은 어떤 관계로 보이나요? 박스 플롯에서 BMI 그룹마다 수면의 질은 어떻게 달랐나요? <small>표준화한 값이라 0보다 크면 평균보다 높다는 뜻이에요.</small></label>
+      <textarea data-memo="vizMemo" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card pl-more">
+    <summary><b>🔀 (시간이 되면 · 다음 시간 처음에) 오렌지3 흐름도 ③-2 건강 데이터와 합쳐 시각화하기</b> <span class="muted">81쪽</span></summary>
+    <p class="muted">Sleep_clean.csv를 저장하지 못했다면 선생님이 알려 주는 폴더의 <span class="mono">Sleep_clean.csv</span>로 시작해요.</p>
+    <div class="pl-flowbox"><svg id="plFlow4" role="img" aria-label="통합과 시각화 위젯 연결 흐름도"></svg></div>
+    <div class="pl-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span></div>
+    <div class="pl-tw" style="margin-top:12px"><table class="tbl pl-set" id="plSet4">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> → 이름을 <b>수면</b>으로</td><td>새 위젯</td><td>방금 저장한 <span class="mono">Sleep_clean.csv</span> 열기. 위젯 이름을 바꾸면(F2) 두 File을 구분하기 쉬워요</td><td>373 instances</td></tr>
+      <tr data-s="2"><td>2</td><td><b>File</b> → 이름을 <b>건강</b>으로</td><td>새 위젯</td><td>선생님이 알려 주는 폴더의 <span class="mono">Health.csv</span> 열기</td><td>Person ID · BMI Category · Blood Pressure · Heart Rate</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Merge Data (1)</b> (Transform)</td><td>수면 → <b>Data</b><br>건강 → <b>Extra Data</b></td><td>Append columns from Extra data. Row matching을 <b>Row index</b>에서 <b>Person ID ↔ Person ID</b>로 바꾸기</td><td>373줄, 14개 속성</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Data Table (6)</b> (Data)</td><td>Merge Data (1) →</td><td>–</td><td>오른쪽 끝에 BMI Category, Blood Pressure, Heart Rate가 붙었는지</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Scatter Plot</b> (Visualize)</td><td>Merge Data (1) →</td><td>Axis x: <b>Quality of Sleep</b>, Axis y: <b>Stress Level</b></td><td>점들이 어느 쪽으로 기울어 있는지</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Box Plot (1)</b> (Visualize)</td><td>Merge Data (1) →</td><td>Variable: <b>Quality of Sleep</b>, Subgroups: <b>BMI Category</b></td><td>정상·과체중·비만 그룹의 상자 위치 비교</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Save Data (1)</b> (Data)</td><td>Merge Data (1) →</td><td><span class="mono">Sleep_Health_merge.csv</span>로 저장 (다음 시간 92쪽에서 써요)</td><td>저장 못 했어도 괜찮아요. 선생님 폴더에도 있어요</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="plDone4"></div>
+  </details>
+  <details class="card pl-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Merge Data에 Data와 Extra Data가 바뀌어 들어갔어요</b> → 연결선을 더블 클릭하면 어느 입력으로 이을지 다시 고를 수 있어요.</li>
+      <li><b>Preprocess 결과가 그대로예요</b> → 창 아래 <b>Apply</b>(또는 Apply Automatically)를 눌렀는지 확인해요.</li>
+      <li><b>Person ID가 Row matching 목록에 없어요</b> → 두 File 모두 Person ID가 있는지, Select Columns (1)에서 Person ID를 Features에 넣었는지 확인해요.</li>
+      <li><b>오렌지3가 안 되면</b> → 위의 작은 표 ⑥~⑧로 표준화·통합·시각화를 해 보고 메모를 채워요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+  <div class="callout">시간이 부족하면 다음 두 (선택) 화면은 건너뛰고 <button class="btn sm" onclick="go(6)">마무리로 가기 →</button></div>
+</section>
+
+<!-- 4 (선택) 파이썬으로 해 보기 -->
+<section class="page" data-name="(선택) 파이썬으로" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>파이썬으로 해 보기 <span class="pl-opt">선택</span></h2><p>교과서 82쪽 · 코랩 · pandas · StandardScaler · matplotlib</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>오렌지3로 한 전처리와 시각화를 <b>파이썬 코드</b>로 똑같이 해 봐요. 선생님이 알려 주는 노트북을 열어 <b>사본을 만든 뒤</b> 코랩 왼쪽 파일 창에 <span class="mono">Sleep.csv</span>와 <span class="mono">Health.csv</span>를 올리고, 위에서부터 셀을 하나씩 실행해요.</span></div>
+  <div class="card">
+    <h3>🐍 노트북 셀 안내</h3>
+    <div class="pl-tw"><table class="tbl pl-cells">
+      <tr><th>셀</th><th>하는 일</th><th>확인할 것</th></tr>
+      <tr><td>①</td><td>라이브러리 불러오기, <span class="mono">read_csv</span>로 Sleep.csv 읽기</td><td>(374, 10). 결측치는 수면 시간 5칸</td></tr>
+      <tr><td>②</td><td><span class="mono">fillna(평균)</span>으로 결측치 채우기</td><td>평균 7.132</td></tr>
+      <tr><td>③</td><td><span class="mono">data[data['Physical Activity Level'] &lt;= 120]</span>로 이상치 빼기</td><td>(373, 10)</td></tr>
+      <tr><td>④-1</td><td><span class="mono">StandardScaler</span>로 다섯 속성 표준화</td><td>평균 0, 표준편차 1 근처</td></tr>
+      <tr><td>④-2</td><td><span class="mono">pd.merge(…, on='Person ID')</span>로 건강 데이터와 합치기</td><td>(373, 13)</td></tr>
+      <tr><td>⑤</td><td>산점도와 박스 플롯 그리기</td><td>오렌지3 그래프와 비교</td></tr>
+    </table></div>
+    <p class="note">파일 경로 <span class="mono">/content/Sleep.csv</span>는 코랩 파일 창에 올린 파일의 위치예요. 런타임이 끝나면 올린 파일이 사라지니 다시 올려요.</p>
+  </div>
+  <div class="card">
+    <h3>🧩 코드 줄과 오렌지3 위젯 짝짓기</h3>
+    <p class="muted" style="margin-top:0">코드 한 줄을 보고, 오렌지3에서 같은 일을 한 위젯을 골라요.</p>
+    <div id="plPair"></div>
+  </div>
+  <div class="card">
+    <h3>🔍 오렌지3와 다른 점 세 가지</h3>
+    <ul class="pl-list">
+      <li><b>박스 플롯의 속성</b> · 82쪽 코드는 BMI별 <b>수면 시간</b>을, 오렌지3 실습(81쪽)은 BMI별 <b>수면의 질</b>을 그려요. 선생님 노트북에는 두 그림이 모두 있어요.</li>
+      <li><b>합치는 기준</b> · 파이썬은 처음부터 <span class="mono">on='Person ID'</span>로 합쳐요. 오렌지3 Merge Data는 처음에 Row index로 맞추어져 있어 Person ID로 바꾸었어요.</li>
+      <li><b>None 읽기</b> · pandas는 수면 장애의 <span class="mono">None</span>(수면 장애 없음)을 결측치로 읽어 결측치가 훨씬 많아 보여요. 선생님 노트북은 빈칸만 결측치로 읽게 고쳐 두었어요.</li>
+    </ul>
+    <div class="memo"><label>(선택) 코드로 해 보니 오렌지3와 비교해 편한 점이나 어려운 점</label><textarea data-memo="pyNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+</section>
+
+<!-- 5 (선택) 정리 · 역량 키우기 -->
+<section class="page" data-name="(선택) 정리" data-acc="#d64535">
+  <div class="head"><div class="num">05</div><div><h2>함께 해결하기 · 「데이터 준비」 정리 <span class="pl-opt">선택</span></h2><p>교과서 83~85쪽 · 시간이 남거나 다음 시간에 더 해요</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>새 데이터로 오늘 한 순서(정보 확인 → 결측치·이상치 → 시각화)를 스스로 해 보고, 「데이터 준비」 단원을 정리해요. 아래 칸은 <b>내 말로</b> 채워요.</span></div>
+  <details class="card pl-more">
+    <summary><b>👥 함께 해결하기 · 학업 성적에 영향을 주는 요인 탐색</b> <span class="muted">83쪽</span></summary>
+    <p>선생님이 알려 주는 폴더의 <span class="mono">Expanded_data_with_more_features.csv</span>(캐글 「Students Exam Scores: Extended Dataset」)를 오렌지3로 불러와요. 범주형 속성에 결측치가 많은 데이터예요.</p>
+    <div class="grid2 even">
+      <div class="memo"><label>1 데이터 정보 · 속성 수, 데이터 타입별 속성 개수, 행 수</label><textarea data-memo="teamInfo" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>2 결측치·이상치를 확인한 방법과 처리 방법(정규화가 필요하면 그 방법도)</label><textarea data-memo="teamClean" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>3 데이터 분석 목적과 그에 맞는 시각화 방법</label><textarea data-memo="teamViz" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>4 짝과 비교해 보니 서로 다르게 고른 방법과 그 까닭</label><textarea data-memo="teamCompare" rows="3"></textarea><div class="saved"></div></div>
+    </div>
+  </details>
+  <div class="card">
+    <h3>📝 개념 정리하기 <span class="muted" style="font-weight:400;font-size:.88rem">빈칸에 들어갈 말을 먼저 떠올린 뒤 눌러서 확인해요</span></h3>
+    <ol class="pl-blanks">
+      <li>날씨 앱 기록에서 기온이 적히지 않은 날의 칸은 <button class="blank" data-a="결측치">?</button>이고, 여름 낮 기온이 「−40℃」로 적힌 칸은 다른 값과 동떨어진 <button class="blank" data-a="이상치">?</button>이다.</li>
+      <li>반 친구들의 줄넘기 횟수 박스 플롯에서 Q1이 20, Q3가 40이면 사분위수 범위는 <button class="blank" data-a="20">?</button>이고, 상한값은 40 + 20 × 1.5 = <button class="blank" data-a="70">?</button>이다.</li>
+      <li>키(cm)와 하루 독서 시간(분)처럼 단위가 다른 두 속성을 평균 0, 표준편차 1이 되도록 바꾸는 작업을 <button class="blank" data-a="표준화">?</button>라고 한다.</li>
+      <li>학년(범주형)별로 하루 수면 시간(수치형)이 어떻게 퍼져 있는지 비교하려면 <button class="blank" data-a="박스 플롯">?</button>을, 두 수치형 속성이 함께 변하는지 보려면 <button class="blank" data-a="산점도">?</button>를 그린다.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>✅ 성취도 평가</h3>
+    <p style="margin-top:0">할 수 있게 된 것을 모두 골라 보세요.</p>
+    <div id="plSelf"></div>
+  </div>
+  <details class="card pl-more">
+    <summary><b>💪 역량 키우기 · 「데이터 준비」 정리</b> <span class="muted">84쪽</span></summary>
+    <div class="memo"><label>1 지식·이해 · 데이터 전처리가 무엇인지, 그리고 왜 중요한지 <b>내가 고른 예</b>로 설명해 보세요.</label><textarea data-memo="capPre" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>2 과정·기능 · 데이터에서 결측치와 이상치를 찾고 처리하는 방법을 오늘 쓴 위젯 이름을 넣어 정리해 보세요.</label><textarea data-memo="capClean" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>3 가치·태도 · 데이터를 편향되지 않게 모으려면 어떻게 해야 하고, 그 자세가 왜 중요한지 적어 보세요.</label><textarea data-memo="capBias" rows="3"></textarea><div class="saved"></div></div>
+    <p class="muted" style="margin:10px 0 4px">내 실력 점검하기 · 「예」라고 답할 수 있는 것을 골라요. 모두 고를 수 있으면 <b>심화</b>, 아니면 <b>보충</b> 활동을 해 봐요.</p>
+    <div id="plLevel"></div>
+    <div class="grid2 even" style="margin-top:12px">
+      <details class="pl-det pl-sel"><summary>🧩 보충 · 성별·BMI별 수면 장애</summary>
+        <p><span class="mono">Sleep_Health_merge.csv</span>를 불러와 성별(Gender)과 체질량 지수(BMI Category)에 따른 수면 장애(Sleep Disorder)를 그래프로 그려 봐요. <b>Distributions</b> 위젯에서 Variable을 Sleep Disorder로, Split by를 Gender(또는 BMI Category)로 두면 돼요.</p>
+        <div class="memo"><label>그래프에서 알게 된 점</label><textarea data-memo="supMemo" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+      <details class="pl-det pl-sel"><summary>🚀 심화 · 심박수와 수면 장애</summary>
+        <p>심박수(Heart Rate)를 구간으로 나눈 막대그래프와, 수면 장애별 심박수 박스 플롯을 그려 비교해 봐요. 막대그래프는 구간별 <b>사람 수</b>를, 박스 플롯은 그룹별 <b>분포(중앙값·사분위수)</b>를 보여 줘요.</p>
+        <div class="memo"><label>두 그래프에서 각각 알 수 있는 것과 차이</label><textarea data-memo="advMemo" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+    </div>
+  </details>
+  <div class="card">
+    <h3>📒 내 계획 점검하기</h3>
+    <p class="muted" style="margin-top:0">「데이터 준비」를 마치며, 이 단원 처음에 적은 나의 계획(교과서 62·70쪽)을 점검하고 새롭게 알게 된 점을 적어요.</p>
+    <div class="pl-prev" id="plPrev"></div>
+    <div class="grid2 even">
+      <div class="memo"><label>나의 계획 점검</label><textarea data-memo="planCheck" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>새롭게 알게 된 점</label><textarea data-memo="newLearn" rows="3"></textarea><div class="saved"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">수면 데이터의 <b>?</b> 칸처럼 비어 있는 결측치는 그 속성의 평균값 같은 값으로 채우거나 그 줄을 지워서 처리한다. 채우면 다른 속성의 값을 잃지 않는다.</div>
+    <div style="--k:#e0702b">신체 활동 수준 240처럼 동떨어진 값은 사분위수 범위로 정한 하한값·상한값을 기준으로 이상치로 판단하고, 표시한 뒤 골라 빼면 평균과 흩어진 정도가 덜 부풀려진다.</div>
+    <div style="--k:#9b4fc4">점수·분·걸음처럼 단위가 다른 속성은 표준화해 견줄 수 있게 만들고, 같은 사람끼리 이어 합친 뒤 산점도·박스 플롯으로 관계와 분포를 살핀다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에 적은 「손볼 순서」와 오늘 실제로 한 순서를 비교해 보고, 시각화에서 본 것을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">수면의 질이 우리의 건강과 행복에 미치는 영향은 얼마나 클까? 그것을 알아보려면 데이터를 어떻게 준비해야 할까?</b>
+    <div class="memo"><textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>결측치</b>를 평균값으로 채운 과정과, 줄을 지우는 방법과 비교한 차이 설명하기</li>
+      <li><b>이상치</b>를 정한 기준(상한값), Formula 식이 Y를 붙이는 값, 처리 뒤 달라진 통계값 설명하기</li>
+      <li>단위가 다른 속성을 <b>표준화</b>한 까닭을 전과 후를 비교해 설명하고, 그래프에서 알게 된 점 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

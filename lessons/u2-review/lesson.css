@@ -1,0 +1,85 @@
+
+  /* u2-review 전용 (rv-) */
+  .rv-scroll{overflow-x:auto;max-width:100%}
+  .rv-tbl{font-size:.82rem;margin:6px 0;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .rv-tbl th,.rv-tbl td{border:1px solid var(--line);padding:4px 7px;text-align:center;white-space:nowrap}
+  .rv-tbl th{background:#fbfaf7;font-weight:700}
+  .rv-tbl th small{display:block;font-weight:400;color:var(--muted);font-size:.74rem}
+  .rv-tbl td.rv-more{text-align:left;color:var(--muted);border:0}
+  /* 02 이상한 칸 찾기 */
+  .rv-chk td{cursor:pointer;min-width:52px;transition:background .15s}
+  .rv-chk td:hover{background:var(--acc-soft)}
+  .rv-chk td.f-broken{background:#fde2dd;color:#a3271a;font-weight:700}
+  .rv-chk td.f-blank{background:#fff1c9;box-shadow:inset 0 0 0 2px #f2a516}
+  .rv-chk td.f-zero{background:#e6eefb;color:#1b3d66;font-weight:700}
+  .rv-chk td.f-ok{background:#eef8f3}
+  .rv-found{display:flex;flex-wrap:wrap;gap:6px 12px;margin:8px 0;font-size:.9rem}
+  .rv-found span{background:#fbfaf7;border-radius:999px;padding:3px 12px;border:1px solid var(--line)}
+  .rv-found span.done{border-color:var(--mint);color:#13684d}
+  .rv-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin:8px 0;line-height:1.6;min-height:2.4em}
+  .rv-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media (max-width:860px){.rv-pick{grid-template-columns:1fr}}
+  .rv-pick>div{background:#fbfaf7;border-radius:12px;padding:10px 12px}
+  .rv-pick b{display:block;margin-bottom:6px}
+  /* 02 이상치 줄 지우기 */
+  .rv-iqr{display:flex;flex-wrap:wrap;gap:6px}
+  .rv-iqr button{font:inherit;font-size:.86rem;border:2px solid var(--line);background:#fff;border-radius:999px;padding:3px 11px;cursor:pointer;color:var(--ink)}
+  .rv-iqr button small{color:var(--muted);font-variant-numeric:tabular-nums}
+  .rv-iqr button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+  .rv-iqr button.on small{color:#fff}
+  .rv-iqr button:disabled{opacity:.4;cursor:not-allowed}
+  .rv-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
+  .rv-left b{font-variant-numeric:tabular-nums}
+  .rv-bar{flex:1;min-width:220px;height:18px;border-radius:999px;background:#eceae4;overflow:hidden}
+  .rv-bar i{display:block;height:100%;background:var(--acc);transition:width .25s}
+  /* 03 막대 */
+  .rv-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px;font-size:.85rem}
+  .rv-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .rv-legend small{color:var(--muted)}
+  .rv-bars{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(12,auto);grid-auto-flow:column;gap:3px 22px}
+  @media (max-width:860px){.rv-bars{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+  .rv-b .n em{font-style:normal;font-weight:900;color:var(--acc);font-size:.8rem}
+  .rv-rec{margin-top:10px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .rv-b{display:grid;grid-template-columns:96px 1fr 40px 40px;align-items:center;gap:6px;font-size:.85rem}
+  .rv-b .n{text-align:right;white-space:nowrap}
+  .rv-b .t{height:14px;background:#f1efea;border-radius:4px;overflow:hidden}
+  .rv-b .t i{display:block;height:100%;border-radius:4px;transition:width .25s}
+  .rv-b b{font-variant-numeric:tabular-nums}
+  .rv-b small{color:#13684d;font-weight:700}
+  /* 03 상관 탐색기 */
+  .rv-ex{align-items:start}
+  .rv-sel{font-size:.88rem;font-weight:700}
+  .rv-sel select{font:inherit;font-weight:400;margin-left:4px;padding:3px 6px;border-radius:8px;border:1px solid var(--line);max-width:210px}
+  .rv-plotbox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}
+  .rv-plotbox svg{display:block;width:100%;max-width:480px;height:auto;margin:0 auto}
+  .rv-chkline{display:flex;gap:6px;align-items:center;font-size:.88rem;margin-top:6px}
+  .rv-r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .rv-r2>div{background:#fbfaf7;border-radius:12px;padding:8px 12px}
+  .rv-r2 span{display:block;font-size:.82rem}
+  .rv-r2 b{font-size:2rem;font-weight:900;color:var(--acc);font-variant-numeric:tabular-nums}
+  .rv-top{display:flex;flex-direction:column;gap:4px}
+  .rv-top button{font:inherit;font-size:.88rem;text-align:left;border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;cursor:pointer;color:var(--ink)}
+  .rv-top button:hover{background:var(--acc-soft)}
+  .rv-top b{float:right;font-variant-numeric:tabular-nums}
+  .rv-an{min-width:640px;margin-top:10px;table-layout:fixed;width:100%}
+  .rv-an th{background:#fbfaf7;font-size:.9rem}
+  .rv-an th small{font-weight:400;color:var(--muted)}
+  .rv-an td{vertical-align:top}
+  .rv-an textarea{width:100%}
+  .rv-set{min-width:700px}
+  .rv-set th{background:#fbfaf7;text-align:left}
+  .rv-set td{font-size:.9rem;border-top:1px solid #eef0f3}
+  .rv-opt summary{cursor:pointer;font-weight:900;font-size:1.02rem}
+  .rv-opt[open] summary{margin-bottom:8px}
+  /* 04 진로 · 평가 */
+  .rv-tc{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .rv-tc .tcard{height:236px}
+  .rv-tc .tcard .f b{font-size:1.08rem}
+  .rv-eval{min-width:620px}
+  .rv-eval td{vertical-align:middle;font-size:.9rem}
+  .rv-eval .chk{flex-wrap:nowrap;gap:4px;justify-content:center}
+  .rv-eval .chk button{padding:2px 10px}
+  /* 05 빈칸 */
+  .rv-blanks li{margin:8px 0;line-height:1.9}
+  .rv-blank{font:inherit;font-weight:700;border:0;border-bottom:2px dashed var(--acc);background:var(--acc-soft);color:var(--acc);border-radius:6px 6px 0 0;padding:0 10px;min-width:64px;cursor:pointer}
+  .rv-blank.on{border-bottom-style:solid;background:#fff4d6;color:var(--ink)}

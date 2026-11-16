@@ -1,0 +1,258 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 2. 데이터 분석</span>
+      <h1>어느 도시로<br>여행을 갈까?<br>데이터로 골라 보자</h1>
+      <div class="story"><b>아현이의 고민</b><br>대학에 들어가면 방학 동안 해외여행을 떠나고 싶은 아현이. 조사해 보니 항공료, 현지 물가 같은 <b>비용</b>이 여행지 선택에 큰 영향을 준대요. 아현이는 예산, 이동 거리, 체험할 수 있는 활동을 모두 따져 자신에게 가장 알맞은 여행지를 고르기로 했어요.</div>
+      <p>관광 산업은 데이터 분석으로 빠르게 바뀌고 있어요. 한국관광공사의 데이터랩은 이동 통신, 신용 카드, 내비게이션 등에서 모은 빅데이터로 관광객의 이동 경로와 소비 패턴을 분석해 지역별 관광 전략을 세워요. 오늘은 우리도 실제 데이터로 <b>유럽 배낭 여행지</b>를 고르는 분석을 시작해요.</p>
+      <ol>
+        <li>필요한 데이터 정하기</li><li>숙소 데이터 속성 파악하기</li><li>1인당 숙박비 구하기</li>
+        <li>도시별 분포와 대푯값</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧳</i><div><b>필요한 데이터 수집</b><small>숙소 정보 · 생활비 데이터</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🔎</i><div><b>데이터 속성 파악</b><small>51,707개 숙소 · 15개 속성</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>➗</i><div><b>새 속성 만들기</b><small>총 숙박비 ÷ 숙박 인원 = charge</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📊</i><div><b>도시별로 묶어 비교</b><small>Box Plot · Group by · Bar Plot</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="callout pa-ready">🍊 <b>지금 바로 오렌지3를 실행해 두세요.</b> 처음 열리는 데 1~2분 걸려요.<br>📁 <b>선생님이 알려 주는 폴더</b>에서 <span class="mono">airbnb_european-cities.csv</span>(약 4.8MB)를 내려받아 찾기 쉬운 폴더에 두세요. 다음 시간에 쓸 <span class="mono">Europe Cost of Living Index by City 2024.csv</span>도 같은 폴더에 함께 받아 두면 좋아요.</div>
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>「비용이 합리적이면서도 만족스러운 유럽 배낭 여행지」를 고르려면 <b>어떤 데이터</b>가 필요한지 정하고, 숙소 데이터를 오렌지3로 불러와 <b>속성을 파악</b>해요. 그다음 <b>1인당 숙박비</b>라는 새 속성을 만들고, 도시별로 묶어 <b>대푯값</b>을 비교해요. 이 흐름은 다음 시간에 생활비 데이터와 합쳐 이어 가요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">학습 계획 세우기</span>
+        <p style="margin:2px 0 6px;font-size:.92rem">내가 여행지를 고른다면 무엇을 따질까요? 해당하는 것을 모두 골라요.</p>
+        <div id="paCrit"></div>
+        <div class="memo"><label>그중 가장 중요한 기준 하나와 그 까닭</label><textarea data-memo="planTrip" rows="2" placeholder="예: ○○ — 왜냐하면 …"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 분석</b> · 데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까?</li>
+          <li><b>오늘의 질문</b> · 데이터 분석으로 실제 문제를 해결하려면 어떻게 해야 할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터를 수집하여 전처리하고 시각화할 수 있다.</li>
+          <li>데이터를 서로 다른 방법으로 분석하여 분석 결과를 비교할 수 있다. <small class="muted">(다음 시간까지 이어서)</small></li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 필요한 데이터 정하기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 필요한 데이터 수집 -->
+<section class="page" data-name="필요한 데이터" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 분석에 필요한 데이터는 무엇일까?</h2><p>교과서 103쪽 · 유럽 도시별 숙소 정보와 고객 평가 데이터 · 유럽 도시별 생활비 데이터</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>분석은 <b>질문</b>에서 시작해요. 「싸면서도 만족스러운 여행지」를 찾으려면 숙소가 얼마인지, 손님들이 어떻게 평가했는지, 그리고 먹고 다니는 데 드는 <b>현지 물가</b>까지 알아야 해요. 그래서 데이터를 <b>두 가지</b> 모아요.</span></div>
+  <div class="cards2">
+    <div class="kc" style="--k:#e0702b"><div class="ic">🏠</div><h4>① 유럽 도시별 숙소 정보와 고객 평가 데이터</h4><p>공유 숙박 플랫폼에서 숙소를 예약할 예정이므로, 그 플랫폼이 공개한 유럽 도시별 숙소 정보와 고객 평가 데이터를 모아요. 교과서는 데이터 공유 플랫폼인 캐글에서 <b>Airbnb Prices European Cities(Merged)</b>를 검색해 내려받아요.</p><small>우리가 쓸 파일: <span class="mono">airbnb_european-cities.csv</span> · 암스테르담, 아테네, 바르셀로나, 베를린, 부다페스트, 리스본, 런던, 파리, 로마, 비엔나 10개 도시</small></div>
+    <div class="kc" style="--k:#9b4fc4"><div class="ic">🛒</div><h4>② 유럽 도시별 생활비 데이터</h4><p>여행지의 물가를 알려고 세계 도시 물가 안내 사이트(<b>NUMBEO</b>)의 유럽 도시별 생활비 데이터를 모아요. NUMBEO는 사용자들이 제공한 데이터를 바탕으로 생활비, 범죄율, 건강 관리, 교통, 오염, 주거 같은 통계를 제공해요.</p><small>우리가 쓸 파일: NUMBEO 자료를 교과서 자료실에서 가공해 제공한 <span class="mono">Europe Cost of Living Index by City 2024.csv</span> (다음 시간에 써요)</small></div>
+  </div>
+  <p class="note">캐글에서 직접 내려받으려면 계정이 필요해요. 우리는 <b>선생님이 알려 주는 폴더</b>의 파일을 써요. 생활비 데이터의 지수는 기준 도시(뉴욕)를 100으로 놓고 비교한 값이라, 100보다 작으면 기준 도시보다 물가가 낮은 편이에요.</p>
+  <div class="card">
+    <h3>🧭 이 질문엔 어느 데이터가 필요할까?</h3>
+    <p class="muted" style="margin-top:0">여행지를 고르며 떠오른 질문이에요. 어느 데이터를 보면 답할 수 있을지 골라요. 한 데이터로는 답할 수 없는 질문도 있어요.</p>
+    <div class="pa-two"><div><b>🏠 숙소 정보 데이터의 속성</b> 총 숙박비 · 객실 타입 · 숙박 가능 인원 · 청결도 · 고객 만족도 · 침실 수 · 도심 거리 · 지하철 거리 · 도시 …</div><div><b>🛒 생활비 데이터의 속성</b> 생활비 지수 · 임대료 지수 · 식료품 지수 · 레스토랑 가격 지수 · 지역 구매력 지수 · 도시 · 국가 …</div></div>
+    <div id="paWhich"></div>
+  </div>
+  <div class="callout" style="font-size:.93rem">🔍 <b>데이터 편향 떠올리기</b> 숙소 데이터는 그 플랫폼에 올라온 숙소만, 생활비 데이터는 사이트에 값을 남긴 사용자의 정보만 담고 있어요. 분석 결과를 말할 때 <b>누가 만든 어떤 데이터인지</b>도 함께 밝혀야 해요.</div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 속성 파악 -->
+<section class="page" data-name="속성 파악" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>숙소 데이터는 어떻게 생겼을까?</h2><p>교과서 104쪽 · File · Data Table · Column Statistics(Feature Statistics) · 함께 해결하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>분석하기 전에 데이터를 <b>훑어봐요</b>. 몇 줄인지, 어떤 속성이 있는지, 빈칸(결측치)은 없는지, 평균과 중앙값은 얼마인지 보면 데이터의 특성이 보여요. 오렌지3에서 <b>File → Data Table · Column Statistics</b>로 확인해요. 교과서에는 <b>Feature Statistics</b>라는 옛 이름으로 나와요.</span></div>
+  <div class="card">
+    <h3>🏷️ 숙박 정보 데이터 속성 15개 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 104쪽)</span></h3>
+    <div class="pa-attrs" id="paAttrs"></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="paAttrBtn">오렌지3가 읽은 형 보기</button><span class="muted" style="font-size:.86rem" id="paAttrMsg">어느 속성이 수치형(numeric)으로 읽힐지 먼저 짐작해 보세요.</span></div>
+  </div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 ① <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div class="pa-flowbox"><svg id="paFlow1" class="pa-f1" role="img" aria-label="숙소 데이터 불러오기 위젯 연결 흐름도"></svg></div>
+    <div class="pa-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span><small>색은 오렌지3 왼쪽 카테고리를 나타내요.</small></div>
+    <div class="pa-tw"><table class="tbl pa-set" id="paSet1">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">airbnb_european-cities.csv</span> 열기 → 위젯을 고르고 <b>F2</b> 키로 이름을 <b>숙소 정보</b>로 바꾸기</td><td>Columns 목록에서 속성마다 Type(numeric · categorical)</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>더블 클릭해 표로 보기</td><td>왼쪽 정보 칸의 데이터 개수(instances)와 속성 수(features)</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Column Statistics</b> (Data)<br><small class="muted">교과서·옛 버전 이름은 <b>Feature Statistics</b>. 최근 버전에서는 Column Statistics로 보여요</small></td><td>File →</td><td>창 왼쪽 위 머리글(<b>^</b>)을 눌러 수치형 속성이 먼저 보이게 하기</td><td><b>Mean</b>(평균) · <b>Mode</b>(최빈값) · <b>Median</b>(중앙값) · <b>Min./Max.</b>(최솟값·최댓값) · <b>Missing</b>(결측치)</td></tr>
+    </table></div>
+    <details class="pa-det"><summary>Dispersion 열은 무엇일까?</summary><p>창에 보이는 <b>Dispersion</b>은 흩어진 정도를 나타내요. 오렌지3의 Dispersion은 표준편차를 평균으로 나눈 값이라 분산과 달라요. 오늘은 읽지 않아도 돼요.</p></details>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="paDone1"></div>
+  </div>
+  <div class="card">
+    <h3>👀 결과 읽기 <span class="muted" style="font-weight:400;font-size:.88rem">(Data Table과 Column Statistics 창에서 찾아 적어요)</span></h3>
+    <p class="muted" style="margin-top:0">소수는 둘째 자리까지 적으면 돼요. 다 적고 「확인하기」를 눌러요. <b>Missing</b> 열이 모두 0인지도 눈으로 확인해요.</p>
+    <div id="paRead"></div>
+    <div class="memo"><label>총 숙박비(realSum)의 평균과 중앙값을 비교해 알게 된 점 <small>청결도처럼 중앙값과 최댓값이 같은 속성에서 알 수 있는 점도 함께</small></label><textarea data-memo="readNote" rows="3" placeholder="평균이 중앙값보다 … 그래서 …"></textarea><div class="saved"></div></div>
+    <details class="pa-det"><summary>🆘 오렌지3가 열리지 않거나 너무 느릴 때 펼쳐 보기</summary>
+      <p style="margin:6px 0">아래는 같은 파일을 Column Statistics로 본 수치형 속성 7개의 값이에요. 이 표에서 찾아 위 칸을 채우세요. <small class="muted">(출처: 캐글 「Airbnb Prices European Cities(Merged)」, 51,707개 숙소 전체로 계산한 요약 통계)</small></p>
+      <div class="pa-tw"><table class="tbl pa-stat" id="paStatTbl"></table></div>
+      <p class="note">데이터 행 51,707개, 속성 15개예요. 범주형 속성 8개(room_type, room_shared, room_private, host_is_superhost, multi, biz, city, weekends)도 Missing은 모두 0이에요.</p>
+    </details>
+  </div>
+  <div class="card pa-together">
+    <h3>🤝 함께 해결하기 · realSum에 결측치가 있다면? <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 104쪽)</span></h3>
+    <p style="margin-top:0">만일 이 데이터의 <b>realSum</b> 속성에 결측치가 있는 숙소 <b>2개</b>가 발견되었다면 어떻게 처리할까요? 결측치와 이상치 처리에서 배운 방법을 떠올려 먼저 골라요.</p>
+    <div class="vote pa-vote3" id="paMissVote"></div>
+    <div class="reveal" id="paMissMore">
+      <div class="pa-think">
+        <div><b>얼마나 사라질까?</b><span>51,707개 중 2개를 지우면 남는 숙소는 51,705개, 전체의 <span id="paMissPct"></span>예요.</span></div>
+        <div><b>무엇으로 채울까?</b><span>위에서 읽은 realSum의 평균과 중앙값이 꽤 달라요. 아주 비싼 숙소 몇 곳에 덜 흔들리는 값은 어느 쪽일까요?</span></div>
+        <div><b>무엇이 빈 걸까?</b><span>realSum은 1인당 숙박비를 계산하는 재료예요. 빈칸을 채운 값이 계산 결과에도 그대로 들어가요.</span></div>
+      </div>
+    </div>
+    <div class="memo"><label>내가 고른 방법과 그 까닭 <small>친구와 이야기한 뒤 의견이 달랐던 점도 적어요</small></label><textarea data-memo="missTalk" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 1인당 숙박비 -->
+<section class="page" data-name="1인당 숙박비" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>1인당 숙박비는 어떻게 구할까?</h2><p>교과서 105쪽 · Formula 위젯으로 새 속성 charge 만들기 · Data Table로 정렬하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>2인실과 6인실의 <b>총 숙박비</b>를 바로 견주면 공평하지 않아요. 총 숙박비(realSum)를 숙박 가능 인원(person_capacity)으로 <b>나누어</b> 한 사람이 내는 값을 새 속성 <b>charge</b>로 만들면 크기가 다른 숙소도 비교할 수 있어요.</span></div>
+  <div class="card">
+    <h3>✏️ Formula 미리 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 예시 숙소 5곳)</span></h3>
+    <p class="muted" style="margin-top:0">charge 칸에 <b>realSum ÷ person_capacity</b>를 직접 계산해 적어요(소수 둘째 자리까지). 다 적으면 「확인하기」, 그다음 두 정렬 단추로 순서를 비교해요.</p>
+    <div class="pa-tw"><table class="tbl pa-calc" id="paCalc"></table></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="paCalcOk">확인하기</button>
+      <button class="btn ghost sm" id="paSortSum">총 숙박비 큰 순서로</button>
+      <button class="btn ghost sm" id="paSortCh">charge 큰 순서로</button>
+      <button class="btn ghost sm" id="paCalcRe">다시 하기</button>
+    </div>
+    <div class="pa-msg" id="paCalcMsg"></div>
+  </div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 charge 만들기</h3>
+    <div class="pa-flowbox"><svg id="paFlow2" class="pa-f2" role="img" aria-label="Formula 위젯으로 새 속성을 만드는 위젯 연결 흐름도"></svg></div>
+    <div class="pa-tw"><table class="tbl pa-set" id="paSet2">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="4"><td>4</td><td><b>Formula</b> (Transform)</td><td>숙소 정보 →</td><td><b>New → Numeric</b> → 이름 칸에 <b>charge</b><br>식: <span class="mono">realSum/person_capacity</span> → <b>Send</b></td><td>식 칸 아래 목록에 charge가 생겼는지</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Data Table (1)</b> (Data)</td><td>Formula →</td><td>맨 오른쪽 <b>charge</b> 머리글을 눌러 오름차순 정렬 (정렬만 하고 줄은 누르지 않기)</td><td>맨 위가 최솟값, 맨 아래가 최댓값</td></tr>
+    </table></div>
+    <div class="callout pa-warn">💡 식에 속성 이름을 직접 치면 틀리기 쉬워요. Formula 창의 <b>Select Feature</b> 목록에서 골라 넣고, 그 사이에 <span class="mono">/</span>만 쳐요.</div>
+    <h4 style="margin:14px 0 6px">Data Table (1)에서 찾아 적기</h4>
+    <div id="paMinMax"></div>
+    <p class="note">person_capacity는 <b>숙박 가능 인원</b>이에요. 그래서 charge는 그 숙소를 정원대로 꽉 채워 묵을 때 한 사람이 내는 값이에요.</p>
+    <div class="memo"><label>총 숙박비 대신 1인당 숙박비로 비교하는 까닭 <small>미리 해 보기에서 순위가 바뀐 숙소를 예로 들어</small></label><textarea data-memo="chargeWhy" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 도시별 분포와 대푯값 -->
+<section class="page" data-name="도시별 대푯값" data-acc="#1f9d74">
+  <div class="head"><div class="num">04</div><div><h2>도시마다 무엇이 다를까?</h2><p>교과서 105~107쪽 · Box Plot으로 분포 보기 · Group by로 도시별 평균 · Bar Plot · 스스로 해결하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>5만 개가 넘는 숙소를 하나씩 볼 수는 없어요. 먼저 <b>Box Plot</b>으로 도시별 숙소 수와 숙박 인원 분포를 보고, <b>Group by</b>로 도시마다 묶어 평균(대푯값)을 구한 뒤 <b>Bar Plot</b>으로 막대를 비교해요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 ② <span class="muted" style="font-weight:400;font-size:.88rem">(1~5번은 02·03에서 만들었어요)</span></h3>
+    <div class="pa-flowbox"><svg id="paFlow3" class="pa-f3" role="img" aria-label="도시별 분포와 대푯값 위젯 연결 흐름도"></svg></div>
+    <div class="pa-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span></div>
+    <div class="pa-tw"><table class="tbl pa-set" id="paSet3">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="6"><td>6</td><td><b>Box Plot</b> (Visualize)</td><td>Formula →</td><td>① <b>Variable</b>과 <b>Subgroups</b>를 모두 <b>city</b><br>② (선택) <b>Variable</b>을 <b>person_capacity</b>로, Subgroups는 <b>city</b> 그대로 — 시간이 없으면 아래 탐색기의 상자 그림으로 봐요</td><td>① 숙소가 가장 많은 도시와 적은 도시<br>② 도시마다 상자가 놓인 숙박 인원(몇 인실이 많은지)</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Group by</b> (Transform)</td><td>Formula →</td><td>왼쪽 <b>Group by</b> 목록에서 <b>city</b>를 고르기. 수치형 속성 8개의 Aggregations가 <b>Mean</b>인지 확인<br>오른쪽 목록에서 <b>범주형 속성</b>(room_type, weekends 등) 줄을 골라 아래 <b>Mode</b> 체크를 풀어요</td><td>Data Table (2)에 <b>- Mode</b> 열이 보이면 Mode 체크를 풀지 않은 것</td></tr>
+      <tr data-s="8"><td>8</td><td><b>Data Table (2)</b> (Data)</td><td>Group by →</td><td>더블 클릭해 보기. 속성명(예: charge - Mean)을 누르면 정렬돼요</td><td>도시 10개가 10줄로, city와 <b>- Mean</b>이 붙은 속성 8개</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Bar Plot</b> (Visualize)</td><td>Group by →</td><td><b>Values</b>를 <b>charge - Mean</b>, <b>Annotations</b>를 <b>city</b></td><td>막대가 가장 높은 도시와 낮은 도시</td></tr>
+    </table></div>
+    <div class="callout pa-save">💾 <b>다 했으면 꼭 저장해요.</b> 오렌지3 메뉴 <b>File → Save As</b>로 <b>여행지 분석</b>이라는 이름으로 데이터 파일과 같은 폴더에 저장해요. 다음 시간에 이 흐름에 생활비 데이터를 이어 붙여요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="paDone2"></div>
+  </div>
+  <div class="card">
+    <h3>📊 도시별 대푯값 탐색기 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3 Group by · Bar Plot과 같은 계산)</span></h3>
+    <p class="muted" style="margin-top:0">속성을 고르면 10개 도시의 대푯값이 막대로 보여요. 정렬과 대푯값(평균 · 중앙값)도 바꿔 보세요.</p>
+    <div class="pa-pick" id="paAttrPick"></div>
+    <div class="row pa-opt" style="margin:8px 0">
+      <span class="muted" style="font-size:.86rem">대푯값</span><span class="pa-seg" id="paStatSeg"></span>
+      <span class="muted" style="font-size:.86rem;margin-left:8px">정렬</span><span class="pa-seg" id="paSortSeg"></span>
+    </div>
+    <div class="pa-bars" id="paBars"></div>
+    <div class="pa-msg" id="paBarMsg"></div>
+    <p class="note">출처: 캐글 「Airbnb Prices European Cities(Merged)」 51,707개 숙소를 도시별로 묶어 계산한 값(숙소 하나하나의 값은 싣지 않았어요).</p>
+    <details class="pa-det"><summary>Box Plot ② 도시별 숙박 인원 분포를 화면에서 보기 (오렌지3에서 못 했을 때)</summary>
+      <p style="margin:6px 0;font-size:.9rem">상자는 사분위수 Q1~Q3, 가운데 굵은 선은 중앙값, ◆는 평균, 가는 선은 최솟값~최댓값이에요. 상자가 2~3에 놓인 도시와 3~4에 놓인 도시를 찾아보세요.</p>
+      <div class="pa-boxwrap"><svg id="paBox" role="img" aria-label="도시별 숙박 인원 상자 그림"></svg></div>
+    </details>
+  </div>
+  <div class="card pa-self">
+    <h3>🙋 스스로 해결하기 · 숙소와 도심과의 거리 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 107쪽)</span></h3>
+    <p style="margin-top:0">여행할 때는 숙소와 관광할 도심과의 거리도 중요해요. 오렌지3 Bar Plot의 Values를 <b>dist - Mean</b>으로 바꾸거나 위 탐색기에서 도심 거리를 골라, 숙소와 도심과의 거리가 가까운 곳과 먼 곳을 찾아요.</p>
+    <div class="grid2 even">
+      <div class="memo"><label>숙소와 도심과의 거리가 가까운 곳(2곳)</label><textarea data-memo="distNear" rows="1"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>숙소와 도심과의 거리가 먼 곳(2곳)</label><textarea data-memo="distFar" rows="1"></textarea><div class="saved"></div></div>
+    </div>
+    <p class="note">평균 대신 중앙값으로 바꾸어도 순서가 같은지 탐색기에서 확인해 보세요. 오렌지3 Group by의 Aggregations에서 <b>Median</b>을 고르면 같은 비교를 할 수 있어요.</p>
+  </div>
+  <details class="card pa-opt-card">
+    <summary>🐍 (선택) 코랩으로 같은 작업 해 보기 <small>(시간이 남거나 집에서)</small></summary>
+    <p class="pa-optnote">교과서 112쪽 「파이썬 소스 코드」를 고친 노트북이에요. <b>선생님이 알려 주는 노트북</b>을 열어 <b>파일 → 드라이브에 사본 저장</b>으로 내 사본을 만든 뒤, 왼쪽 파일 창(📁)에 <span class="mono">airbnb_european-cities.csv</span>를 올리고 셀을 위에서부터 차례로 실행해요. 런타임이 끝나면 올린 파일이 사라지니 다시 올려야 해요.</p>
+    <div class="pa-tw"><table class="tbl pa-set">
+      <tr><th>노트북 제목</th><th>하는 일</th><th>오렌지3 위젯</th></tr>
+      <tr><td>① 데이터 속성 파악하기</td><td><span class="mono">pd.read_csv</span>로 불러오기, <span class="mono">describe()</span>로 속성별 통계값 보기</td><td>File · Data Table · Column Statistics</td></tr>
+      <tr><td>② 1인당 숙박비 구하기</td><td><span class="mono">data1['realSum'] / data1['person_capacity']</span>로 charge 만들기</td><td>Formula</td></tr>
+      <tr><td>③ 도시별 개수·숙박 인원 분포</td><td>도시별 숙소 수 막대, 도시별 숙박 인원 상자 그림</td><td>Box Plot</td></tr>
+      <tr><td>④ 도시별 대푯값 분석하기</td><td><span class="mono">groupby('city').mean()</span>으로 도시별 평균, charge·dist 평균 막대</td><td>Group by · Bar Plot</td></tr>
+    </table></div>
+    <p class="note">노트북 ⑤ 이후(생활비 데이터)는 다음 시간에 이어서 해요.</p>
+  </details>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">아현이의 여행지 고르기처럼 실제 문제를 풀 때는 먼저 <b>질문에 답할 수 있는 데이터</b>를 정해요. 숙소 값과 손님 평가는 공유 숙박 데이터에, 현지 물가는 생활비 데이터에 들어 있어요.</div>
+    <div style="--k:#e0702b">불러온 숙소 데이터는 행 수, 속성, 결측치, 평균과 중앙값부터 살펴 <b>특성을 파악</b>했어요. 총 숙박비는 평균이 중앙값보다 커서, 평균보다 싼 숙소가 절반을 넘었어요.</div>
+    <div style="--k:#1f9d74">크기가 다른 숙소를 견주려고 <b>1인당 숙박비</b>라는 새 속성을 만들고, 도시별로 묶은 <b>대푯값</b>을 막대로 비교해 도시마다 다른 점을 찾았어요.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에 적은 나의 기준을 떠올리며, 오늘 한 일(데이터 정하기 → 속성 파악 → 새 속성 → 도시별 비교)의 순서를 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터 분석으로 실제 문제를 해결하려면 어떻게 해야 할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="callout pa-next">📌 <b>다음 시간 준비</b> 오늘 저장한 <b>여행지 분석</b> 흐름 파일과 <span class="mono">Europe Cost of Living Index by City 2024.csv</span>가 같은 폴더에 있는지 확인해요. 저장하지 못했어도 괜찮아요. 다음 시간 처음에 빠르게 다시 만드는 방법을 안내해요.</div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>Column Statistics에서 읽은 <b>realSum의 평균과 중앙값</b>을 비교해 숙박비가 어떻게 퍼져 있는지 설명하기</li>
+      <li><b>realSum 결측치 2개</b>를 어떻게 처리할지와 그렇게 고른 근거 쓰기</li>
+      <li><b>1인당 숙박비(charge)</b>를 만든 까닭을 순위가 바뀐 예와 함께 설명하고, 식과 최솟값·최댓값 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

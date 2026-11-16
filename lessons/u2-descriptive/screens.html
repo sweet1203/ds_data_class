@@ -1,0 +1,293 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 2. 데이터 분석</span>
+      <h1>평균 하나로<br>충분할까?</h1>
+      <div class="story"><b>세상을 바꾸는 데이터 · 머니볼</b><br>2002년, 미국 프로야구 오클랜드 애슬레틱스의 단장 빌리 빈은 구단 예산이 상위 구단의 3분의 1 수준이라 핵심 선수들을 계속 잃고 있었어요. 그는 감이나 명성 대신 출루율·장타율 같은 <b>데이터</b>로 선수를 평가하는 「머니볼」 전략으로 맞섰어요. 데이터를 제대로 분석하려면 무엇이 필요할까요?</div>
+      <p>데이터에서 의미 있는 정보를 찾아내는 분석 방법은 여러 가지예요. 오늘은 그중 <b>기술 통계</b>부터, 곧 데이터를 대표하는 <b>대푯값</b>과 흩어진 정도를 나타내는 <b>산포도</b>를 배워요.</p>
+      <ol>
+        <li>데이터 분석 방법</li><li>대푯값 · 평균·중앙값·최빈값</li><li>산포도 · 분산·표준편차·사분위수 범위</li>
+        <li>오렌지3 · 직업별 스트레스</li><li>(선택) 더 해 보기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🔍</i><div><b>탐색적 데이터 분석</b><small>기술 통계 · 상관분석</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🎯</i><div><b>대푯값</b><small>평균 · 중앙값 · 최빈값</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>↔️</i><div><b>산포도</b><small>분산 · 표준편차 · 사분위수 범위</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>💼</i><div><b>직업별 스트레스 분석</b><small>Group by · Bar Plot · Box Plot</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>데이터 분석의 첫 단계인 <b>탐색적 데이터 분석</b>을 알아보고, 데이터 전체를 하나의 값으로 나타내는 <b>대푯값</b>과 데이터가 얼마나 흩어져 있는지 나타내는 <b>산포도</b>를 직접 바꿔 보며 비교해요. 마지막에는 지난 시간에 전처리한 수면·건강 데이터로 <b>직업별 스트레스 수준</b>을 오렌지3로 분석해요.</p>
+    </div>
+    <div class="grid2 even">
+      <div class="card">
+        <h3>⚾ 머니볼 전략이 두드러진 성과를 거둔 2002년 시즌 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 87쪽 표)</span></h3>
+        <div class="dv-scroll"><table class="dv-tbl dv-mb">
+          <tr><th>월</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월/10월</th></tr>
+          <tr><th>승</th><td>12</td><td>16</td><td>19</td><td>15</td><td>24</td><td>17</td></tr>
+          <tr><th>패</th><td>14</td><td>11</td><td>7</td><td>10</td><td>4</td><td>13</td></tr>
+          <tr><th>비고</th><td></td><td></td><td></td><td></td><td>20연승 포함</td><td></td></tr>
+        </table></div>
+        <p class="note">Ⅰ단원(49쪽)에서 본 머니볼 전략이에요. 빌리 빈은 단타·2루타·홈런 같은 기록을 출루율과 장타율 데이터로 바꾸어 분석했어요.</p>
+      </div>
+      <div class="card">
+        <h3>💸 평균의 함정 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 88쪽)</span></h3>
+        <p style="margin-top:0">한 은행 보고서에 따르면 1970년대생 가구의 월 평균 소득은 624만 원, 1980년대생 가구는 506만 원이었어요. 그런데 많은 사람들이 「나는 평균에도 못 미친다」며 박탈감을 느꼈어요. 실제로 체감하는 소득에 가까운 <b>중위 소득</b>은 473만 원이었어요.</p>
+        <div class="memo"><label>💭 처음 생각 · 많은 사람이 「평균보다 낮다」고 느낀 까닭은 무엇일까요? <small>마무리에서 다시 봐요.</small></label><textarea data-memo="planGuess" rows="2"></textarea><div class="saved"></div></div>
+      </div>
+    </div>
+    <div class="why3" style="margin-top:16px">
+      <div class="why">
+        <span class="kicker">나의 계획</span>
+        <p style="font-size:.92rem;margin:0 0 6px">진영이는 높은 연봉의 직장에 들어간 사촌 누나가 심한 스트레스로 이직을 고민한다는 이야기를 듣고 「직업에 따라 스트레스 수준은 얼마나 다를까?」 궁금해졌어요(88쪽).</p>
+        <div class="memo"><label>나는 「데이터 분석」에서 다음 내용을 배우고 싶다.</label><textarea data-memo="plan" rows="2"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 분석</b> · 데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까?</li>
+          <li><b>오늘의 질문</b> · 데이터 속성별 특징은 어떻게 파악할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 분석 방법을 비교할 수 있다.</li>
+          <li>서로 다른 방법으로 데이터를 분석하고 그 결과를 비교할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout dv-ready">🧰 <b>오렌지3 준비</b> · 04에서 지난 시간에 저장한 <span class="mono">Sleep_Health_merge.csv</span>를 써요. 저장하지 못했다면 선생님이 알려 주는 폴더에서 내려받아 두세요.</div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 분석 방법부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 분석 방법 -->
+<section class="page" data-name="데이터 분석 방법" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 분석 방법에는 무엇이 있을까?</h2><p>교과서 89쪽 · 탐색적 데이터 분석 · 기술 통계 · 상관분석</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>본격적으로 분석하기 전에 데이터를 그려 보고 요약해 보며 <b>어떻게 생겼는지 탐색</b>하는 단계가 있어요. 이때 속성 <b>하나하나의 특징</b>을 보면 기술 통계, 속성 <b>두 개가 함께 변하는지</b>를 보면 상관분석이에요.</span></div>
+  <div class="card">
+    <h3>🔍 탐색적 데이터 분석</h3>
+    <div class="callout" style="margin-top:4px">데이터 분석의 초기 단계에서 데이터의 구조를 이해하고, 데이터가 가진 패턴과 이상치, 변수들 간의 관계 등을 이해하기 위해 수행되는 분석 방법. 데이터를 시각화하고 요약 통계를 사용해 패턴, 이상치, 변수들 간의 관계를 찾아내는 과정이에요.</div>
+    <div class="cards2">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">📏</div><h4>기술 통계 (descriptive statistics)</h4><p>각 데이터 속성별 <b>중심 경향과 분포</b>를 통계적으로 살펴보는 방법이에요. 데이터 속성 <b>자체의 특징</b>을 파악하는 데 주안점을 둬요.</p><p class="dv-tags"><span>대푯값 · 평균, 중앙값, 최빈값 등</span><span>산포도 · 사분위수 범위, 분산, 표준편차 등</span></p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">🔗</div><h4>상관분석 (correlation analysis)</h4><p>데이터 속성 간의 <b>상관관계</b>를 파악해 어떤 속성들이 서로 연관되어 있는지 확인하는 방법이에요. 키가 큰 사람이 몸무게도 더 나가는 경향처럼요.</p><p class="dv-tags"><span>상관관계</span><span>상관계수</span><small>상관분석은 다음 시간에 배워요.</small></p></div>
+    </div>
+    <p class="note">이러한 탐색적 데이터 분석은 주로 <b>기계학습</b>(컴퓨터가 데이터로 스스로 학습해 규칙을 찾고 새 데이터의 결과를 예측하는 것)이나 <b>딥러닝</b>(인공신경망으로 복잡한 패턴을 학습하는 기계학습의 한 분야) 모델을 적용하기 전에, 데이터의 특징을 파악해 모델의 방향을 정하려고 해요.</p>
+  </div>
+  <div class="card">
+    <h3>🧩 어느 분석일까?</h3>
+    <p class="muted" style="margin-top:0">무엇을 알아보려는지 읽고, 속성 하나의 특징을 보는지 두 속성 사이를 보는지 골라요.</p>
+    <div id="dvSort"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 대푯값 -->
+<section class="page" data-name="대푯값" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>데이터 전체를 하나의 값으로 나타낸다면?</h2><p>교과서 90~91쪽 · 대푯값 · 평균 · 중앙값 · 최빈값 · 함께 해결하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>한 사람의 데이터만으로는 그 직업 전체의 스트레스를 말할 수 없어요. 여러 사람의 데이터를 <b>하나의 값</b>으로 나타낸 것이 <b>대푯값</b>이에요. 평균·중앙값·최빈값 중 무엇을 쓰느냐에 따라 분석 결과가 달라질 수 있어요.</span></div>
+  <div class="cards3">
+    <div class="kc" style="--k:#2f6fd0"><div class="ic">➗</div><h4>평균 (mean)</h4><p>가장 많이 쓰는 대푯값이에요. 산술 평균이라고도 해요.</p>
+      <div class="dv-scroll"><table class="dv-tbl dv-sm"><tr><th>그룹</th><th>SNS 앱</th><th>게임 앱</th></tr><tr><td>A</td><td>10분</td><td>60분</td></tr><tr><td>B</td><td>50분</td><td>20분</td></tr></table></div>
+      <small class="muted">표 Ⅱ-7 그룹별 앱 종류별 1일 평균 사용 시간(90쪽)</small></div>
+    <div class="kc" style="--k:#e0702b"><div class="ic">🎚️</div><h4>중앙값 (median)</h4><p>크기 순서로 나열했을 때 <b>가장 가운데</b> 값이에요. 개수가 짝수이면 가운데 두 값의 평균이에요. 극단으로 치우친 값의 영향을 적게 받아요.</p></div>
+    <div class="kc" style="--k:#1f9d74"><div class="ic">🗳️</div><h4>최빈값 (mode)</h4><p><b>가장 자주</b> 나타나는 값이에요. 숫자로 나타낼 수 없거나 구분하는 용도로 쓰는 <b>범주형 데이터</b>의 대푯값으로 써요.</p></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>🧮 대푯값 계산기</h3>
+    <div class="row dv-tabs" id="dvRepTab"><button class="btn sm" data-t="0">수치 데이터 · 평균과 중앙값</button><button class="btn sm ghost" data-t="1">(선택) 범주 데이터 · 최빈값</button></div>
+    <div id="dvRepNum">
+      <p class="muted" style="margin:6px 0">표 Ⅱ-8 B그룹 학생 9명의 1일 SNS 앱 사용 시간(분)으로 시작해요(90쪽). <b>9번 학생</b>의 값을 막대로 바꾸어 보고, 학생을 더하거나 빼 보세요.</p>
+      <div class="ctrl"><label for="dvNine">9번(분)</label><input type="range" id="dvNine" min="20" max="240" value="200"><output id="dvNineOut">200</output></div>
+      <div class="row" style="margin:6px 0"><label class="dv-add">새 학생 <input type="number" id="dvAddV" min="0" max="240" value="34"> 분</label><button class="btn sm" id="dvAdd">학생 더하기</button><button class="btn sm ghost" id="dvDel">마지막에 더한 학생 빼기</button><button class="btn sm ghost" id="dvRepReset">표 Ⅱ-8로 되돌리기</button></div>
+      <svg viewBox="0 0 640 150" class="dv-svg" id="dvRepSvg" role="img" aria-label="SNS 앱 사용 시간 점그림과 평균·중앙값"></svg>
+      <div class="dv-sorted" id="dvSorted"></div>
+      <div class="dv-msg" id="dvRepMsg"></div>
+    </div>
+    <div id="dvRepCat" style="display:none">
+      <p class="muted" style="margin:6px 0">표 Ⅱ-9의 희망 진로 조사(91쪽)로 시작해요. 그룹을 고르고 <b>＋ / −</b>로 사람 수를 바꾸면 최빈값이 어떻게 바뀌는지 보세요.</p>
+      <div class="row dv-grp" id="dvGrp"><button class="btn sm" data-g="0">A그룹</button><button class="btn sm ghost" data-g="1">B그룹</button></div>
+      <div id="dvCat"></div>
+      <div class="dv-msg" id="dvCatMsg"></div>
+    </div>
+    <div class="memo" style="margin-top:12px"><label>✍️ 9번 학생 값을 200분에서 바꾸어 보았을 때 <b>평균</b>과 <b>중앙값</b>은 각각 어떻게 달라졌나요? 이런 데이터에는 어떤 대푯값이 알맞을까요?</label><textarea data-memo="repMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>👥 함께 해결하기 · 51점인데 탈락? <span class="muted" style="font-weight:400;font-size:.88rem">(91쪽)</span></h3>
+    <p style="margin-top:0">퀴즈 이벤트에서 <b>상위 50%</b>의 참가자에게 상품을 주었고, 평균 점수는 <b>50점</b>이었어요. 그런데 <b>51점</b>을 받은 길동이가 탈락했어요. 참가자가 10명이었다고 하고, <b>평균이 50점이면서 길동이가 탈락하는</b> 점수를 직접 만들어 보세요.</p>
+    <div class="dv-ev" id="dvEv"></div>
+    <div class="row" style="margin-top:6px"><button class="btn sm ghost" id="dvEvReset">처음 점수로</button><button class="btn sm ghost" id="dvEvHint">힌트 보기</button></div>
+    <div class="dv-msg" id="dvEvMsg"></div>
+    <p class="dv-hint" id="dvEvHintBox" style="display:none">힌트: 길동이보다 높은 사람이 5명 이상이어야 해요. 그런데 평균은 50점이어야 하니, 그만큼 나머지 몇 사람의 점수는 어떻게 되어야 할까요?</p>
+    <div class="memo" style="margin-top:10px"><label>✍️ 길동이가 탈락한 까닭을 <b>내가 만든 점수</b>를 예로 들어 설명하고, 상위 50%를 가르는 데는 어떤 대푯값을 봐야 하는지 적어 보세요.</label><textarea data-memo="eventMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 산포도 -->
+<section class="page" data-name="산포도" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터는 얼마나 흩어져 있을까?</h2><p>교과서 94~95쪽 · 산포도 · 분산 · 표준편차 · 사분위수 범위</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>평균이 같아도 데이터가 <b>평균 가까이 모여 있는지</b>, <b>멀리 흩어져 있는지</b>는 다를 수 있어요. 데이터의 분포가 중심값에서 얼마나 흩어져 있는지 나타내는 값이 <b>산포도</b>예요.</span></div>
+  <div class="card">
+    <h3>↔️ 그림 Ⅱ-5 산포도 <span class="muted" style="font-weight:400;font-size:.88rem">(94쪽 그림을 다시 그림, 점은 예시)</span></h3>
+    <div class="grid2 even">
+      <div><svg viewBox="0 0 320 120" class="dv-svg" id="dvFigA" role="img" aria-label="데이터들이 흩어져 있는 그림"></svg><p class="dv-cap">(a) 데이터들이 흩어져 있음</p></div>
+      <div><svg viewBox="0 0 320 120" class="dv-svg" id="dvFigB" role="img" aria-label="데이터들이 밀집해 있는 그림"></svg><p class="dv-cap">(b) 데이터들이 밀집해 있음</p></div>
+    </div>
+    <div class="cards3" style="margin-top:12px">
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">²</div><h4>분산</h4><p>각 값과 평균의 차이(<b>편차</b>)를 제곱한 뒤 그 <b>평균</b>을 낸 값이에요. 0 또는 양의 값이고, 평균 가까이 모이면 0에 가깝고 멀리 흩어지면 커져요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">√</div><h4>표준편차</h4><p>분산은 편차를 제곱해서 값이 과장될 수 있어요. 그래서 <b>분산의 제곱근</b>을 구해 원래 단위로 되돌린 값이 표준편차예요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">📦</div><h4>사분위수 범위 (IQR)</h4><p>크기 순서로 나열해 네 부분으로 나눌 때 <b>제3사분위수 − 제1사분위수</b>예요. 중앙값을 기준으로 가운데 50% 데이터가 놓인 범위예요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧪 산포도 비교기 <span class="muted" style="font-weight:400;font-size:.88rem">(두 반 10명씩, 예시 점수)</span></h3>
+    <p class="muted" style="margin-top:0">점을 좌우로 끌어 점수를 바꿀 수 있어요. 가는 선은 각 점수의 <b>편차</b>(평균과의 차이)예요. 분산은 교과서 정의대로 편차 제곱의 평균(÷ 10)으로 계산해요.</p>
+    <svg viewBox="0 0 660 300" class="dv-svg dv-drag" id="dvSp" role="img" aria-label="두 반 점수 점그림과 박스 플롯"></svg>
+    <div class="dv-scroll"><table class="dv-tbl dv-st" id="dvSpTbl"></table></div>
+    <div class="dv-mis">
+      <b>미션</b>
+      <ol>
+        <li>처음 점수에서 두 반의 <b>평균</b>과 <b>표준편차</b>를 비교해요.</li>
+        <li>B반에서 가장 낮은 점수(40점)를 왼쪽 끝까지 끌어 보세요. <b>표준편차</b>와 <b>사분위수 범위</b> 중 무엇이 더 많이 변하나요?</li>
+        <li>A반 점수를 끌어 A반의 표준편차를 B반보다 크게 만들어 보세요.</li>
+      </ol>
+      <div class="row"><button class="btn sm ghost" id="dvSpReset">처음 점수로</button></div>
+    </div>
+    <div class="dv-msg" id="dvSpMsg"></div>
+    <div class="memo" style="margin-top:10px"><label>✍️ 평균이 같은 두 반을 비교하며 <b>분산·표준편차·사분위수 범위</b>가 알려 주는 것을 적고, 한 점을 멀리 끌었을 때 어떤 값이 크게 달라졌는지 써 보세요.</label><textarea data-memo="spreadMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>📦 A반과 B반의 수학 점수 <span class="muted" style="font-weight:400;font-size:.88rem">(95쪽 박스 플롯을 다시 그림)</span></h3>
+    <svg viewBox="0 0 640 170" class="dv-svg" id="dvAB" role="img" aria-label="A반과 B반 수학 점수 박스 플롯"></svg>
+    <p class="note">A반은 사분위수 범위가 <b>25</b>(60~85)로 좁고, B반은 <b>40</b>(55~95)으로 넓어요. 상자가 넓을수록 점수 차이가 크고 산포도도 커요. 수염 끝 위치는 교과서 그림을 보고 대략 그렸어요.</p>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 오렌지3 직업별 스트레스 -->
+<section class="page" data-name="오렌지3 · 직업별 스트레스" data-acc="#d64535">
+  <div class="head"><div class="num">04</div><div><h2>직업별 스트레스 수준을 분석해 보자</h2><p>교과서 92~95쪽 · Group by · Select Rows · Bar Plot · (선택) Box Plot · Violin Plot</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>진영이의 궁금증을 데이터로 풀어 봐요. 지난 시간에 전처리한 <span class="mono">Sleep_Health_merge.csv</span>에서 데이터가 너무 적은 직업은 빼고, 직업별 스트레스 수준의 <b>평균과 중앙값</b>을 막대그래프로 비교해요(필수: 흐름도 1~8). 직업별 <b>흩어진 정도</b>는 아래 탐색기의 박스 플롯 탭으로 보고, 시간이 되면 오렌지3 Box Plot으로도 확인해요.</span></div>
+  <div class="callout dv-z">📌 <b>표준화된 값 읽기</b> · 이 파일의 수면 시간·수면의 질·신체 활동 수준·<b>스트레스 수준</b>·걸음 수는 지난 시간(81쪽)에 <b>표준화한 값</b>이라 0.909, −0.786처럼 보여요. 1~10 점수로 읽지 말고, <b>0보다 크면 전체 평균보다 높고, 0보다 작으면 낮다</b>고 읽어요. 막대그래프 세로축도 이 값이에요.
+    <details class="dv-det"><summary>원래 점수로 바꾸면 얼마쯤일까? (펼쳐 보기)</summary><p>표준화 전 스트레스 수준의 전체 평균은 약 5.4점, 표준편차는 약 1.8점이었어요. 그래서 0.909는 원래 점수로 약 7점, −0.786은 약 4점, −1.351은 약 3점이에요(원래 점수 ≈ 5.4 + 1.8 × 표준화 값).</p></details>
+  </div>
+  <div class="card">
+    <h3>🔀 오렌지3 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div class="dv-flowbox"><svg id="dvFlow" role="img" aria-label="직업별 스트레스 분석 위젯 연결 흐름도"></svg></div>
+    <div class="dv-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span><small>점선 테두리는 (선택) 위젯이에요.</small></div>
+    <div class="dv-tw" style="margin-top:12px"><table class="tbl dv-set" id="dvSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">Sleep_Health_merge.csv</span> 열기</td><td>373 instances</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Group by</b> (Transform)</td><td>File →</td><td>Group by: <b>Occupation</b>. 가운데 목록에서 <b>Person ID</b>를 골라 Aggregations의 <b>Count</b>만 체크</td><td>–</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Data Table</b> (Data)</td><td>Group by →</td><td>Person ID - Count 열 보기</td><td>직업 11개 중 데이터가 <b>30개 미만</b>인 직업 4개 찾기</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Select Rows</b> (Transform)</td><td>File →</td><td><b>Add Condition</b>을 네 번 눌러 Occupation <span class="mono">is not</span> 각각 Manager / Sales Representative / Scientist / Software Engineer</td><td>창 아래 숫자 373 → <b>362</b></td></tr>
+      <tr data-s="5"><td>5</td><td><b>Group by (평균)</b> (Transform)</td><td>Select Rows →</td><td>Group by: Occupation. <b>Stress Level</b> → <b>Mean</b>. 위젯 이름을 「Group by (평균)」으로 바꾸면 구분하기 쉬워요</td><td>–</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Bar Plot-평균</b> (Visualize)</td><td>Group by (평균) →</td><td>Values: <b>Stress Level - Mean</b>, Annotations: <b>Occupation</b></td><td>0보다 위로 올라간 직업, 아래로 내려간 직업</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Group by (중앙값)</b> (Transform)</td><td>Select Rows →</td><td>Group by: Occupation. <b>Stress Level</b> → <b>Median</b> (Mean은 체크 해제)</td><td>–</td></tr>
+      <tr data-s="8"><td>8</td><td><b>Bar Plot-중앙값</b> (Visualize)</td><td>Group by (중앙값) →</td><td>Values: <b>Stress Level - Median</b>, Annotations: <b>Occupation</b></td><td>평균 막대와 높낮이가 크게 다른 직업</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Box Plot</b> (Visualize) <small>(선택 · 탐색기 박스 플롯 탭으로 대신해도 돼요)</small></td><td>Select Rows →</td><td>Variable: <b>Stress Level</b>, Subgroups: <b>Occupation</b></td><td>상자(제1~제3사분위수)가 넓은 직업, 선처럼 좁은 직업</td></tr>
+      <tr data-s="10"><td>10</td><td><b>Violin Plot</b> (Visualize) <small>(선택)</small></td><td>Select Rows →</td><td>Variable: Stress Level, Subgroups: Occupation. Display에서 <b>Box plot</b>은 체크 해제, <b>Density dots</b>·<b>Show grid</b> 체크, Orientation <b>Horizontal</b>, Scale <b>Count</b></td><td>데이터가 두 구간에 몰려 있는 직업</td></tr>
+    </table></div>
+    <div class="callout dv-warn">💡 오렌지3 Box Plot에서 진한 파란 세로선은 <b>평균</b>, 노란 세로선은 <b>중앙값</b>, 파란 상자는 <b>제1사분위수~제3사분위수</b>예요. 상자 위의 「평균 ± 표준편차」 숫자도 읽어 봐요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="dvDone"></div>
+    <div class="memo">
+      <label>✍️ 그래프에서 찾은 것 · ① <b>평균</b>으로 볼 때와 <b>중앙값</b>으로 볼 때 높낮이가 다르게 보이는 직업 ② 박스 플롯(아래 탐색기 또는 오렌지3)에서 상자가 <b>넓은</b> 직업과 <b>매우 좁은</b> 직업, 그리고 그 뜻 <small>오렌지3가 안 되면 아래 탐색기로 찾아요.</small></label>
+      <textarea data-memo="jobMemo" rows="4"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📦 직업별 스트레스 대푯값 탐색기 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3 Box Plot 대신 · 막혔을 때)</span></h3>
+    <p class="muted" style="margin:0 0 6px">아래 탐색기는 <b>1~10 점수로 지어낸 예시 데이터</b>(직업마다 10~12명)예요. 실제 결과와 값은 다르지만, 대푯값과 박스 플롯을 읽는 방법은 같아요.</p>
+    <div class="row dv-tabs" id="dvJobTab"><button class="btn sm" data-t="mean">평균 막대</button><button class="btn sm ghost" data-t="med">중앙값 막대</button><button class="btn sm ghost" data-t="box">박스 플롯</button></div>
+    <svg viewBox="0 0 660 345" class="dv-svg" id="dvJob" role="img" aria-label="직업별 스트레스 예시 데이터 그래프"></svg>
+    <div class="dv-msg" id="dvJobMsg"></div>
+  </div>
+  <details class="card dv-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Bar Plot의 Values에 Stress Level - Mean이 없어요</b> → Group by에서 Stress Level의 Mean을 체크했는지, Bar Plot이 그 Group by 뒤에 이어졌는지 확인해요.</li>
+      <li><b>Select Rows에서 직업이 하나만 빠져요</b> → 조건 줄이 네 개인지, 연산자가 <span class="mono">is</span>가 아니라 <span class="mono">is not</span>인지 확인해요.</li>
+      <li><b>파일이 없어요</b> → 선생님이 알려 주는 폴더에서 <span class="mono">Sleep_Health_merge.csv</span>를 내려받아요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="4"></div>
+  <div class="callout">시간이 부족하면 다음 「(선택) 더 해 보기」 화면은 건너뛰고 <button class="btn sm" onclick="go(6)">마무리로 가기 →</button></div>
+</section>
+
+<!-- 5 (선택) 더 해 보기 -->
+<section class="page" data-name="(선택) 더 해 보기" data-acc="#c98a00">
+  <div class="head"><div class="num">05</div><div><h2>스스로 해결하기 · 파이썬으로 해 보기 <span class="dv-opt">선택</span></h2><p>교과서 94쪽 · 99쪽 · 시간이 남거나 다음 시간에 더 해요</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>오렌지3에 들어 있는 다른 데이터로 대푯값과 산포도를 스스로 구해 보고, 오늘 오렌지3로 한 분석을 파이썬 코드로도 살펴봐요.</span></div>
+  <div class="card">
+    <h3>🙋 스스로 해결하기 · Course Grades의 영어 과목 <span class="muted" style="font-weight:400;font-size:.88rem">(94쪽)</span></h3>
+    <p style="margin-top:0">오렌지3의 <b>Datasets</b> 위젯(Data 카테고리, 인터넷 연결 필요)에서 <b>Course Grades</b>를 찾아 불러와요. <b>Column Statistics</b>(교과서·옛 버전 이름은 Feature Statistics)로 평균·중앙값을, <b>Box Plot</b>으로 사분위수와 「평균 ± 표준편차」를 확인해요.</p>
+    <div class="memo"><label>영어 과목의 대푯값(평균·중앙값)과 산포도(표준편차·사분위수 범위), 그리고 그 값으로 알 수 있는 것</label><textarea data-memo="gradeMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🐍 파이썬으로 해 보기 ①~③ <span class="muted" style="font-weight:400;font-size:.88rem">(99쪽, 선생님이 알려 주는 노트북)</span></h3>
+    <div class="dv-tw"><table class="tbl dv-cells">
+      <tr><th>셀</th><th>코드가 하는 일</th><th>오렌지3에서는</th></tr>
+      <tr><td>①</td><td><span class="mono">pd.read_csv('Sleep_Health_merge.csv')</span>로 데이터 불러오기</td><td>File</td></tr>
+      <tr><td>②</td><td><span class="mono">value_counts()</span>로 직업별 데이터 수를 세고, 30개 이상인 직업만 남기기</td><td>Group by(Count) · Select Rows</td></tr>
+      <tr><td>③</td><td><span class="mono">groupby('Occupation')</span>로 묶어 <span class="mono">agg(['mean', 'median'])</span>로 평균·중앙값을 구하고 막대그래프 그리기</td><td>Group by(평균·중앙값) · Bar Plot</td></tr>
+    </table></div>
+    <p class="note">코랩 파일 창에 <span class="mono">Sleep_Health_merge.csv</span>를 올린 뒤 실행해요. pandas는 수면 장애의 <span class="mono">None</span>(장애 없음)을 빈칸처럼 읽을 수 있으니, 선생님 노트북의 안내를 따라요.</p>
+  </div>
+  <div class="card">
+    <h3>✅ 성취도 평가</h3>
+    <p style="margin-top:0">할 수 있게 된 것을 모두 골라 보세요.</p>
+    <div id="dvSelf"></div>
+  </div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">본격적인 분석에 앞서 그래프와 요약 통계로 데이터를 둘러보는 것이 탐색적 데이터 분석이다. 속성 하나의 모습은 기술 통계로, 두 속성이 함께 움직이는지는 상관분석으로 살핀다.</div>
+    <div style="--k:#e0702b">SNS 사용 시간에 200분 같은 값이 끼면 평균은 크게 끌려가지만 가운데 값인 중앙값은 거의 그대로다. 희망 진로처럼 범주로 나뉜 데이터는 가장 많이 나온 값으로 대표한다.</div>
+    <div style="--k:#9b4fc4">평균이 같은 두 반도 점수가 퍼진 모양은 다를 수 있다. 편차 제곱의 평균인 분산, 그 제곱근인 표준편차, 가운데 절반의 폭인 사분위수 범위로 흩어진 정도를 함께 본다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에 적은 「평균의 함정」 처음 생각을 다시 보고, 오늘 배운 낱말(대푯값, 평균·중앙값, 산포도)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터 속성별 특징은 어떻게 파악할 수 있을까?</b>
+    <div class="memo"><textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>대푯값 계산기에서 <b>200분</b>을 바꾸었을 때 평균과 중앙값의 변화, 알맞은 대푯값 설명하기</li>
+      <li>평균이 50점인데 <b>51점</b>을 받은 길동이가 탈락한 까닭을 내가 만든 점수로 설명하기</li>
+      <li>평균이 같은 두 반에서 <b>분산·표준편차·사분위수 범위</b>가 알려 주는 것 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

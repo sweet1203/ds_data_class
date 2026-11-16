@@ -1,0 +1,338 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 협력적 창의·융합 활동 · 단원 정리</span>
+      <h1>여행 동선<br>계획하기</h1>
+      <div class="story"><b>학생회가 학교 여행을 맡았다면?</b><br>모든 학생이 여행을 즐기려면 어떤 유형의 장소가 인기 있고 즐거운지 알아야 해요. 식당, 공원, 박물관 같은 여러 장소에 대한 <b>리뷰 평점 데이터</b>로 알아보고 여행 동선을 계획해 봐요. 「극장을 좋아하는 사람은 박물관도 좋아할까?」 「만족도가 높은 장소는 어디일까?」</div>
+      <p>오늘은 모둠이 Ⅱ단원에서 배운 <b>수집 → 전처리 → 시각화 → 분석</b>을 한 번에 이어 해 보고, 마지막에 Ⅱ단원 전체를 정리하며 단원 핵심 질문에 답해요.</p>
+      <ol>
+        <li>문제 정의 · 데이터</li><li>데이터 전처리</li><li>시각화 · 분석</li><li>진로 · 성찰</li><li>Ⅱ단원 정리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">모둠 정하기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🎯</i><div><b>문제 정의 · 데이터</b><small>누구의 평점인지 따져 보기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🧹</i><div><b>데이터 전처리</b><small>깨진 값 · 빈칸 · 0점 · 이상치</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📊</i><div><b>시각화 · 분석</b><small>장소별 평점과 평점 사이의 상관관계</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📚</i><div><b>Ⅱ단원 정리</b><small>핵심 질문에 답하기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>실제 여행 리뷰 데이터로 <b>데이터 준비와 분석</b>의 전 과정을 모둠이 함께 해 봐요. 단원을 시작할 때 던진 두 물음도 이 활동과 단원 정리를 거쳐 스스로 답해 봐요.</p>
+    </div>
+    <div class="cards2" style="margin-bottom:16px">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🧹</div><h4>단원 핵심 질문 · 데이터 준비</h4><p>데이터를 편향되지 않도록 수집하고 전처리하는 방법은 무엇이며, 데이터 분석을 위해 어떻게 시각화해야 할까?</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🔍</div><h4>단원 핵심 질문 · 데이터 분석</h4><p>데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까?</p></div>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">모둠 구성</span>
+        <p style="margin:0;font-size:.9rem">3명 내외가 한 모둠이에요. Ⅰ단원 활동처럼 역할을 나눠요.</p>
+        <ul style="font-size:.9rem">
+          <li><b>팀장</b> 모둠 활동을 진행하고 결과를 발표한다.</li>
+          <li><b>기술자</b> 화면 체험과 프로그램을 직접 다룬다.</li>
+          <li><b>기록자</b> 모둠이 정한 내용을 기록한다.</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">모둠 정하기</span>
+        <div class="memo" style="margin-top:0">
+          <label>모둠명</label><input type="text" data-memo="team" placeholder="예: 동선 설계단">
+          <label>나의 역할</label><div id="myRoleChips"></div>
+          <div class="saved"></div>
+        </div>
+      </div>
+      <div class="why">
+        <span class="kicker">50분 계획</span>
+        <ul>
+          <li>모둠 정하기 · 문제 정의 · 데이터 <b>10분</b></li>
+          <li>전처리 <b>9분</b> → 시각화 · 분석 <b>11분</b></li>
+          <li>진로 · 성찰 <b>6분</b> → Ⅱ단원 정리 <b>6분</b> → 마무리 <b>8분</b></li>
+        </ul>
+        <p style="font-size:.88rem;margin-top:8px" class="muted">모둠이 함께 이야기하되, 메모는 각자 내 화면에 적어요.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 문제 정의 · 데이터 →</button></div>
+  </div>
+</section>
+
+<!-- 1 문제 정의 · 데이터 -->
+<section class="page" data-name="문제 정의 · 데이터" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>문제 정의 · 데이터 수집 및 선택</h2><p>교과서 116쪽 · 1 문제 정의 · 2 데이터 수집 및 선택</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>먼저 「무엇을 알아내서 무엇을 정할지」를 한 문장으로 정해요. 그다음 쓸 데이터가 <b>누구의, 어떤</b> 평가인지 살펴봐요. 데이터가 우리 학생들을 대표하지 못하면 결론도 치우칠 수 있어요(데이터 편향).</span></div>
+  <div class="card">
+    <h3>1️⃣ 문제 정의</h3>
+    <div class="memo" style="margin-top:0">
+      <label>많은 학생들이 만족할 수 있는 장소를 선택하려면 어떻게 해야 할까요? 모둠이 해결할 문제를 한두 문장으로 정해요. <small>「무엇을 데이터로 알아보고 → 그것으로 무엇을 정할지」가 드러나게 써요.</small></label>
+      <textarea data-memo="probDef" rows="2"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>2️⃣ 데이터 수집 및 선택 · 여행 리뷰 평점 데이터</h3>
+    <p style="margin-top:0">교과서는 캐글에서 「Travel Review Rating Dataset」을 찾아 쓰게 해요. 이 데이터는 원래 UCI 머신러닝 저장소에 공개된 「Travel Review Ratings」예요. 파일은 선생님이 알려 주는 폴더에 있어요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🗺️</div><h4>무엇을 모았나</h4><p>구글 리뷰에서 <b>유럽 여러 관광지</b>에 남긴 사용자 평점이에요. 구글 평점은 별 1~5개인데, 이 표에는 장소 유형마다 그 사람이 준 평점의 <b>평균</b>이 0~5 사이 값으로 들어 있어요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🧾</div><h4>한 줄 = ?</h4><p>표의 한 줄은 <b>사용자 한 명</b>이에요. 첫 열 User는 사용자 번호, 나머지 열은 장소 유형이에요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">🔢</div><h4>크기</h4><p>아래 미리 보기 표를 보고 <b>장소 유형이 몇 개인지</b> 세어 보세요. 사용자는 모두 <b>5,456명</b>이에요.</p></div>
+    </div>
+    <h4 style="margin:14px 0 6px">👀 데이터 미리 보기 <span class="muted" style="font-weight:400;font-size:.85rem">(첫 5줄 · 옆으로 밀어 보세요)</span></h4>
+    <div class="rv-scroll"><table class="rv-tbl" id="rvPrev"></table></div>
+    <p class="note" id="rvSrc1">출처: Shini Renjith (2018), UCI Machine Learning Repository 「Travel Review Ratings」, CC BY 4.0. 화면의 표와 그래프는 UCI에 공개된 이 자료를 교과서 자료실 배포본 파일로 다시 계산해 만든 것이에요.</p>
+    <details class="rv-opt rv-rec">
+      <summary>📝 모둠 기록지 · 수집 방법과 데이터 크기 <span class="muted" style="font-weight:400;font-size:.85rem">(모둠 기록자가 적어요 · 나머지는 선택)</span></summary>
+      <div class="memo" style="margin-top:4px">
+        <label>수집 방법</label><input type="text" data-memo="collectHow" placeholder="어디에서, 어떤 데이터를 구했나요?">
+        <label>데이터 개수와 속성 <small>사용자 수, 장소 유형 수, 평점의 범위</small></label><input type="text" data-memo="dataSize">
+        <div class="saved"></div>
+      </div>
+    </details>
+  </div>
+  <div class="card">
+    <h3>🧭 이 평점은 누구의 평가일까? <span class="muted" style="font-weight:400;font-size:.88rem">(데이터 편향 점검)</span></h3>
+    <p class="muted" style="margin-top:0">「편향되지 않은 데이터」인지 따져 봐요. 우리 학교 학생의 만족을 알아보는 데 이 데이터를 그대로 쓰면 걸리는 점을 모두 골라요.</p>
+    <div id="biasChips"></div>
+    <div class="memo">
+      <label>✍️ 이 데이터가 <b>우리 학생들</b>을 대표하지 못할 수 있는 까닭과, 이를 줄이려면 무엇을 더 모으거나 어떻게 보완할지 적어요. <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="biasFix" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 전처리 -->
+<section class="page" data-name="데이터 전처리" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>데이터 전처리</h2><p>교과서 116쪽 · 3 데이터 전처리 · 데이터 변환 · 데이터 축소 · 결측치와 이상치 처리</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>진짜 데이터에는 <b>깨진 값, 빈칸, 이상한 점수</b>가 섞여 있어요. 먼저 찾아내고, 어떻게 처리할지 모둠이 정해요. 처리 방법에 따라 <b>남는 데이터</b>와 분석 결과가 달라질 수 있어요.</span></div>
+  <div class="card">
+    <h3>🔍 이상한 칸 찾기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 자료실 배포본에서 8줄 · 8개 열만 골라 그대로 옮김)</span></h3>
+    <p class="muted" style="margin-top:0">이상해 보이는 칸을 눌러 보세요. <span class="mono">⇥</span>는 눈에 보이지 않는 탭 문자가 들어 있다는 표시예요.</p>
+    <div class="rv-scroll"><table class="rv-tbl rv-chk" id="rvChk"></table></div>
+    <div class="rv-found" id="rvFound"></div>
+    <div class="rv-say" id="rvSay">칸을 누르면 그 값이 왜 이상한지(또는 괜찮은지) 알려 줘요.</div>
+    <button class="btn ghost sm" id="rvChkReset">처음부터 다시 찾기</button>
+  </div>
+  <div class="card">
+    <h3>🛠️ 어떻게 처리할까? <span class="muted" style="font-weight:400;font-size:.88rem">(정답이 하나가 아니에요. 모둠이 정하고 까닭을 적어요)</span></h3>
+    <div class="rv-pick">
+      <div><b>글자가 섞인 값</b><div id="ppBrokenChips"></div></div>
+      <div><b>빈칸</b><div id="ppBlankChips"></div></div>
+      <div><b>0점</b><div id="ppZeroChips"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>✂️ 이상치가 있는 줄을 지우면 몇 줄이 남을까?</h3>
+    <p class="muted" style="margin-top:0">열마다 사분위수로 하한값(Q1 − 1.5 × IQR)과 상한값(Q3 + 1.5 × IQR)을 구해, 범위를 벗어난 값이 <b>한 열이라도 있으면 그 줄(사용자)을 지운다</b>고 해 봐요. 열을 누르면 그 열의 이상치 줄을 지워요. 숫자는 그 열의 이상치 개수예요.</p>
+    <div id="rvIqrCols" class="rv-iqr"></div>
+    <div class="row" style="margin:8px 0;gap:6px"><button class="btn ghost sm" id="rvIqrAll">이상치가 있는 열 모두 고르기</button><button class="btn ghost sm" id="rvIqrNone">모두 풀기</button></div>
+    <div class="rv-left"><div class="rv-bar"><i id="rvLeftBar"></i></div><b id="rvLeft"></b></div>
+    <div class="rv-say" id="rvIqrSay"></div>
+  </div>
+  <div class="card">
+    <h3>📝 우리 모둠의 전처리 계획 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 116쪽 표)</span></h3>
+    <details class="rv-opt rv-rec">
+      <summary>📝 모둠 기록지 · 데이터 변환과 데이터 축소 <span class="muted" style="font-weight:400;font-size:.85rem">(모둠 기록자가 적어요 · 나머지는 선택)</span></summary>
+      <div class="memo" style="margin-top:4px">
+        <label>데이터 변환 <small>문자로 읽힌 열, 값의 범위를 맞추는 일 등</small></label><input type="text" data-memo="ppTrans">
+        <label>데이터 축소 <small>분석에 필요 없는 열이나 줄</small></label><input type="text" data-memo="ppReduce">
+        <div class="saved"></div>
+      </div>
+    </details>
+    <div class="memo">
+      <label>결측치와 이상치 처리 <small>위에서 고른 방법과 그 까닭, 이상치 줄을 지우면 몇 줄이 남는지까지 적어요. 질문폼 2번에 써요.</small></label><textarea data-memo="ppMissOut" rows="3"></textarea>
+      <div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 시각화 · 분석 -->
+<section class="page" data-name="시각화 · 분석" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터 시각화 · 데이터 분석</h2><p>교과서 117쪽 · 4 데이터 시각화 · 5 데이터 분석</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>장소 유형별로 평점이 얼마나 높은지 <b>막대그래프</b>로 비교하고, 두 장소의 평점이 함께 움직이는지 <b>산점도와 상관계수</b>로 알아봐요. 함께 높게 평가받는 장소끼리 묶으면 동선을 짜기 좋아요.</span></div>
+  <div class="card">
+    <h3>4️⃣ 장소별 평균 평점 <span class="muted" style="font-weight:400;font-size:.88rem">(5,456명 전체)</span></h3>
+    <div class="row" style="gap:6px;margin-bottom:8px">
+      <button class="btn ghost sm" id="rvZero">0점 빼고 보기(평가 없음으로 보기)</button>
+      <button class="btn ghost sm" id="rvSort">평점 높은 순서로</button>
+    </div>
+    <div class="rv-legend"><span style="--k:#9b4fc4">문화적 장소</span><span style="--k:#1f9d74">운동 및 피트니스</span><span style="--k:#e0702b">외식 및 유흥</span><span style="--k:#8a94a3">그 밖의 장소</span><small>묶음은 이 화면에서 교과서 117쪽 표에 맞춰 나눈 것이에요.</small></div>
+    <div class="rv-bars" id="rvBars"></div>
+    <div class="rv-say" id="rvBarSay"></div>
+    <details class="rv-opt rv-rec">
+      <summary>📝 모둠 기록지 · 4 데이터 시각화 표 <span class="muted" style="font-weight:400;font-size:.85rem">(모둠 기록자가 적어요 · 나머지는 선택)</span></summary>
+      <div class="memo" style="margin-top:4px">
+        <label>장소별 평점 분포 <small>평균 평점이 높은 장소와 낮은 장소, 0점을 빼면 달라지는 장소</small></label><input type="text" data-memo="vizDist">
+        <label>장소별 특성에 따른 인기도 차이 <small>어떤 묶음의 장소가 대체로 높게(낮게) 평가받았나요?</small></label><input type="text" data-memo="vizPop">
+        <div class="saved"></div>
+      </div>
+    </details>
+  </div>
+  <div class="card">
+    <h3>5️⃣ 장소 평점 상관 탐색기</h3>
+    <p class="muted" style="margin-top:0">두 장소 유형을 고르면, 사용자 200명(무작위로 고른 표본)의 산점도와 <b>전체 5,456명</b>으로 구한 상관계수가 나와요. 02에서 이상치 줄을 지우고 남은 <b>686명</b>으로 구한 상관계수도 함께 비교해요.</p>
+    <div class="row" style="gap:6px;margin-bottom:8px" id="rvQuick"></div>
+    <div class="grid2 rv-ex">
+      <div>
+        <div class="row" style="gap:6px;margin-bottom:6px">
+          <label class="rv-sel">가로축 <select id="rvSelX"></select></label>
+          <label class="rv-sel">세로축 <select id="rvSelY"></select></label>
+        </div>
+        <div class="rv-plotbox"><svg id="rvPlot" role="img" aria-label="두 장소 유형 평점의 산점도"></svg></div>
+        <label class="rv-chkline"><input type="checkbox" id="rvKeepOnly"> 이상치 줄을 지우고 남은 사람만 보기</label>
+      </div>
+      <div>
+        <div class="rv-r2">
+          <div><span class="muted">전체 5,456명</span><b id="rvRAll">–</b></div>
+          <div><span class="muted">이상치 줄 지운 686명</span><b id="rvRKeep">–</b></div>
+        </div>
+        <div class="rv-say" id="rvRSay"></div>
+        <h4 style="margin:12px 0 6px">전체에서 상관계수가 큰 짝 <span class="muted" style="font-weight:400;font-size:.85rem">(누르면 산점도로)</span></h4>
+        <div id="rvTop" class="rv-top"></div>
+      </div>
+    </div>
+    <p class="note">출처: Shini Renjith (2018), UCI Machine Learning Repository 「Travel Review Ratings」, CC BY 4.0. 교과서 자료실 배포본으로 계산했고, 결측 3칸은 열 평균으로 채웠어요. 「뚜렷한·보여요·거의 없음」은 0.7·0.3을 기준으로 이 화면에서 붙인 대략적인 말이에요(교과서 용어가 아님).</p>
+    <div class="memo">
+      <label>✍️ 우리 모둠의 여행 동선 제안 · 어떤 장소 유형을 함께 묶어 동선을 짤지, 그 근거가 된 그래프나 상관계수를 넣어 적어요. 전체와 686명의 결과가 달랐다면 어느 쪽을 믿을지도 적어요. <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="routePlan" rows="3"></textarea><div class="saved"></div>
+    </div>
+    <p class="muted" style="font-size:.9rem;margin:12px 0 4px">교과서 117쪽 분석 표 · 세 칸 가운데 <b>한 칸 이상</b> 적어요. 시간이 남으면 나머지도 채워요.</p>
+    <div class="rv-scroll"><table class="tbl rv-an">
+      <tr><th>문화적 장소<br><small>(박물관, 아트 갤러리 등)</small></th><th>운동 및 피트니스<br><small>(체육관, 수영장)</small></th><th>외식 및 유흥 장소</th></tr>
+      <tr>
+        <td><textarea data-memo="anCul" rows="3" placeholder="함께 높게 평가받는 장소, 상관계수"></textarea><div class="saved"></div></td>
+        <td><textarea data-memo="anFit" rows="3"></textarea><div class="saved"></div></td>
+        <td><textarea data-memo="anFood" rows="3"></textarea><div class="saved"></div></td>
+      </tr>
+    </table></div>
+  </div>
+  <details class="card rv-opt">
+    <summary>🍊 (선택) 오렌지3로 전체 흐름 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">남는 시간이나 다음 시간에</span></summary>
+    <p class="muted">선생님이 알려 주는 폴더의 <span class="mono">google_review_ratings.csv</span>로 아래 순서를 따라가요. 앞에서 배운 위젯을 모두 써요.</p>
+    <div class="rv-scroll"><table class="tbl rv-set">
+      <tr><th>순서</th><th>위젯 (카테고리)</th><th>설정 · 할 일</th><th>앞에서 배운 곳</th></tr>
+      <tr><td>1</td><td><b>File</b> (Data)</td><td>파일 열기, <b>User</b>는 Role을 <b>meta</b>로</td><td>67쪽</td></tr>
+      <tr><td>2</td><td><b>Edit Domain</b> (Transform)</td><td>문자로 읽힌 <b>local services</b>를 숫자형(Numeric)으로 바꾸기. <b>처음 쓰는 위젯</b>이에요 — 속성의 이름이나 형식을 바꿔 줘요.</td><td>새 위젯 · 데이터 변환</td></tr>
+      <tr><td>3</td><td><b>Impute</b> (Transform)</td><td>결측치를 <b>Average</b>(평균)로 채우기</td><td>78~79쪽</td></tr>
+      <tr><td>4</td><td><b>Box Plot</b> (Visualize)</td><td>열마다 Q1·Q3를 읽어 하한값·상한값 계산</td><td>79~80쪽</td></tr>
+      <tr><td>5</td><td><b>Formula</b> → <b>Select Rows</b> (Transform)</td><td>범위를 벗어나면 이상치로 표시하고, 이상치가 아닌 줄만 남기기</td><td>80쪽</td></tr>
+      <tr><td>6</td><td><b>Violin Plot</b> (Visualize)</td><td>장소별 평점 분포 보기</td><td>93쪽</td></tr>
+      <tr><td>7</td><td><b>Correlations</b> (Unsupervised)</td><td>Pearson, 장소 하나를 골라 다른 장소와의 상관계수 보기</td><td>98쪽</td></tr>
+      <tr><td>8</td><td><b>Preprocess</b> → <b>Heat Map</b></td><td>Normalize Features로 0~1 사이로 바꾼 뒤 히트맵 보기</td><td>112쪽</td></tr>
+    </table></div>
+    <p class="note">24개 열마다 상·하한값을 구해야 해서 시간이 오래 걸려요. 모둠이 관심 있는 장소 몇 개만 골라 해도 돼요. 이상치를 지운 뒤 몇 줄이 남는지 꼭 확인해요.</p>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 진로 · 성찰 -->
+<section class="page" data-name="진로 · 성찰" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>데이터 과학에 도전하는 사람들 · 성찰하기</h2><p>교과서 118쪽 · 117쪽 · 의료 분야 데이터 과학자, 성찰 및 발표, 평가하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터로 <b>사람들의 건강</b>을 돕는 데이터 과학자의 이야기를 읽고 내 진로와 이어 봐요. 그다음 오늘 활동을 돌아보며 아쉬운 점과 앞으로의 계획을 적고 스스로 평가해요.</span></div>
+  <div class="card">
+    <h3>🩺 데이터로 건강한 세상을 꿈꾸다 · 의료 분야 데이터 과학자</h3>
+    <p style="margin-top:0">의료 인공지능 기업에서 회사 제품의 성능을 평가하고 이전 제품과 비교하며, 인공지능의 성능을 잘 잴 수 있는 방법을 연구하는 사람이에요.</p>
+    <p class="muted" style="font-size:.88rem;margin-bottom:10px">질문 카드를 눌러 답을 확인해요. (인터뷰 내용을 줄여 다시 썼어요.)</p>
+    <div class="tcards rv-tc" id="careerCards"></div>
+    <div class="memo" style="margin-top:14px">
+      <label>🪪 나의 진로 메모 · 내가 관심 있는 분야에서 데이터 과학이 쓰일 수 있는 일 하나와, 그 일에 필요한 역량 가운데 내가 기르고 싶은 것</label>
+      <textarea data-memo="career" rows="2" placeholder="예: 관심 분야 — ○○ / 데이터가 쓰이는 일 — ○○ / 기르고 싶은 역량 — ○○"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📝 6 성찰 및 발표</h3>
+    <div class="grid2 even">
+      <div class="memo" style="margin-top:0"><label>아쉬운 점</label><textarea data-memo="regret" rows="2"></textarea><div class="saved"></div></div>
+      <div class="memo" style="margin-top:0"><label>앞으로의 계획</label><textarea data-memo="nextPlan" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <h3 style="margin-top:14px">📝 평가하기 · 자기 평가 <span class="muted" style="font-weight:400;font-size:.88rem">5 = 아주 잘함 · 1 = 많이 부족함</span></h3>
+    <div class="rv-scroll"><table class="rv-eval">
+      <tr><th class="l">평가 영역</th><th class="l">평가 기준</th><th>자기 평가</th></tr>
+      <tr><td class="l"><b>문제 정의</b></td><td class="l">주어진 주제가 해결하려는 목표에 적합한가?</td><td><div id="eval1"></div></td></tr>
+      <tr><td class="l"><b>데이터 수집 및 선택</b></td><td class="l">문제 해결을 위해 편향적이지 않은 데이터를 선정하였는가?</td><td><div id="eval2"></div></td></tr>
+      <tr><td class="l"><b>데이터 전처리와 시각화</b></td><td class="l">데이터를 전처리하여 오류 가능성을 최소화하였는가?</td><td><div id="eval3"></div></td></tr>
+      <tr><td class="l"><b>데이터 분석</b></td><td class="l">데이터 시각화 및 속성 간의 관계를 파악하며 분석하였는가?</td><td><div id="eval4"></div></td></tr>
+      <tr><td class="l"><b>결과</b></td><td class="l">해결 방안이 구체적이며 목표 달성에 적합한가?</td><td><div id="eval5"></div></td></tr>
+    </table></div>
+    <details class="rv-opt" style="margin-top:8px">
+      <summary>동료 평가 (선택)</summary>
+      <div class="memo" style="margin-top:4px"><label>다른 모둠 발표를 듣고, 위 다섯 항목 가운데 잘한 점이나 더 살펴보면 좋을 점을 한 가지씩 적어요.</label><textarea data-memo="peerNote" rows="2"></textarea><div class="saved"></div></div>
+    </details>
+  </div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 Ⅱ단원 정리 -->
+<section class="page" data-name="Ⅱ단원 정리" data-acc="#d64535">
+  <div class="head"><div class="num">05</div><div><h2>Ⅱ단원 정리: 데이터 준비와 분석</h2><p>교과서 119쪽 · 주요 개념 정리</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>Ⅱ단원에서 배운 낱말을 두 묶음으로 돌아보고, <b>새로운 상황 문장</b>에서 알맞은 개념을 떠올려 봐요. 그다음 퀴즈로 확인해요.</span></div>
+  <div class="cards2">
+    <div class="kc" style="--k:#2f6fd0"><div class="ic">🧹</div><h4>1. 데이터 준비</h4><p>종속 변수 · 독립 변수 · 데이터 수집 방법 · 데이터 편향(확증 · 사회적 · 선택 편향) · 요약 통계량 · 데이터 전처리(정제 · 통합 · 축소 · 변환) · 결측치(제거 · 대체) · 이상치(사분위수 · IQR · 하한값 · 상한값) · 데이터 통합 · 스케일링(정규화 · 표준화) · 데이터 시각화(시간 · 분포 · 관계 · 공간)</p></div>
+    <div class="kc" style="--k:#1f9d74"><div class="ic">🔍</div><h4>2. 데이터 분석</h4><p>탐색적 데이터 분석 · 기술 통계 · 대푯값(평균 · 중앙값 · 최빈값) · 산포도(분산 · 표준편차 · 사분위수 범위) · 상관분석(상관관계 · 상관계수 · 산점도) · 인과관계 · 데이터 통합과 상관분석으로 여행지 분석하기</p></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>📝 이 상황의 개념은?</h3>
+    <p class="muted" style="margin-top:0;font-size:.9rem">빈칸에 들어갈 말을 먼저 떠올린 뒤 눌러서 확인하세요. 한 번 더 누르면 다시 가려져요.</p>
+    <ol class="rv-blanks">
+      <li>학교 앞 헬스장 회원에게만 「하루 운동 시간」 설문을 받았더니 전교생보다 운동 시간이 훨씬 길게 나왔다. 특정 조건의 사람만 모여 전체를 대표하지 못한 이 현상은 <button class="rv-blank" data-a="선택 편향">?</button>이다.</li>
+      <li>체육 대회 기록표에서 몇 학생의 50m 달리기 기록 칸이 비어 있어, 같은 반 기록의 중앙값으로 채웠다. 비어 있던 칸은 <button class="rv-blank" data-a="결측치">?</button>이고, 이렇게 채우는 방법은 대체이다.</li>
+      <li>키(cm)와 하루 걸음 수처럼 단위와 범위가 다른 두 속성을 함께 비교하려고, 각 속성의 가장 작은 값은 0, 가장 큰 값은 1이 되게 바꾸었다. 이 스케일링 방법은 <button class="rv-blank" data-a="정규화">?</button>이다.</li>
+      <li>동아리 부원 9명의 한 달 용돈 가운데 한 명만 매우 많아 평균이 크게 올라갔다. 이럴 때는 값을 크기 순서로 늘어놓았을 때 한가운데 오는 <button class="rv-blank" data-a="중앙값">?</button>이 대표로 더 알맞다.</li>
+      <li>편의점의 우산 판매량과 따뜻한 음료 판매량이 함께 늘었지만, 둘 다 비 오고 쌀쌀한 날씨 때문일 수 있다. 상관관계가 있어도 <button class="rv-blank" data-a="인과관계">?</button>가 있다고 단정할 수 없다.</li>
+    </ol>
+  </div>
+  <details class="card rv-opt">
+    <summary>✅ 역량 Check! <span class="muted" style="font-weight:400;font-size:.88rem">(선택 · 이 단원에서 길러진 역량을 모두 골라요)</span></summary>
+    <div id="unitComp" style="margin-top:8px"></div>
+  </details>
+  <div class="quiz" data-quiz="5"></div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 단원 핵심 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">여행 리뷰 평점은 리뷰를 남긴 사람들의 평가라서 <b>우리 학생들을 그대로 대표하지 않을 수 있다</b>. 누구의 데이터인지 따지고, 부족하면 설문처럼 다른 데이터를 더 모아 편향을 줄인다.</div>
+    <div style="--k:#e0702b">깨진 값·빈칸·0점을 찾아 <b>변환·대체·제거</b>를 정하는 일이 전처리다. 이상치가 하나라도 있는 줄을 모두 지웠더니 5,456명 가운데 686명만 남은 것처럼, 처리 방법에 따라 <b>남는 데이터와 결론</b>이 달라진다.</div>
+    <div style="--k:#9b4fc4">장소별 평균은 <b>막대그래프</b>로, 두 장소 평점의 관계는 <b>산점도와 상관계수</b>로 본다. 함께 높게 평가받는 장소를 묶어 동선을 짜되, 상관관계를 원인과 결과로 단정하지 않는다.</div>
+  </div>
+  <div class="card">
+    <h3>Ⅱ단원 핵심 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">①은 꼭, ②는 시간이 남으면 답해요. 오늘 활동과 지금까지 배운 낱말(편향, 결측치, 이상치, 정규화·표준화, 시각화, 대푯값, 산포도, 상관계수 등)을 넣어 내 말로 답해 보세요.</p>
+    <div class="memo">
+      <label>① 데이터를 편향되지 않도록 수집하고 전처리하는 방법은 무엇이며, 데이터 분석을 위해 어떻게 시각화해야 할까?</label><textarea data-memo="keyQ1" rows="3"></textarea>
+      <label>② (선택) 데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까? <small>①을 쓰고 시간이 남으면 답해요.</small></label><textarea data-memo="keyQ2" rows="3"></textarea>
+      <div class="saved"></div>
+    </div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>여행 리뷰 평점 데이터가 <b>우리 학생들을 대표하지 못할 수 있는 까닭</b>과, 편향을 줄이려고 더 모으거나 보완할 방법 설명하기</li>
+      <li>모둠이 정한 <b>결측치·이상치 처리 방법</b>과 그 까닭, 이상치 줄을 모두 지울 때 생기는 문제 설명하기</li>
+      <li>장소별 평점과 <b>상관계수</b>를 근거로 모둠의 여행 동선 제안과 그 해석에서 조심할 점 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

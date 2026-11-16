@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터 통합과 스케일링</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202c; --muted:#5b6776; --paper:#f3efe7; --card:#fff; --line:#e3ddd2;
+    --navy:#0f2742; --amber:#f2a516; --red:#d64535; --mint:#1f9d74;
+    --acc:#2f6fd0; --acc-soft:#e6eefb;
+    --shadow:0 18px 50px rgba(15,39,66,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.65;
+    background-image:radial-gradient(rgba(15,39,66,.07) 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column}
+  .top{position:sticky;top:0;z-index:10;background:rgba(15,39,66,.97);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+  .brand{font-family:"Black Han Sans",sans-serif;font-size:1.15rem;letter-spacing:.01em;white-space:nowrap;color:inherit;text-decoration:none}
+  .steps{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps button{flex:0 0 auto;border:0;background:transparent;color:#9fb3cc;font:inherit;font-size:.82rem;padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .steps button.on{background:var(--amber);color:var(--navy);font-weight:900}
+  .steps button.done::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fd3a5;margin-left:5px;vertical-align:middle}
+  .score{font-size:.85rem;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .progress{height:4px;background:rgba(15,39,66,.12)}
+  .progress i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+  main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:26px 20px 30px}
+  .page{display:none}
+  .page.on{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1) both}
+  .page.on.back{animation-name:enterBack}
+  @keyframes enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes enterBack{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  .head{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .num{font-family:"Black Han Sans",sans-serif;font-size:4.2rem;line-height:.85;color:var(--acc);opacity:.9}
+  .head h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:2.1rem;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .head p{margin:4px 0 0;color:var(--muted)}
+  .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;border:1px solid rgba(0,0,0,.04)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .grid2.even{grid-template-columns:1fr 1fr}
+  @media (max-width:860px){.grid2,.grid2.even{grid-template-columns:1fr}.num{font-size:3rem}.head h2{font-size:1.6rem}}
+  h3{margin:0 0 8px;font-size:1.1rem}
+  h4{margin:0 0 4px}
+  p{margin:6px 0}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .book{display:inline-block;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:center}
+  th{color:var(--muted);font-weight:700;font-size:.85rem}
+  td.l,th.l{text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .chip.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .btn{border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;transition:transform .1s, box-shadow .2s;box-shadow:0 6px 16px rgba(15,39,66,.18)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+  .btn.sm{padding:5px 12px;font-size:.88rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctrl{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:4px 10px;margin:4px 0}
+  .ctrl label{font-weight:900;font-size:.95rem}
+  .ctrl output{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  input[type=text],input[type=number]{font:inherit;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px;background:#fff;color:var(--ink)}
+  .big{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+  .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
+  .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
+  .cx>h3{margin:0 0 4px;font-size:1.15rem}
+  .cx>.lead2{color:var(--muted);margin:0 0 12px}
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media (max-width:860px){.qa{grid-template-columns:1fr}}
+  .qa>div{background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .qa b.q{display:block;color:var(--acc);margin-bottom:3px}
+  .vsteps{list-style:none;margin:0;padding:0;counter-reset:v}
+  .vsteps>li{position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line)}
+  .vsteps>li:first-child{border-top:0}
+  .vsteps>li::before{counter-increment:v;content:counter(v);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.9rem}
+  .vsteps p{margin:2px 0 0;font-size:.93rem}
+  .case{background:#fff8e6;border:2px solid #f6d58a;border-radius:16px;padding:16px 20px;margin-bottom:18px}
+  .case>h3{margin:0 0 8px;font-size:1.05rem;color:#8a5a00}
+  /* 퀴즈 */
+  .quiz{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:16px;padding:20px 22px;margin-top:6px;box-shadow:var(--shadow)}
+  .quiz .qh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .quiz .qh b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.25rem;color:var(--amber)}
+  .quiz .qh span{font-size:.85rem;color:#a9bbd2}
+  .qi{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;margin-top:10px}
+  .qi .qq{font-weight:700;margin-bottom:8px}
+  .qi .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .qi .opts button{font:inherit;font-size:.93rem;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .qi .opts button:hover:not(:disabled){border-color:var(--amber)}
+  .qi .opts button.right{background:var(--mint);border-color:var(--mint);font-weight:700}
+  .qi .opts button.wrong{background:var(--red);border-color:var(--red);text-decoration:line-through}
+  .qi .opts button:disabled{cursor:default}
+  .qi .why{margin-top:8px;font-size:.9rem;color:#d7e3f2;display:none}
+  .qi.answered .why{display:block}
+  .qi.answered.correct{box-shadow:inset 4px 0 0 var(--mint)}
+  .qi.answered.incorrect{box-shadow:inset 4px 0 0 var(--red)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(243,239,231,.94);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+  .foot .btn{min-width:110px}
+  .foot .pg{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  /* 표지 */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 20% 0%,#24507f 0%,#0f2742 55%,#0a1a2e 100%);color:#fff;min-height:520px;padding:46px 44px;box-shadow:var(--shadow)}
+  .cover canvas{position:absolute;right:0;top:0;height:100%;width:62%;image-rendering:pixelated;opacity:.95}
+  .cover .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0f2742 34%,rgba(15,39,66,.75) 50%,rgba(15,39,66,0) 70%)}
+  .cover .in{position:relative;max-width:560px}
+  .cover .tag{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.85rem;padding:4px 12px;border-radius:999px}
+  .cover h1{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:3.1rem;line-height:1.15;margin:16px 0 10px}
+  .cover p{color:#c8d6e8;font-size:1.05rem}
+  .cover ol{margin:18px 0 26px;padding-left:20px;color:#e1e9f4;columns:2;column-gap:28px;font-size:.95rem}
+  @media (max-width:700px){.cover{padding:30px 22px}.cover h1{font-size:2.2rem}.cover ol{columns:1}.cover canvas{width:100%;opacity:.3}.cover .fade{display:none}}
+  .today{margin-top:26px}
+  .kicker{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:1.15rem;color:var(--navy);margin-bottom:6px;border-bottom:4px solid var(--amber);line-height:1.2}
+  .today-lead{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+  .today-lead p{font-size:1.12rem;margin:6px 0 0}
+  .why3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  @media (max-width:900px){.why3{grid-template-columns:1fr}}
+  .why{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 22px}
+  .why ul{margin:6px 0 0;padding-left:18px;font-size:.95rem}
+  .why li{margin:6px 0}
+  .why ul.can{list-style:none;padding:0}
+  .why ul.can li{padding-left:28px;position:relative}
+  .why ul.can li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .why ul.uses{list-style:none;padding:0}
+  .why ul.uses li{border-left:3px solid var(--amber);padding-left:10px}
+  .glossary-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .glossary-head .muted{font-size:.88rem}
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.glossary{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.glossary{grid-template-columns:1fr}}
+  .gcard{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:#fff;border-radius:14px;padding:16px 16px 12px;box-shadow:var(--shadow);border-top:6px solid var(--g);position:relative;transition:transform .18s, box-shadow .18s}
+  .gcard:hover,.gcard:focus-visible{transform:translateY(-4px);box-shadow:0 22px 50px rgba(15,39,66,.16)}
+  .gcard:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+  .gcard i{position:absolute;right:14px;top:8px;font-style:normal;font-family:"Black Han Sans",sans-serif;font-size:1.9rem;color:var(--g);opacity:.25}
+  .gcard h4{margin:0 0 6px;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;color:var(--g)}
+  .gcard dl{margin:0;font-size:.88rem;line-height:1.45}
+  .gcard dt{font-weight:900;margin-top:7px}
+  .gcard dd{margin:1px 0 0;color:#3c4654}
+  .prob{display:grid;grid-template-columns:60px 1fr 46px;gap:6px;align-items:center;font-size:.88rem;min-width:200px}
+  .prob i{display:block;height:12px;border-radius:6px;background:var(--acc)}
+  .apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:860px){.apps{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:2rem;display:block}
+  .apps button b{display:block}
+  .appd{display:none}
+  .appd.on{display:block;animation:enter .35s both}
+  .ex2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:640px){.ex2{grid-template-columns:1fr}}
+  .ex2>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem;border-left:4px solid var(--acc)}
+  .try{margin-top:12px;background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+  .try ol{margin:4px 0 0;padding-left:20px}
+  /* 3단원 공통 */
+  .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
+  .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
+  .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
+  .route .st i{font-style:normal;font-size:1.6rem}
+  .route .st b{display:block;font-size:1.02rem}
+  .route .st small{color:#c8d6e8;font-size:.82rem}
+  .route .ar{color:var(--amber);text-align:center;font-weight:900;opacity:0;animation:rin .5s forwards}
+  @keyframes rin{to{opacity:1;transform:none}}
+  @media (max-width:1080px){.route{position:relative;right:auto;top:auto;width:100%;margin-top:22px}}
+  .story{background:rgba(255,255,255,.08);border-left:4px solid var(--amber);border-radius:10px;padding:10px 14px;margin:14px 0;color:#e1e9f4;font-size:.95rem}
+  .story b{color:#fff}
+  /* 카드 묶음 */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:900px){.cards3,.cards4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards3,.cards2,.cards4{grid-template-columns:1fr}}
+  .kc{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:14px 16px;border-top:6px solid var(--k,var(--acc))}
+  .kc h4{color:var(--k,var(--acc));font-size:1.05rem;margin:0 0 4px}
+  .kc p{font-size:.92rem;margin:4px 0 0}
+  .kc .ic{font-size:1.7rem;line-height:1}
+  .kc small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+  .tagt{display:inline-block;font-size:.76rem;font-weight:900;border-radius:999px;padding:1px 9px;background:color-mix(in srgb,var(--k,var(--acc)) 14%,white);color:var(--k,var(--acc));margin:6px 4px 0 0}
+  /* 연표 */
+  .tl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tl button{flex:1;min-width:92px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;font:inherit;font-weight:900;cursor:pointer;color:var(--ink)}
+  .tl button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.tlv{grid-template-columns:1fr}}
+  .tlv>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--k)}
+  .tlv h4{color:var(--k)}
+  .tlv .it{margin:6px 0 0;font-size:.93rem}
+  .tlv .it b{display:block}
+  /* 분류 게임 */
+  .sit{background:#fbfaf7;border:2px dashed var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-height:170px}
+  .sit .cnt{font-size:.82rem;color:var(--muted)}
+  .sit .sq{font-size:1.08rem;font-weight:900;margin:6px 0 12px;min-height:52px}
+  .sit .ic{font-size:2rem}
+  .sit .row{justify-content:center}
+  .sit .fb{min-height:24px;margin-top:8px;font-size:.93rem}
+  .sit .cat{border:2px solid var(--k);color:var(--k);background:#fff;font-weight:900}
+  .sit .cat:hover{background:color-mix(in srgb,var(--k) 12%,white)}
+  .board{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;margin-top:12px}
+  @media (max-width:760px){.board{grid-template-columns:1fr 1fr}}
+  .board>div{background:#fff;border-radius:12px;border-top:5px solid var(--k);padding:8px 10px;font-size:.84rem;min-height:70px}
+  .board>div b{display:block;color:var(--k);font-size:.92rem}
+  .board>div span{display:block;border-top:1px dashed var(--line);padding:3px 0}
+  .board>div span.x{color:var(--red)}
+  /* 뒤집는 카드 */
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .tcard{perspective:900px;height:172px;cursor:pointer}
+  .tcard .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .tcard.flip .in{transform:rotateY(180deg)}
+  .tcard .f,.tcard .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:12px 14px;box-shadow:0 6px 16px rgba(15,39,66,.09);overflow:auto}
+  .tcard .f{background:#fff;border-top:6px solid var(--acc);display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .tcard .f i{font-style:normal;font-size:2rem;line-height:1.1}
+  .tcard .f b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;line-height:1.25;margin-top:4px}
+  .tcard .f small{color:var(--muted);font-size:.78rem;margin-top:6px}
+  .tcard .b{background:var(--acc);color:#fff;transform:rotateY(180deg);font-size:.9rem;line-height:1.5}
+  .tcard .b .x{margin-top:6px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px;font-size:.84rem}
+  /* 사례 탭 */
+  .apps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .apps.a6{grid-template-columns:repeat(6,1fr)}
+  @media (max-width:860px){.apps,.apps.a6{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.apps,.apps.a6{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:12px 8px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s;font-size:.92rem}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:1.8rem;display:block}
+  .apps button b{display:block}
+  .cview{margin-top:14px}
+  .pr{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+  @media (max-width:760px){.pr{grid-template-columns:1fr}}
+  .pr>div{border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .pr .p{background:#fdecea;border-left:5px solid var(--red)}
+  .pr .s{background:#e7f6ef;border-left:5px solid var(--mint)}
+  .pr h4{font-size:.95rem}
+  .pr .p h4{color:#9b2c20}.pr .s h4{color:#13684d}
+  .dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:10px;background:#fbfaf7;border-radius:10px;padding:10px 12px}
+  .dl b{color:var(--acc)}
+  /* 메모 */
+  .memo{margin-top:10px}
+  .memo label{display:block;font-weight:700;font-size:.93rem;margin:10px 0 4px}
+  .memo label small{font-weight:400;color:var(--muted)}
+  .memo input[type=text]{width:100%}
+  textarea{font:inherit;width:100%;min-height:64px;padding:8px 10px;border:1px solid #c5ccd5;border-radius:8px;resize:vertical;color:var(--ink);background:#fff}
+  .saved{font-size:.8rem;color:var(--mint);min-height:1em}
+  /* 투표 */
+  .vote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:560px){.vote{grid-template-columns:1fr}}
+  .vote button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center;font-weight:900}
+  .vote button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .vote button small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+  .reveal{display:none;margin-top:12px}
+  .reveal.on{display:block;animation:fadein .4s both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .pct{display:grid;grid-template-columns:120px 1fr 50px;gap:8px;align-items:center;margin:6px 0;font-size:.93rem}
+  .pct i{display:block;height:16px;border-radius:8px;background:var(--acc);width:0;transition:width .8s}
+  /* 질문폼 연결 */
+  .formgo{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-top:18px}
+  .formgo .kicker{color:#fff;border-bottom-color:var(--amber)}
+  .formgo h3{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;margin:4px 0 8px}
+  .formgo ol{margin:6px 0 12px;padding-left:22px;color:#e1e9f4}
+  .formgo ol li{margin:6px 0}
+  .formgo p{color:#c8d6e8;font-size:.92rem}
+  .formgo .go{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:1.1rem;text-decoration:none;border-radius:12px;padding:12px 22px;margin-top:6px}
+  .formgo .go:hover{filter:brightness(1.05)}
+  .msum{background:#fff;border-radius:14px;padding:12px 16px;margin-top:12px;color:var(--ink);font-size:.9rem}
+  .msum h4{color:var(--navy)}
+  .msum dl{margin:6px 0 0}
+  .msum dt{font-weight:700;margin-top:8px;color:var(--muted);font-size:.84rem}
+  .msum dd{margin:2px 0 0;white-space:pre-wrap}
+  .msum dd.e{color:#aab2bd}
+  .key3{display:grid;gap:10px;margin-bottom:18px}
+  .key3 div{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--k);font-size:1.02rem}
+  .note{font-size:.84rem;color:var(--muted);margin-top:8px}
+  .flow2{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .flow2>div{flex:1;min-width:140px;background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .flow2>div b{display:block}
+  .flow2>div span{font-size:.88rem}
+  .flow2>.ar{flex:0 0 auto;min-width:0;background:none;border:0;align-self:center;font-weight:900;color:var(--muted);padding:0}
+  @media (max-width:640px){.flow2>.ar{flex-basis:100%;text-align:center;transform:rotate(90deg)}}
+  .chk{display:flex;flex-wrap:wrap;gap:8px}
+  .chk button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .chk button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .tbl td,.tbl th{padding:8px 10px;vertical-align:top}
+  .tbl td{text-align:left;font-size:.92rem}
+  .mx{min-width:560px}
+  .mx th{background:#fbfaf7}
+  .mx td{border:1px solid var(--line);height:74px;width:30%;font-size:.86rem;cursor:pointer;background:#fff;transition:background .2s}
+  .mx td:hover{background:var(--acc-soft)}
+  .mx td.fill{background:#e7f6ef;cursor:default}
+  .mx td.bad{background:#fdecea}
+  .mx th.r{white-space:nowrap}
+  #mxPool button{border-radius:12px;text-align:left;max-width:100%}
+  /* 4단원 */
+  .sdg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media (max-width:760px){.sdg{grid-template-columns:repeat(3,1fr)}}
+  .sdg button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;padding:8px 6px;color:#fff;background:var(--c);min-height:74px;font-size:.78rem;line-height:1.3;font-weight:700;display:flex;flex-direction:column;gap:2px;transition:transform .15s}
+  .sdg button b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.3rem;line-height:1}
+  .sdg button:hover,.sdg button.on{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .sdg button.on{outline:3px solid var(--navy)}
+  .sdgv{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:6px solid var(--c,#0f2742);min-height:60px}
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.five{grid-template-columns:1fr}}
+  .five>div{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:12px 12px;border-top:6px solid var(--k)}
+  .five b.n{font-family:"Black Han Sans",sans-serif;color:var(--k);font-size:1.2rem}
+  .five h4{margin:2px 0 4px;font-size:.98rem}
+  .five p{font-size:.86rem;margin:4px 0}
+  .five .ml{margin-top:8px;background:color-mix(in srgb,var(--k) 10%,white);border-radius:8px;padding:6px 8px;font-size:.82rem}
+  .quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:6px;margin-top:8px}
+  .quad .ax{font-size:.78rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .quad .ax.v{writing-mode:vertical-rl}
+  .quad .cell{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 8px;font-size:.84rem;cursor:pointer}
+  .quad .cell.best{border-color:var(--mint);background:#e7f6ef}
+  .quad .cell small{display:block;color:var(--muted);font-size:.74rem}
+  .quad .cell span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin:2px 2px 0 0}
+  .qbuild{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:1.08rem;font-weight:700;background:#fff8e6;border:2px solid #f6d58a;border-radius:12px;padding:12px 14px}
+  .qbuild input{flex:1;min-width:200px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px}
+  .plan{width:100%}
+  .plan td:first-child{width:150px;font-weight:700;font-size:.9rem;background:#fbfaf7}
+  .plan input{width:100%;font:inherit;padding:5px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 시뮬레이터 */
+  .sim{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.sim{grid-template-columns:1fr}}
+  .sim .cls{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .sim .cls h4{color:var(--k);display:flex;justify-content:space-between}
+  .sim .cls ul{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+  .sim .cls li.new{color:var(--k);font-weight:700}
+  .cand{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cand button{border:2px dashed var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--ink)}
+  .cand button.on{border-style:solid;background:color-mix(in srgb,var(--k) 15%,white);font-weight:700}
+  .tt td,.tt th{padding:6px 8px;font-size:.88rem}
+  .tt td.r{color:var(--mint);font-weight:900}.tt td.w{color:var(--red);font-weight:900}
+  .score2{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .score2 div{flex:1;min-width:140px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px 12px;text-align:center}
+  .score2 b{display:block;font-family:"Black Han Sans",sans-serif;font-size:1.8rem;color:var(--acc)}
+  /* 스크래치 블록 */
+  .blocks{font-family:ui-sans-serif,system-ui;font-size:.86rem;display:inline-block}
+  .blk{display:block;border-radius:6px;padding:5px 10px;margin:3px 0;color:#fff;width:max-content;max-width:100%}
+  .blk.ev{background:#ffbf00;color:#333;border-radius:14px 14px 6px 6px}
+  .blk.ctl{background:#ffab19;color:#333}
+  .blk.ml{background:#4c97ff}
+  .blk.lk{background:#9966ff}
+  .blk.in{margin-left:22px}
+  .blk i{font-style:normal;background:rgba(255,255,255,.9);color:#333;border-radius:10px;padding:0 6px;margin:0 2px}
+  .penguin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:560px){.penguin{grid-template-columns:1fr}}
+  .penguin div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .dist td,.dist th{padding:6px 8px;font-size:.88rem;text-align:center}
+  .dist tr.near{background:#fff4d6;font-weight:900}
+  .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.roles{grid-template-columns:1fr 1fr}}
+  .roles div{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px;text-align:center;font-size:.84rem}
+  .roles div i{font-style:normal;font-size:1.6rem;display:block}
+  .roles div b{display:block;font-size:.92rem}
+  .roles div em{display:block;font-style:normal;margin-top:6px;background:#e6eefb;border-radius:8px;padding:4px 6px;color:#1b3d66}
+  .types div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .types div b{display:block}
+  .types div small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+
+  /* 카드 격자 칸이 안의 긴 코드·표 때문에 늘어나지 않게 */
+  .cards2>*,.cards3>*,.cards4>*,.grid2>*{min-width:0}
+  /* 진도 보내기 */
+  .tr-gate{position:fixed;inset:0;z-index:200;background:rgba(15,39,66,.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .tr-card{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px 22px 16px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  .tr-card h2{margin:0;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+  .tr-sub{margin:-4px 0 4px;color:var(--muted);font-size:.92rem}
+  .tr-cls{display:flex;gap:8px}
+  .tr-cls label{flex:1;cursor:pointer}
+  .tr-cls input{position:absolute;opacity:0;pointer-events:none}
+  .tr-cls span{display:block;text-align:center;padding:10px 0;border:2px solid var(--line);border-radius:12px;font-weight:900;font-size:1.05rem}
+  .tr-cls input:checked+span{border-color:var(--navy);background:var(--navy);color:#fff}
+  .tr-cls input:focus-visible+span{outline:3px solid var(--amber)}
+  .tr-f{display:flex;align-items:center;gap:10px}
+  .tr-f span{width:40px;font-weight:700}
+  .tr-f input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:9px 12px;border:1px solid #c5ccd5;border-radius:10px}
+  .tr-err{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em}
+  .tr-card .btn{padding:12px;font-size:1.05rem;background:var(--navy)}
+  .tr-note{margin:2px 0 0;color:var(--muted);font-size:.8rem;line-height:1.5;text-align:center}
+  .tr-who,.tr-badge{display:flex;align-items:center;gap:6px;font-size:.82rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px 4px 3px 12px;white-space:nowrap}
+  .tr-badge{padding:3px 12px;background:var(--amber);color:#111;font-weight:700}
+  .tr-who button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px}
+  .tr-who button:hover{background:rgba(255,255,255,.3)}
+  .tr-cls[hidden]{display:none}
+  .tr-badge button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(0,0,0,.14);border-radius:999px;padding:2px 9px;margin-left:6px}
+  /* page-guard: 글자 선택·복사 막기 (입력 칸은 편집 가능) */
+  body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
+  .pg-toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0f2742;color:#fff;padding:9px 16px;border-radius:999px;font-size:.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+  .pg-toast.on{opacity:1}
+
+  /* u2-integrate 전용 (ig-) */
+  .ig-scroll{overflow-x:auto;max-width:100%}
+  .ig-tbl{font-size:.9rem;margin:6px 0;background:#fff}
+  .ig-tbl th,.ig-tbl td{border:1px solid var(--line);padding:5px 9px;font-variant-numeric:tabular-nums}
+  .ig-tbl th{background:#fbfaf7}
+  .ig-tbl td.nan{color:var(--red);font-weight:700;background:#fdecea}
+  .ig-tbl tr.del td{text-decoration:line-through;color:#aab2bd;background:#f6f4ef}
+  .ig-tbl tr.dup td{background:#fff4d6}
+  .ig-tbl .yb{font:inherit;font-variant-numeric:tabular-nums;border:2px solid var(--line);background:#fff;border-radius:8px;padding:1px 8px;cursor:pointer;color:var(--ink);min-width:72px}
+  .ig-tbl .yb:hover{border-color:var(--acc)}
+  .ig-tbl .yb.fixed{border-color:var(--mint);background:#e7f6ef;color:#13684d;font-weight:700}
+  .ig-tbl .yb:disabled{cursor:default}
+  .ig-tbl .tag{display:inline-block;font-size:.72rem;border-radius:6px;padding:0 5px;margin-left:4px;background:#eceae4;color:var(--muted);text-decoration:none}
+  .ig-t6 td.ig-arr{font-size:1.4rem;color:var(--muted);border:0;background:none}
+  .ig-mini{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0}
+  .ig-mini table{width:auto;margin:0;font-size:.74rem;background:#fff}
+  .ig-mini th,.ig-mini td{border:1px solid var(--line);padding:1px 6px}
+  .ig-mini th{background:color-mix(in srgb,var(--k) 12%,white);color:var(--ink)}
+  .ig-mini>b{color:var(--k)}
+  .ig-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+  @media (max-width:860px){.ig-steps{grid-template-columns:1fr}}
+  .ig-steps>div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.88rem;border-top:4px solid var(--acc)}
+  .ig-steps b{display:block;margin-bottom:4px}
+  .ig-cnt{font-weight:700;color:var(--acc)}
+  .ig-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0;display:none}
+  .ig-msg.on{display:block}
+  .ig-msg:empty{display:none}
+  .ig-result:empty{display:none}
+  .ig-result{background:#fff;border:2px dashed var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+  .ig-result.good{border-style:solid;border-color:var(--mint);background:#f3fbf7}
+  .ig-result h4{margin:0 0 4px}
+  .ig-result ul{margin:6px 0 0;padding-left:20px;font-size:.9rem}
+  .ig-side{background:#fbfaf7;border-radius:12px;padding:10px 14px;font-size:.93rem}
+  .ig-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .ig-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .ig-prev span{white-space:pre-wrap}
+  /* 02 수식 */
+  .ig-fx{font-family:"Times New Roman",serif;font-size:1.15rem;display:flex;align-items:center;gap:6px;margin:8px 0;background:#fbfaf7;border-radius:10px;padding:6px 10px;width:max-content;max-width:100%}
+  .ig-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle}
+  .ig-frac>span{padding:0 4px}
+  .ig-frac>span:first-child{border-bottom:1.5px solid var(--ink)}
+  .ig-pill{font:inherit;font-size:.88rem;border:2px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--ink)}
+  .ig-pill:hover{border-color:var(--acc)}
+  .ig-pill.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .ig-svg{max-width:820px;margin:8px auto 0}
+  .ig-svg text{font-family:"Noto Sans KR",system-ui,sans-serif}
+  .ig-svg .tk{font-size:11px;fill:var(--muted)}
+  .ig-svg .axl{font-size:12px;font-weight:700;fill:var(--muted)}
+  .ig-svg .rl{font-size:12.5px;font-weight:900}
+  .ig-svg .ax{stroke:#9aa3ad;stroke-width:1.2}
+  .ig-svg .gl{stroke:#eceae4;stroke-width:1}
+  .ig-svg .zero{stroke:#0f2742;stroke-width:1.2;stroke-dasharray:4 4}
+  .ig-svg .ph{fill:#2f6fd0;stroke:#fff;stroke-width:1.5}
+  .ig-svg .pt{fill:#e0702b;stroke:#fff;stroke-width:1.5}
+  .ig-svg .sel{stroke:#0f2742;stroke-width:3}
+  .ig-svg .ring{fill:none;stroke:#d64535;stroke-width:2}
+  .ig-ctrl{grid-template-columns:70px 1fr 56px;max-width:620px;margin-top:6px}
+  .ig-ctrl label{font-size:.85rem;line-height:1.2}
+  .ig-click tr:not(:first-child){cursor:pointer}
+  .ig-click tr:not(:first-child):hover td{background:var(--acc-soft)}
+  .ig-click tr.on td{background:#fff4d6;font-weight:700}
+  .ig-stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .ig-stat>div{background:#fbfaf7;border-radius:10px;padding:6px 10px;font-size:.84rem;border-left:4px solid var(--k)}
+  .ig-stat b{display:block}
+  .ig-det{margin-top:12px;background:#fbfaf7;border-radius:10px;padding:8px 12px}
+  .ig-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .ig-vote{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:760px){.ig-vote{grid-template-columns:1fr}}
+  .ig-svg .hb{fill:#2f6fd0;opacity:.85}
+  .ig-svg .hb2{fill:#1f9d74;opacity:.85}
+  .ig-svg .mean{stroke:#d64535;stroke-width:2;stroke-dasharray:5 4}
+  .ig-svg .ml{font-size:11px;font-weight:900;fill:#d64535}
+  /* 03 시각화 */
+  .ig-four .kc h4{font-size:1rem}
+  .ig-th{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+  .ig-th figure{margin:0;background:#fbfaf7;border-radius:8px;padding:4px 4px 2px;text-align:center}
+  .ig-th figcaption{font-size:.74rem;font-weight:700;color:var(--k)}
+  .ig-th svg{max-width:120px;margin:0 auto}
+  .ig-tabs{grid-template-columns:repeat(5,1fr)}
+  @media (max-width:860px){.ig-tabs{grid-template-columns:repeat(3,1fr)}}
+  .ig-vz{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:center}
+  @media (max-width:860px){.ig-vz{grid-template-columns:1fr}}
+  .ig-vz .k{display:inline-block;font-size:.78rem;font-weight:900;border-radius:999px;padding:1px 10px;color:#fff;background:var(--k)}
+  .ig-vz p{font-size:.93rem}
+  .ig-svg .vl{fill:none;stroke:#2f6fd0;stroke-width:2}
+  .ig-svg .vd{fill:#2f6fd0}
+  .ig-svg .vb{fill:#2f6fd0}
+  .ig-svg .vbox{fill:#fde3c9;stroke:#e0702b;stroke-width:1.5}
+  .ig-svg .vmed{stroke:#0f2742;stroke-width:2.5}
+  .ig-svg .vwh{stroke:#e0702b;stroke-width:1.5}
+  .ig-svg .vs{fill:#e0702b;opacity:.85}
+  .ig-more summary{cursor:pointer}
+  .ig-more[open] summary{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">데이터 과학</span>
+  <nav class="steps" id="steps"></nav>
+  <div class="score" id="score"></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+
+<main id="main">
+
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 1. 데이터 준비</span>
+      <h1>따로 모은 데이터,<br>함께<br>비교하려면?</h1>
+      <div class="story"><b>지난 시간에 한 일</b><br>해수면 높이 편차 데이터에서 빈칸(1986~1988년)과 이상치(2012년, 2020년)를 찾아 처리했어요. 이제 <b>해수면 온도 편차</b> 데이터와 합쳐 두 속성을 함께 보고 싶어요. 그런데 두 표는 연도를 적는 방식이 다르고, 높이와 온도는 <b>값의 범위</b>도 달라요.</div>
+      <p>오늘은 여러 데이터를 하나로 합치는 <b>데이터 통합</b>, 범위가 다른 값을 나란히 비교할 수 있게 맞추는 <b>데이터 스케일링</b>, 그리고 목적에 맞게 그래프를 고르는 <b>데이터 시각화</b>를 배워요.</p>
+      <ol>
+        <li>데이터 통합</li><li>데이터 스케일링</li><li>데이터 시각화</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🔗</i><div><b>데이터 통합</b><small>공통된 열(연도)로 두 표 합치기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📏</i><div><b>데이터 스케일링</b><small>Min-Max 정규화 · Z-Score 표준화</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🔍</i><div><b>분포 모양 확인</b><small>표준화하면 모양이 바뀔까?</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📊</i><div><b>데이터 시각화</b><small>시간 · 분포 · 관계 · 공간</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>해수면 높이 표와 온도 표를 <b>연도를 기준으로 직접 합쳐 보고</b>, 합칠 때 생기는 문제(형식이 다른 연도, 중복, 결측치)를 해결해요. 그리고 범위가 다른 두 속성을 <b>정규화·표준화</b>로 바꾸어 보며 무엇이 바뀌고 무엇이 그대로인지 확인해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <div class="ig-prev" id="igPrev"></div>
+        <div class="memo" style="margin-top:0"><label>따로 있는 해수면 높이 표와 온도 표를 하나로 합쳐 한 그래프로 비교하려면, 무엇부터 해야 할까요?</label><textarea data-memo="firstThought" rows="3"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>교과서 70쪽</b> · 수면의 질이 우리의 건강과 행복에 미치는 영향은 얼마나 클까?</li>
+          <li><b>오늘의 질문 ①</b> · 여러 데이터를 어떻게 하나로 합치고, 범위가 다른 값을 어떻게 비교할까?</li>
+          <li><b>오늘의 질문 ②</b> · 데이터 시각화는 무엇이고 어떤 방법이 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>이상치와 결측치를 탐색하고 정규화를 통해 데이터를 가공할 수 있다.</li>
+          <li>데이터를 분석하기 위해 시각화할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 통합부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 통합 -->
+<section class="page" data-name="데이터 통합" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 통합은 어떻게 할까?</h2><p>교과서 74쪽 · 데이터 통합 · 공통된 열 · 표 Ⅱ-5 · 수평적·수직적 통합 · 표 Ⅱ-6 형식 변환</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>따로 있는 두 표를 <b>공통된 열</b>(예: 연도)을 기준으로 한 표로 합치는 것이 <b>데이터 통합</b>이에요. 그런데 연도를 적는 방식이 다르거나, 같은 줄이 두 번 있거나, 빈칸이 있으면 줄이 엉뚱하게 맞춰져요. 그래서 합치기 전에 정리부터 해요.</span></div>
+  <div class="card">
+    <h3>🔗 데이터 통합</h3>
+    <div class="callout" style="margin-top:4px">여러 개의 데이터셋 또는 파일을 통합하는 작업을 <b>데이터 통합</b>이라고 한다.</div>
+    <p>각 데이터셋이 <b>다른 정보나 속성</b>을 담고 있을 때 두 데이터를 합치면 더 많은 정보를 얻을 수 있어요. 그러면 통계적으로 더 의미 있는 결과를 얻고 더 정확하게 분석할 수 있어요. 데이터는 주로 <b>공통된 열</b>을 기준으로 통합해요.</p>
+    <div class="cards2">
+      <div class="kc" style="--k:#2f6fd0"><h4>↔ 수평적 통합 <small style="display:inline;margin:0">(행을 기준으로)</small></h4>
+        <div class="ig-mini">
+          <table><tr><th>연도</th><th>높이</th></tr><tr><td>1989</td><td>0.0</td></tr><tr><td>1990</td><td>−0.9</td></tr></table><b>+</b>
+          <table><tr><th>연도</th><th>온도</th></tr><tr><td>1989</td><td>−0.5</td></tr><tr><td>1990</td><td>0.1</td></tr></table><b>→</b>
+          <table><tr><th>연도</th><th>높이</th><th>온도</th></tr><tr><td>1989</td><td>0.0</td><td>−0.5</td></tr><tr><td>1990</td><td>−0.9</td><td>0.1</td></tr></table>
+        </div>
+        <p>같은 연도의 행끼리 옆으로 붙여 <b>한 행에 두 속성</b>을 표시해요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>↕ 수직적 통합 <small style="display:inline;margin:0">(열을 기준으로)</small></h4>
+        <div class="ig-mini">
+          <table><tr><th>반</th><th>수면</th></tr><tr><td>1반</td><td>6.5</td></tr></table><b>+</b>
+          <table><tr><th>반</th><th>수면</th></tr><tr><td>2반</td><td>7.0</td></tr></table><b>→</b>
+          <table><tr><th>반</th><th>수면</th></tr><tr><td>1반</td><td>6.5</td></tr><tr><td>2반</td><td>7.0</td></tr></table>
+        </div>
+        <p>열이 같은 두 표를 <b>아래로 이어 붙여</b> 행을 늘려요. <small style="display:inline">(예시 값)</small></p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧩 연도로 두 표 합치기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 74쪽 표 Ⅱ-5 · 온도 표의 연도 표기는 지어낸 예시)</span></h3>
+    <p class="muted" style="margin-top:0">먼저 <b>「두 표 합치기」</b>를 그냥 눌러 보세요. 그다음 ①~③으로 표를 정리하고 다시 합쳐요. 순서는 바꿔도 돼요.</p>
+    <div class="grid2 even">
+      <div><h4>(a) 해수면 높이 편차</h4><div class="ig-scroll"><table class="ig-tbl" id="igTA"></table></div></div>
+      <div><h4>(b) 해수면 온도 편차</h4><div class="ig-scroll"><table class="ig-tbl" id="igTB"></table></div></div>
+    </div>
+    <div class="ig-steps">
+      <div><b>① 연도 형식 맞추기</b><span>(b)에서 YYYY 형식이 아닌 연도 칸을 눌러 고쳐요. <span id="igFixCnt" class="ig-cnt"></span></span></div>
+      <div><b>② 중복 줄 지우기</b><button class="btn ghost sm" id="igDedup">중복 줄 찾아 지우기</button></div>
+      <div><b>③ 결측치 연도 정리</b><button class="btn ghost sm" id="igDropNa">결측치가 있는 연도 지우기</button></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="igMerge">두 표 합치기 →</button><button class="btn ghost sm" id="igMergeReset">처음부터</button></div>
+    <div class="ig-msg" id="igStepMsg"></div>
+    <div class="ig-result" id="igResult"></div>
+    <div class="memo"><label>① 형식을 맞추지 않고 합쳤을 때 무슨 일이 생겼나요? ② 중복 줄과 결측치 연도는 왜 정리해야 했나요?</label><textarea data-memo="mergeMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>📝 통합할 때 필요한 정리</h3>
+    <p style="margin-top:0">데이터를 통합할 때는 <b>중복 제거, 결측값 처리, 형식 변환</b> 등이 필요할 수 있어요. 표 Ⅱ-5에서는 1986~1988년 해수면 높이가 결측치라서 그 기간의 해수면 온도 데이터도 지우고, 연도가 일치하는 데이터만 통합해요.</p>
+    <div class="grid2">
+      <div>
+        <h4>표 Ⅱ-6 데이터 형식 변환 예시 <span class="muted" style="font-weight:400;font-size:.85rem">(교과서 74쪽)</span></h4>
+        <div class="ig-scroll"><table class="ig-tbl ig-t6">
+          <tr><th>학생 이름</th><th>졸업 연도</th><th></th><th>졸업 연도</th></tr>
+          <tr><td>김민혁</td><td>2024</td><td rowspan="4" class="ig-arr">⇨</td><td>2024</td></tr>
+          <tr><td>이수진</td><td>‘24’</td><td>2024</td></tr>
+          <tr><td>최서연</td><td>2024년</td><td>2024</td></tr>
+          <tr><td>한지민</td><td>24</td><td>2024</td></tr>
+        </table></div>
+        <p class="note">숫자 형식(2024)과 문자 형식(‘24’, 2024년)이 섞여 있으면 같은 연도로 맞춰지지 않아요. 모두 YYYY 형식으로 바꾸어요.</p>
+      </div>
+      <div class="ig-side">
+        <p style="margin-top:0">두 데이터의 <b>형식이나 범위가 다르면</b> 통합하면서 일관성을 유지하는 데 시간과 노력이 많이 들어요. 또 <b>잘못된 매핑</b>(엉뚱한 줄끼리 짝짓기)이나 <b>중복 처리</b> 오류가 생길 수 있어 조심해야 해요.</p>
+        <p class="note">Ⅰ단원에서 날짜를 기준으로 VLOOKUP으로 날씨 정보를 찾아 붙인 것도 공통된 열을 기준으로 한 통합이에요. 다음 시간에는 오렌지3의 <b>Merge Data</b> 위젯으로 수면 데이터와 건강 데이터를 합쳐요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 스케일링 -->
+<section class="page" data-name="데이터 스케일링" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>값의 범위가 다르면 어떻게 비교할까?</h2><p>교과서 75쪽 · 데이터 스케일링 · Min-Max 정규화 · Z-Score 표준화 · 이상치의 영향</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>1989~1996년 해수면 높이 편차는 −2.5~0.5쯤, 온도 편차는 −1.0~0.1쯤이라 범위가 달라요. 이대로 함께 분석하면 범위가 큰 속성의 영향이 너무 커질 수 있어요. <b>데이터 스케일링</b>은 여러 속성의 값을 비슷한 범위로 맞추는 일이에요. 값의 순서는 그대로 두고 <b>눈금만 바꾸어요</b>.</span></div>
+  <div class="card">
+    <h3>📏 데이터 스케일링</h3>
+    <p style="margin-top:0">데이터셋에 다양한 데이터가 있을 때 각 값의 범위가 다르면 특정 데이터의 영향이 과도하게 커질 수 있어요. 이때 필요한 것이 데이터 스케일링이에요. <span class="muted">(데이터 스케일: 데이터 값의 크기나 범위, 데이터 간의 상대적 크기)</span></p>
+    <div class="cards2">
+      <div class="kc" style="--k:#e0702b"><h4>정규화 · 최소-최대 정규화(Min-Max Scaling)</h4>
+        <div class="ig-fx"><i>x</i><sub>scaled</sub> = <span class="ig-frac"><span><i>x</i> − <i>x</i><sub>min</sub></span><span><i>x</i><sub>max</sub> − <i>x</i><sub>min</sub></span></span></div>
+        <p>각 값에서 <b>최솟값을 뺀 뒤</b> 최댓값과 최솟값의 차이로 나누어요. 최솟값은 <b>0</b>, 최댓값은 <b>1</b>이 되어 모든 값이 0~1 사이에 놓여요.</p>
+        <small>이상치가 있으면 정규화된 값의 분포가 왜곡될 수 있어요. 그래서 정규화 전에 이상치를 먼저 처리해요.</small></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>표준화 · Z-Score 표준화</h4>
+        <div class="ig-fx"><i>x</i><sub>scaled</sub> = <span class="ig-frac"><span><i>x</i> − <i>x̄</i></span><span><i>σ</i></span></span></div>
+        <p>각 값에서 <b>평균(<i>x̄</i>)을 뺀 뒤</b> 표준편차(<i>σ</i>)로 나누어요. 평균은 <b>0</b>, 표준편차는 <b>1</b>이 돼요.</p>
+        <small>표준편차는 값들이 평균에서 얼마나 흩어져 있는지 나타내는 값이에요(뒤에서 자세히 배워요). 표준화도 이상치의 영향을 받을 수 있지만, 정규화에 비해 이상치로 인한 영향이 적은 경우가 많아요. Min-Max는 최솟값·최댓값 두 값으로 정해져 이상치 하나에 범위 전체가 좌우되고, 표준화는 모든 값의 평균·표준편차로 정해져 데이터가 많으면 영향이 덜해요.</small></div>
+    </div>
+    <p class="note">오렌지3에서는 Preprocess 위젯의 <b>Normalize Features</b> 안에 <b>Standardize</b>가 들어 있어요. 다음 시간에 수면 데이터를 표준화할 때 써요.</p>
+  </div>
+  <div class="card">
+    <h3>⚖️ 스케일링 비교기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 75쪽 1989~1996년 값)</span></h3>
+    <p class="muted" style="margin-top:0">방법을 바꾸며 두 속성의 점이 어떻게 옮겨 가는지 보세요. 표의 줄을 누르면 그 연도의 계산식이 나와요. 아래 막대로 1996년 높이를 이상치로 만들어 볼 수도 있어요.</p>
+    <div class="row" id="igMode"><button class="ig-pill on" data-m="0">원래 값</button><button class="ig-pill" data-m="1">Min-Max 정규화</button><button class="ig-pill" data-m="2">표준화</button></div>
+    <svg viewBox="0 0 720 210" id="igScaleSvg" class="ig-svg" role="img" aria-label="해수면 높이 편차와 온도 편차 점그래프"></svg>
+    <div class="ctrl ig-ctrl"><label for="igOut">1996년<br>높이</label><input type="range" id="igOut" min="-3" max="20" step="0.1" value="-2.4"><output id="igOutVal">−2.4</output></div>
+    <div class="row"><button class="btn ghost sm" id="igOutMake">1996년 높이를 12.0으로 (이상치 만들기)</button><button class="btn ghost sm" id="igOutBack">원래대로 (−2.4)</button></div>
+    <div class="grid2" style="margin-top:10px">
+      <div class="ig-scroll"><table class="ig-tbl ig-click" id="igScaleTbl"></table></div>
+      <div>
+        <div class="ig-msg on" id="igFormula">표의 줄을 눌러 보세요.</div>
+        <div class="ig-stat" id="igScaleStat"></div>
+      </div>
+    </div>
+    <div class="ig-msg on" id="igScaleMsg"></div>
+    <details class="ig-det"><summary>교과서 75쪽 정규화 전·후 표와 비교하기</summary>
+      <div class="ig-scroll"><table class="ig-tbl">
+        <tr><th rowspan="2">연도</th><th colspan="2">정규화 전</th><th colspan="2">정규화 후</th></tr>
+        <tr><th>해수면 높이</th><th>해수면 온도</th><th>해수면 높이</th><th>해수면 온도</th></tr>
+        <tr><td>1989</td><td>0.0</td><td>−0.5</td><td>0.200</td><td>0.25</td></tr>
+        <tr><td>1990</td><td>−0.9</td><td>0.1</td><td>0.128</td><td>0.55</td></tr>
+        <tr><td>1991</td><td>−0.1</td><td>−0.6</td><td>0.192</td><td>0.20</td></tr>
+        <tr><td>1992</td><td>0.5</td><td>−0.4</td><td>0.240</td><td>0.30</td></tr>
+        <tr><td>1993</td><td>−2.5</td><td>−1.0</td><td>0.000</td><td>0.00</td></tr>
+        <tr><td>1994</td><td>−0.9</td><td>−0.1</td><td>0.128</td><td>0.45</td></tr>
+        <tr><td>1995</td><td>−2.1</td><td>−0.3</td><td>0.032</td><td>0.35</td></tr>
+        <tr><td>1996</td><td>−2.4</td><td>−0.2</td><td>0.008</td><td>0.40</td></tr>
+      </table></div>
+      <p class="note">교과서 표는 보이는 8개 연도만이 아니라 <b>전체 연도</b>의 최솟값과 최댓값(높이 −2.5와 10.0, 온도 −1.0과 1.0)으로 계산한 값이에요(이상치 2개를 처리한 뒤의 데이터로 보여요). 예: 1989년 높이 (0.0 − (−2.5)) ÷ (10.0 − (−2.5)) = 0.200. 비교기는 보이는 8개 값만으로 계산해서 값이 달라요.</p>
+    </details>
+    <div class="memo"><label>① Min-Max 정규화와 표준화는 값을 어떻게 바꾸었나요? ② 1996년 높이를 이상치로 만들었더니 나머지 값들은 어떻게 되었나요?</label><textarea data-memo="scaleMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🔍 표준화하면 분포의 모양이 바뀔까?</h3>
+    <p style="margin-top:0">히스토그램은 값을 일정한 구간으로 나누어, 구간마다 값이 몇 개 있는지 막대로 나타낸 그래프예요. 아래 예시 데이터를 표준화하면 히스토그램의 모양은 어떻게 될까요? <b>먼저 예상을 골라요.</b></p>
+    <div class="vote ig-vote" id="igShapeVote"></div>
+    <div class="reveal" id="igShapeAfter">
+      <div class="row" id="igSet" style="margin-top:6px"></div>
+      <div class="grid2 even">
+        <div><h4>표준화 전</h4><svg viewBox="0 0 340 190" id="igHistA" class="ig-svg" role="img" aria-label="표준화 전 히스토그램"></svg><p class="note" id="igHistAS"></p></div>
+        <div><h4>표준화 후</h4><svg viewBox="0 0 340 190" id="igHistB" class="ig-svg" role="img" aria-label="표준화 후 히스토그램"></svg><p class="note" id="igHistBS"></p></div>
+      </div>
+      <div class="callout"><b>📌 바로잡기</b> 교과서 75쪽 「디지털 샘의 Tip」에는 표준화를 하면 데이터가 「정규 분포(종 모양 분포)에 가까운 형태로 변한다」고 적혀 있어요. 하지만 표준화는 <b>모든 값에서 같은 수(평균)를 빼고 같은 수(표준편차)로 나누는</b> 계산이라 값들의 순서와 간격의 비율이 그대로예요. 그래서 히스토그램의 <b>모양은 바뀌지 않고</b>, 가운데가 0으로 옮겨 가고 눈금만 바뀌어요. 교과서 75쪽 그림에서도 표준화 전과 후의 히스토그램 모양이 같아요.</div>
+    </div>
+    <div class="memo"><label>내 예상과 실제 결과를 비교하고, 모양이 그대로인 까닭을 표준화 계산(빼기·나누기)과 연결해 적어요.</label><textarea data-memo="shapeMemo" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 데이터 시각화 -->
+<section class="page" data-name="데이터 시각화" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>데이터 시각화는 무엇이고 어떤 방법이 있을까?</h2><p>교과서 76~77쪽 · 시간 시각화 · 분포 시각화 · 관계 시각화 · 공간 시각화</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>숫자 표만 보고는 의미를 찾기 어려워요. 그래프로 바꾸면 <b>흐름, 퍼진 모양, 두 값의 관계, 위치</b>가 한눈에 보여요. 무엇을 알고 싶은지(분석 목적)에 따라 알맞은 그래프를 골라요.</span></div>
+  <div class="card">
+    <h3>📊 데이터 시각화</h3>
+    <div class="callout" style="margin-top:4px">수치나 통계 데이터를 그래픽으로 표현하여 분석 결과를 직관적으로 이해할 수 있도록 돕는 기술을 <b>데이터 시각화</b>라고 한다.</div>
+    <p>데이터의 패턴, 추세, 상관관계 등을 쉽게 파악하고, 분석 목적에 따라 다양한 시각화 방법을 골라 의사 결정에 활용할 수 있어요.</p>
+    <div class="cards4 ig-four">
+      <div class="kc" style="--k:#2f6fd0"><h4>01 시간 시각화</h4><div class="ig-th" id="igTh1"></div><p>시간의 흐름에 따라 데이터가 어떻게 변하는지 보여 줘요. 일정한 시간 간격으로 모은 <b>시계열 데이터</b>에 써요.</p><small>예: 분기별 물가 변동, 연도별 해수면 높이 · 추세와 패턴 파악, 이상치 감지</small></div>
+      <div class="kc" style="--k:#1f9d74"><h4>02 분포 시각화</h4><div class="ig-th" id="igTh2"></div><p>데이터의 전체적인 구조나 분포를 보여 줘요. 데이터가 일정 간격에 걸쳐 어떻게 퍼져 있는지 알 수 있어요.</p><small>예: 시험 점수 분포(히스토그램), 여러 그룹의 키 분포(박스 플롯)</small></div>
+      <div class="kc" style="--k:#e0702b"><h4>03 관계 시각화</h4><div class="ig-th" id="igTh3"></div><p>두 개 이상의 변수 사이의 연관성이나 규칙을 탐색해요. 히트맵은 상관관계를 색상의 강도로 나타내요.</p><small>예: 키와 몸무게(산점도), 판매량과 광고비(히트맵) · 산점도 행렬, 평행좌표 플롯</small></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>04 공간 시각화</h4><div class="ig-th" id="igTh4"></div><p>정보를 지도 위에 나타내 지점마다 데이터를 비교하거나 구분해요. 위치와 거리를 바탕으로 이해해요.</p><small>예: 인구 분포·밀집도(점 지도), 지역별 출산율(등치 지역도)</small></div>
+    </div>
+    <p class="note">그림은 모양을 보여 주려고 새로 그린 예시예요. 히스토그램은 연속된 값을 구간으로 나누어 막대 사이에 빈칸이 없고, 막대그래프는 항목마다 막대를 따로 세워 막대 사이에 빈칸이 있어요.</p>
+  </div>
+  <div class="card">
+    <h3>🎯 이 질문엔 어떤 시각화? <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 질문 8개)</span></h3>
+    <p class="muted" style="margin-top:0">질문을 읽고, 그 질문에 답하기 알맞은 시각화 방법을 골라요.</p>
+    <div id="igSort"></div>
+  </div>
+  <details class="card ig-more">
+    <summary><b>🏪 (선택) 같은 데이터, 다른 그래프</b> <span class="muted" style="font-weight:400;font-size:.88rem">(학교 매점 4주 판매 기록 · 지어낸 예시 · 시간이 남으면)</span></summary>
+    <p class="muted" style="margin-top:0">같은 매점 데이터도 어떤 그래프로 그리느냐에 따라 보이는 것이 달라요. 그래프를 하나씩 눌러 보세요.</p>
+    <div class="apps ig-tabs" id="igVizBtn"></div>
+    <div class="cview" id="igVizView"></div>
+    <div class="memo"><label>내가 매점 주인이라면 이 데이터로 무엇이 궁금할까요? 질문 하나와, 그 질문에 알맞은 그래프와 까닭을 적어요.</label><textarea data-memo="vizMemo" rows="2"></textarea><div class="saved"></div></div>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">해수면 높이 표와 온도 표는 연도를 <b>YYYY 형식</b>으로 맞추고 <b>중복 줄</b>과 <b>결측치가 있는 연도</b>를 정리한 뒤에야 연도마다 한 줄씩 맞게 합쳐졌다. 공통된 열로 묶으면 한 행에서 두 속성을 함께 볼 수 있다.</div>
+    <div style="--k:#e0702b">범위가 다른 높이 편차와 온도 편차도 <b>Min-Max 정규화</b>로 0~1에, <b>표준화</b>로 평균 0·표준편차 1에 맞추면 나란히 비교할 수 있다. 한 값이 이상치가 되면 나머지 값이 한쪽으로 몰리므로 스케일링 전에 이상치부터 처리한다.</div>
+    <div style="--k:#9b4fc4">표준화를 해도 히스토그램의 <b>모양은 그대로</b>이고 가운데 위치와 눈금만 바뀐다. 그래프는 알고 싶은 것에 맞춰 고른다. 흐름은 선 그래프, 퍼진 모양은 히스토그램과 박스 플롯, 두 값이 함께 변하는지는 산점도, 지역 사이의 차이는 지도가 잘 보여 준다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에 적은 처음 생각을 다시 보고, 오늘 배운 낱말(데이터 통합, 공통된 열, 형식 변환, 정규화, 표준화, 시각화)을 넣어 답해 보세요.</p>
+    <div class="ig-prev" id="igPrev2"></div>
+    <b style="font-size:.93rem">여러 데이터를 어떻게 하나로 합치고, 범위가 다른 값을 어떻게 비교할까?</b>
+    <div class="memo" style="margin-top:4px"><textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="callout"><b>다음 시간 준비</b> 오렌지3로 수면 데이터에 오늘까지 배운 전처리(결측치·이상치 처리, 표준화, 통합)를 직접 해 보고 시각화해요. 노트북에서 오렌지3가 열리는지 확인하고, 선생님이 알려 주는 폴더에서 <b>Sleep.csv</b>와 <b>Health.csv</b>를 내려받을 준비를 해요.</div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>연도로 두 표 합치기</b>에서 형식을 맞추지 않았을 때 생긴 일과, 형식 맞추기·중복 지우기·결측치 연도 정리가 필요한 까닭 설명하기</li>
+      <li><b>스케일링 비교기</b>에서 Min-Max 정규화와 표준화를 비교하고, 이상치를 만들었을 때 생긴 일과 이상치를 먼저 처리하는 까닭 설명하기</li>
+      <li><b>표준화 전후 히스토그램</b>에서 내 예상과 결과를 비교하고, 모양이 그대로인 까닭 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="../forms/data-u2-integrate.html" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="foot">
+  <button class="btn ghost" id="prev">← 이전</button>
+  <span class="pg" id="pg"></span>
+  <button class="btn" id="next">다음 →</button>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toLocaleString('ko-KR');
+
+
+
+const LESSON='u2-integrate', PEP='';
+
+/* 진도 보내기 ①: 누가 쓰는지 확인 (반·학번마다 퀴즈·메모를 따로 저장) */
+const WHO=(function(){
+  if(!PEP) return {off:true,sfx:''};
+  if(/[?&]preview(=|&|$)/.test(location.search)) return {preview:true,sfx:'@preview'};
+  let w=null; try{w=JSON.parse(sessionStorage.getItem('aiw-who')||'null');}catch(e){}
+  if(w&&w.teacher) return {preview:true,teacher:true,sfx:'@preview'};
+  if(!w||!/^\d{5}$/.test(w.no||'')) return {need:true,sfx:'@none'};
+  return {cls:w.cls,no:w.no,name:w.name,sfx:'@'+w.no};
+})();
+/* 퀴즈 (교과서 74~77쪽) — 보기는 짧은 것 → 긴 것, 극단어 피하기 */
+const QUIZ={
+ 1:[{q:'서로 다른 데이터셋을 하나로 통합하는 주된 까닭은?',o:['파일 크기를 줄이려고','더 많은 정보를 얻으려고','값의 범위를 0~1로 맞추려고'],a:1,w:'각 데이터셋이 다른 정보나 속성을 담고 있을 때 합치면 더 많은 정보를 얻고 더 정확하게 분석할 수 있어요(74쪽).'},
+    {q:'연도가 「2024」, 「‘24’」, 「2024년」으로 섞여 있는 두 표를 연도로 합치기 전에 할 일은?',o:['연도 열을 지운다','값이 큰 행부터 정렬한다','연도를 같은 형식으로 바꾼다'],a:2,w:'형식이 다르면 같은 연도도 서로 다른 값으로 여겨져 통합이 제대로 되지 않아요. YYYY처럼 한 가지 형식으로 바꾸어요(표 Ⅱ-6).'},
+    {q:'3월 매점 판매 기록과 4월 매점 판매 기록(열이 같음)을 한 표로 이어 붙이는 통합 방법은?',o:['수직적 통합','수평적 통합','데이터 축소'],a:0,w:'열이 같은 두 표를 아래로 이어 붙여 행을 늘리므로 열을 기준으로 하는 수직적 통합이에요. 같은 연도의 행끼리 옆으로 붙여 한 행에 속성을 늘리는 것은 수평적 통합이에요(74쪽).'}],
+ 2:[{q:'값 10, 20, 30, 50을 최소-최대 정규화하면 20은 얼마가 될까?',o:['0.2','0.25','0.4'],a:1,w:'(20 − 10) ÷ (50 − 10) = 10 ÷ 40 = 0.25예요. 최솟값 10은 0, 최댓값 50은 1이 돼요.'},
+    {q:'Z-Score 표준화를 한 데이터의 표준편차는?',o:['0','0.5','1'],a:2,w:'각 값에서 평균을 빼고 표준편차로 나누므로 새 평균은 0, 표준편차는 1이 돼요(75쪽).'},
+    {q:'표준화하기 전과 후의 히스토그램을 비교하면 분포의 모양은?',o:['그대로이다','좌우가 뒤집힌다','종 모양으로 바뀐다'],a:0,w:'모든 값에서 같은 수를 빼고 같은 수로 나누기만 해서 값의 순서와 간격의 비율이 그대로예요. 가운데 위치와 눈금만 바뀌어요.'}],
+ 3:[{q:'한 학급 학생들의 키가 몇 cm쯤에 많이 몰려 있는지 보려면 알맞은 그래프는?',o:['산점도','선 그래프','히스토그램'],a:2,w:'구간마다 값이 몇 개 있는지 보여 주는 히스토그램이 분포를 보기에 알맞아요(76쪽 분포 시각화).'},
+    {q:'하루 공부 시간과 시험 점수가 함께 변하는 경향이 있는지 보려면 알맞은 그래프는?',o:['산점도','막대그래프','등치 지역도'],a:0,w:'두 변수의 연관성을 탐색하는 관계 시각화에는 산점도가 알맞아요(77쪽).'},
+    {q:'여러 변수 사이의 쌍별 관계를 한꺼번에 보려면 알맞은 것은?',o:['박스 플롯','산점도 행렬','등치 지역도'],a:1,w:'산점도 행렬은 변수 두 개씩 짝지은 산점도를 모아 여러 변수 간의 쌍별 관계를 한 번에 보여 줘요(77쪽).'}],
+ 4:[{q:'용돈 데이터(만 원) 3, 4, 5, 5, 6에 잘못 입력된 100이 섞였다. 이대로 Min-Max 정규화하면 3~6은 어떻게 될까?',o:['0 근처로 몰린다','1 근처로 몰린다','0~1에 고르게 퍼진다'],a:0,w:'최솟값 3은 0, 최댓값 100은 1이 되므로 6도 (6 − 3) ÷ 97 ≈ 0.03에 그쳐요. 그래서 정규화 전에 이상치를 먼저 처리해요(75쪽).'},
+    {q:'학생 명부(학번·이름)와 동아리 신청표(학번·이름·동아리)를 하나로 합칠 때 기준으로 가장 알맞은 열은?',o:['이름','학번','동아리'],a:1,w:'학번은 두 표에 함께 있고 학생마다 하나뿐이라 줄이 바르게 맞아요. 이름은 같은 이름이 있으면 엉뚱한 줄끼리 짝지어지는 잘못된 매핑이 생길 수 있어요(74쪽).'},
+    {q:'단위가 다른 키(cm)와 몸무게(kg)를 함께 분석하기 전에 하면 좋은 전처리는?',o:['데이터 축소','결측치 대체','데이터 스케일링'],a:2,w:'값의 범위가 다르면 범위가 큰 속성의 영향이 과도하게 커질 수 있어서 정규화나 표준화로 범위를 맞추어요(75쪽).'}]
+};
+
+const QK='ds-u2-integrate-quiz'+WHO.sfx;
+const MK='ds-u2-integrate-memo'+WHO.sfx;
+let QS={}; try{QS=JSON.parse(localStorage.getItem(QK)||'{}')||{};}catch(e){QS={};}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(QS));}catch(e){}}
+const TOTALQ=Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+function qperm(n,key){ let h=2166136261; for(const c of key){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}
+  const p=[...Array(n).keys()]; for(let i=n-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0; h=(h+0x6D2B79F5)>>>0; const j=h%(i+1); [p[i],p[j]]=[p[j],p[i]];} return p; }
+function renderQuiz(box){
+  const k=box.dataset.quiz; box.innerHTML=`<div class="qh"><b>개념 퀴즈</b><span>${QUIZ[k].length}문제 · 고르면 바로 채점</span></div>`;
+  QUIZ[k].forEach((it,i)=>{
+    const id=k+'-'+i, d=document.createElement('div'); d.className='qi';
+    /* 보기 순서는 학생마다 섞되(새로 고쳐도 같은 순서), 저장·채점은 원래 번호로 */
+    const perm=qperm(it.o.length, QK+'|'+id);
+    d.innerHTML=`<div class="qq">${i+1}. ${it.q}</div><div class="opts">${perm.map(j=>`<button data-j="${j}">${it.o[j]}</button>`).join('')}</div><div class="why"></div>`;
+    const btn=j=>d.querySelector(`button[data-j="${j}"]`);
+    const mark=(j,anim)=>{
+      const bs=d.querySelectorAll('button'); bs.forEach(b=>b.disabled=true);
+      btn(it.a).classList.add('right'); if(j!==it.a){btn(j).classList.add('wrong'); if(anim) d.classList.add('shake');}
+      d.classList.add('answered', j===it.a?'correct':'incorrect');
+      d.querySelector('.why').textContent=(j===it.a?'정답. ':'정답은 「'+it.o[it.a]+'」. ')+it.w;
+    };
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;QS[id]=j;saveQ();mark(j,true);updScore();});
+    if(QS[id]!=null && QS[id]<it.o.length) mark(QS[id],false);
+    box.appendChild(d);
+  });
+}
+
+/* 페이지 이동 */
+const pages=[...document.querySelectorAll('.page')];
+const stepBtns=pages.map((p,i)=>{const b=document.createElement('button');b.textContent=i?`${i}. ${p.dataset.name}`:'시작';b.onclick=()=>go(i);$('steps').appendChild(b);return b;});
+function updScore(){
+  let ok=0; for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{if(QS[k+'-'+i]===it.a) ok++;});
+  $('score').textContent=`퀴즈 ${ok} / ${TOTALQ}`;
+  pages.forEach((p,i)=>{const q=p.querySelector('[data-quiz]'); if(!q) return; const k=q.dataset.quiz; stepBtns[i].classList.toggle('done',QUIZ[k].every((_,j)=>QS[k+'-'+j]!=null));});
+  let h='<tr><th class="l">개념</th><th>맞힌 문제</th></tr>';
+  for(const k in QUIZ){const n=QUIZ[k].length, c=QUIZ[k].filter((it,i)=>QS[k+'-'+i]===it.a).length, a=QUIZ[k].filter((_,i)=>QS[k+'-'+i]!=null).length;
+    h+=`<tr><td class="l">${k}. ${pages[k].dataset.name}</td><td>${a?`<b class="${c===n?'ok':''}">${c} / ${n}</b>`:'<span class="muted">아직 안 풂</span>'}</td></tr>`;}
+  h+=`<tr><td class="l"><b>합계</b></td><td><b>${ok} / ${TOTALQ}</b></td></tr>`;
+  $('result').innerHTML=h;
+}
+let cur=-1;
+const onShow={};
+function go(i){
+  i=Math.max(0,Math.min(pages.length-1,i)); if(i===cur) return;
+  const back=i<cur; if(cur>=0) pages[cur].classList.remove('on','back');
+  pages[i].classList.add('on'); pages[i].classList.toggle('back',back);
+  document.documentElement.style.setProperty('--acc',pages[i].dataset.acc);
+  document.documentElement.style.setProperty('--acc-soft',pages[i].dataset.acc+'1a');
+  stepBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sb=$('steps'), btn=stepBtns[i]; sb.scrollLeft=btn.offsetLeft-sb.clientWidth/2+btn.clientWidth/2;
+  $('prog').style.width=(i/(pages.length-1)*100)+'%';
+  $('pg').textContent=`${i} / ${pages.length-1}`;
+  $('prev').style.visibility=i?'visible':'hidden'; $('next').style.visibility=i<pages.length-1?'visible':'hidden';
+  cur=i; try{history.replaceState(null,'','#p'+i);}catch(e){} window.scrollTo(0,0);
+  if(onShow[i]) onShow[i]();
+}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.defaultPrevented)return; if(e.target.matches&&e.target.matches('input,select,textarea'))return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+document.querySelectorAll('.gcard').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.click();}}));
+document.querySelectorAll('[data-quiz]').forEach(renderQuiz);
+$('quizReset').onclick=()=>{QS={};saveQ();document.querySelectorAll('[data-quiz]').forEach(renderQuiz);updScore();};
+
+
+/* 공용 부품: 메모·카드·분류 게임·탭·투표·칩 */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* 메모: data-memo가 있는 입력칸은 이 기기에 저장 */
+let MEMO=store.get(MK,{});
+function bindMemos(){
+  document.querySelectorAll('[data-memo]').forEach(t=>{
+    const k=t.dataset.memo; if(MEMO[k]!=null) t.value=MEMO[k];
+    let tm; t.addEventListener('input',()=>{MEMO[k]=t.value; clearTimeout(tm); tm=setTimeout(()=>{store.set(MK,MEMO); const s=t.parentElement.querySelector('.saved'); if(s){s.textContent='이 기기에 저장됨'; setTimeout(()=>s.textContent='',1400);} t.dispatchEvent(new Event('memo'));},300);});
+  });
+}
+function memoSummary(box,list){
+  const h=list.map(([k,label])=>{const v=(MEMO[k]||'').trim(); return `<dt>${esc(label)}</dt><dd class="${v?'':'e'}">${v?esc(v):'(아직 안 씀)'}</dd>`;}).join('');
+  $(box).innerHTML=`<h4>오늘 화면에 적어 둔 내 메모</h4><dl>${h}</dl>`;
+}
+
+/* 뒤집는 카드 */
+function flipCards(box,items){
+  $(box).innerHTML=items.map(c=>`<div class="tcard" tabindex="0"><div class="in"><div class="f"><i>${c.ic||''}</i><b>${c.f}</b>${c.s?`<small>${c.s}</small>`:''}</div><div class="b">${c.b}${c.x?`<div class="x">${c.x}</div>`:''}</div></div></div>`).join('');
+  $(box).querySelectorAll('.tcard').forEach(t=>{const f=()=>t.classList.toggle('flip'); t.onclick=f; t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+}
+
+/* 분류 게임: 문장을 보고 알맞은 묶음 고르기 */
+function sorter(box,cfg){
+  const B=$(box);
+  function start(){
+    const order=shuffle(cfg.items.map((_,i)=>i)); let pos=0, ok=0; const placed=cfg.cats.map(()=>[]);
+    B.innerHTML=`<div class="sit"><div class="cnt"></div><div class="ic"></div><div class="sq"></div><div class="row btns">${cfg.cats.map((c,j)=>`<button class="btn sm cat" style="--k:${c.k}" data-j="${j}">${c.n}</button>`).join('')}</div><div class="fb"></div><div class="row nx" style="margin-top:8px"></div></div><div class="board" style="--n:${cfg.cats.length}">${cfg.cats.map(c=>`<div style="--k:${c.k}"><b>${c.n}</b></div>`).join('')}</div>`;
+    const sq=B.querySelector('.sq'), ic=B.querySelector('.ic'), cnt=B.querySelector('.cnt'), fb=B.querySelector('.fb'), nx=B.querySelector('.nx'), btns=[...B.querySelectorAll('.cat')], cols=[...B.querySelectorAll('.board>div')];
+    function show(){
+      if(pos>=order.length){cnt.textContent=''; ic.textContent='🎉'; sq.innerHTML=`${order.length}개 중 <b>${ok}개</b>를 바로 맞혔어요.`; fb.innerHTML=cfg.end||''; btns.forEach(b=>b.style.display='none'); nx.innerHTML='<button class="btn ghost sm">처음부터 다시</button>'; nx.firstChild.onclick=start; return;}
+      const it=cfg.items[order[pos]]; cnt.textContent=`${pos+1} / ${order.length}`; ic.textContent=it.ic||''; sq.innerHTML=it.t; fb.textContent=''; nx.innerHTML=''; btns.forEach(b=>{b.disabled=false;b.style.display='';});
+    }
+    btns.forEach(b=>b.onclick=()=>{
+      const it=cfg.items[order[pos]], j=+b.dataset.j, right=j===it.c; if(right) ok++;
+      btns.forEach(x=>x.disabled=true);
+      fb.innerHTML=(right?'<span class="ok">맞아요!</span> ':`<span class="ng">아쉬워요.</span> 정답은 <b>${cfg.cats[it.c].n}</b>. `)+(it.w||'');
+      const s=document.createElement('span'); s.innerHTML=it.short||it.t; if(!right) s.className='x'; cols[it.c].appendChild(s);
+      nx.innerHTML='<button class="btn sm">다음 →</button>'; nx.firstChild.onclick=()=>{pos++;show();}; nx.firstChild.focus();
+    });
+    show();
+  }
+  start();
+}
+
+/* 탭 보기: 버튼을 누르면 내용 바꾸기 */
+function tabs(btnBox,viewBox,items,render){
+  $(btnBox).innerHTML=items.map((it,i)=>`<button data-i="${i}"><span class="e">${it.ic||''}</span><b>${it.n}</b></button>`).join('');
+  const bs=[...$(btnBox).querySelectorAll('button')];
+  const pick=i=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); $(viewBox).innerHTML=render(items[i],i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i)); pick(0);
+}
+
+/* 투표: 고르면 결과 보이기 (이 기기에만 저장) */
+function vote(box,key,opts,onPick){
+  const B=$(box); B.innerHTML=opts.map((o,i)=>`<button data-i="${i}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')];
+  const pick=(i,save)=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); if(save){MEMO[key]=opts[i][0]; store.set(MK,MEMO);} onPick&&onPick(i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i,true));
+  const prev=opts.findIndex(o=>o[0]===MEMO[key]); if(prev>=0) pick(prev,false);
+}
+function chips(box,key,opts,multi){
+  const B=$(box); B.classList.add('chk'); B.innerHTML=opts.map(o=>`<button>${o}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')]; let sel=(MEMO[key]||'').split(' · ').filter(Boolean);
+  const draw=()=>bs.forEach(b=>b.classList.toggle('on',sel.includes(b.textContent)));
+  bs.forEach(b=>b.onclick=()=>{const t=b.textContent; if(multi) sel=sel.includes(t)?sel.filter(x=>x!==t):[...sel,t]; else sel=sel.includes(t)?[]:[t]; MEMO[key]=sel.join(' · '); store.set(MK,MEMO); draw(); B.dispatchEvent(new Event('memo'));});
+  draw();
+}
+/* u2-integrate 데이터 통합과 스케일링 (교과서 74~77쪽) */
+/* 숫자 표시: 마이너스는 「−」 */
+const igN=v=>{const r=Math.round(v*1000)/1000; return String(Object.is(r,-0)?0:r).replace('-','−');};
+const igF=(v,d)=>{const s=(Math.round(v*10**d)/10**d).toFixed(d); return (/^-0\.?0*$/.test(s)?s.slice(1):s).replace('-','−');};
+const igMean=a=>a.reduce((s,x)=>s+x,0)/a.length;
+/* 표준편차: 편차 제곱의 평균의 제곱근(표준화 후 표준편차가 정확히 1) */
+const igSd=a=>{const m=igMean(a); return Math.sqrt(igMean(a.map(x=>(x-m)**2)));};
+function igQ(a,p){const s=[...a].sort((x,y)=>x-y), pos=(s.length-1)*p, lo=Math.floor(pos), f=pos-lo; return lo+1<s.length? s[lo]+(s[lo+1]-s[lo])*f : s[lo];}
+const igClear=g=>{while(g.firstChild) g.removeChild(g.firstChild);};
+const igP=v=>v<0?'('+igN(v)+')':igN(v);
+
+/* 0 시작: 지난 시간(u2-clean)에 적은 나의 계획 보여 주기 — 읽기만 함 */
+(function(){
+  let p=''; try{ p=String((store.get('ds-u2-clean-memo'+WHO.sfx,{})||{}).plan||'').trim(); }catch(e){ p=''; }
+  $('igPrev').innerHTML=p?`<b>지난 시간(교과서 70쪽)에 적은 나의 계획</b><span>${esc(p)}</span>`:'';
+  $('igPrev').style.display=p?'':'none';
+})();
+
+/* 01 연도로 두 표 합치기 (표 Ⅱ-5 값, 온도 표의 연도 표기는 지어낸 예시) */
+(function(){
+  const A0=[[1986,null],[1987,null],[1988,null],[1989,0.0],[1990,-0.9],[1991,-0.1],[1992,0.5],[1993,-2.5]];
+  const B0=[["'86",-0.9],['1987년',-0.7],['1988',-0.2],['1989',-0.5],["'90",0.1],['1991',-0.6],['1992년',-0.4],['1992',-0.4],['93',-1.0]];
+  const TARGET=[[1989,0.0,-0.5],[1990,-0.9,0.1],[1991,-0.1,-0.6],[1992,0.5,-0.4],[1993,-2.5,-1.0]];
+  const MISSY=['1986','1987','1988'];
+  const isY=s=>/^\d{4}$/.test(s), toY=s=>{const d=s.replace(/\D/g,''); return d.length===2?'19'+d:d;};
+  const NBAD=B0.filter(b=>!isY(b[0])).length;
+  let A, B, log;
+  const say=h=>{$('igStepMsg').innerHTML=h; $('igStepMsg').classList.toggle('on',!!h);};
+  function draw(){
+    $('igTA').innerHTML='<tr><th>연도</th><th>해수면 높이 편차</th></tr>'+A.map(a=>`<tr class="${a.del?'del':''}"><td>${a.y}</td><td class="${a.h==null&&!a.del?'nan':''}">${a.h==null?'NaN':igF(a.h,1)}</td></tr>`).join('');
+    $('igTB').innerHTML='<tr><th>연도</th><th>해수면 온도 편차</th></tr>'+B.map((b,i)=>`<tr class="${b.del?'del':''}"><td><button class="yb${b.cur!==b.raw?' fixed':''}" data-i="${i}"${b.del?' disabled':''}>${esc(b.cur)}</button></td><td>${igF(b.t,1)}</td></tr>`).join('');
+    $('igTB').querySelectorAll('.yb').forEach(btn=>btn.onclick=()=>{
+      const b=B[+btn.dataset.i];
+      if(isY(b.cur)){ say(b.cur!==b.raw?`「${esc(b.raw)}」 칸은 이미 고쳤어요(→ ${b.cur}).`:`「${b.cur}」 칸은 이미 YYYY 형식이에요. 다른 칸을 찾아보세요.`); return; }
+      const old=b.cur; b.cur=toY(b.cur);
+      const left=B.filter(x=>!isY(x.cur)).length;
+      say(`「${esc(old)}」 → <b>${b.cur}</b>. 숫자 네 자리(YYYY) 형식으로 맞추었어요.${left?` 아직 ${left}칸 남았어요.`:' 형식을 모두 맞추었어요!'}`); draw();
+    });
+    $('igFixCnt').textContent=`고친 칸 ${B.filter(b=>b.cur!==b.raw).length} / ${NBAD}`;
+  }
+  function reset(){
+    A=A0.map(([y,h])=>({y,h,del:false})); B=B0.map(([raw,t])=>({raw,cur:raw,t,del:false})); log=[];
+    $('igResult').innerHTML=''; $('igResult').classList.remove('good'); say(''); draw();
+  }
+  $('igDedup').onclick=()=>{
+    const seen=new Set(); let n=0;
+    B.forEach(b=>{ if(b.del) return; const k=b.cur+'|'+b.t; if(seen.has(k)){ b.del=true; n++; } else seen.add(k); });
+    const unfixed=B.some(b=>!b.del&&!isY(b.cur));
+    if(n) say(`똑같은 줄 <b>${n}개</b>를 지웠어요. 같은 연도가 두 번 있으면 합칠 때 그 연도가 두 줄로 나와요.`);
+    else if(unfixed) say('똑같은 줄이 안 보여요. 그런데 「1992년」과 「1992」는 정말 다른 연도일까요? <b>① 연도 형식을 먼저 맞추고</b> 다시 찾아보세요.');
+    else say('지울 중복 줄이 없어요.');
+    draw();
+  };
+  $('igDropNa').onclick=()=>{
+    const already=A.every(a=>a.h!=null||a.del);
+    A.forEach(a=>{ if(a.h==null) a.del=true; });
+    let n=0; B.forEach(b=>{ if(!b.del&&MISSY.includes(b.cur)){ b.del=true; n++; } });
+    const left=B.filter(b=>!b.del&&!isY(b.cur)&&MISSY.includes(toY(b.cur))).length;
+    let h=already&&!n?'높이 표의 결측치 연도는 이미 지웠어요.':`높이 표에서 결측치(NaN)가 있는 1986~1988년을 지우고, 온도 표에서도 같은 연도 <b>${n}줄</b>을 지웠어요.`;
+    if(left) h+=` 그런데 온도 표에 형식이 달라 같은 연도인지 알아보지 못한 줄이 <b>${left}개</b> 남았어요. 연도 형식을 맞춘 뒤 한 번 더 눌러 보세요.`;
+    say(h); draw();
+  };
+  $('igMerge').onclick=()=>{
+    const As=A.filter(a=>!a.del), Bs=B.filter(b=>!b.del), rows=[];
+    As.forEach(a=>Bs.forEach(b=>{ if(String(a.y)===b.cur) rows.push({y:a.y,h:a.h,t:b.t}); }));
+    const noA=As.filter(a=>!Bs.some(b=>String(a.y)===b.cur)).map(a=>a.y);
+    const noB=Bs.filter(b=>!As.some(a=>String(a.y)===b.cur)).map(b=>esc(b.cur));
+    const cnt={}; rows.forEach(r=>cnt[r.y]=(cnt[r.y]||0)+1);
+    const dupY=Object.keys(cnt).filter(k=>cnt[k]>1), hasNa=rows.some(r=>r.h==null);
+    const ok=!noA.length&&!noB.length&&rows.length===TARGET.length&&rows.every((r,i)=>r.y===TARGET[i][0]&&r.h===TARGET[i][1]&&r.t===TARGET[i][2]);
+    const issues=[];
+    let h=`<h4>합친 결과: ${rows.length}줄</h4><div class="ig-scroll"><table class="ig-tbl"><tr><th>연도</th><th>해수면 높이</th><th>해수면 온도</th></tr>`+
+      rows.map(r=>`<tr class="${cnt[r.y]>1?'dup':''}"><td>${r.y}</td><td class="${r.h==null?'nan':''}">${r.h==null?'NaN':igF(r.h,1)}</td><td>${igF(r.t,1)}</td></tr>`).join('')+'</table></div><ul>';
+    if(noA.length||noB.length){ h+=`<li><b>짝을 못 찾아 빠진 줄</b> · 높이 표: ${noA.length?noA.join(', '):'없음'} / 온도 표: ${noB.length?noB.join(', '):'없음'}</li>`; issues.push(`빠진 줄 ${noA.length+noB.length}개`); }
+    if(dupY.length){ h+=`<li><b>${dupY.join(', ')}년</b>이 두 줄로 나왔어요(중복).</li>`; issues.push('중복'); }
+    if(hasNa){ h+='<li>결측치(NaN)가 있는 줄이 섞여 있어요.</li>'; issues.push('결측치 섞임'); }
+    if(ok) h+='<li class="ok">교과서 표 Ⅱ-5 (c)의 1989~1993년과 같아요! 결측치가 있는 연도는 빼고, 연도가 일치하는 데이터만 통합했어요.</li>';
+    else if(!issues.length) h+='<li>문제가 보이지 않아요.</li>';
+    $('igResult').innerHTML=h+'</ul>'; $('igResult').classList.toggle('good',ok);
+    log.push(`${rows.length}줄${ok?'(완성)':(issues.length?'('+issues.join('·')+')':'')}`);
+    MEMO.mergeLog='합치기 기록: '+log.slice(-6).join(' → '); store.set(MK,MEMO);
+  };
+  $('igMergeReset').onclick=reset;
+  reset();
+})();
+
+/* 02 스케일링 비교기 (교과서 75쪽 1989~1996년 값) */
+(function(){
+  const YR=[1989,1990,1991,1992,1993,1994,1995,1996];
+  const H0=[0.0,-0.9,-0.1,0.5,-2.5,-0.9,-2.1,-2.4], T=[-0.5,0.1,-0.6,-0.4,-1.0,-0.1,-0.3,-0.2];
+  let H=H0.slice(), mode=0, sel=-1;
+  const S=$('igScaleSvg');
+  const sc=a=>{ if(mode===0) return a.slice(); if(mode===1){const lo=Math.min(...a), hi=Math.max(...a); return a.map(x=>(x-lo)/(hi-lo));} const m=igMean(a), s=igSd(a); return a.map(x=>(x-m)/s); };
+  function range(all){
+    if(mode===1) return [-0.05,1.05];
+    const lo=Math.min(...all), hi=Math.max(...all);
+    if(mode===2){ const r=Math.max(2.5,Math.ceil(Math.max(-lo,hi)*2)/2); return [-r,r]; }
+    const pad=Math.max(.3,(hi-lo)*.06); return [Math.floor((lo-pad)*2)/2, Math.ceil((hi+pad)*2)/2];
+  }
+  function ticks(lo,hi){ const st=[0.1,0.2,0.25,0.5,1,2,2.5,5,10].find(s=>(hi-lo)/s<=10)||10, out=[]; for(let t=Math.ceil(lo/st-1e-9)*st;t<=hi+1e-9;t+=st) out.push(Math.round(t*1000)/1000); return out; }
+  const fv=v=>mode===0?igN(v):igF(v,3);
+  function draw(){
+    const sh=sc(H), st=sc(T), [lo,hi]=range(sh.concat(st)), X=v=>160+(v-lo)/(hi-lo)*530;
+    igClear(S);
+    el('text',{x:10,y:16,class:'axl'},S,['원래 값 · 두 속성을 같은 눈금에','Min-Max 정규화 · 0~1','표준화 · 평균 0, 표준편차 1'][mode]);
+    if(mode===2) el('line',{x1:X(0),x2:X(0),y1:24,y2:192,class:'zero'},S);
+    [[78,'해수면 높이 편차','#2f6fd0',sh,'ph'],[168,'해수면 온도 편차','#e0702b',st,'pt']].forEach(([y,name,col,vals,cls],r)=>{
+      el('text',{x:10,y:y-6,class:'rl',fill:col},S,name);
+      el('line',{x1:160,x2:690,y1:y,y2:y,class:'ax'},S);
+      ticks(lo,hi).forEach(t=>{ el('line',{x1:X(t),x2:X(t),y1:y-3,y2:y+3,class:'ax'},S); el('text',{x:X(t),y:y+16,class:'tk','text-anchor':'middle'},S,igN(t)); });
+      const used={};
+      vals.forEach((v,i)=>{
+        const px=Math.round(X(v)/6), lv=used[px]=(used[px]||0)+1, cy=y-11-(lv-1)*13;
+        const c=el('circle',{cx:X(v),cy,r:6.5,class:cls+(i===sel?' sel':'')},S); el('title',{},c,`${YR[i]}년 ${name} ${fv(v)}`);
+        if(r===0&&i===7&&Math.abs(H[7]-H0[7])>1e-9) el('circle',{cx:X(v),cy,r:10.5,class:'ring'},S);
+      });
+    });
+    $('igScaleTbl').innerHTML=`<tr><th>연도</th><th>해수면 높이</th><th>해수면 온도</th></tr>`+YR.map((y,i)=>`<tr data-i="${i}" class="${i===sel?'on':''}"><td>${y}</td><td>${fv(sh[i])}</td><td>${fv(st[i])}</td></tr>`).join('');
+    $('igScaleTbl').querySelectorAll('tr[data-i]').forEach(tr=>tr.onclick=()=>{sel=+tr.dataset.i; draw();});
+    /* 계산식 */
+    let f='표의 줄을 눌러 보세요.';
+    if(sel>=0){
+      const one=(nm,a)=>{
+        const x=a[sel];
+        if(mode===1){const mn=Math.min(...a), mx=Math.max(...a); return `<b>${nm}</b> (x − 최솟값) ÷ (최댓값 − 최솟값) = (${igN(x)} − ${igP(mn)}) ÷ (${igN(mx)} − ${igP(mn)}) = <b>${igF((x-mn)/(mx-mn),3)}</b>`;}
+        const m=igMean(a), s=igSd(a); return `<b>${nm}</b> (x − 평균) ÷ 표준편차 = (${igN(x)} − ${igP(Math.round(m*1000)/1000)}) ÷ ${igF(s,3)} = <b>${igF((x-m)/s,3)}</b>`;
+      };
+      f=mode===0?`<b>${YR[sel]}년</b> 높이 ${igN(H[sel])}, 온도 ${igN(T[sel])} · 원래 값이에요. 위에서 Min-Max 정규화나 표준화를 골라 보세요.`
+        :`<b>${YR[sel]}년</b><br>${one('높이',H)}<br>${one('온도',T)}`;
+    }
+    $('igFormula').innerHTML=f;
+    /* 통계 */
+    const chip=(nm,a,k)=>`<div style="--k:${k}"><b>${nm}</b>최솟값 ${fv(Math.min(...a))} · 최댓값 ${fv(Math.max(...a))}<br>평균 ${igF(igMean(a),mode?3:2)} · 표준편차 ${igF(igSd(a),mode?3:2)}</div>`;
+    $('igScaleStat').innerHTML=chip('해수면 높이',sh,'#2f6fd0')+chip('해수면 온도',st,'#e0702b');
+    /* 안내 */
+    /* 이상치 판정: 원래 높이 8개의 IQR 경계(Q3 + 1.5 × IQR)로 */
+    const hq1=igQ(H,.25), hq3=igQ(H,.75), hhi=hq3+1.5*(hq3-hq1), hlo=hq1-1.5*(hq3-hq1);
+    const out=H[7]>hhi+1e-9||H[7]<hlo-1e-9, rest=sh.slice(0,7);
+    let msg=['같은 눈금에 그리면 높이 편차는 넓게, 온도 편차는 좁게 퍼져 보여요. 온도의 차이가 잘 드러나지 않아요.',
+             '두 속성 모두 가장 작은 값은 <b>0</b>, 가장 큰 값은 <b>1</b>이 되었어요. 이제 같은 눈금에서 비교할 수 있어요.',
+             '두 속성 모두 평균이 <b>0</b>, 표준편차가 <b>1</b>이 되었어요. 0보다 크면 평균보다 큰 값, 작으면 평균보다 작은 값이에요.'][mode];
+    if(out){
+      msg+=[` <br>1996년 높이(${igN(H[7])})가 8개 값의 ${H[7]>hhi?'상한값(Q3 + 1.5 × IQR = '+igF(hhi,2)+')보다 커서':'하한값(Q1 − 1.5 × IQR = '+igF(hlo,2)+')보다 작아서'} <b>이상치</b>가 되었어요. 방법을 바꿔 보세요.`,
+            ` <br>이상치인 1996년 높이가 ${H[7]>hhi?'1':'0'}을 차지해서, 나머지 7개 높이 값이 <b>${igF(Math.min(...rest),2)}~${igF(Math.max(...rest),2)}</b> 사이로 몰렸어요. 서로의 차이가 잘 보이지 않아요.`,
+            ` <br>나머지 7개 높이 값이 <b>${igF(Math.min(...rest),2)}~${igF(Math.max(...rest),2)}</b> 사이에 모였어요. 표준화도 이상치의 영향을 받아요.`][mode];
+      if(mode) msg+=' 그래서 스케일링 전에 이상치를 먼저 처리해요.';
+    }
+    if(mode===2) msg+=' <br><span class="muted">Min-Max는 최솟값·최댓값 두 값으로 정해져 이상치 하나에 범위 전체가 좌우되고, 표준화는 모든 값의 평균·표준편차로 정해져 데이터가 많으면 영향이 덜해요. 이 예처럼 값이 8개뿐이면 차이가 거의 없어요.</span>';
+    $('igScaleMsg').innerHTML=msg;
+  }
+  $('igMode').querySelectorAll('.ig-pill').forEach(b=>b.onclick=()=>{mode=+b.dataset.m; $('igMode').querySelectorAll('.ig-pill').forEach(x=>x.classList.toggle('on',x===b)); draw();});
+  const setOut=v=>{H[7]=Math.round(v*10)/10; $('igOut').value=H[7]; $('igOutVal').textContent=igN(H[7]); draw();};
+  $('igOut').oninput=()=>setOut(+$('igOut').value);
+  $('igOutMake').onclick=()=>setOut(12);
+  $('igOutBack').onclick=()=>setOut(-2.4);
+  draw();
+})();
+
+/* 02 표준화하면 분포 모양이 바뀔까? (지어낸 예시 데이터 30개씩) */
+(function(){
+  const SETS=[
+    {n:'지난주 읽은 책 수(권)',d:'한쪽으로 치우친 예시',v:[0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,4,4,5,5,6,7,8,10,12,15]},
+    {n:'하루 운동 시간(분)',d:'봉우리가 둘인 예시',v:[10,15,15,15,20,20,20,20,25,25,25,25,30,30,35,70,75,80,80,85,85,85,90,90,90,95,95,100,105,110]},
+    {n:'키(cm)',d:'가운데가 볼록한 예시',v:[152,155,157,158,159,160,160,161,162,162,163,163,164,164,165,165,165,166,166,167,167,168,169,170,171,172,173,175,178,181]}
+  ];
+  let k=0;
+  function hist(id,vals,cls,unit){
+    const lo=Math.min(...vals), hi=Math.max(...vals), NB=8, w=(hi-lo)/NB, cnt=Array(NB).fill(0);
+    vals.forEach(v=>{let i=Math.floor((v-lo)/w+1e-9); if(i>=NB) i=NB-1; cnt[i]++;});
+    const mx=Math.max(...cnt), S=$(id), X=i=>36+i*(290/NB), Y=c=>150-c/mx*125;
+    igClear(S);
+    const step=mx>8?2:1;
+    for(let c=0;c<=mx;c+=step){ el('line',{x1:36,x2:326,y1:Y(c),y2:Y(c),class:'gl'},S); el('text',{x:30,y:Y(c)+4,class:'tk','text-anchor':'end'},S,c); }
+    cnt.forEach((c,i)=>el('rect',{x:X(i),y:Y(c),width:290/NB,height:150-Y(c),class:cls,stroke:'#fff','stroke-width':1},S));
+    for(let i=0;i<=NB;i+=2) el('text',{x:X(i),y:166,class:'tk','text-anchor':'middle'},S,Math.abs(hi-lo)<20?igF(lo+i*w,1):igN(Math.round((lo+i*w)*10)/10));
+    const m=igMean(vals), mxp=36+(m-lo)/(hi-lo)*290;
+    el('line',{x1:mxp,x2:mxp,y1:18,y2:150,class:'mean'},S); el('text',{x:mxp+4,y:16,class:'ml'},S,'평균 '+(Math.abs(m)<1e-9?'0':igF(m,1)));
+    el('text',{x:326,y:184,class:'axl','text-anchor':'end'},S,unit);
+    el('text',{x:4,y:12,class:'tk'},S,'개수');
+  }
+  function draw(){
+    const s=SETS[k], v=s.v, m=igMean(v), sd=igSd(v), z=v.map(x=>(x-m)/sd);
+    hist('igHistA',v,'hb',s.n); hist('igHistB',z,'hb2','표준화한 값');
+    $('igHistAS').textContent=`평균 ${igF(m,2)} · 표준편차 ${igF(sd,2)} · 최솟값 ${igN(Math.min(...v))} · 최댓값 ${igN(Math.max(...v))}`;
+    $('igHistBS').textContent=`평균 ${igF(igMean(z),2)} · 표준편차 ${igF(igSd(z),2)} · 최솟값 ${igF(Math.min(...z),2)} · 최댓값 ${igF(Math.max(...z),2)}`;
+  }
+  $('igSet').innerHTML=SETS.map((s,i)=>`<button class="ig-pill${i===k?' on':''}" data-k="${i}">${s.n} <small>· ${s.d}</small></button>`).join('');
+  $('igSet').querySelectorAll('button').forEach(b=>b.onclick=()=>{k=+b.dataset.k; $('igSet').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); draw();});
+  vote('igShapeVote','shapeVote',[['종 모양에 가까워진다','정규 분포처럼 바뀐다'],['모양은 그대로다','눈금만 바뀐다'],['반대쪽으로 치우친다','좌우가 뒤집힌다']],()=>{$('igShapeAfter').classList.add('on'); draw();});
+})();
+
+/* 03 시각화 방법 그림(새로 그린 예시) */
+(function(){
+  const ax='<line x1="8" y1="62" x2="114" y2="62" stroke="#9aa3ad"/><line x1="8" y1="6" x2="8" y2="62" stroke="#9aa3ad"/>';
+  const blob='M18,14 C34,4 60,8 74,12 C92,16 108,26 104,42 C100,58 80,66 58,62 C38,60 22,62 14,48 C8,36 8,22 18,14 Z';
+  const T={
+    '선 그래프':ax+'<polyline fill="none" stroke="#2f6fd0" stroke-width="2" points="10,50 24,46 38,48 52,38 66,40 80,30 94,26 110,16"/>',
+    '막대그래프':ax+[30,22,38,26,44,34].map((h,i)=>`<rect x="${14+i*16}" y="${62-h}" width="11" height="${h}" fill="#2f6fd0"/>`).join(''),
+    '히스토그램':ax+[8,18,30,42,34,20,10,5].map((h,i)=>`<rect x="${10+i*13}" y="${62-h}" width="13" height="${h}" fill="#1f9d74" stroke="#fff" stroke-width=".8"/>`).join(''),
+    '박스 플롯':[[16,30,46,58,88,104],[34,12,32,40,60,84],[52,40,62,70,86,110]].map(([y,a,b,m,c,d])=>`<line x1="${a}" x2="${d}" y1="${y}" y2="${y}" stroke="#1f9d74"/><rect x="${b}" y="${y-6}" width="${c-b}" height="12" fill="#d8f0e6" stroke="#1f9d74"/><line x1="${m}" x2="${m}" y1="${y-6}" y2="${y+6}" stroke="#0f2742" stroke-width="2"/>`).join(''),
+    '산점도':ax+[[14,52],[22,48],[28,50],[36,40],[42,44],[50,36],[58,38],[64,30],[72,32],[80,24],[88,26],[96,18],[104,14]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.6" fill="#e0702b"/>`).join(''),
+    '히트맵':[...Array(20)].map((_,i)=>{const r=i/5|0, c=i%5, v=[.9,.6,.3,.5,.2,.6,.9,.4,.7,.3,.3,.4,.9,.5,.6,.5,.7,.5,.9,.4][i]; return `<rect x="${12+c*20}" y="${6+r*14}" width="19" height="13" fill="rgba(224,112,43,${v})"/>`;}).join(''),
+    '산점도 행렬':[...Array(9)].map((_,i)=>{const r=i/3|0, c=i%3, x=14+c*34, y=4+r*21; return `<rect x="${x}" y="${y}" width="32" height="19" fill="#fff" stroke="#e3ddd2"/>`+(r===c?`<text x="${x+16}" y="${y+13}" font-size="8" text-anchor="middle" fill="#5b6776">${'ABC'[r]}</text>`:[[5,14],[11,11],[17,8],[23,6],[28,4]].map(([dx,dy],j)=>`<circle cx="${x+dx}" cy="${y+((r+c)%2?dy:19-dy)}" r="1.6" fill="#e0702b"/>`).join(''));}).join(''),
+    '평행좌표 플롯':[14,44,74,104].map(x=>`<line x1="${x}" x2="${x}" y1="6" y2="62" stroke="#9aa3ad"/>`).join('')+[[50,20,40,14],[40,30,20,26],[20,50,30,44],[30,40,56,34]].map(p=>`<polyline fill="none" stroke="#e0702b" stroke-width="1.4" opacity=".8" points="${p.map((y,i)=>(14+i*30)+','+y).join(' ')}"/>`).join(''),
+    '점 지도':`<path d="${blob}" fill="#f1edf7" stroke="#9b4fc4"/>`+[[30,24],[34,28],[38,26],[36,32],[62,40],[66,44],[70,38],[64,48],[84,30],[52,22],[28,46]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.2" fill="#9b4fc4"/>`).join(''),
+    '등치 지역도':[['M18,14 L50,9 L56,34 L14,40 Z',.25],['M50,9 L90,16 L82,34 L56,34 Z',.7],['M90,16 L106,30 L102,44 L82,34 Z',.45],['M14,40 L56,34 L58,62 L18,56 Z',.9],['M56,34 L82,34 L80,62 L58,62 Z',.35],['M82,34 L102,44 L96,58 L80,62 Z',.6]].map(([d,v])=>`<path d="${d}" fill="rgba(155,79,196,${v})" stroke="#fff"/>`).join('')
+  };
+  const put=(id,names)=>{$(id).innerHTML=names.map(n=>`<figure><svg viewBox="0 0 120 70" aria-hidden="true">${T[n]}</svg><figcaption>${n}</figcaption></figure>`).join('');};
+  put('igTh1',['선 그래프','막대그래프']); put('igTh2',['히스토그램','박스 플롯']); put('igTh3',['산점도','히트맵','산점도 행렬','평행좌표 플롯']); put('igTh4',['점 지도','등치 지역도']);
+})();
+
+/* 03 이 질문엔 어떤 시각화? (새로 만든 질문) */
+sorter('igSort',{
+  cats:[{n:'시간 시각화',k:'#2f6fd0'},{n:'분포 시각화',k:'#1f9d74'},{n:'관계 시각화',k:'#e0702b'},{n:'공간 시각화',k:'#9b4fc4'}],
+  items:[
+    {t:'최근 10년 동안 우리 지역의 미세먼지 농도는 해마다 어떻게 달라졌을까?',short:'10년 동안 미세먼지 농도',c:0,ic:'🌫️',w:'해마다 달라지는 흐름을 보는 질문이라 선 그래프나 막대그래프가 알맞아요.'},
+    {t:'점심 무렵 매점 손님 수는 10분 단위로 어떻게 오르내릴까?',short:'10분 단위 매점 손님 수',c:0,ic:'🥪',w:'일정한 간격으로 차례로 모은 값이에요. 교과서의 「시간대별 방문자 수」 막대그래프와 같은 꼴이에요.'},
+    {t:'우리 반 수학 점수는 몇 점대에 가장 많이 몰려 있을까?',short:'수학 점수가 몰린 점수대',c:1,ic:'📝',w:'점수가 구간마다 몇 명인지 보는 히스토그램이 알맞아요.'},
+    {t:'1반·2반·3반 학생들의 키는 반마다 얼마나 퍼져 있을까?',short:'반마다 키가 퍼진 정도',c:1,ic:'📏',w:'여러 그룹의 퍼진 정도를 나란히 비교하는 박스 플롯이 알맞아요.'},
+    {t:'하루 운동량이 많은 학생일수록 잠을 깊게 잘까?',short:'운동량과 잠의 깊이',c:2,ic:'🏃',w:'두 변수가 함께 변하는지 보는 질문이라 산점도가 알맞아요.'},
+    {t:'국어·영어·수학·과학 점수는 서로 얼마나 함께 오르내릴까?',short:'네 과목 점수끼리',c:2,ic:'🧮',w:'여러 변수 사이의 쌍별 관계는 히트맵이나 산점도 행렬로 한눈에 봐요.'},
+    {t:'우리 시의 전기차 충전소는 어느 동네에 모여 있을까?',short:'전기차 충전소가 모인 동네',c:3,ic:'🔌',w:'위치를 점으로 찍어 보는 점 지도가 알맞아요.'},
+    {t:'시·군마다 노인 인구 비율이 얼마나 다른지 지역별 색으로 비교하려면?',short:'시·군별 노인 인구 비율',c:3,ic:'🗺️',w:'지역별 값을 색의 강도로 칠하는 등치 지역도가 알맞아요.'}
+  ],
+  end:'<b>정리</b> 무엇이 궁금한지에 따라 그래프가 달라져요. 흐름이 궁금하면 <b>시간</b>, 퍼진 모양이 궁금하면 <b>분포</b>, 두 값이 함께 변하는지 궁금하면 <b>관계</b>, 어디에 있는지 궁금하면 <b>공간</b> 시각화예요.'
+});
+
+/* 03 같은 데이터, 다른 그래프 (학교 매점 4주 · 지어낸 예시) */
+(function(){
+  const TEMP=[22,23,25,24,26,24,25,27,28,27,26,28,29,30,29,28,30,31,31,30];
+  const NZ=[2,-3,1,0,-2,3,-1,2,-4,1,0,-2,3,1,-1,2,-3,0,4,-2];
+  const DRINK=TEMP.map((t,i)=>30+4*(t-22)+NZ[i]);
+  const BREAD=[52,47,63,50,41, 55,49,60,48,38, 50,46,64,51,40, 54,48,61,49,39];
+  const SNACK=[31,28,35,26,33, 29,30,36,27,32, 30,25,34,28,31, 33,29,37,26,30];
+  const W=420, H=220, L=50, R=400, TOP=26, BOT=180;
+  const sx=(v,a,b)=>L+(v-a)/(b-a)*(R-L), sy=(v,a,b)=>BOT-(v-a)/(b-a)*(BOT-TOP);
+  const grid=(a,b,st)=>{let s=''; for(let v=a;v<=b;v+=st) s+=`<line x1="${L}" x2="${R}" y1="${sy(v,a,b)}" y2="${sy(v,a,b)}" class="gl"/><text x="${L-6}" y="${sy(v,a,b)+4}" class="tk" text-anchor="end">${v}</text>`; return s;};
+  const wrap=(inner,yl,xl)=>`<svg viewBox="0 0 ${W} ${H}" class="ig-svg" role="img" aria-label="${yl} 그래프">${inner}<text x="6" y="12" class="axl">${yl}</text><text x="${R}" y="${H-4}" class="axl" text-anchor="end">${xl}</text></svg>`;
+  const wkSum=[0,1,2,3].map(w=>DRINK.slice(w*5,w*5+5).reduce((a,b)=>a+b,0));
+  const best=wkSum.indexOf(Math.max(...wkSum))+1;
+  const V={
+    line:()=>wrap(grid(20,70,10)+`<polyline points="${DRINK.map((v,i)=>sx(i,0,19)+','+sy(v,20,70)).join(' ')}" class="vl"/>`+DRINK.map((v,i)=>`<circle cx="${sx(i,0,19)}" cy="${sy(v,20,70)}" r="3" class="vd"/>`).join('')+[0,5,10,15].map((i,w)=>`<text x="${sx(i,0,19)}" y="${BOT+16}" class="tk">${w+1}주</text>`).join(''),'음료 판매량(개)','날짜 순서'),
+    bar:()=>wrap(grid(0,350,50)+wkSum.map((v,w)=>{const x=L+w*88+24; return `<rect x="${x}" y="${sy(v,0,350)}" width="44" height="${BOT-sy(v,0,350)}" class="vb"/><text x="${x+22}" y="${sy(v,0,350)-4}" class="tk" text-anchor="middle">${v}</text><text x="${x+22}" y="${BOT+16}" class="tk" text-anchor="middle">${w+1}주</text>`;}).join(''),'주별 음료 판매량 합계(개)','주차'),
+    hist:()=>{const ed=[25,35,45,55,65,75], c=ed.slice(0,-1).map((a,i)=>DRINK.filter(v=>v>=a&&(i===4?v<=ed[i+1]:v<ed[i+1])).length);
+      return wrap(grid(0,8,2)+c.map((n,i)=>`<rect x="${sx(ed[i],25,75)}" y="${sy(n,0,8)}" width="${sx(ed[i+1],25,75)-sx(ed[i],25,75)}" height="${BOT-sy(n,0,8)}" class="hb2" stroke="#fff"/>`).join('')+ed.map(e=>`<text x="${sx(e,25,75)}" y="${BOT+16}" class="tk" text-anchor="middle">${e}</text>`).join(''),'날수(일)','음료 판매량(개)');},
+    box:()=>{const rows=[['빵',BREAD],['음료',DRINK],['과자',SNACK]];
+      let s=''; for(let v=0;v<=80;v+=10) s+=`<line x1="${sx(v,0,80)}" x2="${sx(v,0,80)}" y1="${TOP}" y2="${BOT}" class="gl"/><text x="${sx(v,0,80)}" y="${BOT+16}" class="tk" text-anchor="middle">${v}</text>`;
+      rows.forEach(([n,a],r)=>{const y=TOP+30+r*50, q1=igQ(a,.25), q2=igQ(a,.5), q3=igQ(a,.75), mn=Math.min(...a), mx=Math.max(...a), X=v=>sx(v,0,80);
+        s+=`<text x="${L-6}" y="${y+4}" class="tk" text-anchor="end">${n}</text><line x1="${X(mn)}" x2="${X(mx)}" y1="${y}" y2="${y}" class="vwh"/><rect x="${X(q1)}" y="${y-12}" width="${X(q3)-X(q1)}" height="24" class="vbox"/><line x1="${X(q2)}" x2="${X(q2)}" y1="${y-12}" y2="${y+12}" class="vmed"/>`;});
+      return wrap(s,'품목','하루 판매량(개)');},
+    scatter:()=>wrap(grid(20,70,10)+DRINK.map((v,i)=>`<circle cx="${sx(TEMP[i],21,32)}" cy="${sy(v,20,70)}" r="4" class="vs"/>`).join('')+[22,24,26,28,30,32].map(t=>`<text x="${sx(t,21,32)}" y="${BOT+16}" class="tk" text-anchor="middle">${t}</text>`).join(''),'음료 판매량(개)','그날 최고 기온(℃)')
+  };
+  const ITEMS=[
+    {ic:'📈',n:'선 그래프',k:'line',kind:'시간 시각화',col:'#2f6fd0',p:'날이 갈수록 음료 판매량이 늘어나는 <b>흐름(추세)</b>이 보여요. 어느 날 갑자기 튀는 값이 있는지도 찾기 쉬워요.'},
+    {ic:'📊',n:'막대그래프',k:'bar',kind:'시간 시각화',col:'#2f6fd0',p:`주마다 음료 판매량 합계를 차례로 놓으면 주가 지날수록 늘어나 <b>${best}주</b>에 가장 많이 팔렸다는 것이 한눈에 보여요. 일정한 간격(주)으로 모은 값을 비교하기 좋아요.`},
+    {ic:'🧱',n:'히스토그램',k:'hist',kind:'분포 시각화',col:'#1f9d74',p:'날마다 팔린 음료 개수가 <b>어느 구간에 많이 몰려 있는지</b>, 전체가 어떻게 퍼져 있는지 보여요. 막대 사이에 빈칸이 없어요.'},
+    {ic:'📦',n:'박스 플롯',k:'box',kind:'분포 시각화',col:'#1f9d74',p:'빵·음료·과자의 하루 판매량을 놓고 <b>가운데 값(중앙값)과 퍼진 정도</b>를 품목끼리 비교할 수 있어요.'},
+    {ic:'🔵',n:'산점도',k:'scatter',kind:'관계 시각화',col:'#e0702b',p:'기온이 높은 날일수록 음료가 많이 팔리는 경향이 보여요. <b>두 변수가 함께 변하는지</b> 볼 때 알맞아요.'}
+  ];
+  tabs('igVizBtn','igVizView',ITEMS,it=>`<div class="ig-vz">${V[it.k]()}<div><span class="k" style="--k:${it.col}">${it.kind}</span><p><b>이 그래프로 보면</b> ${it.p}</p></div></div>`);
+})();
+
+/* 04 마무리 */
+const MEMOLIST=[['firstThought','처음 생각: 두 표를 합쳐 비교하려면'],['mergeLog','연도로 두 표 합치기 기록'],['mergeMemo','두 표를 합치며 알게 된 것'],['scaleMemo','정규화·표준화 비교와 이상치의 영향'],['shapeVote','표준화하면 분포 모양은? (내 예상)'],['shapeMemo','예상과 결과, 모양이 그대로인 까닭'],['vizMemo','(선택) 매점 데이터로 궁금한 것과 알맞은 그래프'],['keyQ','오늘의 질문에 대한 내 답']];
+onShow[4]=()=>{
+  const v=String(MEMO.firstThought||'').trim();
+  $('igPrev2').innerHTML=v?`<b>시작 화면에 적은 처음 생각</b><span>${esc(v)}</span>`:'';
+  $('igPrev2').style.display=v?'':'none';
+  /* (선택) 항목은 쓴 것만 모아 보기에 보이기 */
+  memoSummary('msum',MEMOLIST.filter(([k,l])=>!l.startsWith('(선택)')||String(MEMO[k]||'').trim()));
+};
+
+/* 진도 보내기 ②: 화면 이동·퀴즈·메모·창 이탈을 선생님 시트로 */
+(function(){
+  if(WHO.off) return;
+  const box=document.createElement('div');
+  if(WHO.preview){
+    box.className='tr-badge';
+    box.innerHTML=WHO.teacher?'교사 모드 · 전송 안 함 <button type="button">끝내기</button>':'미리보기 · 진도 전송 안 함';
+    (document.querySelector('.top')||document.body).appendChild(box);
+    const b=box.querySelector('button'); if(b) b.onclick=()=>{ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); };
+    return;
+  }
+
+  if(WHO.need){
+    let last={}; try{last=JSON.parse(localStorage.getItem('aiw-last')||'{}')||{};}catch(e){}
+    box.className='tr-gate';
+    box.innerHTML=`<form class="tr-card" autocomplete="off">
+      <h2>수업 시작 전에</h2>
+      <p class="tr-sub">학번과 이름을 써 주세요.</p>
+      <label class="tr-f"><span>학번</span><input name="no" inputmode="numeric" maxlength="5" placeholder="예: 20101" value="${esc(last.no||'')}"></label>
+      <label class="tr-f"><span>이름</span><input name="name" maxlength="10" placeholder="이름" value="${esc(last.name||'')}"></label>
+      <div class="tr-cls" hidden>${[].map(c=>`<label><input type="radio" name="cls" value="${c}"><span>${c}</span></label>`).join('')}</div>
+      <div class="tr-err"></div>
+      <button class="btn" type="submit">시작하기 →</button>
+      <p class="tr-note">어느 화면까지 왔는지, 퀴즈와 메모가 선생님께 전달돼요.<br>다른 친구 이름으로 들어가지 마세요.</p>
+    </form>`;
+    document.body.appendChild(box);
+    const f=box.querySelector('form'), err=box.querySelector('.tr-err'), go2=f.querySelector('button[type=submit]'), clsBox=box.querySelector('.tr-cls');
+    f.no.addEventListener('input',()=>{f.no.value=f.no.value.replace(/\D/g,'').slice(0,5);});
+    const TEACH=t=>{let h=2166136261;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return h.toString(36);}, TEACH_H='853zuh';
+    const enter=w=>{ try{sessionStorage.setItem('aiw-who',JSON.stringify(w)); if(!w.teacher) localStorage.setItem('aiw-last',JSON.stringify({no:w.no,name:w.name}));}catch(e){} location.reload(); };
+    const busy=on=>{ go2.disabled=on; go2.textContent=on?'명단에서 확인하는 중…':'시작하기 →'; };
+    f.onsubmit=async e=>{
+      e.preventDefault(); err.textContent='';
+      const no=f.no.value.trim(), name=f.name.value.replace(/\s+/g,'').trim();
+      if(TEACH(no+'|'+name)===TEACH_H) return enter({teacher:true});
+      if(!/^\d{5}$/.test(no)){err.textContent='학번 다섯 자리를 숫자로 써 주세요.';f.no.focus();return;}
+      if(name.length<2){err.textContent='이름을 써 주세요.';f.name.focus();return;}
+      /* 명단에서 확인이 안 될 때만 반을 직접 고른다 */
+      if(!clsBox.hidden){
+        const cls=(f.querySelector('input[name=cls]:checked')||{}).value;
+        if(!cls){err.textContent='반을 골라 주세요.';return;}
+        return enter({cls,no,name});
+      }
+      busy(true);
+      try{
+        const r=await fetch(PEP,{method:'POST',body:JSON.stringify({op:'who',no,name})});
+        const d=await r.json();
+        if(d.ok) return enter({cls:d.cls,no,name});
+        busy(false);
+        if(d.err==='notfound'){ err.textContent='명단에서 찾지 못했어요. 학번과 이름을 다시 확인해 주세요. 계속 안 되면 선생님께 말해 주세요.'; return; }
+        throw new Error(d.err);
+      }catch(x){
+        busy(false);
+        if(clsBox.hidden){ clsBox.hidden=false; err.textContent='명단을 확인하지 못했어요. 내 반을 골라 주세요.'; }
+      }
+    };
+    setTimeout(()=>{ (f.no.value?(f.name.value?go2:f.name):f.no).focus(); },50);
+    return;
+  }
+
+  /* 이름 표시 + 바꾸기 */
+  box.className='tr-who';
+  box.innerHTML=`<span>${esc(WHO.cls)} ${esc(WHO.no)} <b>${esc(WHO.name)}</b></span><button type="button" title="다른 학생으로 바꾸기">바꾸기</button>`;
+  (document.querySelector('.top')||document.body).appendChild(box);
+  box.querySelector('button').onclick=()=>{ if(confirm('다른 학생으로 바꿀까요? (지금까지 한 것은 이 학번으로 저장돼 있어요)')){ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); } };
+
+  const SK=QK+'-seen', AK=QK+'-away';
+  const seen=new Set(store.get(SK,[]));
+  const A=store.get(AK,{n:0,s:0});
+  let awayAt=null, lastAct=Date.now(), sent=0, lastSent=0, tmr=null, dirty=false;
+
+  function snap(){
+    let ok=0, done=0;
+    for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{const v=QS[k+'-'+i]; if(v!=null){done++; if(v===it.a) ok++;}});
+    const ML=(typeof MEMOLIST!=='undefined')?MEMOLIST:[];
+    return {op:'put',lesson:LESSON,title:document.title,cls:WHO.cls,no:WHO.no,name:WHO.name,
+      scr:cur,names:pages.map((p,i)=>i?p.dataset.name:'시작'),seen:[...seen].sort((a,b)=>a-b),
+      qOk:ok,qDone:done,qTot:TOTALQ,
+      memo:ML.map(([k,l])=>[l,String(MEMO[k]==null?'':MEMO[k]).slice(0,1500)]),
+      away:awayAt?1:0,leaves:A.n,awaySec:Math.round(A.s+(awayAt?(Date.now()-awayAt)/1000:0)),idle:Math.round((Date.now()-lastAct)/1000),n:++sent};
+  }
+  function flush(){
+    if(!dirty) return; dirty=false; lastSent=Date.now();
+    const body=JSON.stringify(snap());
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(PEP,new Blob([body],{type:'text/plain'}))) return; }catch(e){}
+    try{ fetch(PEP,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  /* 너무 자주 보내지 않기: 보통 15초, 창 이탈·복귀는 3초 간격 */
+  function send(urgent){
+    dirty=true; clearTimeout(tmr);
+    const gap=urgent?3000:15000, wait=Math.max(0,gap-(Date.now()-lastSent));
+    tmr=setTimeout(flush,wait);
+  }
+
+  const _go=go; go=function(i){ _go(i); if(!seen.has(cur)){seen.add(cur); store.set(SK,[...seen]);} send(true); };
+  const _upd=updScore; updScore=function(){ _upd(); send(); };
+  const _set=store.set; store.set=function(k,v){ _set(k,v); if(k===MK) send(); };
+
+  function leave(){ if(awayAt) return; awayAt=Date.now(); A.n++; _set(AK,A); send(true); }
+  function back(){ if(!awayAt) return; A.s+=(Date.now()-awayAt)/1000; awayAt=null; _set(AK,A); send(true); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?leave():(document.hasFocus()&&back()); });
+  window.addEventListener('blur',()=>setTimeout(()=>{ if(!document.hasFocus()) leave(); },300));
+  window.addEventListener('focus',back);
+  window.addEventListener('pagehide',()=>{ dirty=true; flush(); });
+  ['pointerdown','keydown','input','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now();},{capture:true,passive:true}));
+  /* 화면에 머물러 있으면 2분마다 한 번 신호 */
+  setInterval(()=>{ if(!document.hidden) send(); },120000);
+})();
+
+/* 시작 */
+bindMemos();
+updScore();
+const h0=parseInt((location.hash.match(/^#p(\d+)$/)||[])[1],10);
+go(isNaN(h0)?0:h0);
+</script>
+<script>
+/* page-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 (복사 버튼은 그대로 동작) */
+(function(){
+  var t=null, tm=null, MSG='수업 자료는 복사할 수 없어요. 내 말로 정리해 보세요.';
+  function say(){ if(!t){t=document.createElement('div');t.className='pg-toast';document.body.appendChild(t);} t.textContent=MSG; t.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){t.classList.remove('on');},1800); }
+  function inField(e){ return e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'); }
+  ['copy','cut'].forEach(function(type){ document.addEventListener(type,function(e){ e.preventDefault(); say(); },true); });
+  document.addEventListener('contextmenu',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('selectstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('keydown',function(e){ var k=(e.key||'').toLowerCase(); if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x')){ e.preventDefault(); say(); } if((e.ctrlKey||e.metaKey)&&k==='a'&&!inField(e)) e.preventDefault(); },true);
+})();
+</script>
+</body>
+</html>

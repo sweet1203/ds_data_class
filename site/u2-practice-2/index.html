@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터 분석의 실제 ② 분석과 해석 · 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202c; --muted:#5b6776; --paper:#f3efe7; --card:#fff; --line:#e3ddd2;
+    --navy:#0f2742; --amber:#f2a516; --red:#d64535; --mint:#1f9d74;
+    --acc:#2f6fd0; --acc-soft:#e6eefb;
+    --shadow:0 18px 50px rgba(15,39,66,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:17px;line-height:1.65;
+    background-image:radial-gradient(rgba(15,39,66,.07) 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column}
+  .top{position:sticky;top:0;z-index:10;background:rgba(15,39,66,.97);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+  .brand{font-family:"Black Han Sans",sans-serif;font-size:1.15rem;letter-spacing:.01em;white-space:nowrap;color:inherit;text-decoration:none}
+  .steps{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .steps::-webkit-scrollbar{display:none}
+  .steps button{flex:0 0 auto;border:0;background:transparent;color:#9fb3cc;font:inherit;font-size:.82rem;padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .steps button.on{background:var(--amber);color:var(--navy);font-weight:900}
+  .steps button.done::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fd3a5;margin-left:5px;vertical-align:middle}
+  .score{font-size:.85rem;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .progress{height:4px;background:rgba(15,39,66,.12)}
+  .progress i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s}
+  main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:26px 20px 30px}
+  .page{display:none}
+  .page.on{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1) both}
+  .page.on.back{animation-name:enterBack}
+  @keyframes enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes enterBack{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  .head{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .num{font-family:"Black Han Sans",sans-serif;font-size:4.2rem;line-height:.85;color:var(--acc);opacity:.9}
+  .head h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:2.1rem;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .head p{margin:4px 0 0;color:var(--muted)}
+  .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;border:1px solid rgba(0,0,0,.04)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .grid2.even{grid-template-columns:1fr 1fr}
+  @media (max-width:860px){.grid2,.grid2.even{grid-template-columns:1fr}.num{font-size:3rem}.head h2{font-size:1.6rem}}
+  h3{margin:0 0 8px;font-size:1.1rem}
+  h4{margin:0 0 4px}
+  p{margin:6px 0}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .book{display:inline-block;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:center}
+  th{color:var(--muted);font-weight:700;font-size:.85rem}
+  td.l,th.l{text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .chip.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .btn{border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;transition:transform .1s, box-shadow .2s;box-shadow:0 6px 16px rgba(15,39,66,.18)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+  .btn.sm{padding:5px 12px;font-size:.88rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctrl{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:4px 10px;margin:4px 0}
+  .ctrl label{font-weight:900;font-size:.95rem}
+  .ctrl output{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  input[type=text],input[type=number]{font:inherit;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px;background:#fff;color:var(--ink)}
+  .big{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+  .ok{color:var(--mint);font-weight:700}.ng{color:var(--red);font-weight:700}
+  .callout{border-radius:12px;padding:12px 16px;background:var(--acc-soft);border-left:5px solid var(--acc);margin:12px 0}
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#f1f3f6;padding:1px 6px;border-radius:5px}
+  .cx{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;border-left:6px solid var(--acc)}
+  .cx>h3{margin:0 0 4px;font-size:1.15rem}
+  .cx>.lead2{color:var(--muted);margin:0 0 12px}
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media (max-width:860px){.qa{grid-template-columns:1fr}}
+  .qa>div{background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .qa b.q{display:block;color:var(--acc);margin-bottom:3px}
+  .vsteps{list-style:none;margin:0;padding:0;counter-reset:v}
+  .vsteps>li{position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line)}
+  .vsteps>li:first-child{border-top:0}
+  .vsteps>li::before{counter-increment:v;content:counter(v);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.9rem}
+  .vsteps p{margin:2px 0 0;font-size:.93rem}
+  .case{background:#fff8e6;border:2px solid #f6d58a;border-radius:16px;padding:16px 20px;margin-bottom:18px}
+  .case>h3{margin:0 0 8px;font-size:1.05rem;color:#8a5a00}
+  /* 퀴즈 */
+  .quiz{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:16px;padding:20px 22px;margin-top:6px;box-shadow:var(--shadow)}
+  .quiz .qh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .quiz .qh b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.25rem;color:var(--amber)}
+  .quiz .qh span{font-size:.85rem;color:#a9bbd2}
+  .qi{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;margin-top:10px}
+  .qi .qq{font-weight:700;margin-bottom:8px}
+  .qi .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .qi .opts button{font:inherit;font-size:.93rem;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .qi .opts button:hover:not(:disabled){border-color:var(--amber)}
+  .qi .opts button.right{background:var(--mint);border-color:var(--mint);font-weight:700}
+  .qi .opts button.wrong{background:var(--red);border-color:var(--red);text-decoration:line-through}
+  .qi .opts button:disabled{cursor:default}
+  .qi .why{margin-top:8px;font-size:.9rem;color:#d7e3f2;display:none}
+  .qi.answered .why{display:block}
+  .qi.answered.correct{box-shadow:inset 4px 0 0 var(--mint)}
+  .qi.answered.incorrect{box-shadow:inset 4px 0 0 var(--red)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(243,239,231,.94);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+  .foot .btn{min-width:110px}
+  .foot .pg{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  /* 표지 */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 20% 0%,#24507f 0%,#0f2742 55%,#0a1a2e 100%);color:#fff;min-height:520px;padding:46px 44px;box-shadow:var(--shadow)}
+  .cover canvas{position:absolute;right:0;top:0;height:100%;width:62%;image-rendering:pixelated;opacity:.95}
+  .cover .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0f2742 34%,rgba(15,39,66,.75) 50%,rgba(15,39,66,0) 70%)}
+  .cover .in{position:relative;max-width:560px}
+  .cover .tag{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:.85rem;padding:4px 12px;border-radius:999px}
+  .cover h1{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:3.1rem;line-height:1.15;margin:16px 0 10px}
+  .cover p{color:#c8d6e8;font-size:1.05rem}
+  .cover ol{margin:18px 0 26px;padding-left:20px;color:#e1e9f4;columns:2;column-gap:28px;font-size:.95rem}
+  @media (max-width:700px){.cover{padding:30px 22px}.cover h1{font-size:2.2rem}.cover ol{columns:1}.cover canvas{width:100%;opacity:.3}.cover .fade{display:none}}
+  .today{margin-top:26px}
+  .kicker{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:1.15rem;color:var(--navy);margin-bottom:6px;border-bottom:4px solid var(--amber);line-height:1.2}
+  .today-lead{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+  .today-lead p{font-size:1.12rem;margin:6px 0 0}
+  .why3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  @media (max-width:900px){.why3{grid-template-columns:1fr}}
+  .why{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px 22px}
+  .why ul{margin:6px 0 0;padding-left:18px;font-size:.95rem}
+  .why li{margin:6px 0}
+  .why ul.can{list-style:none;padding:0}
+  .why ul.can li{padding-left:28px;position:relative}
+  .why ul.can li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .why ul.uses{list-style:none;padding:0}
+  .why ul.uses li{border-left:3px solid var(--amber);padding-left:10px}
+  .glossary-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .glossary-head .muted{font-size:.88rem}
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.glossary{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.glossary{grid-template-columns:1fr}}
+  .gcard{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:#fff;border-radius:14px;padding:16px 16px 12px;box-shadow:var(--shadow);border-top:6px solid var(--g);position:relative;transition:transform .18s, box-shadow .18s}
+  .gcard:hover,.gcard:focus-visible{transform:translateY(-4px);box-shadow:0 22px 50px rgba(15,39,66,.16)}
+  .gcard:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+  .gcard i{position:absolute;right:14px;top:8px;font-style:normal;font-family:"Black Han Sans",sans-serif;font-size:1.9rem;color:var(--g);opacity:.25}
+  .gcard h4{margin:0 0 6px;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;color:var(--g)}
+  .gcard dl{margin:0;font-size:.88rem;line-height:1.45}
+  .gcard dt{font-weight:900;margin-top:7px}
+  .gcard dd{margin:1px 0 0;color:#3c4654}
+  .prob{display:grid;grid-template-columns:60px 1fr 46px;gap:6px;align-items:center;font-size:.88rem;min-width:200px}
+  .prob i{display:block;height:12px;border-radius:6px;background:var(--acc)}
+  .apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:860px){.apps{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:2rem;display:block}
+  .apps button b{display:block}
+  .appd{display:none}
+  .appd.on{display:block;animation:enter .35s both}
+  .ex2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  @media (max-width:640px){.ex2{grid-template-columns:1fr}}
+  .ex2>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;font-size:.93rem;border-left:4px solid var(--acc)}
+  .try{margin-top:12px;background:var(--acc-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+  .try ol{margin:4px 0 0;padding-left:20px}
+  /* 3단원 공통 */
+  .easy{display:flex;gap:12px;align-items:flex-start;background:#fffbea;border:2px solid #f6d58a;border-radius:14px;padding:12px 16px;margin:-4px 0 16px;font-size:1rem;line-height:1.6}
+  .easy b.t{flex:0 0 auto;background:#f2a516;color:#0f2742;border-radius:999px;padding:2px 10px;font-size:.82rem;margin-top:2px}
+  .route{position:absolute;right:30px;top:36px;width:min(430px,44%);display:grid;gap:10px}
+  .route .st{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;color:#fff;opacity:0;transform:translateX(20px);animation:rin .6s forwards}
+  .route .st i{font-style:normal;font-size:1.6rem}
+  .route .st b{display:block;font-size:1.02rem}
+  .route .st small{color:#c8d6e8;font-size:.82rem}
+  .route .ar{color:var(--amber);text-align:center;font-weight:900;opacity:0;animation:rin .5s forwards}
+  @keyframes rin{to{opacity:1;transform:none}}
+  @media (max-width:1080px){.route{position:relative;right:auto;top:auto;width:100%;margin-top:22px}}
+  .story{background:rgba(255,255,255,.08);border-left:4px solid var(--amber);border-radius:10px;padding:10px 14px;margin:14px 0;color:#e1e9f4;font-size:.95rem}
+  .story b{color:#fff}
+  /* 카드 묶음 */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:900px){.cards3,.cards4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards3,.cards2,.cards4{grid-template-columns:1fr}}
+  .kc{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:14px 16px;border-top:6px solid var(--k,var(--acc))}
+  .kc h4{color:var(--k,var(--acc));font-size:1.05rem;margin:0 0 4px}
+  .kc p{font-size:.92rem;margin:4px 0 0}
+  .kc .ic{font-size:1.7rem;line-height:1}
+  .kc small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+  .tagt{display:inline-block;font-size:.76rem;font-weight:900;border-radius:999px;padding:1px 9px;background:color-mix(in srgb,var(--k,var(--acc)) 14%,white);color:var(--k,var(--acc));margin:6px 4px 0 0}
+  /* 연표 */
+  .tl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tl button{flex:1;min-width:92px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;font:inherit;font-weight:900;cursor:pointer;color:var(--ink)}
+  .tl button.on{border-color:var(--acc);background:var(--acc);color:#fff}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.tlv{grid-template-columns:1fr}}
+  .tlv>div{background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:5px solid var(--k)}
+  .tlv h4{color:var(--k)}
+  .tlv .it{margin:6px 0 0;font-size:.93rem}
+  .tlv .it b{display:block}
+  /* 분류 게임 */
+  .sit{background:#fbfaf7;border:2px dashed var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-height:170px}
+  .sit .cnt{font-size:.82rem;color:var(--muted)}
+  .sit .sq{font-size:1.08rem;font-weight:900;margin:6px 0 12px;min-height:52px}
+  .sit .ic{font-size:2rem}
+  .sit .row{justify-content:center}
+  .sit .fb{min-height:24px;margin-top:8px;font-size:.93rem}
+  .sit .cat{border:2px solid var(--k);color:var(--k);background:#fff;font-weight:900}
+  .sit .cat:hover{background:color-mix(in srgb,var(--k) 12%,white)}
+  .board{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;margin-top:12px}
+  @media (max-width:760px){.board{grid-template-columns:1fr 1fr}}
+  .board>div{background:#fff;border-radius:12px;border-top:5px solid var(--k);padding:8px 10px;font-size:.84rem;min-height:70px}
+  .board>div b{display:block;color:var(--k);font-size:.92rem}
+  .board>div span{display:block;border-top:1px dashed var(--line);padding:3px 0}
+  .board>div span.x{color:var(--red)}
+  /* 뒤집는 카드 */
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .tcard{perspective:900px;height:172px;cursor:pointer}
+  .tcard .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .tcard.flip .in{transform:rotateY(180deg)}
+  .tcard .f,.tcard .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:12px 14px;box-shadow:0 6px 16px rgba(15,39,66,.09);overflow:auto}
+  .tcard .f{background:#fff;border-top:6px solid var(--acc);display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .tcard .f i{font-style:normal;font-size:2rem;line-height:1.1}
+  .tcard .f b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.2rem;line-height:1.25;margin-top:4px}
+  .tcard .f small{color:var(--muted);font-size:.78rem;margin-top:6px}
+  .tcard .b{background:var(--acc);color:#fff;transform:rotateY(180deg);font-size:.9rem;line-height:1.5}
+  .tcard .b .x{margin-top:6px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px;font-size:.84rem}
+  /* 사례 탭 */
+  .apps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .apps.a6{grid-template-columns:repeat(6,1fr)}
+  @media (max-width:860px){.apps,.apps.a6{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.apps,.apps.a6{grid-template-columns:1fr 1fr}}
+  .apps button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:14px;padding:12px 8px;box-shadow:0 6px 16px rgba(15,39,66,.08);border:3px solid transparent;text-align:center;transition:.2s;font-size:.92rem}
+  .apps button.on{border-color:var(--acc);transform:translateY(-3px)}
+  .apps button .e{font-size:1.8rem;display:block}
+  .apps button b{display:block}
+  .cview{margin-top:14px}
+  .pr{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+  @media (max-width:760px){.pr{grid-template-columns:1fr}}
+  .pr>div{border-radius:12px;padding:12px 14px;font-size:.93rem}
+  .pr .p{background:#fdecea;border-left:5px solid var(--red)}
+  .pr .s{background:#e7f6ef;border-left:5px solid var(--mint)}
+  .pr h4{font-size:.95rem}
+  .pr .p h4{color:#9b2c20}.pr .s h4{color:#13684d}
+  .dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:10px;background:#fbfaf7;border-radius:10px;padding:10px 12px}
+  .dl b{color:var(--acc)}
+  /* 메모 */
+  .memo{margin-top:10px}
+  .memo label{display:block;font-weight:700;font-size:.93rem;margin:10px 0 4px}
+  .memo label small{font-weight:400;color:var(--muted)}
+  .memo input[type=text]{width:100%}
+  textarea{font:inherit;width:100%;min-height:64px;padding:8px 10px;border:1px solid #c5ccd5;border-radius:8px;resize:vertical;color:var(--ink);background:#fff}
+  .saved{font-size:.8rem;color:var(--mint);min-height:1em}
+  /* 투표 */
+  .vote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media (max-width:560px){.vote{grid-template-columns:1fr}}
+  .vote button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center;font-weight:900}
+  .vote button.on{border-color:var(--acc);background:var(--acc-soft)}
+  .vote button small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+  .reveal{display:none;margin-top:12px}
+  .reveal.on{display:block;animation:fadein .4s both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .pct{display:grid;grid-template-columns:120px 1fr 50px;gap:8px;align-items:center;margin:6px 0;font-size:.93rem}
+  .pct i{display:block;height:16px;border-radius:8px;background:var(--acc);width:0;transition:width .8s}
+  /* 질문폼 연결 */
+  .formgo{background:linear-gradient(135deg,#0f2742,#1b3d66);color:#fff;border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-top:18px}
+  .formgo .kicker{color:#fff;border-bottom-color:var(--amber)}
+  .formgo h3{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;margin:4px 0 8px}
+  .formgo ol{margin:6px 0 12px;padding-left:22px;color:#e1e9f4}
+  .formgo ol li{margin:6px 0}
+  .formgo p{color:#c8d6e8;font-size:.92rem}
+  .formgo .go{display:inline-block;background:var(--amber);color:var(--navy);font-weight:900;font-size:1.1rem;text-decoration:none;border-radius:12px;padding:12px 22px;margin-top:6px}
+  .formgo .go:hover{filter:brightness(1.05)}
+  .msum{background:#fff;border-radius:14px;padding:12px 16px;margin-top:12px;color:var(--ink);font-size:.9rem}
+  .msum h4{color:var(--navy)}
+  .msum dl{margin:6px 0 0}
+  .msum dt{font-weight:700;margin-top:8px;color:var(--muted);font-size:.84rem}
+  .msum dd{margin:2px 0 0;white-space:pre-wrap}
+  .msum dd.e{color:#aab2bd}
+  .key3{display:grid;gap:10px;margin-bottom:18px}
+  .key3 div{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--k);font-size:1.02rem}
+  .note{font-size:.84rem;color:var(--muted);margin-top:8px}
+  .flow2{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .flow2>div{flex:1;min-width:140px;background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .flow2>div b{display:block}
+  .flow2>div span{font-size:.88rem}
+  .flow2>.ar{flex:0 0 auto;min-width:0;background:none;border:0;align-self:center;font-weight:900;color:var(--muted);padding:0}
+  @media (max-width:640px){.flow2>.ar{flex-basis:100%;text-align:center;transform:rotate(90deg)}}
+  .chk{display:flex;flex-wrap:wrap;gap:8px}
+  .chk button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .chk button.on{border-color:var(--acc);background:var(--acc);color:#fff;font-weight:700}
+  .tbl td,.tbl th{padding:8px 10px;vertical-align:top}
+  .tbl td{text-align:left;font-size:.92rem}
+  .mx{min-width:560px}
+  .mx th{background:#fbfaf7}
+  .mx td{border:1px solid var(--line);height:74px;width:30%;font-size:.86rem;cursor:pointer;background:#fff;transition:background .2s}
+  .mx td:hover{background:var(--acc-soft)}
+  .mx td.fill{background:#e7f6ef;cursor:default}
+  .mx td.bad{background:#fdecea}
+  .mx th.r{white-space:nowrap}
+  #mxPool button{border-radius:12px;text-align:left;max-width:100%}
+  /* 4단원 */
+  .sdg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media (max-width:760px){.sdg{grid-template-columns:repeat(3,1fr)}}
+  .sdg button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;padding:8px 6px;color:#fff;background:var(--c);min-height:74px;font-size:.78rem;line-height:1.3;font-weight:700;display:flex;flex-direction:column;gap:2px;transition:transform .15s}
+  .sdg button b{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.3rem;line-height:1}
+  .sdg button:hover,.sdg button.on{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .sdg button.on{outline:3px solid var(--navy)}
+  .sdgv{margin-top:12px;background:#fbfaf7;border-radius:12px;padding:12px 14px;border-left:6px solid var(--c,#0f2742);min-height:60px}
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.five{grid-template-columns:1fr}}
+  .five>div{background:#fff;border-radius:14px;box-shadow:0 6px 16px rgba(15,39,66,.08);padding:12px 12px;border-top:6px solid var(--k)}
+  .five b.n{font-family:"Black Han Sans",sans-serif;color:var(--k);font-size:1.2rem}
+  .five h4{margin:2px 0 4px;font-size:.98rem}
+  .five p{font-size:.86rem;margin:4px 0}
+  .five .ml{margin-top:8px;background:color-mix(in srgb,var(--k) 10%,white);border-radius:8px;padding:6px 8px;font-size:.82rem}
+  .quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:6px;margin-top:8px}
+  .quad .ax{font-size:.78rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .quad .ax.v{writing-mode:vertical-rl}
+  .quad .cell{background:#fbfaf7;border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 8px;font-size:.84rem;cursor:pointer}
+  .quad .cell.best{border-color:var(--mint);background:#e7f6ef}
+  .quad .cell small{display:block;color:var(--muted);font-size:.74rem}
+  .quad .cell span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin:2px 2px 0 0}
+  .qbuild{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:1.08rem;font-weight:700;background:#fff8e6;border:2px solid #f6d58a;border-radius:12px;padding:12px 14px}
+  .qbuild input{flex:1;min-width:200px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid #c5ccd5;border-radius:8px}
+  .plan{width:100%}
+  .plan td:first-child{width:150px;font-weight:700;font-size:.9rem;background:#fbfaf7}
+  .plan input{width:100%;font:inherit;padding:5px 8px;border:1px solid #c5ccd5;border-radius:6px}
+  /* 시뮬레이터 */
+  .sim{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.sim{grid-template-columns:1fr}}
+  .sim .cls{background:#fbfaf7;border-radius:12px;padding:10px 12px;border-top:5px solid var(--k)}
+  .sim .cls h4{color:var(--k);display:flex;justify-content:space-between}
+  .sim .cls ul{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+  .sim .cls li.new{color:var(--k);font-weight:700}
+  .cand{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cand button{border:2px dashed var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--ink)}
+  .cand button.on{border-style:solid;background:color-mix(in srgb,var(--k) 15%,white);font-weight:700}
+  .tt td,.tt th{padding:6px 8px;font-size:.88rem}
+  .tt td.r{color:var(--mint);font-weight:900}.tt td.w{color:var(--red);font-weight:900}
+  .score2{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .score2 div{flex:1;min-width:140px;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px 12px;text-align:center}
+  .score2 b{display:block;font-family:"Black Han Sans",sans-serif;font-size:1.8rem;color:var(--acc)}
+  /* 스크래치 블록 */
+  .blocks{font-family:ui-sans-serif,system-ui;font-size:.86rem;display:inline-block}
+  .blk{display:block;border-radius:6px;padding:5px 10px;margin:3px 0;color:#fff;width:max-content;max-width:100%}
+  .blk.ev{background:#ffbf00;color:#333;border-radius:14px 14px 6px 6px}
+  .blk.ctl{background:#ffab19;color:#333}
+  .blk.ml{background:#4c97ff}
+  .blk.lk{background:#9966ff}
+  .blk.in{margin-left:22px}
+  .blk i{font-style:normal;background:rgba(255,255,255,.9);color:#333;border-radius:10px;padding:0 6px;margin:0 2px}
+  .penguin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media (max-width:560px){.penguin{grid-template-columns:1fr}}
+  .penguin div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .dist td,.dist th{padding:6px 8px;font-size:.88rem;text-align:center}
+  .dist tr.near{background:#fff4d6;font-weight:900}
+  .roles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media (max-width:860px){.roles{grid-template-columns:1fr 1fr}}
+  .roles div{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(15,39,66,.08);padding:10px;text-align:center;font-size:.84rem}
+  .roles div i{font-style:normal;font-size:1.6rem;display:block}
+  .roles div b{display:block;font-size:.92rem}
+  .roles div em{display:block;font-style:normal;margin-top:6px;background:#e6eefb;border-radius:8px;padding:4px 6px;color:#1b3d66}
+  .types div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-left:4px solid var(--k)}
+  .types div b{display:block}
+  .types div small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+
+  /* 카드 격자 칸이 안의 긴 코드·표 때문에 늘어나지 않게 */
+  .cards2>*,.cards3>*,.cards4>*,.grid2>*{min-width:0}
+  /* 진도 보내기 */
+  .tr-gate{position:fixed;inset:0;z-index:200;background:rgba(15,39,66,.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .tr-card{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px 22px 16px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  .tr-card h2{margin:0;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+  .tr-sub{margin:-4px 0 4px;color:var(--muted);font-size:.92rem}
+  .tr-cls{display:flex;gap:8px}
+  .tr-cls label{flex:1;cursor:pointer}
+  .tr-cls input{position:absolute;opacity:0;pointer-events:none}
+  .tr-cls span{display:block;text-align:center;padding:10px 0;border:2px solid var(--line);border-radius:12px;font-weight:900;font-size:1.05rem}
+  .tr-cls input:checked+span{border-color:var(--navy);background:var(--navy);color:#fff}
+  .tr-cls input:focus-visible+span{outline:3px solid var(--amber)}
+  .tr-f{display:flex;align-items:center;gap:10px}
+  .tr-f span{width:40px;font-weight:700}
+  .tr-f input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:9px 12px;border:1px solid #c5ccd5;border-radius:10px}
+  .tr-err{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em}
+  .tr-card .btn{padding:12px;font-size:1.05rem;background:var(--navy)}
+  .tr-note{margin:2px 0 0;color:var(--muted);font-size:.8rem;line-height:1.5;text-align:center}
+  .tr-who,.tr-badge{display:flex;align-items:center;gap:6px;font-size:.82rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px 4px 3px 12px;white-space:nowrap}
+  .tr-badge{padding:3px 12px;background:var(--amber);color:#111;font-weight:700}
+  .tr-who button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px}
+  .tr-who button:hover{background:rgba(255,255,255,.3)}
+  .tr-cls[hidden]{display:none}
+  .tr-badge button{all:unset;cursor:pointer;font-size:.74rem;background:rgba(0,0,0,.14);border-radius:999px;padding:2px 9px;margin-left:6px}
+  /* page-guard: 글자 선택·복사 막기 (입력 칸은 편집 가능) */
+  body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
+  .pg-toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0f2742;color:#fff;padding:9px 16px;border-radius:999px;font-size:.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+  .pg-toast.on{opacity:1}
+
+  /* u2-practice-2 전용 (pb-) */
+  .pb-ready{margin:0 0 16px;font-size:.95rem}
+  .pb-tw{overflow-x:auto;max-width:100%}
+  .pb-msg{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0;min-height:2.4em}
+  .pb-msg:empty{display:none}
+  .pb-det{margin-top:10px;background:#fbfaf7;border-radius:10px;padding:8px 12px;color:var(--ink)}
+  .pb-det summary{cursor:pointer;font-weight:700;color:var(--acc)}
+  .pb-det p,.pb-det li{font-size:.92rem}
+  .pb-ol{margin:8px 0 0;padding-left:22px;font-size:.92rem}
+  .pb-ol li{margin:4px 0}
+  .pb-warn{font-size:.9rem;margin-top:12px}
+  .pb-prev{background:#fff8e6;border-radius:10px;padding:8px 10px;font-size:.88rem;margin-bottom:8px}
+  .pb-prev b{display:block;color:#8a5a00;font-size:.82rem}
+  .pb-prev span{white-space:pre-wrap}
+  .pb-opt{display:inline-block;vertical-align:middle;font-family:"Noto Sans KR",sans-serif;font-size:.8rem;font-weight:900;background:var(--amber);color:var(--navy);border-radius:999px;padding:2px 10px;margin-left:6px}
+  .pb-tag{display:inline-block;font-size:.72rem;font-weight:900;background:#fff4d6;color:#8a5a00;border-radius:999px;padding:0 7px}
+  /* 01 속성 */
+  .pb-attrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  @media (max-width:860px){.pb-attrs{grid-template-columns:1fr 1fr}}
+  .pb-attrs>div{background:#fbfaf7;border-left:4px solid var(--acc);border-radius:8px;padding:6px 10px;font-size:.86rem;line-height:1.4;min-width:0}
+  .pb-attrs b{margin-right:6px}
+  .pb-attrs .mono{font-size:.76rem;word-break:break-word}
+  .pb-attrs small{display:block;color:var(--muted);font-size:.78rem}
+  /* 흐름도 */
+  .pb-flowbox{overflow-x:auto}
+  .pb-flowbox svg{display:block;width:100%;height:auto}
+  .pb-f1{max-width:560px;min-width:440px}
+  .pb-f2{max-width:760px;min-width:620px}
+  .pb-f3{max-width:600px;min-width:480px}
+  .pb-f4{max-width:780px;min-width:640px}
+  .pb-flowbox .fe{fill:none;stroke:#8a94a3;stroke-width:2}
+  .pb-flowbox .fl{font-size:11px;fill:#5b6776;text-anchor:end;font-weight:700}
+  .pb-flowbox .fn{cursor:pointer}
+  .pb-flowbox .fb{fill:#fff;stroke-width:2}
+  .pb-flowbox .fn.dn{opacity:.55}
+  .pb-flowbox .fn.on{opacity:1}
+  .pb-flowbox .fn.on .fb{fill:#fff4d6;stroke-width:4}
+  .pb-flowbox .fn:focus{outline:none}
+  .pb-flowbox .fn:focus .fb{stroke-width:4}
+  .pb-flowbox .fnum{font-size:13px;font-weight:900;fill:#fff;text-anchor:middle}
+  .pb-flowbox .ft{font-size:13px;font-weight:700;fill:#16202c}
+  .pb-flowbox .fs{font-size:11px;fill:#5b6776}
+  .pb-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;font-size:.85rem}
+  .pb-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .pb-legend small{color:var(--muted)}
+  .pb-set{min-width:860px;margin:10px 0 0;font-size:.9rem}
+  .pb-set th{text-align:left;background:#fbfaf7;white-space:nowrap}
+  .pb-set td{border-top:1px solid #eef0f3;vertical-align:top}
+  .pb-set td:first-child{font-weight:900;color:var(--acc);text-align:center;width:44px}
+  .pb-set tr[data-s]{cursor:pointer;transition:background .3s}
+  .pb-set tr.hl td{background:#fff4d6}
+  /* 02 통합 */
+  .pb-mg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+  @media (max-width:860px){.pb-mg{grid-template-columns:1fr}}
+  .pb-mt{overflow-x:auto}
+  .pb-mt>b{display:block;font-size:.92rem;margin-bottom:4px}
+  .pb-mt table,.pb-mres{border-collapse:collapse;font-size:.84rem;width:100%;background:#fff}
+  .pb-mt th,.pb-mt td,.pb-mres th,.pb-mres td{border:1px solid var(--line);padding:3px 7px;text-align:right;white-space:nowrap}
+  .pb-mt th,.pb-mres th{background:#fbfaf7;font-size:.78rem;text-align:center;line-height:1.25}
+  .pb-mt td:first-child,.pb-mres td:first-child{text-align:left;font-weight:700}
+  .pb-mt tr.ex td{color:#9aa3ae}
+  .pb-mt td.al{background:#fde8e6;color:var(--red)}
+  .pb-mt input{width:80px;font:inherit;border:2px solid #b9cdea;border-radius:6px;padding:1px 6px;text-align:right}
+  .pb-mres{margin-top:6px;min-width:600px}
+  .pb-mres tr.nm td{background:#fde8e6}
+  .pb-mgctl{margin-top:10px;gap:10px 16px}
+  .pb-chkl{font-size:.9rem;cursor:pointer}
+  .pb-chkl small{color:var(--muted)}
+  .pb-seg{display:inline-flex;flex-wrap:wrap;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+  .pb-seg button{font:inherit;font-size:.84rem;border:0;background:#fff;padding:4px 12px;cursor:pointer;color:var(--ink)}
+  .pb-seg button+button{border-left:1px solid var(--line)}
+  .pb-seg button.on{background:var(--acc);color:#fff;font-weight:700}
+  /* 03 산점도 */
+  .pb-axes{gap:10px 18px;font-size:.9rem}
+  .pb-axes select,#pbGeoSize{font:inherit;font-size:.88rem;padding:3px 6px;border:2px solid var(--line);border-radius:8px;max-width:100%}
+  .pb-scwrap{overflow-x:auto}
+  .pb-scwrap svg{display:block;width:100%;max-width:620px;min-width:440px;height:auto;margin:8px auto 0;background:#fff;border:1px solid var(--line);border-radius:10px}
+  #pbSc .gl{stroke:#eef0f3;stroke-width:1}
+  #pbSc .tk{font-size:10px;fill:#8a94a3}
+  #pbSc .axl{font-size:11px;font-weight:700;fill:#5b6776}
+  #pbSc .pt{fill:#e0702b;stroke:#fff;stroke-width:2}
+  #pbSc .lb{font-size:11px;fill:#16202c;font-weight:700}
+  .pb-rline{display:grid;grid-template-columns:24px 1fr 24px;align-items:center;gap:6px;max-width:520px;margin:10px auto 0;font-size:.82rem;color:var(--muted);text-align:center}
+  .pb-rline div{position:relative;height:10px;border-radius:999px;background:linear-gradient(90deg,#2a6fb8,#eef0f3 50%,#8fd16a)}
+  .pb-rline i{position:absolute;top:-5px;width:4px;height:20px;margin-left:-2px;background:#0f2742;border-radius:2px}
+  .pb-rline em{position:absolute;top:-2px;width:1px;height:14px;background:#8a94a3}
+  .pb-selftbl{min-width:620px;font-size:.9rem}
+  .pb-selftbl th,.pb-selftbl td{border:1px solid var(--line);padding:6px 10px;vertical-align:middle}
+  .pb-selftbl th{background:#fbfaf7}
+  .pb-selftbl .memo{margin:0}
+  .pb-selftbl input{width:100%;font:inherit;border:2px solid #f0c9a8;border-radius:6px;padding:3px 8px}
+  .pb-care ul{margin:6px 0 0;padding-left:20px}
+  /* 04 히트맵 */
+  .pb-hpick{display:flex;flex-wrap:wrap;gap:6px}
+  .pb-hpick label{border:2px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.86rem;cursor:pointer;background:#fff}
+  .pb-hpick label.on{border-color:var(--acc);background:var(--acc-soft);font-weight:700}
+  .pb-hpick label.dis{opacity:.55;cursor:not-allowed}
+  .pb-hpick small{font-weight:400;color:var(--muted)}
+  .pb-heat{border-collapse:separate;border-spacing:2px;font-size:.85rem;margin-top:4px;min-width:560px}
+  .pb-heat th{background:#fbfaf7;padding:4px 8px;font-size:.8rem;text-align:center;line-height:1.25;vertical-align:bottom}
+  .pb-heat th small{display:block;font-weight:400;color:var(--muted);font-size:.7rem}
+  .pb-heat tr th:first-child{text-align:left;white-space:nowrap}
+  .pb-heat td{padding:5px 8px;text-align:center;font-variant-numeric:tabular-nums;border-radius:4px;min-width:74px;font-weight:700}
+  .pb-heat td.sc{background:#0f2742;color:#fff}
+  .pb-dir{display:block;margin:4px auto 0;font:inherit;font-size:.72rem;border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:999px;padding:1px 8px;cursor:pointer;white-space:nowrap}
+  .pb-hlegend{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);margin-top:6px;max-width:360px}
+  .pb-hlegend i{flex:1;height:10px;border-radius:999px}
+  .pb-book>summary{cursor:pointer}
+  .pb-book ul{margin:8px 0 0;padding-left:20px;font-size:.93rem}
+  .pb-book li{margin:5px 0}
+  /* 05 (선택) */
+  .pb-optc>summary{cursor:pointer;font-weight:900;font-size:1.02rem}
+  .pb-optc>summary small{font-weight:400;color:var(--muted);font-size:.85rem}
+  .pb-geowrap{overflow-x:auto}
+  .pb-geowrap svg{display:block;width:100%;max-width:640px;min-width:480px;height:auto;margin:8px auto 0;background:#f4f8fb;border:1px solid var(--line);border-radius:10px}
+  #pbGeo .gl{stroke:#dde5ec;stroke-width:1}
+  #pbGeo .tk{font-size:10px;fill:#8a94a3}
+  #pbGeo .ct{cursor:pointer}
+  #pbGeo .ct circle{fill:#1f9d74;fill-opacity:.75;stroke:#fff;stroke-width:2}
+  #pbGeo .ct.on circle{fill:#e0702b;fill-opacity:.95;stroke:#0f2742}
+  #pbGeo .ct:focus{outline:none}
+  #pbGeo .ct:focus circle{stroke:#0f2742;stroke-width:3}
+  #pbGeo .lb{font-size:11px;font-weight:700;fill:#16202c}
+  #pbGeo .lk{stroke:#e0702b;stroke-width:2;stroke-dasharray:5 4}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">데이터 과학</span>
+  <nav class="steps" id="steps"></nav>
+  <div class="score" id="score"></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+
+<main id="main">
+
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 2. 데이터 분석</span>
+      <h1>숙박비와 물가를<br>함께 보면<br>어디가 좋을까?</h1>
+      <div class="story"><b>지난 시간에 한 일</b><br>숙소 데이터 51,707줄을 불러와 속성을 파악하고, <b>1인당 숙박비(charge)</b>를 만들어 도시별 평균을 구했어요. 오늘은 여기에 <b>생활비 데이터</b>를 합쳐 두 데이터 속성 사이의 관계를 찾고, 여러 기준을 한눈에 보며 여행지를 골라요.</div>
+      <p>여행을 계획할 때는 숙박비 말고도 교통비, 식비 같은 부대 비용이 들어요. 도시별 생활비 데이터를 숙소 데이터와 <b>도시</b>를 기준으로 통합하면, 「숙박비가 비싼 도시는 물가도 비쌀까?」 같은 질문에 답할 수 있어요.</p>
+      <ol>
+        <li>생활비 데이터 살펴보기</li><li>두 데이터 통합하기</li><li>관계 시각화와 상관관계</li>
+        <li>정규화와 히트맵</li><li>(선택) 함께 해결하기 · 정리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🛒</i><div><b>생활비 데이터</b><small>174개 도시 · 9개 속성</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🔗</i><div><b>도시 기준으로 통합</b><small>Merge Data · city ↔ City</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📈</i><div><b>속성 간의 관계</b><small>Scatter Plot · Correlations</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🟨</i><div><b>정규화와 히트맵</b><small>0~1로 맞춰 한눈에 비교</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="callout pb-ready">🍊 <b>오렌지3를 실행하고 지난 시간에 저장한 「여행지 분석」 흐름을 열어요</b>(File → Open). 📁 <b>선생님이 알려 주는 폴더</b>에서 <span class="mono">Europe Cost of Living Index by City 2024.csv</span>도 준비해요.
+      <details class="pb-det"><summary>저장한 흐름이 없다면 · 5분 안에 다시 만들기</summary>
+        <ol class="pb-ol">
+          <li><b>File</b>로 <span class="mono">airbnb_european-cities.csv</span> 열기 (F2로 이름을 <b>숙소 정보</b>로)</li>
+          <li><b>Formula</b> 연결 → New → Numeric, 이름 <b>charge</b>, 식 <span class="mono">realSum/person_capacity</span> → Send</li>
+          <li>Formula에 <b>Group by</b> 연결 → Group by 목록에서 <b>city</b>, 수치형 속성은 <b>Mean</b> 그대로, 범주형 속성(room_type, weekends 등)은 <b>Mode</b> 체크 풀기</li>
+          <li>Group by에 <b>Data Table</b>을 이어 10줄이 나오면 준비 끝 (<b>- Mode</b> 열이 보이면 3번의 Mode 체크를 풀어요. Box Plot · Bar Plot은 오늘 필요 없어요)</li>
+        </ol>
+      </details>
+    </div>
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>생활비 데이터를 불러와 속성을 확인하고, 지난 시간의 <b>도시별 평균</b>과 <b>도시를 기준으로 수평 통합</b>해요. 통합한 데이터로 산점도와 상관계수를 구해 <b>속성 간의 관계</b>를 파악하고, 단위가 다른 속성을 <b>0~1로 정규화</b>해 히트맵으로 도시를 비교해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">학습 계획 세우기</span>
+        <div class="pb-prev" id="pbPrev"></div>
+        <div class="memo"><label>오늘 두 데이터를 합쳐서 꼭 확인하고 싶은 질문 하나</label><textarea data-memo="planToday" rows="2" placeholder="예: ○○가 싼 도시는 △△도 …할까?"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 분석</b> · 데이터 속성별 특징과 속성 간의 관계를 파악하고 데이터를 분석하여 유의미한 정보를 추출하려면 어떤 방법이 필요할까?</li>
+          <li><b>오늘의 질문</b> · 데이터 분석으로 실제 문제를 해결하려면 어떻게 해야 할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터를 수집하여 전처리하고 시각화할 수 있다.</li>
+          <li>데이터를 서로 다른 방법으로 분석하여 분석 결과를 비교할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 생활비 데이터부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 생활비 데이터 -->
+<section class="page" data-name="생활비 데이터" data-acc="#9b4fc4">
+  <div class="head"><div class="num">01</div><div><h2>생활비 데이터는 무엇을 알려 줄까?</h2><p>교과서 108쪽 · 유럽 도시별 생활비 데이터 분석 · File · Data Table · Box Plot</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>생활비 데이터는 도시마다 물가가 <b>기준 도시(뉴욕)를 100</b>으로 놓았을 때 얼마쯤인지 지수로 알려 줘요. 생활비·임대료·식료품·레스토랑 지수는 숫자가 클수록 그 항목이 비싼 도시예요. 오렌지3로 불러와 속성과 결측치를 먼저 확인해요.</span></div>
+  <div class="card">
+    <h3>🏷️ 생활비 데이터 속성 9개 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 108쪽)</span></h3>
+    <div class="pb-attrs">
+      <div><b>순위</b><span class="mono">Rank</span><small>생활비 지수가 높은 순서(1이 가장 높음)</small></div>
+      <div><b>생활비 지수</b><span class="mono">Cost of Living Index</span><small>식료품·외식·교통·공공요금 등의 가격 수준(주거비 제외)</small></div>
+      <div><b>임대료 지수</b><span class="mono">Rent Index</span><small>집을 빌리는 값의 수준</small></div>
+      <div><b>생활비+임대료 지수</b><span class="mono">Cost of Living Plus Rent Index</span><small>두 가지를 함께 본 값</small></div>
+      <div><b>식료품 지수</b><span class="mono">Groceries Index</span><small>장을 보는 값의 수준</small></div>
+      <div><b>레스토랑 가격 지수</b><span class="mono">Restaurant Price Index</span><small>식당에서 사 먹는 값의 수준</small></div>
+      <div><b>지역 구매력 지수</b><span class="mono">Local Purchasing Power Index</span><small>그 도시 소득으로 살 수 있는 정도</small></div>
+      <div><b>도시</b><span class="mono">City</span><small>도시 이름(text)</small></div>
+      <div><b>국가</b><span class="mono">Country</span><small>나라 이름</small></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 ③ <span class="muted" style="font-weight:400;font-size:.88rem">(번호는 지난 시간 1~9번에 이어서)</span></h3>
+    <div class="pb-flowbox"><svg id="pbFlow1" class="pb-f1" role="img" aria-label="생활비 데이터 불러오기 위젯 연결 흐름도"></svg></div>
+    <div class="pb-legend"><span style="--k:#f2b84b">Data</span><span style="--k:#f0875a">Transform</span><span style="--k:#ef8fa0">Visualize</span><span style="--k:#8fb4e8">Unsupervised</span><small>색은 오렌지3 왼쪽 카테고리를 나타내요.</small></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet1">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="10"><td>10</td><td><b>File (1)</b> (Data)</td><td>새 위젯</td><td><span class="mono">Europe Cost of Living Index by City 2024.csv</span> 열기 → F2로 이름을 <b>생활비</b>로<br>Columns 목록에서 <b>Country</b>의 Type 칸을 더블 클릭해 <b>categorical</b>로 바꾸고 <b>Apply</b></td><td>City는 text, Country는 categorical(둘 다 meta)</td></tr>
+      <tr data-s="11"><td>11</td><td><b>Data Table (3)</b> (Data)</td><td>생활비 →</td><td>더블 클릭해 보기</td><td>174개의 데이터 행, 9개 속성, 결측치 없음</td></tr>
+      <tr data-s="12"><td>12</td><td><b>Box Plot (1)</b> (Visualize) <small class="pb-tag">선택</small></td><td>생활비 →</td><td><b>Variable</b>을 <b>Cost of Living Index</b>, <b>Subgroups</b>를 <b>Country</b></td><td>나라별 도시들의 생활비 지수 분포. 상자 위의 숫자는 평균과 표준편차</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone1"></div>
+  </div>
+  <div class="card">
+    <h3>🔢 지수 읽기 연습 <span class="muted" style="font-weight:400;font-size:.88rem">(카드를 눌러 뒤집어요 · 지수 값은 새로 만든 예시)</span></h3>
+    <div class="tcards" id="pbIdx"></div>
+    <div class="memo"><label>(선택) Box Plot (1)에서 스위스(Switzerland) 도시들의 생활비 지수 평균과 표준편차를 찾아 적고, 다른 나라와 비교해 보세요.</label><textarea data-memo="swissNote" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 두 데이터 통합 -->
+<section class="page" data-name="두 데이터 통합" data-acc="#2f6fd0">
+  <div class="head"><div class="num">02</div><div><h2>두 데이터를 어떻게 하나로 합칠까?</h2><p>교과서 109쪽 · Merge Data · city ↔ City · 수평 통합 · LINK 74쪽 데이터 통합</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>숙소 데이터(도시별 평균)와 생활비 데이터에는 <b>도시</b>라는 같은 속성이 있어요. 도시 이름이 같은 줄끼리 옆으로 이어 붙이면(<b>수평 통합</b>) 한 줄에 숙박비와 물가가 함께 놓여 둘 사이의 관계를 분석할 수 있어요.</span></div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 통합하기</h3>
+    <div class="pb-flowbox"><svg id="pbFlow2" class="pb-f2" role="img" aria-label="Merge Data로 두 데이터를 통합하는 위젯 연결 흐름도"></svg></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet2">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="13"><td>13</td><td><b>Merge Data</b> (Transform)</td><td>Group by → <b>Data</b><br>생활비 → <b>Extra Data</b></td><td><b>Merging</b>: <b>Find matching pairs of rows</b><br><b>Row matching</b>: 왼쪽 <b>city</b> matches 오른쪽 <b>City</b> (처음에 Row index로 되어 있으면 바꿔요)</td><td>연결선 글자가 Data · Extra Data로 맞게 들어갔는지</td></tr>
+      <tr data-s="14"><td>14</td><td><b>Data Table (4)</b> (Data)</td><td>Merge Data →</td><td>더블 클릭해 보기</td><td><b>10줄</b>, 숙소 정보 8개 + 생활비 7개 = <b>15개 속성</b>(<b>- Mode</b> 열이 보이면 빼고 세어요). 열은 city 다음에 숙소 정보, 생활비 순서</td></tr>
+    </table></div>
+    <div class="callout pb-warn">💡 생활비 7개 속성에는 <b>Rank(순위)</b>도 들어가요. Rank는 값이 작을수록 생활비 지수가 높은 도시라, 다음 화면의 상관계수와 히트맵에서 다른 지수와 <b>반대 방향</b>으로 나타나요. 순위는 크기를 재는 값이 아니라는 점에 주의해서 읽어요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone2"></div>
+  </div>
+  <div class="card">
+    <h3>🧩 통합 따라 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3에서 읽은 값을 넣어 직접 합쳐 봐요)</span></h3>
+    <p class="muted" style="margin-top:0">① 오른쪽 생활비 표의 빈칸에 오렌지3에서 <b>Merge Data 뒤에 붙인 Data Table</b>(통합 결과 10줄)에서 찾은 도시별 <b>Cost of Living Index</b>를 적어요. 위젯 번호(예: Data Table (4))는 내 화면과 달라도 괜찮아요. 이 화면에는 생활비 값을 싣지 않아요. 오렌지3가 안 되면 빈칸인 채로 합쳐 봐도 돼요. ② 「합치기」를 눌러요. ③ 「이름이 다르게 적혀 있다면?」도 켜 보세요.</p>
+    <div class="pb-mg" id="pbMg"></div>
+    <div class="row pb-mgctl">
+      <label class="pb-chkl"><input type="checkbox" id="pbMgName"> 이름이 다르게 적혀 있다면? <small>(Rome → Roma, Vienna → Wien, 예시)</small></label>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="btn sm" id="pbMgDo">합치기 (Merge Data)</button>
+      <button class="btn ghost sm" id="pbMgFix" disabled>이름 표기 맞추기</button>
+      <button class="btn ghost sm" id="pbMgReset">결과 지우기</button>
+    </div>
+    <details class="pb-det"><summary>(더 알아보기) 합치는 방법을 Append columns from Extra data로 바꾸면?</summary>
+      <p>Merge Data의 다른 방법으로 바꿔 「합치기」를 다시 눌러 보세요. 이름이 다른 도시가 있을 때 결과가 어떻게 다른지 비교해요.</p>
+      <span class="pb-seg" id="pbMgMode"></span>
+    </details>
+    <div class="pb-msg" id="pbMgMsg"></div>
+    <div class="pb-tw" id="pbMgOut"></div>
+    <p class="note">숙소 표 출처: 캐글 「Airbnb Prices European Cities(Merged)」를 도시별로 묶은 평균. 생활비 표는 174줄 가운데 일부 도시 이름만 보여요.</p>
+  </div>
+  <div class="memo"><label>✍️ 174줄짜리 생활비 데이터와 합쳤는데 왜 10줄만 남았을까요? 도시 이름이 다르게 적혀 있으면 어떻게 되고, 어떻게 해결해야 할까요?</label><textarea data-memo="mergeNote" rows="3"></textarea><div class="saved"></div></div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 관계 시각화·상관 -->
+<section class="page" data-name="관계와 상관" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>숙박비가 비싼 도시는 물가도 비쌀까?</h2><p>교과서 110~111쪽 · Scatter Plot · Correlations · 스스로 해결하기 · LINK 96쪽 상관관계</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>통합한 데이터에서 두 속성을 골라 <b>산점도</b>에 찍으면 함께 커지는지, 반대로 움직이는지 눈으로 보여요. <b>상관계수</b>는 그 방향과 강도를 −1~1 사이의 숫자로 알려 줘요.</span></div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 관계 보기</h3>
+    <div class="pb-flowbox"><svg id="pbFlow3" class="pb-f3" role="img" aria-label="산점도와 상관계수 위젯 연결 흐름도"></svg></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet3">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="15"><td>15</td><td><b>Scatter Plot</b> (Visualize)</td><td>Merge Data →</td><td><b>Axis x</b>: <b>charge - Mean</b>, <b>Axis y</b>: <b>Cost of Living Index</b>, <b>Label</b>: <b>city</b></td><td>왼쪽 아래에 모인 도시, 오른쪽 위에 놓인 도시. 점들이 놓인 방향</td></tr>
+      <tr data-s="16"><td>16</td><td><b>Correlations</b> (Unsupervised)</td><td>Merge Data →</td><td><b>Pearson correlation</b> 그대로, 그 아래 선택 상자(처음에는 <b>(All combinations)</b>)에서 <b>guest_satisfaction_overall - Mean</b> 고르기</td><td>막대 색(연두색 = 양의 상관, 파란색 = 음의 상관)과 막대 길이, 앞의 숫자</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone3"></div>
+  </div>
+  <div class="grid2 even">
+    <div class="memo"><label>✍️ Scatter Plot: 왼쪽 아래와 오른쪽 위에 놓인 도시, 그리고 두 속성의 관계에 대한 내 짐작</label><textarea data-memo="scatterNote" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label>✍️ Correlations: 고객 만족도와 양의 상관이 가장 뚜렷한 속성, 음의 상관이 가장 뚜렷한 속성과 그 뜻</label><textarea data-memo="corrNote" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card pb-self">
+    <h3>🙋 스스로 해결하기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 111쪽)</span></h3>
+    <p style="margin-top:0">1인당 평균 숙박비(<b>charge - Mean</b>)와 아래 두 속성 사이의 상관계수를 알아보고 결과를 분석해요. Correlations 창의 Pearson correlation 아래 선택 상자를 <b>charge - Mean</b>으로 바꾸면 찾을 수 있어요.</p>
+    <div class="pb-tw"><table class="tbl pb-selftbl">
+      <tr><th>구분</th><th>생활비 물가(Cost of Living Index)</th><th>고객 평균 만족도(guest_satisfaction_overall - Mean)</th></tr>
+      <tr><th>상관계수</th><td><div class="memo"><input type="text" data-memo="rCol" placeholder="예: 0.○○"><div class="saved"></div></div></td><td><div class="memo"><input type="text" data-memo="rSat" placeholder="예: −0.○○"><div class="saved"></div></div></td></tr>
+    </table></div>
+    <div class="memo"><label>상관관계 분석 <small>두 상관계수의 방향과 0·1(−1) 중 어디에 가까운지를 넣어서</small></label><textarea data-memo="selfCorr" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>📈 화면 안 산점도 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3가 안 될 때 · 다른 속성끼리도 해 보기)</span></h3>
+    <p class="muted" style="margin-top:0">x축과 y축 속성을 고르면 10개 도시의 점과 상관계수 r이 나와요. 생활비 지수는 02에서 내가 입력한 값을 써요.</p>
+    <div class="row pb-axes"><label>x축 <select id="pbSx"></select></label><label>y축 <select id="pbSy"></select></label></div>
+    <div class="pb-scwrap"><svg id="pbSc" role="img" aria-label="두 속성의 산점도"></svg></div>
+    <div class="pb-rbar" id="pbRbar"></div>
+    <div class="pb-msg" id="pbScMsg"></div>
+  </div>
+  <div class="card pb-care">
+    <h3>⚠️ 상관계수를 해석할 때 조심할 점</h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#e0702b"><div class="ic">🔟</div><h4>도시는 10개뿐</h4><p>숙소 5만여 개가 아니라 <b>10개 도시의 평균</b>끼리 구한 상관계수예요. 점이 10개뿐이면 무슨 일이 생길지, 산점도에서 한 도시를 가려 보며 생각해 봐요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🔁</div><h4>상관관계 ≠ 인과관계</h4><p>두 속성이 함께 움직여도 하나가 다른 하나의 원인이라고 할 수는 없어요(97쪽 더 알아보기).</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🏅</div><h4>Rank 줄은 따로</h4><p>Rank는 순위라 작을수록 비싼 도시예요. 다른 지수와 부호가 반대로 나와요.</p></div>
+    </div>
+    <details class="pb-det"><summary>교과서는 고객 만족도를 어떻게 해석했을까? (내 메모를 쓴 뒤에 펼쳐요)</summary>
+      <ul>
+        <li>고객 만족도는 <b>청결도</b>, <b>숙박 인원</b>과 양의 상관관계를 보여, 청결하고 넓은 숙소가 만족도의 주요 평가 대상이라고 짐작해요. 다만 숙박 인원의 상관계수는 청결도보다 0에 훨씬 가까워 「높다」기보다는 중간 정도예요.</li>
+        <li>고객 만족도는 <b>임대료 지수</b>, <b>생활비+임대료 지수</b>와 음의 상관관계를 보여, 임대료가 높은 도시에서 숙소의 만족도가 떨어지는 경향이 있다고 해석해요.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 정규화와 히트맵 -->
+<section class="page" data-name="정규화와 히트맵" data-acc="#1f9d74">
+  <div class="head"><div class="num">04</div><div><h2>여러 기준을 한눈에 보려면?</h2><p>교과서 112쪽 · Preprocess(Normalize to interval [0, 1]) · Heat Map · 여행지 판단</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>총 숙박비는 수백, 청결도는 10 아래, 도심 거리는 한 자릿수라 그대로 색칠하면 큰 숫자만 눈에 띄어요. 속성마다 <b>최솟값은 0, 최댓값은 1</b>이 되도록 바꾸는 <b>정규화</b>(최소-최대 정규화, 75쪽)를 하면 단위가 달라도 한 판에서 비교할 수 있어요.</span></div>
+  <div class="card">
+    <div class="callout pb-warn" style="margin-top:0">📌 <b>오렌지3 Heat Map(아래 17·18번)과 이 화면 히트맵 중 하나는 꼭</b> 해요. 다른 하나는 시간이 되면 해요. 아래 메모는 어느 쪽을 보고 써도 돼요.</div>
+    <h3>🟨 여행지 히트맵 만들기 <span class="muted" style="font-weight:400;font-size:.88rem">(10개 도시 집계값으로 계산)</span></h3>
+    <p class="muted" style="margin-top:0">내 기준이 될 속성을 고르고, 보기 방식을 차례로 바꿔 보세요. 「좋은 쪽으로 맞추기」에서는 속성마다 <b>클수록 좋은지 · 작을수록 좋은지</b>를 정하면 1에 가까울수록 내 기준에 맞는 도시가 돼요.</p>
+    <div class="pb-hpick" id="pbHPick"></div>
+    <div class="row" style="margin:8px 0"><span class="muted" style="font-size:.86rem">보기</span><span class="pb-seg" id="pbHMode"></span></div>
+    <div class="pb-tw"><table class="pb-heat" id="pbHeat"></table></div>
+    <div class="pb-hlegend" id="pbHLegend"></div>
+    <div class="pb-msg" id="pbHMsg"></div>
+    <div class="row"><button class="btn sm" id="pbHSave">이 기준의 순위를 메모에 담기</button></div>
+    <div class="memo"><label>✍️ 내 기준(고른 속성과 방향)으로 본 1~3위 도시와, 그렇게 판단한 까닭 <small>오렌지3 히트맵이나 화면 히트맵을 보고</small></label><textarea data-memo="heatWhy" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>🔀 오렌지3에서 정규화하고 히트맵 그리기</h3>
+    <div class="pb-flowbox"><svg id="pbFlow4" class="pb-f4" role="img" aria-label="정규화와 히트맵 위젯 연결 흐름도"></svg></div>
+    <div class="pb-tw"><table class="tbl pb-set" id="pbSet4">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="17"><td>17</td><td><b>Preprocess</b> (Transform)</td><td>Merge Data →</td><td>왼쪽 목록의 <b>Normalize Features</b>를 오른쪽으로 끌어 놓고 <b>Normalize to interval [0, 1]</b> 고르기</td><td>–</td></tr>
+      <tr data-s="18"><td>18</td><td><b>Heat Map</b> (Visualize)</td><td>Preprocess →<br><small class="muted">(Preprocessed Data → Data)</small></td><td><b>Row Annotations</b>의 <b>Text</b>를 <b>city</b>로</td><td>오른쪽에 도시 이름이 붙고, 칸이 범례의 0~1 색으로 칠해졌는지(기본 색에서는 1에 가까울수록 밝은 노란색, 0에 가까울수록 짙은 파란색)</td></tr>
+    </table></div>
+    <div class="callout pb-warn">💡 오렌지3 히트맵에는 생활비 7개 속성이 함께 들어가요. <b>Rank</b> 열은 생활비가 낮은 도시일수록 1에 가깝게 칠해져 다른 지수와 반대예요. 또 0~1로 바꾼 값은 「10개 도시 안에서 몇 번째쯤」을 보여 줄 뿐, 실제 차이가 큰지 작은지는 정규화 전 값으로 확인해요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="pbDone4"></div>
+  </div>
+  <details class="card pb-book">
+    <summary><b>📖 교과서는 어떻게 판단했을까?</b> <span class="muted">(내 순위를 정한 뒤 비교해요)</span></summary>
+    <ul>
+      <li><b>숙소를 중심으로 보면</b> 청결도와 고객 만족도가 높고 도심 거리와 1인당 숙박비가 낮은 <b>아테네</b>가 알맞은 여행지예요.</li>
+      <li><b>생활비와 숙소를 모두 보면</b> 생활비 지수와 1인당 숙박비가 낮고 고객 만족도도 높은 편인 <b>부다페스트</b>가 알맞아요.</li>
+      <li>반면 <b>런던</b>은 생활비 지수와 도심 거리가 높고 청결도와 고객 만족도가 낮아, 꼭 가야 할 관광지가 있는 것이 아니라면 그리 추천할 만한 여행지는 아니라고 판단해요.</li>
+    </ul>
+    <p class="note">같은 데이터라도 <b>무엇을 기준으로 삼는지</b>에 따라 결론이 달라져요. 분석 목적에 맞는 방법을 골라 적용하면 문제를 효과적으로 해결할 수 있어요.</p>
+  </details>
+  <div class="callout">시간이 부족하면 다음 「(선택)」 화면은 건너뛰고 <button class="btn sm" onclick="go(6)">마무리로 가기 →</button></div>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 (선택) 함께 해결하기 · 정리 -->
+<section class="page" data-name="(선택) 함께 해결하기 · 정리" data-acc="#c98a00">
+  <div class="head"><div class="num">05</div><div><h2>모둠 여행지 정하기 · 「데이터 분석」 정리 <span class="pb-opt">선택</span></h2><p>교과서 113~115쪽 · 시간이 남거나 다음 시간에 더 해요</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>앞서 조사한 도시 중 <b>세 곳</b>을 골라 모둠원과 함께 여행을 간다면 어디가 좋을까요? 각자의 기준을 나누고, 도시들이 지도에서 얼마나 떨어져 있는지 보며 정해요. 이어서 「데이터 분석」 단원을 정리해요.</span></div>
+  <details class="card pb-optc" open>
+    <summary>🤝 함께 해결하기 · 모둠 여행지 3곳 정하기 <small>(교과서 113쪽)</small></summary>
+    <div class="memo"><label>1. 모둠원이 각자 우선순위로 두는 기준과 그 이유 <small>이름 / 기준 / 이유 순서로 한 줄씩</small></label><textarea data-memo="geoCrit" rows="3"></textarea><div class="saved"></div></div>
+    <h4 style="margin:12px 0 6px">2. 도시를 지도에 나타내 보기</h4>
+    <p style="margin:0 0 6px;font-size:.92rem">교과서는 오렌지3 <b>Geo</b> 애드온의 <b>Geocoding</b>(지역명을 위도·경도 좌표로 바꿈)과 <b>Geo Map</b> 위젯을 써요. 애드온을 설치하려면 인터넷과 설치 권한이 필요하니 선생님과 함께 해요. 설치가 어렵다면 아래 <b>화면 안 좌표 지도</b>로 해요.</p>
+    <details class="pb-det"><summary>오렌지3 Geo 애드온으로 하기</summary>
+      <ol class="pb-ol">
+        <li>메뉴 <b>Options → Add-ons…</b>에서 <b>Geo</b>를 체크하고 설치한 뒤 오렌지3를 다시 열어요.</li>
+        <li>Merge Data에 <b>Geocoding</b>을 연결 → <b>Encode region names into geographical coordinates</b>, Region identifier는 <b>city</b>, Identifier type은 <b>Major city (Europe)</b></li>
+        <li>Geocoding에 <b>Geo Map</b>을 연결(Coded Data → Data) → Color는 <b>city</b>, <b>Size</b>에 모둠원 기준 속성을 한 번씩 넣어 비교해요.</li>
+      </ol>
+    </details>
+    <div class="row" style="margin-top:8px"><span class="muted" style="font-size:.86rem">점 크기</span><select id="pbGeoSize"></select><span class="muted" style="font-size:.84rem">도시를 눌러 세 곳까지 고르면 서로 떨어진 거리가 나와요.</span></div>
+    <div class="pb-geowrap"><svg id="pbGeo" role="img" aria-label="10개 도시의 위도 경도 좌표 지도"></svg></div>
+    <div class="pb-msg" id="pbGeoMsg"></div>
+    <p class="note">점 위치는 도시 중심의 위도·경도(널리 알려진 값)를 가로·세로 좌표로 찍은 것이고, 거리는 두 좌표 사이의 직선거리를 대략 계산한 값이에요. 실제 이동 거리와는 달라요.</p>
+    <div class="memo"><label>3. 모둠이 정한 여행지 3곳(1~3순위)과 그 이유 <small>다른 모둠과 비교한 점도</small></label><textarea data-memo="geoPick" rows="3"></textarea><div class="saved"></div></div>
+  </details>
+  <details class="card pb-optc">
+    <summary>🧠 역량 키우기 · 「데이터 분석」 정리 <small>(교과서 114~115쪽)</small></summary>
+    <div class="memo"><label><span class="tagt" style="--k:#2f6fd0">지식·이해</span> 지난 시간과 오늘 한 여행지 분석에서 <b>탐색적 데이터 분석</b>, <b>기술 통계</b>, <b>상관분석</b>에 해당하는 단계를 하나씩 찾아 무엇을 했는지 설명해 보세요.</label><textarea data-memo="capEda" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label><span class="tagt" style="--k:#1f9d74">과정·기능</span> 궁금한 두 속성이 있는 데이터(예: 우리 반의 하루 운동 시간과 잠든 시각)를 정해, 오렌지3나 파이썬으로 산점도와 상관계수를 구했다면 무엇을 골랐고 어떤 관계가 나왔는지 적어 보세요.</label><textarea data-memo="capCorr" rows="3"></textarea><div class="saved"></div></div>
+    <div class="memo"><label><span class="tagt" style="--k:#d64535">가치·태도</span> 도시마다 숙박비를 평균 하나로만 비교하면 무엇을 놓칠 수 있을까요? 그래서 데이터를 분석할 때 어떤 자세가 필요한지 내 생각을 적어 보세요.</label><textarea data-memo="capMean" rows="3"></textarea><div class="saved"></div></div>
+    <h4 style="margin:12px 0 6px">📊 내 실력 점검하기</h4>
+    <p class="muted" style="margin-top:0">「예」라고 답할 수 있는 것을 모두 골라요. 모두 고를 수 있으면 <b>심화</b>, 아니면 <b>보충</b> 활동을 해 봐요.</p>
+    <div id="pbLevel"></div>
+    <div class="grid2 even" style="margin-top:12px">
+      <details class="pb-det"><summary>🧩 보충 · 심장 질환 데이터의 상관관계</summary>
+        <p>오렌지3 <b>Datasets</b> 위젯에서 내장 데이터 <b>Heart Disease</b>를 불러와 <b>Correlations</b>로 속성 간 상관계수를 구해요. 상관계수는 1이나 −1에 가까울수록 강하고, 0에 가까울수록 약한 상관관계예요.</p>
+        <div class="memo"><label>가장 강한 상관관계를 가진 두 속성과 그렇게 판단한 이유</label><textarea data-memo="extraHeart" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+      <details class="pb-det"><summary>🚀 심화 · 나라별 물가 지도 (Geo 애드온 필요)</summary>
+        <p><b>생활비</b> File → <b>Geocoding</b>(Country로 좌표 찾기) → <b>Choropleth Map</b>으로 나라별 생활비 지수를 색으로 칠해요. 짝을 못 찾은 나라(UnitedKingdom처럼 붙여 쓴 이름 등)는 Geocoding 창 오른쪽 목록에서 직접 골라 줘요. 데이터값에 따라 해당 영역의 색을 다르게 칠하는 위젯이에요.</p>
+        <div class="memo"><label>물가와 지리적 특성 사이에서 찾은 관계와 그 원인에 대한 내 생각</label><textarea data-memo="extraMap" rows="3"></textarea><div class="saved"></div></div>
+      </details>
+    </div>
+    <h4 style="margin:14px 0 6px">📒 내 계획 점검하기</h4>
+    <div class="grid2 even">
+      <div class="memo"><label>「데이터 분석」을 시작할 때 세운 나의 계획 점검</label><textarea data-memo="planCheck" rows="3"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>새롭게 알게 된 점</label><textarea data-memo="newLearn" rows="3"></textarea><div class="saved"></div></div>
+    </div>
+  </details>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">숙소 데이터와 생활비 데이터는 <b>도시</b>라는 공통 속성으로 이어 붙였어요. 이름이 일치하는 도시만 짝지어져 10줄이 되었고, 표기가 다르면 짝을 찾지 못하니 형식을 먼저 맞춰야 해요.</div>
+    <div style="--k:#e0702b">합친 데이터의 산점도에서 1인당 숙박비가 높은 도시는 생활비 지수도 높은 쪽에 모였고, 상관계수로 그 방향과 강도를 숫자로 확인했어요. 도시가 10개뿐이고 상관이 원인을 뜻하지는 않는다는 점도 함께 따졌어요.</div>
+    <div style="--k:#1f9d74">단위가 다른 속성을 0~1로 바꾸어 히트맵으로 색칠하니 도시마다 강점과 약점이 한눈에 보였어요. 어떤 속성을 기준으로 삼느냐에 따라 고른 여행지가 달라졌어요.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">지난 시간과 오늘 한 일(데이터 수집 → 속성 파악 → 새 속성 → 통합 → 관계 분석 → 정규화·히트맵)을 떠올리며 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터 분석으로 실제 문제를 해결하려면 어떻게 해야 할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+    <p class="note">05는 (선택) 화면이라 퀴즈가 없어요.</p>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>두 데이터를 <b>무엇을 기준으로 통합</b>했는지, 왜 <b>10줄</b>만 남았는지, 이름 표기가 다를 때의 문제 설명하기</li>
+      <li><b>1인당 숙박비와 생활비 지수</b>의 산점도에서 짐작한 관계와 상관계수 쓰기</li>
+      <li><b>고객 만족도</b>와 상관이 뚜렷한 속성을 해석하고, 해석할 때 조심할 점 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="../forms/data-u2-practice-2.html" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="foot">
+  <button class="btn ghost" id="prev">← 이전</button>
+  <span class="pg" id="pg"></span>
+  <button class="btn" id="next">다음 →</button>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toLocaleString('ko-KR');
+
+
+
+const LESSON='u2-practice-2', PEP='';
+
+/* 진도 보내기 ①: 누가 쓰는지 확인 (반·학번마다 퀴즈·메모를 따로 저장) */
+const WHO=(function(){
+  if(!PEP) return {off:true,sfx:''};
+  if(/[?&]preview(=|&|$)/.test(location.search)) return {preview:true,sfx:'@preview'};
+  let w=null; try{w=JSON.parse(sessionStorage.getItem('aiw-who')||'null');}catch(e){}
+  if(w&&w.teacher) return {preview:true,teacher:true,sfx:'@preview'};
+  if(!w||!/^\d{5}$/.test(w.no||'')) return {need:true,sfx:'@none'};
+  return {cls:w.cls,no:w.no,name:w.name,sfx:'@'+w.no};
+})();
+/* 퀴즈 (교과서 108~115쪽) — 보기는 짧은 것 → 긴 것, 극단어 피하기 */
+const QUIZ={
+ 1:[{q:'생활비 데이터를 불러온 File 위젯에서 Type을 categorical로 바꾸어 주는 속성은?',o:['Rank','Country','Cost of Living Index'],a:1,w:'Country는 나라 이름을 나누는 값이라 범주형(categorical)으로 바꿔요. 그래야 Box Plot에서 나라별로 나누어 볼 수 있어요(108쪽).'},
+    {q:'생활비 데이터에서 Rank(순위)의 값이 큰 도시일수록 어떻다고 할 수 있을까?',o:['생활비 지수가 낮다','도시의 인구가 많다','숙소의 수가 많은 편이다'],a:0,w:'Rank는 생활비 지수가 높은 순서로 매긴 순위라, 1위가 가장 비싸고 순위 숫자가 클수록 생활비 지수가 낮아요.'}],
+ 2:[{q:'Merge Data에서 Find matching pairs of rows를 고르고 city와 City를 맞추면 남는 줄은?',o:['생활비 표의 174줄','숙소 표의 51,707줄','두 표에 모두 있는 도시의 줄'],a:2,w:'일치하는 행만 찾아 통합하므로 두 데이터에 모두 있는 10개 도시만 남아요(109쪽).'},
+    {q:'숙소 표에는 Vienna, 생활비 표에는 Wien으로 적혀 있다면 Find matching pairs of rows의 결과는?',o:['비엔나 줄이 빠진다','두 줄이 자동으로 맞춰진다','비엔나 줄이 두 번 들어간다'],a:0,w:'Wien과 Vienna는 서로 다른 값으로 읽혀 짝이 되지 않고, 일치하는 행만 남기는 방법이라 그 도시 줄이 결과에서 빠져요.'},
+    {q:'통합한 데이터를 Data Table로 보면 (- Mode 열을 빼고) 15개 속성이다. 그 까닭은?',o:['도시가 15개라서','숙소 8개와 생활비 7개를 합쳐서','숙소 데이터의 15개 속성을 그대로 써서'],a:1,w:'Group by로 구한 숙소 정보의 평균 8개와 생활비 데이터의 수치형 속성 7개(Rank 포함)가 한 줄에 이어져요(109쪽).'}],
+ 3:[{q:'산점도의 점들이 대체로 왼쪽 아래에서 오른쪽 위로 놓여 있을 때 짐작할 수 있는 것은?',o:['상관관계 없음','음의 상관관계','양의 상관관계'],a:2,w:'가로축 속성이 커질 때 세로축 속성도 함께 커지는 모양이라 양의 상관관계를 짐작할 수 있어요(96·110쪽).'},
+    {q:'오렌지3 Correlations 위젯에서 파란색 막대로 표시되는 두 속성의 관계는?',o:['음의 상관관계','양의 상관관계','상관관계 없음'],a:0,w:'양의 상관관계는 연두색, 음의 상관관계는 파란색으로 표시되고, 막대가 길수록 상관관계가 강해요(111쪽).'},
+    {q:'10개 도시의 평균끼리 구한 상관계수를 해석할 때 조심할 점은?',o:['도시 한두 곳에 값이 흔들린다','상관계수가 1을 넘을 수 있다','평균으로는 상관계수를 구할 수 없다'],a:0,w:'자료가 10개뿐이면 한두 도시가 달라져도 상관계수가 크게 바뀌어요. 산점도로 함께 확인해요. 상관계수는 −1에서 1 사이 값이에요.'}],
+ 4:[{q:'히트맵을 그리기 전에 Preprocess로 속성값을 0~1 범위로 바꾸는 까닭은?',o:['속성마다 단위가 달라서','결측치를 0으로 채우려고','비싼 도시를 빼고 보려고'],a:0,w:'속성마다 단위와 범위가 달라 그대로 칠하면 값이 큰 속성만 눈에 띄어요. 정규화로 범위를 맞추면 함께 비교할 수 있어요(112쪽).'},
+    {q:'최소-최대 정규화를 하면 10개 도시 가운데 도심 거리 평균이 가장 먼 도시의 값은?',o:['0','1','0.5'],a:1,w:'(값 − 최솟값) ÷ (최댓값 − 최솟값)에 가장 먼 도시의 값을 넣으면 분자와 분모가 같아져요(75쪽).'},
+    {q:'오렌지3 Heat Map에서 각 줄 옆에 도시 이름이 보이게 하려면 어디를 바꿀까?',o:['Split By','Clustering','Row Annotations'],a:2,w:'Row Annotations의 Text를 city로 정하면 줄마다 도시 이름이 붙어 어느 도시의 색인지 읽을 수 있어요(112쪽).'}],
+ 6:[{q:'도서관 대출 표와 학생 명단 표를 하나로 통합하려 한다. 두 표에 꼭 함께 있어야 하는 것은?',o:['같은 줄 수','같은 속성 순서','학생을 구별하는 같은 속성'],a:2,w:'데이터는 주로 공통된 열을 기준으로 통합해요. 줄 수나 속성 순서는 달라도 학번처럼 학생을 구별하는 값으로 짝을 찾을 수 있어요(74쪽).'},
+    {q:'운동 시간과 기분 점수의 상관계수가 0.8로 나왔다. 바르게 말한 것은?',o:['둘은 관계가 없다','함께 커지는 경향이 있다','운동을 하면 기분이 좋아진다'],a:1,w:'0.8은 1에 가까운 양의 상관관계예요. 하지만 상관관계만으로 운동이 기분 변화의 원인이라고 말할 수는 없어요.'},
+    {q:'같은 여행지 데이터로 친구는 아테네, 나는 부다페스트를 골랐다. 결과가 달라진 까닭으로 알맞은 것은?',o:['정규화를 잘못해서','데이터에 오류가 있어서','기준으로 삼은 속성이 달라서'],a:2,w:'숙소만 볼지, 생활비까지 볼지처럼 분석 목적과 기준이 달라지면 같은 데이터에서도 다른 결론이 나와요(112쪽).'}]
+};
+
+const QK='ds-u2-practice-2-quiz'+WHO.sfx;
+const MK='ds-u2-practice-2-memo'+WHO.sfx;
+let QS={}; try{QS=JSON.parse(localStorage.getItem(QK)||'{}')||{};}catch(e){QS={};}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(QS));}catch(e){}}
+const TOTALQ=Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+function qperm(n,key){ let h=2166136261; for(const c of key){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}
+  const p=[...Array(n).keys()]; for(let i=n-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0; h=(h+0x6D2B79F5)>>>0; const j=h%(i+1); [p[i],p[j]]=[p[j],p[i]];} return p; }
+function renderQuiz(box){
+  const k=box.dataset.quiz; box.innerHTML=`<div class="qh"><b>개념 퀴즈</b><span>${QUIZ[k].length}문제 · 고르면 바로 채점</span></div>`;
+  QUIZ[k].forEach((it,i)=>{
+    const id=k+'-'+i, d=document.createElement('div'); d.className='qi';
+    /* 보기 순서는 학생마다 섞되(새로 고쳐도 같은 순서), 저장·채점은 원래 번호로 */
+    const perm=qperm(it.o.length, QK+'|'+id);
+    d.innerHTML=`<div class="qq">${i+1}. ${it.q}</div><div class="opts">${perm.map(j=>`<button data-j="${j}">${it.o[j]}</button>`).join('')}</div><div class="why"></div>`;
+    const btn=j=>d.querySelector(`button[data-j="${j}"]`);
+    const mark=(j,anim)=>{
+      const bs=d.querySelectorAll('button'); bs.forEach(b=>b.disabled=true);
+      btn(it.a).classList.add('right'); if(j!==it.a){btn(j).classList.add('wrong'); if(anim) d.classList.add('shake');}
+      d.classList.add('answered', j===it.a?'correct':'incorrect');
+      d.querySelector('.why').textContent=(j===it.a?'정답. ':'정답은 「'+it.o[it.a]+'」. ')+it.w;
+    };
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;QS[id]=j;saveQ();mark(j,true);updScore();});
+    if(QS[id]!=null && QS[id]<it.o.length) mark(QS[id],false);
+    box.appendChild(d);
+  });
+}
+
+/* 페이지 이동 */
+const pages=[...document.querySelectorAll('.page')];
+const stepBtns=pages.map((p,i)=>{const b=document.createElement('button');b.textContent=i?`${i}. ${p.dataset.name}`:'시작';b.onclick=()=>go(i);$('steps').appendChild(b);return b;});
+function updScore(){
+  let ok=0; for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{if(QS[k+'-'+i]===it.a) ok++;});
+  $('score').textContent=`퀴즈 ${ok} / ${TOTALQ}`;
+  pages.forEach((p,i)=>{const q=p.querySelector('[data-quiz]'); if(!q) return; const k=q.dataset.quiz; stepBtns[i].classList.toggle('done',QUIZ[k].every((_,j)=>QS[k+'-'+j]!=null));});
+  let h='<tr><th class="l">개념</th><th>맞힌 문제</th></tr>';
+  for(const k in QUIZ){const n=QUIZ[k].length, c=QUIZ[k].filter((it,i)=>QS[k+'-'+i]===it.a).length, a=QUIZ[k].filter((_,i)=>QS[k+'-'+i]!=null).length;
+    h+=`<tr><td class="l">${k}. ${pages[k].dataset.name}</td><td>${a?`<b class="${c===n?'ok':''}">${c} / ${n}</b>`:'<span class="muted">아직 안 풂</span>'}</td></tr>`;}
+  h+=`<tr><td class="l"><b>합계</b></td><td><b>${ok} / ${TOTALQ}</b></td></tr>`;
+  $('result').innerHTML=h;
+}
+let cur=-1;
+const onShow={};
+function go(i){
+  i=Math.max(0,Math.min(pages.length-1,i)); if(i===cur) return;
+  const back=i<cur; if(cur>=0) pages[cur].classList.remove('on','back');
+  pages[i].classList.add('on'); pages[i].classList.toggle('back',back);
+  document.documentElement.style.setProperty('--acc',pages[i].dataset.acc);
+  document.documentElement.style.setProperty('--acc-soft',pages[i].dataset.acc+'1a');
+  stepBtns.forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sb=$('steps'), btn=stepBtns[i]; sb.scrollLeft=btn.offsetLeft-sb.clientWidth/2+btn.clientWidth/2;
+  $('prog').style.width=(i/(pages.length-1)*100)+'%';
+  $('pg').textContent=`${i} / ${pages.length-1}`;
+  $('prev').style.visibility=i?'visible':'hidden'; $('next').style.visibility=i<pages.length-1?'visible':'hidden';
+  cur=i; try{history.replaceState(null,'','#p'+i);}catch(e){} window.scrollTo(0,0);
+  if(onShow[i]) onShow[i]();
+}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.defaultPrevented)return; if(e.target.matches&&e.target.matches('input,select,textarea'))return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+document.querySelectorAll('.gcard').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.click();}}));
+document.querySelectorAll('[data-quiz]').forEach(renderQuiz);
+$('quizReset').onclick=()=>{QS={};saveQ();document.querySelectorAll('[data-quiz]').forEach(renderQuiz);updScore();};
+
+
+/* 공용 부품: 메모·카드·분류 게임·탭·투표·칩 */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* 메모: data-memo가 있는 입력칸은 이 기기에 저장 */
+let MEMO=store.get(MK,{});
+function bindMemos(){
+  document.querySelectorAll('[data-memo]').forEach(t=>{
+    const k=t.dataset.memo; if(MEMO[k]!=null) t.value=MEMO[k];
+    let tm; t.addEventListener('input',()=>{MEMO[k]=t.value; clearTimeout(tm); tm=setTimeout(()=>{store.set(MK,MEMO); const s=t.parentElement.querySelector('.saved'); if(s){s.textContent='이 기기에 저장됨'; setTimeout(()=>s.textContent='',1400);} t.dispatchEvent(new Event('memo'));},300);});
+  });
+}
+function memoSummary(box,list){
+  const h=list.map(([k,label])=>{const v=(MEMO[k]||'').trim(); return `<dt>${esc(label)}</dt><dd class="${v?'':'e'}">${v?esc(v):'(아직 안 씀)'}</dd>`;}).join('');
+  $(box).innerHTML=`<h4>오늘 화면에 적어 둔 내 메모</h4><dl>${h}</dl>`;
+}
+
+/* 뒤집는 카드 */
+function flipCards(box,items){
+  $(box).innerHTML=items.map(c=>`<div class="tcard" tabindex="0"><div class="in"><div class="f"><i>${c.ic||''}</i><b>${c.f}</b>${c.s?`<small>${c.s}</small>`:''}</div><div class="b">${c.b}${c.x?`<div class="x">${c.x}</div>`:''}</div></div></div>`).join('');
+  $(box).querySelectorAll('.tcard').forEach(t=>{const f=()=>t.classList.toggle('flip'); t.onclick=f; t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}};});
+}
+
+/* 분류 게임: 문장을 보고 알맞은 묶음 고르기 */
+function sorter(box,cfg){
+  const B=$(box);
+  function start(){
+    const order=shuffle(cfg.items.map((_,i)=>i)); let pos=0, ok=0; const placed=cfg.cats.map(()=>[]);
+    B.innerHTML=`<div class="sit"><div class="cnt"></div><div class="ic"></div><div class="sq"></div><div class="row btns">${cfg.cats.map((c,j)=>`<button class="btn sm cat" style="--k:${c.k}" data-j="${j}">${c.n}</button>`).join('')}</div><div class="fb"></div><div class="row nx" style="margin-top:8px"></div></div><div class="board" style="--n:${cfg.cats.length}">${cfg.cats.map(c=>`<div style="--k:${c.k}"><b>${c.n}</b></div>`).join('')}</div>`;
+    const sq=B.querySelector('.sq'), ic=B.querySelector('.ic'), cnt=B.querySelector('.cnt'), fb=B.querySelector('.fb'), nx=B.querySelector('.nx'), btns=[...B.querySelectorAll('.cat')], cols=[...B.querySelectorAll('.board>div')];
+    function show(){
+      if(pos>=order.length){cnt.textContent=''; ic.textContent='🎉'; sq.innerHTML=`${order.length}개 중 <b>${ok}개</b>를 바로 맞혔어요.`; fb.innerHTML=cfg.end||''; btns.forEach(b=>b.style.display='none'); nx.innerHTML='<button class="btn ghost sm">처음부터 다시</button>'; nx.firstChild.onclick=start; return;}
+      const it=cfg.items[order[pos]]; cnt.textContent=`${pos+1} / ${order.length}`; ic.textContent=it.ic||''; sq.innerHTML=it.t; fb.textContent=''; nx.innerHTML=''; btns.forEach(b=>{b.disabled=false;b.style.display='';});
+    }
+    btns.forEach(b=>b.onclick=()=>{
+      const it=cfg.items[order[pos]], j=+b.dataset.j, right=j===it.c; if(right) ok++;
+      btns.forEach(x=>x.disabled=true);
+      fb.innerHTML=(right?'<span class="ok">맞아요!</span> ':`<span class="ng">아쉬워요.</span> 정답은 <b>${cfg.cats[it.c].n}</b>. `)+(it.w||'');
+      const s=document.createElement('span'); s.innerHTML=it.short||it.t; if(!right) s.className='x'; cols[it.c].appendChild(s);
+      nx.innerHTML='<button class="btn sm">다음 →</button>'; nx.firstChild.onclick=()=>{pos++;show();}; nx.firstChild.focus();
+    });
+    show();
+  }
+  start();
+}
+
+/* 탭 보기: 버튼을 누르면 내용 바꾸기 */
+function tabs(btnBox,viewBox,items,render){
+  $(btnBox).innerHTML=items.map((it,i)=>`<button data-i="${i}"><span class="e">${it.ic||''}</span><b>${it.n}</b></button>`).join('');
+  const bs=[...$(btnBox).querySelectorAll('button')];
+  const pick=i=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); $(viewBox).innerHTML=render(items[i],i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i)); pick(0);
+}
+
+/* 투표: 고르면 결과 보이기 (이 기기에만 저장) */
+function vote(box,key,opts,onPick){
+  const B=$(box); B.innerHTML=opts.map((o,i)=>`<button data-i="${i}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')];
+  const pick=(i,save)=>{bs.forEach((b,j)=>b.classList.toggle('on',i===j)); if(save){MEMO[key]=opts[i][0]; store.set(MK,MEMO);} onPick&&onPick(i);};
+  bs.forEach(b=>b.onclick=()=>pick(+b.dataset.i,true));
+  const prev=opts.findIndex(o=>o[0]===MEMO[key]); if(prev>=0) pick(prev,false);
+}
+function chips(box,key,opts,multi){
+  const B=$(box); B.classList.add('chk'); B.innerHTML=opts.map(o=>`<button>${o}</button>`).join('');
+  const bs=[...B.querySelectorAll('button')]; let sel=(MEMO[key]||'').split(' · ').filter(Boolean);
+  const draw=()=>bs.forEach(b=>b.classList.toggle('on',sel.includes(b.textContent)));
+  bs.forEach(b=>b.onclick=()=>{const t=b.textContent; if(multi) sel=sel.includes(t)?sel.filter(x=>x!==t):[...sel,t]; else sel=sel.includes(t)?[]:[t]; MEMO[key]=sel.join(' · '); store.set(MK,MEMO); draw(); B.dispatchEvent(new Event('memo'));});
+  draw();
+}
+/* u2-practice-2 데이터 분석의 실제 ② 분석과 해석 · 정리 (교과서 108~115쪽) */
+
+/* 도시별 평균 — 캐글 「Airbnb Prices European Cities(Merged)」 51,707개 숙소를 도시별로 묶은 집계값(오렌지3 파이썬으로 원본 csv에서 계산, 교과서 106·112쪽 값과 대조함).
+   lat·lon: 도시 중심의 위도·경도(널리 알려진 공개값). 생활비(NUMBEO) 값은 싣지 않고 학생이 입력한다. */
+const PB_ATTR=[
+  {k:'charge',ko:'1인당 숙박비',en:'charge - Mean',up:false},
+  {k:'realSum',ko:'총 숙박비',en:'realSum - Mean',up:false},
+  {k:'person_capacity',ko:'숙박 인원',en:'person_capacity - Mean',up:true},
+  {k:'cleanliness_rating',ko:'청결도',en:'cleanliness_rating - Mean',up:true},
+  {k:'guest_satisfaction_overall',ko:'고객 만족도',en:'guest_satisfaction_overall - Mean',up:true},
+  {k:'bedrooms',ko:'침실 수',en:'bedrooms - Mean',up:true},
+  {k:'dist',ko:'도심 거리',en:'dist - Mean',up:false},
+  {k:'metro_dist',ko:'지하철 거리',en:'metro_dist - Mean',up:false},
+  {k:'col',ko:'생활비 지수',en:'Cost of Living Index (내가 입력)',up:false}
+];
+const PB_CITY=[
+  {k:'Amsterdam',ko:'암스테르담',country:'Netherlands',lat:52.3676,lon:4.9041,realSum:573.1128,person_capacity:2.7817,cleanliness_rating:9.4659,guest_satisfaction_overall:94.5144,bedrooms:1.2923,dist:2.8251,metro_dist:1.0894,charge:205.7859},
+  {k:'Athens',ko:'아테네',country:'Greece',lat:37.9838,lon:23.7275,realSum:151.7441,person_capacity:3.6981,cleanliness_rating:9.6384,guest_satisfaction_overall:95.0036,bedrooms:1.2714,dist:1.8031,metro_dist:0.4787,charge:44.6259},
+  {k:'Barcelona',ko:'바르셀로나',country:'Spain',lat:41.3874,lon:2.1686,realSum:293.7537,person_capacity:2.6167,cleanliness_rating:9.2916,guest_satisfaction_overall:91.1091,bedrooms:1.1613,dist:2.117,metro_dist:0.4412,charge:112.1393},
+  {k:'Berlin',ko:'베를린',country:'Germany',lat:52.52,lon:13.405,realSum:244.5838,person_capacity:2.775,cleanliness_rating:9.4618,guest_satisfaction_overall:94.3237,bedrooms:1.0705,dist:5.2571,metro_dist:0.8361,charge:92.3438},
+  {k:'Budapest',ko:'부다페스트',country:'Hungary',lat:47.4979,lon:19.0402,realSum:176.5135,person_capacity:3.5408,cleanliness_rating:9.4774,guest_satisfaction_overall:94.5853,bedrooms:1.1057,dist:1.8728,metro_dist:0.5441,charge:53.5769},
+  {k:'Lisbon',ko:'리스본',country:'Portugal',lat:38.7223,lon:-9.1393,realSum:238.2105,person_capacity:3.3434,cleanliness_rating:9.3706,guest_satisfaction_overall:91.0939,bedrooms:1.2724,dist:1.9669,metro_dist:0.7115,charge:75.274},
+  {k:'London',ko:'런던',country:'UnitedKingdom',lat:51.5072,lon:-0.1276,realSum:362.4693,person_capacity:2.8462,cleanliness_rating:9.175,guest_satisfaction_overall:90.6457,bedrooms:1.1288,dist:5.3264,metro_dist:1.0055,charge:126.6715},
+  {k:'Paris',ko:'파리',country:'France',lat:48.8566,lon:2.3522,realSum:392.5314,person_capacity:2.9536,cleanliness_rating:9.2636,guest_satisfaction_overall:92.0375,bedrooms:0.9728,dist:2.9958,metro_dist:0.2273,charge:137.5011},
+  {k:'Rome',ko:'로마',country:'Italy',lat:41.9028,lon:12.4964,realSum:205.3919,person_capacity:3.3574,cleanliness_rating:9.5147,guest_satisfaction_overall:93.1223,bedrooms:1.2298,dist:3.027,metro_dist:0.8198,charge:65.3534},
+  {k:'Vienna',ko:'비엔나',country:'Austria',lat:48.2082,lon:16.3738,realSum:241.5825,person_capacity:3.3503,cleanliness_rating:9.4724,guest_satisfaction_overall:93.7311,bedrooms:1.1023,dist:3.1395,metro_dist:0.5267,charge:78.8134}
+];
+const pbFix=(v,d)=>Number(v).toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+/* 학생이 입력한 생활비 지수 (02에서 입력, 03·04·05에서 씀) */
+function pbColGet(){
+  const o={}; String(MEMO.colVals||'').split(' · ').forEach(p=>{const m=p.match(/^([A-Za-z]+) (.+)$/); if(m) o[m[1]]=m[2];});
+  return o;
+}
+const pbNum=s=>{const t=String(s==null?'':s).replace(/,/g,'').trim(); return t===''?NaN:Number(t);};
+function pbVal(c,k){ if(k==='col') return pbNum(pbColGet()[c.k]); return c[k]; }
+const pbColCount=()=>PB_CITY.filter(c=>!isNaN(pbVal(c,'col'))).length;
+let pbOnCol=[];   /* 생활비 지수가 바뀌면 다시 그릴 체험들 */
+
+/* 0 시작: 지난 시간(u2-practice-1)에 적은 기준 보여 주기 — 읽기만 함 */
+(function(){
+  let m={}; try{ m=store.get('ds-u2-practice-1-memo'+WHO.sfx,{})||{}; }catch(e){ m={}; }
+  const a=String(m.planCrit||'').trim(), b=String(m.planTrip||'').trim();
+  const h=(a?`<b>지난 시간에 고른 나의 기준</b><span>${esc(a)}</span>`:'')+(b?`<b>가장 중요한 기준</b><span>${esc(b)}</span>`:'');
+  $('pbPrev').innerHTML=h; $('pbPrev').style.display=h?'':'none';
+})();
+
+/* 위젯 연결 흐름도 (오렌지3 화면을 캡처하지 않고 새로 그림) — 교과서 ows 「데이터 분석의 실제(103쪽)」의 연결과 같게 */
+function pbDrawFlow(svgId,tblId,W,H,nodes,edges){
+  const col={D:'#f2b84b',T:'#f0875a',V:'#ef8fa0',U:'#8fb4e8'}, BW=176, BH=48, N={};
+  nodes.forEach(n=>N[n.s]=n);
+  let g=`<defs><marker id="${svgId}A" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a94a3"/></marker></defs>`;
+  edges.forEach(([a,b,lab,dy])=>{
+    const p=N[a], q=N[b], x1=p.x+BW, y1=p.y+BH/2, x2=q.x-2, y2=q.y+BH/2+(dy||0);
+    g+=`<path d="M${x1} ${y1}C${x1+40} ${y1} ${x2-40} ${y2} ${x2} ${y2}" class="fe" marker-end="url(#${svgId}A)"/>`;
+    if(lab) g+=`<text x="${x2-12}" y="${dy>0?y2+15:y2-7}" class="fl">${lab}</text>`;
+  });
+  nodes.forEach(n=>{
+    g+=`<g class="fn${n.done?' dn':''}" data-s="${n.s}" tabindex="0"><rect x="${n.x}" y="${n.y}" width="${BW}" height="${BH}" rx="10" class="fb" style="stroke:${col[n.c]}"/><rect x="${n.x}" y="${n.y}" width="28" height="${BH}" rx="10" fill="${col[n.c]}"/><rect x="${n.x+18}" y="${n.y}" width="10" height="${BH}" fill="${col[n.c]}"/><text x="${n.x+14}" y="${n.y+29}" class="fnum">${n.s}</text><text x="${n.x+36}" y="${n.y+(n.sub?20:29)}" class="ft">${n.t}</text>${n.sub?`<text x="${n.x+36}" y="${n.y+37}" class="fs">${n.sub}</text>`:''}</g>`;
+  });
+  const S=$(svgId); S.setAttribute('viewBox',`0 0 ${W} ${H}`); S.innerHTML=g;
+  const T=$(tblId);
+  const pick=s=>{
+    S.querySelectorAll('.fn').forEach(x=>x.classList.toggle('on',x.dataset.s===s));
+    T.querySelectorAll('tr[data-s]').forEach(tr=>tr.classList.toggle('hl',tr.dataset.s===s));
+    const tr=T.querySelector(`tr[data-s="${s}"]`); if(tr) tr.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  S.querySelectorAll('.fn').forEach(x=>{x.onclick=()=>pick(x.dataset.s); x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(x.dataset.s);}};});
+  T.querySelectorAll('tr[data-s]').forEach(tr=>tr.onclick=()=>pick(tr.dataset.s));
+}
+pbDrawFlow('pbFlow1','pbSet1',480,180,[
+  {s:10,t:'생활비',sub:'File (1)',c:'D',x:10,y:66},
+  {s:11,t:'Data Table (3)',c:'D',x:290,y:10},{s:12,t:'Box Plot (1)',sub:'(선택) 나라별 분포',c:'V',x:290,y:120}
+],[[10,11],[10,12]]);
+pbDrawFlow('pbFlow2','pbSet2',700,200,[
+  {s:7,t:'Group by',sub:'지난 시간 · 도시별 평균',c:'T',x:10,y:20,done:true},{s:10,t:'생활비',sub:'File (1)',c:'D',x:10,y:128,done:true},
+  {s:13,t:'Merge Data',sub:'city ↔ City',c:'T',x:270,y:74},{s:14,t:'Data Table (4)',sub:'10줄 · 15속성(Mode 열 빼고)',c:'D',x:514,y:74}
+],[[7,13,'Data',-8],[10,13,'Extra Data',8],[13,14]]);
+pbDrawFlow('pbFlow3','pbSet3',520,190,[
+  {s:13,t:'Merge Data',c:'T',x:10,y:70,done:true},
+  {s:15,t:'Scatter Plot',sub:'charge × 생활비 지수',c:'V',x:320,y:12},{s:16,t:'Correlations',sub:'고객 만족도 기준',c:'U',x:320,y:128}
+],[[13,15],[13,16]]);
+pbDrawFlow('pbFlow4','pbSet4',720,80,[
+  {s:13,t:'Merge Data',c:'T',x:10,y:16,done:true},{s:17,t:'Preprocess',sub:'Normalize [0, 1]',c:'T',x:262,y:16},{s:18,t:'Heat Map',sub:'Row Annotations: city',c:'V',x:530,y:16}
+],[[13,17],[17,18]]);
+chips('pbDone1','done1Pick',['생활비 파일 불러오기','이름을 생활비로','Country를 categorical로','Data Table로 174행 확인','(선택) Box Plot'],true);
+chips('pbDone2','done2Pick',['Merge Data 연결(Data · Extra Data)','Find matching pairs of rows','city ↔ City로 맞추기','Data Table로 10줄 확인'],true);
+chips('pbDone3','done3Pick',['Scatter Plot 축 정하기','Label을 city로','Correlations 연결','만족도 기준 막대 읽기','charge 기준으로 바꿔 읽기'],true);
+chips('pbDone4','done4Pick',['Preprocess로 0~1 정규화','Heat Map 연결','Row Annotations를 city로','저장하기(File → Save)'],true);
+
+/* 01 지수 읽기 연습 (예시 값) */
+flipCards('pbIdx',[
+  {ic:'📈',f:'생활비 지수 120',s:'(예시)',b:'기준 도시(뉴욕)를 100으로 볼 때 생활비가 20%쯤 비싼 편이에요.'},
+  {ic:'🏅',f:'Rank 1',s:'순위',b:'174개 도시 가운데 생활비 지수가 가장 높은 도시예요. Rank가 클수록 생활비 지수는 낮아요.',x:'순위는 크기를 재는 값이 아니에요.'}
+]);
+
+/* 02 통합 따라 해 보기 */
+(function(){
+  const EXTRA=[['Dublin','Ireland'],['Madrid','Spain'],['Munich','Germany'],['Oslo','Norway'],['Prague','CzechRepublic'],['Zurich','Switzerland']];
+  const RIGHT=PB_CITY.map(c=>({name:c.k,country:c.country,mine:true})).concat(EXTRA.map(e=>({name:e[0],country:e[1],mine:false}))).sort((a,b)=>a.name<b.name?-1:1);
+  const ALIAS={Rome:'Roma',Vienna:'Wien'};
+  let mode='match', merged=false;
+  const nameOf=r=>$('pbMgName').checked&&ALIAS[r.name]?ALIAS[r.name]:r.name;
+  function saveCol(o){ MEMO.colVals=PB_CITY.filter(c=>String(o[c.k]||'').trim()!=='').map(c=>`${c.k} ${String(o[c.k]).trim()}`).join(' · '); store.set(MK,MEMO); }
+  function drawTables(){
+    const col=pbColGet();
+    const L=`<div class="pb-mt"><b>🏠 숙소 정보 (Group by 결과)</b><table><tr><th>city</th><th>charge - Mean</th><th>guest_satisfaction<br>_overall - Mean</th></tr>${PB_CITY.map(c=>`<tr><td>${c.k}</td><td>${pbFix(c.charge,2)}</td><td>${pbFix(c.guest_satisfaction_overall,2)}</td></tr>`).join('')}</table></div>`;
+    const R=`<div class="pb-mt"><b>🛒 생활비 (174줄 중 일부)</b><table><tr><th>City</th><th>Country</th><th>Cost of Living Index</th></tr>${RIGHT.map(r=>{const nm=nameOf(r), alias=nm!==r.name;
+      return `<tr class="${r.mine?'':'ex'}"><td class="${alias?'al':''}">${nm}</td><td>${r.country}</td><td>${r.mine?`<input type="text" inputmode="decimal" data-c="${r.name}" value="${esc(col[r.name]||'')}" placeholder="?" aria-label="${r.name} 생활비 지수">`:'<span class="muted">…</span>'}</td></tr>`;}).join('')}</table></div>`;
+    $('pbMg').innerHTML=L+R;
+    $('pbMg').querySelectorAll('input[data-c]').forEach(inp=>inp.oninput=()=>{const o=pbColGet(); o[inp.dataset.c]=inp.value; saveCol(o); if(merged) doMerge(true); pbOnCol.forEach(f=>f());});
+  }
+  function doMerge(quiet){
+    merged=true;
+    const col=pbColGet(), names=new Map(RIGHT.map(r=>[nameOf(r),r]));
+    const rows=[]; const miss=[];
+    PB_CITY.forEach(c=>{const r=names.get(c.k); if(r) rows.push([c,r]); else { miss.push(c); if(mode==='append') rows.push([c,null]); }});
+    $('pbMgOut').innerHTML=`<table class="pb-mres"><tr><th>city</th><th>charge - Mean</th><th>guest_satisfaction_overall - Mean</th><th>Country</th><th>Cost of Living Index</th></tr>${rows.map(([c,r])=>`<tr class="${r?'':'nm'}"><td>${c.k}</td><td>${pbFix(c.charge,2)}</td><td>${pbFix(c.guest_satisfaction_overall,2)}</td><td>${r?r.country:'?'}</td><td>${r?(String(col[c.k]||'').trim()?esc(col[c.k]):'<span class="muted">(빈칸)</span>'):'?'}</td></tr>`).join('')}</table>`;
+    const how=mode==='match'?'<b>Find matching pairs of rows</b>':'<b>Append columns from Extra data</b>';
+    let msg=`${how} · 숙소 10줄과 생활비 174줄을 합쳐 <b>${rows.length}줄</b>이 되었어요. `;
+    if(miss.length) msg+=mode==='match'?`<span class="ng">${miss.map(c=>c.k).join(', ')}</span>는 생활비 표에서 같은 이름을 찾지 못해 <b>빠졌어요</b>. `:`<span class="ng">${miss.map(c=>c.k).join(', ')}</span>는 짝을 못 찾아 생활비 칸이 <b>?</b>(결측치)가 되었어요. `;
+    else msg+=mode==='match'?'두 표에 <b>모두 있는 도시</b>만 짝지어 남고, 생활비 표에만 있는 164개 도시는 들어오지 않아요.':'숙소 표의 줄은 모두 남고, 짝을 찾은 생활비 값이 옆에 붙어요.';
+    const blanks=PB_CITY.filter(c=>String(col[c.k]||'').trim()==='').length;
+    if(blanks&&!miss.length) msg+=` <span class="muted">(생활비 지수 빈칸 ${blanks}개는 오렌지3 Data Table (4)에서 찾아 채워요)</span>`;
+    $('pbMgMsg').innerHTML=msg;
+    $('pbMgFix').disabled=!miss.length;
+    if(!quiet) $('pbMgOut').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  $('pbMgMode').innerHTML='<button data-v="match">Find matching pairs of rows</button><button data-v="append">Append columns from Extra data</button>';
+  const segDraw=()=>$('pbMgMode').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===mode));
+  $('pbMgMode').querySelectorAll('button').forEach(b=>b.onclick=()=>{mode=b.dataset.v; segDraw(); if(merged) doMerge(true);});
+  $('pbMgName').onchange=()=>{drawTables(); if(merged) doMerge(true);};
+  $('pbMgDo').onclick=()=>doMerge(false);
+  $('pbMgFix').onclick=()=>{$('pbMgName').checked=false; drawTables(); doMerge(true); $('pbMgMsg').innerHTML+=' <b>도시 이름 표기를 하나로 맞추니 다시 짝을 찾았어요.</b> 연도를 YYYY 형식으로 맞추었던 것(74쪽)처럼, 통합 전에 기준 속성의 형식을 맞춰야 해요.';};
+  $('pbMgReset').onclick=()=>{merged=false; $('pbMgOut').innerHTML=''; $('pbMgMsg').innerHTML=''; $('pbMgFix').disabled=true;};
+  segDraw(); drawTables();
+})();
+
+/* 피어슨 상관계수 */
+function pbCorr(xs,ys){
+  const n=xs.length; if(n<3) return NaN;
+  const mx=xs.reduce((a,b)=>a+b,0)/n, my=ys.reduce((a,b)=>a+b,0)/n;
+  let sxy=0,sxx=0,syy=0; for(let i=0;i<n;i++){const dx=xs[i]-mx, dy=ys[i]-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy;}
+  return sxx&&syy?sxy/Math.sqrt(sxx*syy):NaN;
+}
+const pbRWord=r=>{const a=Math.abs(r); const dir=r>0?'양의 상관관계':'음의 상관관계'; if(a<0.3) return '0에 가까운 편이라 뚜렷한 상관관계가 보이지 않아요'; return dir+(a>=0.7?`예요. ${r>0?'1':'−1'}에 가까운 편이에요`:'예요. 0과 '+(r>0?'1':'−1')+' 사이 중간쯤이에요');};
+
+/* 03 화면 안 산점도 */
+(function(){
+  const S=$('pbSc'), W=520, H=330, L=64, R=20, T=16, B=48;
+  const opt=PB_ATTR.map(a=>`<option value="${a.k}">${a.ko} (${a.en})</option>`).join('');
+  $('pbSx').innerHTML=opt; $('pbSy').innerHTML=opt;
+  const useCol=()=>{$('pbSx').value='charge'; $('pbSy').value='col';};
+  if(pbColCount()>=3) useCol(); else { $('pbSx').value='dist'; $('pbSy').value='charge'; }
+  function draw(){
+    const kx=$('pbSx').value, ky=$('pbSy').value, ax=PB_ATTR.find(a=>a.k===kx), ay=PB_ATTR.find(a=>a.k===ky);
+    const pts=PB_CITY.map(c=>({c,x:pbVal(c,kx),y:pbVal(c,ky)})).filter(p=>!isNaN(p.x)&&!isNaN(p.y));
+    S.setAttribute('viewBox',`0 0 ${W} ${H}`); S.innerHTML='';
+    if(pts.length<3){
+      el('text',{x:W/2,y:H/2,class:'axl','text-anchor':'middle'},S,'생활비 지수를 02에서 3개 도시 이상 입력하면 그려져요');
+      $('pbRbar').innerHTML=''; $('pbScMsg').innerHTML='y축이나 x축에 「생활비 지수」를 고르려면 <b>02 통합 따라 해 보기</b>의 빈칸을 먼저 채워요.'; return;
+    }
+    const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+    const pad=(a,b)=>{const d=(b-a)||1; return [a-d*0.08,b+d*0.08];};
+    const [x0,x1]=pad(Math.min(...xs),Math.max(...xs)), [y0,y1]=pad(Math.min(...ys),Math.max(...ys));
+    const X=v=>L+(v-x0)/(x1-x0)*(W-L-R), Y=v=>H-B-(v-y0)/(y1-y0)*(H-B-T);
+    for(let i=0;i<=4;i++){const vx=x0+(x1-x0)*i/4, vy=y0+(y1-y0)*i/4;
+      el('line',{x1:X(vx),x2:X(vx),y1:T,y2:H-B,class:'gl'},S); el('text',{x:X(vx),y:H-B+15,class:'tk','text-anchor':'middle'},S,pbFix(vx,vx>=100?0:2));
+      el('line',{x1:L,x2:W-R,y1:Y(vy),y2:Y(vy),class:'gl'},S); el('text',{x:L-6,y:Y(vy)+4,class:'tk','text-anchor':'end'},S,pbFix(vy,vy>=100?0:2));}
+    el('text',{x:(L+W-R)/2,y:H-10,class:'axl','text-anchor':'middle'},S,ax.en);
+    const ty=el('text',{x:14,y:(T+H-B)/2,class:'axl','text-anchor':'middle',transform:`rotate(-90 14 ${(T+H-B)/2})`},S,ay.en);
+    pts.forEach(p=>{el('circle',{cx:X(p.x),cy:Y(p.y),r:6,class:'pt'},S); const right=X(p.x)>W-110; el('text',{x:X(p.x)+(right?-9:9),y:Y(p.y)+4,class:'lb','text-anchor':right?'end':'start'},S,p.c.k);});
+    const r=pbCorr(xs,ys);
+    $('pbRbar').innerHTML=isNaN(r)?'':`<div class="pb-rline"><span>−1</span><div><i style="left:${((r+1)/2*100).toFixed(1)}%"></i><em style="left:50%"></em></div><span>1</span></div>`;
+    $('pbScMsg').innerHTML=isNaN(r)?'값이 모두 같아 상관계수를 구할 수 없어요.':`<b>r = ${r.toFixed(2).replace('-','−')}</b> (${pts.length}개 도시) · ${pbRWord(r)}. <span class="muted">(말로 푼 부분은 대략적인 표현이에요)</span>`+(kx===ky?' 같은 속성끼리는 r이 1이에요. 다른 속성을 골라 보세요.':'')+(pts.length<10?' <span class="muted">생활비 지수를 넣은 도시만 그렸어요.</span>':'');
+  }
+  $('pbSx').onchange=draw; $('pbSy').onchange=draw;
+  let touched=false;
+  pbOnCol.push(draw); onShow[3]=()=>{ if(pbColCount()>=3&&!touched) useCol(); draw(); };
+  $('pbSx').addEventListener('change',()=>{touched=true;}); $('pbSy').addEventListener('change',()=>{touched=true;});
+  draw();
+})();
+
+/* 04 여행지 히트맵 만들기 */
+const PB_HEAT={sel:['cleanliness_rating','guest_satisfaction_overall','dist','charge'],up:{},mode:'norm'};
+PB_ATTR.forEach(a=>PB_HEAT.up[a.k]=a.up);
+function pbHeatScores(){
+  const sel=PB_HEAT.sel.filter(k=>k!=='col'||pbColCount()===10);
+  const rng={}; sel.forEach(k=>{const v=PB_CITY.map(c=>pbVal(c,k)); rng[k]=[Math.min(...v),Math.max(...v)];});
+  const norm=(c,k)=>{const [a,b]=rng[k]; return b>a?(pbVal(c,k)-a)/(b-a):0;};
+  const good=(c,k)=>PB_HEAT.up[k]?norm(c,k):1-norm(c,k);
+  const score=c=>sel.length?sel.reduce((s,k)=>s+good(c,k),0)/sel.length:0;
+  return {sel,norm,good,score};
+}
+(function(){
+  const pal=['#1f2f86','#2a6fb8','#33a39a','#8fd16a','#f4ee5a'];
+  const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+  const colorOf=t=>{t=Math.max(0,Math.min(1,t)); const p=t*(pal.length-1), i=Math.min(pal.length-2,Math.floor(p)), f=p-i, a=hex(pal[i]), b=hex(pal[i+1]); return `rgb(${a.map((v,j)=>Math.round(v+(b[j]-v)*f)).join(',')})`;};
+  const MODES=[['raw','정규화 전 값'],['norm','정규화 (0~1)'],['good','좋은 쪽으로 맞추기']];
+  $('pbHMode').innerHTML=MODES.map(m=>`<button data-v="${m[0]}">${m[1]}</button>`).join('');
+  $('pbHMode').querySelectorAll('button').forEach(b=>b.onclick=()=>{PB_HEAT.mode=b.dataset.v; draw();});
+  function pickDraw(){
+    const full=pbColCount()===10;
+    if(!full) PB_HEAT.sel=PB_HEAT.sel.filter(k=>k!=='col');   /* 02 입력을 지우면 생활비 지수 선택도 풀기 */
+    $('pbHPick').innerHTML=PB_ATTR.map(a=>{const dis=a.k==='col'&&!full; return `<label class="${PB_HEAT.sel.includes(a.k)?'on':''}${dis?' dis':''}"><input type="checkbox" data-k="${a.k}" ${PB_HEAT.sel.includes(a.k)?'checked':''} ${dis?'disabled':''}> ${a.ko}${a.k==='col'?(full?' <small>(내가 입력)</small>':' <small>(02에서 10개 도시를 모두 입력하면 쓸 수 있어요)</small>'):''}</label>`;}).join('');
+    $('pbHPick').querySelectorAll('input').forEach(i=>i.onchange=()=>{const k=i.dataset.k; PB_HEAT.sel=i.checked?[...PB_HEAT.sel,k]:PB_HEAT.sel.filter(x=>x!==k); PB_HEAT.sel=PB_ATTR.map(a=>a.k).filter(x=>PB_HEAT.sel.includes(x)); draw();});
+  }
+  function draw(){
+    pickDraw();
+    $('pbHMode').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===PB_HEAT.mode));
+    const {sel,norm,good,score}=pbHeatScores(), mode=PB_HEAT.mode;
+    if(!sel.length){ $('pbHeat').innerHTML=''; $('pbHLegend').innerHTML=''; $('pbHMsg').innerHTML='속성을 하나 이상 골라요.'; return; }
+    let rows=PB_CITY.slice(); if(mode==='good') rows.sort((a,b)=>score(b)-score(a));
+    const all=[]; sel.forEach(k=>PB_CITY.forEach(c=>all.push(pbVal(c,k)))); const gmin=Math.min(...all), gmax=Math.max(...all);
+    const cell=(c,k)=>{
+      let t,txt; const v=pbVal(c,k);
+      if(mode==='raw'){ t=gmax>gmin?(v-gmin)/(gmax-gmin):0; txt=pbFix(v,v>=100?1:2); }
+      else if(mode==='norm'){ t=norm(c,k); txt=t.toFixed(2); }
+      else { t=good(c,k); txt=t.toFixed(2); }
+      return `<td style="background:${colorOf(t)};color:${t>0.55?'#16202c':'#fff'}">${txt}</td>`;
+    };
+    const head=sel.map(k=>{const a=PB_ATTR.find(x=>x.k===k); return `<th>${a.ko}<small>${k==='col'?'Cost of Living Index':a.en.replace(' - Mean','')}</small>${mode==='good'?`<button data-k="${k}" class="pb-dir">${PB_HEAT.up[k]?'클수록 좋음 ↑':'작을수록 좋음 ↓'}</button>`:''}</th>`;}).join('');
+    $('pbHeat').innerHTML=`<tr><th>${mode==='good'?'순위 · ':''}city</th>${head}${mode==='good'?'<th>점수<small>평균</small></th>':''}</tr>`+rows.map((c,i)=>`<tr><th>${mode==='good'?(i+1)+'. ':''}${c.ko} <small>${c.k}</small></th>${sel.map(k=>cell(c,k)).join('')}${mode==='good'?`<td class="sc">${score(c).toFixed(2)}</td>`:''}</tr>`).join('');
+    $('pbHeat').querySelectorAll('.pb-dir').forEach(b=>b.onclick=()=>{PB_HEAT.up[b.dataset.k]=!PB_HEAT.up[b.dataset.k]; draw();});
+    $('pbHLegend').innerHTML=`<span>${mode==='raw'?pbFix(gmin,2):'0'}</span><i style="background:linear-gradient(90deg,${pal.join(',')})"></i><span>${mode==='raw'?pbFix(gmax,2):'1'}</span>`;
+    $('pbHMsg').innerHTML=mode==='raw'?'<b>정규화 전 값</b>으로 칠하면 값이 큰 속성(숙박비 등)만 밝고, 청결도처럼 값이 작은 속성은 도시끼리 달라도 모두 같은 색으로 보여요. 「정규화 (0~1)」로 바꿔 보세요.'
+      :mode==='norm'?'<b>정규화</b>: 속성마다 (값 − 최솟값) ÷ (최댓값 − 최솟값). 10개 도시 중 가장 작은 값은 0, 가장 큰 값은 1이 돼요. 오렌지3 Heat Map과 같은 방식이에요.'
+      :'<b>좋은 쪽으로 맞추기</b>: 「작을수록 좋음」 속성은 1 − 정규화 값으로 바꿔 모든 칸에서 1에 가까울수록 좋게 했어요. 점수는 고른 속성의 평균이에요. 머리글 단추로 방향을 바꿔 보세요.';
+  }
+  $('pbHSave').onclick=()=>{
+    const {sel,score}=pbHeatScores(); if(!sel.length) return;
+    const top=PB_CITY.slice().sort((a,b)=>score(b)-score(a)).slice(0,3);
+    MEMO.heatRank='기준: '+sel.map(k=>PB_ATTR.find(a=>a.k===k).ko+(PB_HEAT.up[k]?'↑':'↓')).join(' · ')+' → '+top.map((c,i)=>`${i+1}위 ${c.ko}(${score(c).toFixed(2)})`).join(' · ');
+    store.set(MK,MEMO);
+    $('pbHMsg').innerHTML=`메모에 담았어요: ${esc(MEMO.heatRank)}`;
+  };
+  pbOnCol.push(draw); onShow[4]=draw;
+  draw();
+})();
+
+/* 05 (선택) 화면 안 좌표 지도 */
+(function(){
+  const S=$('pbGeo'), W=620, H=440, lon0=-12, lon1=27, lat0=36, lat1=55, kx=Math.cos(46*Math.PI/180);
+  const sx=(W-40)/((lon1-lon0)*kx), sy=(H-40)/(lat1-lat0), s=Math.min(sx,sy);
+  const X=lon=>20+(lon-lon0)*kx*s, Y=lat=>20+(lat1-lat)*s;
+  const opts=[['none','같게'],['charge','1인당 숙박비'],['cleanliness_rating','청결도'],['guest_satisfaction_overall','고객 만족도'],['dist','도심 거리'],['col','생활비 지수(내가 입력)']];
+  $('pbGeoSize').innerHTML=opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('');
+  let picked=[];
+  const hav=(a,b)=>{const R=6371, r=Math.PI/180, dl=(b.lat-a.lat)*r, dn=(b.lon-a.lon)*r; const h=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)**2; return 2*R*Math.asin(Math.sqrt(h));};
+  function draw(){
+    const k=$('pbGeoSize').value;
+    S.setAttribute('viewBox',`0 0 ${Math.round(X(lon1)+20)} ${H}`); S.innerHTML='';
+    for(let lo=-10;lo<=25;lo+=5){el('line',{x1:X(lo),x2:X(lo),y1:Y(lat1),y2:Y(lat0),class:'gl'},S); el('text',{x:X(lo),y:H-4,class:'tk','text-anchor':'middle'},S,(lo<0?'서경 '+(-lo):'동경 '+lo)+'°');}
+    for(let la=40;la<=55;la+=5){el('line',{x1:X(lon0),x2:X(lon1),y1:Y(la),y2:Y(la),class:'gl'},S); el('text',{x:X(lon0)+2,y:Y(la)-3,class:'tk'},S,'북위 '+la+'°');}
+    const vals=PB_CITY.map(c=>k==='none'?NaN:pbVal(c,k)), ok=vals.filter(v=>!isNaN(v)), mn=Math.min(...ok), mx=Math.max(...ok);
+    if(picked.length>1) for(let i=0;i<picked.length;i++) for(let j=i+1;j<picked.length;j++){const a=PB_CITY[picked[i]], b=PB_CITY[picked[j]]; el('line',{x1:X(a.lon),y1:Y(a.lat),x2:X(b.lon),y2:Y(b.lat),class:'lk'},S);}
+    PB_CITY.forEach((c,i)=>{
+      const v=vals[i], r=isNaN(v)?7:(mx>mn?7+(v-mn)/(mx-mn)*15:12);
+      const g=el('g',{class:'ct'+(picked.includes(i)?' on':''),tabindex:0,role:'button','aria-label':c.ko},S);
+      el('circle',{cx:X(c.lon),cy:Y(c.lat),r},g);
+      const lp=c.k==='Vienna'?'t':c.k==='London'?'l':'r', lt=c.ko+(isNaN(v)?'':` ${pbFix(v,v>=100?0:1)}`);
+      el('text',lp==='t'?{x:X(c.lon),y:Y(c.lat)-r-4,class:'lb','text-anchor':'middle'}:lp==='l'?{x:X(c.lon)-r-3,y:Y(c.lat)+4,class:'lb','text-anchor':'end'}:{x:X(c.lon)+r+3,y:Y(c.lat)+4,class:'lb'},g,lt);
+      const f=()=>{picked=picked.includes(i)?picked.filter(x=>x!==i):[...picked,i].slice(-3); draw();};
+      g.addEventListener('click',f); g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});
+    });
+    let msg=k==='col'&&!ok.length?'생활비 지수는 02에서 입력한 도시만 크기가 달라져요. ':'';
+    if(picked.length<2) msg+='도시를 눌러 두세 곳을 골라 보세요.';
+    else { const pr=[]; for(let i=0;i<picked.length;i++) for(let j=i+1;j<picked.length;j++){const a=PB_CITY[picked[i]], b=PB_CITY[picked[j]]; pr.push(`${a.ko}–${b.ko} 약 ${fmt(Math.round(hav(a,b)/10)*10)}km`);} msg+=`고른 도시: <b>${picked.map(i=>PB_CITY[i].ko).join(', ')}</b> · 직선거리 ${pr.join(' · ')}`; }
+    $('pbGeoMsg').innerHTML=msg;
+  }
+  $('pbGeoSize').onchange=draw;
+  pbOnCol.push(draw); onShow[5]=draw;
+  draw();
+})();
+
+/* 05 (선택) 내 실력 점검 */
+chips('pbLevel','levelPick',['탐색적 데이터 분석 방법을 설명할 수 있다','데이터에서 두 속성 간의 상관관계를 분석할 수 있다','데이터의 특성에 따라 알맞은 방식으로 분석하는 태도를 가지고 있다'],true);
+
+/* 06 마무리 */
+const MEMOLIST=[['planToday','오늘 확인하고 싶은 질문'],['done1Pick','진행 체크 ③ 생활비 데이터'],['swissNote','(선택) 스위스 도시들의 생활비 지수'],['colVals','오렌지3에서 읽어 입력한 생활비 지수'],['done2Pick','진행 체크 ④ 통합'],['mergeNote','10줄만 남은 까닭과 이름 표기 문제'],['done3Pick','진행 체크 ⑤ 관계 시각화'],['scatterNote','Scatter Plot에서 본 관계'],['corrNote','고객 만족도와 상관이 뚜렷한 속성'],['rCol','스스로 해결하기: charge와 생활비 지수의 상관계수'],['rSat','스스로 해결하기: charge와 고객 만족도의 상관계수'],['selfCorr','스스로 해결하기: 상관관계 분석'],['heatRank','히트맵: 내 기준과 순위'],['heatWhy','히트맵: 1~3위 도시와 판단한 까닭'],['done4Pick','진행 체크 ⑥ 정규화와 히트맵'],['geoCrit','(선택) 모둠원의 기준과 이유'],['geoPick','(선택) 모둠이 정한 여행지 3곳'],['capEda','(선택) 탐색적 분석·기술 통계·상관분석 단계'],['capCorr','(선택) 두 속성의 상관관계 분석'],['capMean','(선택) 평균만으로 비교할 때 놓치는 것'],['levelPick','(선택) 내 실력 점검'],['extraHeart','(선택) 보충: 심장 질환 데이터'],['extraMap','(선택) 심화: 나라별 물가 지도'],['planCheck','(선택) 나의 계획 점검'],['newLearn','(선택) 새롭게 알게 된 점'],['keyQ','오늘의 질문에 대한 내 답']];
+/* (선택) 항목은 쓴 것만 모아 보기에 보이기 */
+onShow[6]=()=>memoSummary('msum',MEMOLIST.filter(([k,l])=>!l.startsWith('(선택)')||String(MEMO[k]||'').trim()));
+
+/* 진도 보내기 ②: 화면 이동·퀴즈·메모·창 이탈을 선생님 시트로 */
+(function(){
+  if(WHO.off) return;
+  const box=document.createElement('div');
+  if(WHO.preview){
+    box.className='tr-badge';
+    box.innerHTML=WHO.teacher?'교사 모드 · 전송 안 함 <button type="button">끝내기</button>':'미리보기 · 진도 전송 안 함';
+    (document.querySelector('.top')||document.body).appendChild(box);
+    const b=box.querySelector('button'); if(b) b.onclick=()=>{ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); };
+    return;
+  }
+
+  if(WHO.need){
+    let last={}; try{last=JSON.parse(localStorage.getItem('aiw-last')||'{}')||{};}catch(e){}
+    box.className='tr-gate';
+    box.innerHTML=`<form class="tr-card" autocomplete="off">
+      <h2>수업 시작 전에</h2>
+      <p class="tr-sub">학번과 이름을 써 주세요.</p>
+      <label class="tr-f"><span>학번</span><input name="no" inputmode="numeric" maxlength="5" placeholder="예: 20101" value="${esc(last.no||'')}"></label>
+      <label class="tr-f"><span>이름</span><input name="name" maxlength="10" placeholder="이름" value="${esc(last.name||'')}"></label>
+      <div class="tr-cls" hidden>${[].map(c=>`<label><input type="radio" name="cls" value="${c}"><span>${c}</span></label>`).join('')}</div>
+      <div class="tr-err"></div>
+      <button class="btn" type="submit">시작하기 →</button>
+      <p class="tr-note">어느 화면까지 왔는지, 퀴즈와 메모가 선생님께 전달돼요.<br>다른 친구 이름으로 들어가지 마세요.</p>
+    </form>`;
+    document.body.appendChild(box);
+    const f=box.querySelector('form'), err=box.querySelector('.tr-err'), go2=f.querySelector('button[type=submit]'), clsBox=box.querySelector('.tr-cls');
+    f.no.addEventListener('input',()=>{f.no.value=f.no.value.replace(/\D/g,'').slice(0,5);});
+    const TEACH=t=>{let h=2166136261;for(const c of t){h^=c.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return h.toString(36);}, TEACH_H='853zuh';
+    const enter=w=>{ try{sessionStorage.setItem('aiw-who',JSON.stringify(w)); if(!w.teacher) localStorage.setItem('aiw-last',JSON.stringify({no:w.no,name:w.name}));}catch(e){} location.reload(); };
+    const busy=on=>{ go2.disabled=on; go2.textContent=on?'명단에서 확인하는 중…':'시작하기 →'; };
+    f.onsubmit=async e=>{
+      e.preventDefault(); err.textContent='';
+      const no=f.no.value.trim(), name=f.name.value.replace(/\s+/g,'').trim();
+      if(TEACH(no+'|'+name)===TEACH_H) return enter({teacher:true});
+      if(!/^\d{5}$/.test(no)){err.textContent='학번 다섯 자리를 숫자로 써 주세요.';f.no.focus();return;}
+      if(name.length<2){err.textContent='이름을 써 주세요.';f.name.focus();return;}
+      /* 명단에서 확인이 안 될 때만 반을 직접 고른다 */
+      if(!clsBox.hidden){
+        const cls=(f.querySelector('input[name=cls]:checked')||{}).value;
+        if(!cls){err.textContent='반을 골라 주세요.';return;}
+        return enter({cls,no,name});
+      }
+      busy(true);
+      try{
+        const r=await fetch(PEP,{method:'POST',body:JSON.stringify({op:'who',no,name})});
+        const d=await r.json();
+        if(d.ok) return enter({cls:d.cls,no,name});
+        busy(false);
+        if(d.err==='notfound'){ err.textContent='명단에서 찾지 못했어요. 학번과 이름을 다시 확인해 주세요. 계속 안 되면 선생님께 말해 주세요.'; return; }
+        throw new Error(d.err);
+      }catch(x){
+        busy(false);
+        if(clsBox.hidden){ clsBox.hidden=false; err.textContent='명단을 확인하지 못했어요. 내 반을 골라 주세요.'; }
+      }
+    };
+    setTimeout(()=>{ (f.no.value?(f.name.value?go2:f.name):f.no).focus(); },50);
+    return;
+  }
+
+  /* 이름 표시 + 바꾸기 */
+  box.className='tr-who';
+  box.innerHTML=`<span>${esc(WHO.cls)} ${esc(WHO.no)} <b>${esc(WHO.name)}</b></span><button type="button" title="다른 학생으로 바꾸기">바꾸기</button>`;
+  (document.querySelector('.top')||document.body).appendChild(box);
+  box.querySelector('button').onclick=()=>{ if(confirm('다른 학생으로 바꿀까요? (지금까지 한 것은 이 학번으로 저장돼 있어요)')){ try{sessionStorage.removeItem('aiw-who');}catch(e){} location.reload(); } };
+
+  const SK=QK+'-seen', AK=QK+'-away';
+  const seen=new Set(store.get(SK,[]));
+  const A=store.get(AK,{n:0,s:0});
+  let awayAt=null, lastAct=Date.now(), sent=0, lastSent=0, tmr=null, dirty=false;
+
+  function snap(){
+    let ok=0, done=0;
+    for(const k in QUIZ) QUIZ[k].forEach((it,i)=>{const v=QS[k+'-'+i]; if(v!=null){done++; if(v===it.a) ok++;}});
+    const ML=(typeof MEMOLIST!=='undefined')?MEMOLIST:[];
+    return {op:'put',lesson:LESSON,title:document.title,cls:WHO.cls,no:WHO.no,name:WHO.name,
+      scr:cur,names:pages.map((p,i)=>i?p.dataset.name:'시작'),seen:[...seen].sort((a,b)=>a-b),
+      qOk:ok,qDone:done,qTot:TOTALQ,
+      memo:ML.map(([k,l])=>[l,String(MEMO[k]==null?'':MEMO[k]).slice(0,1500)]),
+      away:awayAt?1:0,leaves:A.n,awaySec:Math.round(A.s+(awayAt?(Date.now()-awayAt)/1000:0)),idle:Math.round((Date.now()-lastAct)/1000),n:++sent};
+  }
+  function flush(){
+    if(!dirty) return; dirty=false; lastSent=Date.now();
+    const body=JSON.stringify(snap());
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(PEP,new Blob([body],{type:'text/plain'}))) return; }catch(e){}
+    try{ fetch(PEP,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  /* 너무 자주 보내지 않기: 보통 15초, 창 이탈·복귀는 3초 간격 */
+  function send(urgent){
+    dirty=true; clearTimeout(tmr);
+    const gap=urgent?3000:15000, wait=Math.max(0,gap-(Date.now()-lastSent));
+    tmr=setTimeout(flush,wait);
+  }
+
+  const _go=go; go=function(i){ _go(i); if(!seen.has(cur)){seen.add(cur); store.set(SK,[...seen]);} send(true); };
+  const _upd=updScore; updScore=function(){ _upd(); send(); };
+  const _set=store.set; store.set=function(k,v){ _set(k,v); if(k===MK) send(); };
+
+  function leave(){ if(awayAt) return; awayAt=Date.now(); A.n++; _set(AK,A); send(true); }
+  function back(){ if(!awayAt) return; A.s+=(Date.now()-awayAt)/1000; awayAt=null; _set(AK,A); send(true); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?leave():(document.hasFocus()&&back()); });
+  window.addEventListener('blur',()=>setTimeout(()=>{ if(!document.hasFocus()) leave(); },300));
+  window.addEventListener('focus',back);
+  window.addEventListener('pagehide',()=>{ dirty=true; flush(); });
+  ['pointerdown','keydown','input','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now();},{capture:true,passive:true}));
+  /* 화면에 머물러 있으면 2분마다 한 번 신호 */
+  setInterval(()=>{ if(!document.hidden) send(); },120000);
+})();
+
+/* 시작 */
+bindMemos();
+updScore();
+const h0=parseInt((location.hash.match(/^#p(\d+)$/)||[])[1],10);
+go(isNaN(h0)?0:h0);
+</script>
+<script>
+/* page-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 (복사 버튼은 그대로 동작) */
+(function(){
+  var t=null, tm=null, MSG='수업 자료는 복사할 수 없어요. 내 말로 정리해 보세요.';
+  function say(){ if(!t){t=document.createElement('div');t.className='pg-toast';document.body.appendChild(t);} t.textContent=MSG; t.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){t.classList.remove('on');},1800); }
+  function inField(e){ return e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'); }
+  ['copy','cut'].forEach(function(type){ document.addEventListener(type,function(e){ e.preventDefault(); say(); },true); });
+  document.addEventListener('contextmenu',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('selectstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!inField(e)) e.preventDefault(); },true);
+  document.addEventListener('keydown',function(e){ var k=(e.key||'').toLowerCase(); if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x')){ e.preventDefault(); say(); } if((e.ctrlKey||e.metaKey)&&k==='a'&&!inField(e)) e.preventDefault(); },true);
+})();
+</script>
+</body>
+</html>

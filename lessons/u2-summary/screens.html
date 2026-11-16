@@ -1,0 +1,268 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#1f9d74">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅱ. 데이터 준비와 분석 · 1. 데이터 준비</span>
+      <h1>2만 명의 데이터,<br>어떻게<br>한눈에 볼까?</h1>
+      <div class="story"><b>민혁이의 궁금증, 이어서</b><br>민혁이는 생활 패턴과 체중 증가의 관계를 알고 싶었어요. 그런데 비만 데이터를 열어 보니 사람이 <b>2만 명</b>이 넘고 속성이 <b>13개</b>나 돼요. 한 줄씩 읽어서는 끝이 없어요. 데이터 전체의 모습을 몇 개의 숫자로 요약해 볼 수는 없을까요?</div>
+      <p>오늘은 수집한 데이터의 <b>규모</b>, 속성의 <b>형</b>(수치형·범주형), <b>요약 통계량</b>을 살펴 데이터의 특징을 파악해요. 분석 도구는 <b>오렌지3</b>이고, 같은 일을 <b>파이썬</b>으로도 해 볼 수 있어요.</p>
+      <ol>
+        <li>데이터 속성 파악하기</li><li>기초 통계량 이해하기</li><li>오렌지3로 확인하기</li>
+        <li>함께 해결하기 · 우리 학교 문제</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📏</i><div><b>데이터의 규모</b><small>몇 행, 몇 개의 속성일까</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🔤</i><div><b>속성의 형</b><small>수치형(numeric) · 범주형(categorical)</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📊</i><div><b>기초 통계량</b><small>분포 · 평균 · 중앙값 · 최솟값 · 최댓값 · 결측치</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🦟</i><div><b>우리 학교 문제에 적용</b><small>예시 데이터로 특성 분석 표 채우기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="callout su-ready">🍊 <b>지금 바로 오렌지3를 실행해 두세요.</b> 처음 열리는 데 1~2분 걸려요. 열리는 동안 다음 화면에서 개념을 먼저 봐요.<br>📁 <b>선생님이 알려 주는 폴더</b>에서 <span class="mono">obesity_level.csv</span>(비만 데이터)와 <span class="mono">Mosquito Activity Index.csv</span>(04 함께 해결하기 예시 데이터)를 내려받아 두세요.</div>
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>비만 데이터의 속성 13개가 <b>수치형</b>인지 <b>범주형</b>인지 판단하고, 평균·중앙값·결측치 같은 <b>기초 통계량</b>이 무엇을 알려 주는지 직접 값을 바꿔 가며 확인해요. 그다음 오렌지3의 <b>File</b>과 <b>Column Statistics</b>(교과서·옛 버전 이름은 Feature Statistics) 위젯으로 2만 명의 데이터를 한 번에 요약해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">지난 시간과 잇기</span>
+        <div class="su-prev" id="suPrev"></div>
+        <div class="memo"><label>2만 명의 나이를 한 줄씩 읽지 않고 「어떤 나이의 사람들이 모인 데이터인지」 알려면 무엇을 계산해 보면 될까요?</label><textarea data-memo="planStat" rows="2" placeholder="지금 떠오르는 대로 적어요"></textarea><div class="saved"></div></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 준비</b> · 데이터를 편향되지 않도록 수집하고 전처리하는 방법은 무엇이며, 데이터 분석을 위해 어떻게 시각화해야 할까?</li>
+          <li><b>오늘의 질문</b> · 수집한 데이터는 어떤 특성이 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>수집된 데이터의 특성을 분석할 수 있다.</li>
+        </ul>
+        <p style="font-size:.86rem;margin-top:8px" class="muted">💬 디지털 샘의 Tip (67쪽) · 이 교과서는 분석 도구로 <b>오렌지</b>와 <b>파이썬</b>을 함께 써요. 오늘은 오렌지3가 꼭 할 실습이고, 코랩(파이썬)은 선택이에요.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 속성 파악하기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 속성 파악 -->
+<section class="page" data-name="데이터 속성 파악" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>이 데이터는 어떤 속성으로 이루어졌을까?</h2><p>교과서 67쪽 · 데이터의 규모 · 수치형과 범주형 · 표 Ⅱ-2 · 오렌지3의 feature</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터를 받으면 먼저 <b>얼마나 큰지</b>(행과 속성의 개수)와 속성마다 <b>어떤 형</b>인지 봐요. 크기를 재거나 센 값이면 <b>수치형</b>, 무리를 나누는 값이면 숫자로 적혀 있어도 <b>범주형</b>이에요.</span></div>
+  <div class="card">
+    <h3>🍔 비만 데이터 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 67쪽 표 Ⅱ-2 비만 데이터 속성의 일부)</span></h3>
+    <div class="su-scroll"><table class="su-tbl">
+      <tr><th></th><th>성별</th><th>나이</th><th>키(m)</th><th>몸무게(kg)</th><th>가족력 과체중 여부</th><th>일일 식사 횟수</th><th>비만도 등급</th></tr>
+      <tr><td>1</td><td>남성</td><td>16</td><td>1.74</td><td>76</td><td>1</td><td>2</td><td>과체중 1단계</td></tr>
+      <tr><td>2</td><td>여성</td><td>16</td><td>1.63</td><td>59</td><td>0</td><td>3</td><td>저체중</td></tr>
+      <tr><td>3</td><td>남성</td><td>17</td><td>1.83</td><td>105</td><td>1</td><td>2</td><td>비만 1단계</td></tr>
+    </table></div>
+    <p>나이, 키, 몸무게, 일일 식사 횟수는 <b>수치형</b>으로 나타낼 수 있어요. 가족력 과체중 여부는 <b>1(있음)과 0(없음)</b>으로 나타내지만 <b>범주형</b>이에요. 1과 0은 양이 아니라 「있다·없다」를 나누는 기호이기 때문이에요.</p>
+    <div class="cards2">
+      <div class="kc" style="--k:#f2b84b"><div class="ic">📂</div><h4>오렌지3로 열어 보면</h4><p>Data 카테고리의 <b>File</b> 위젯으로 <span class="mono">obesity_level.csv</span>를 불러오면 총 <b>20,758개</b>의 데이터, <b>13개</b>의 속성이라고 나와요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🏷️</div><h4>오렌지3의 낱말</h4><p>오렌지3에서는 데이터 속성을 <b>feature</b>로, 수치형을 <b>numeric</b>, 범주형을 <b>categorical</b>로 표기해요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🔤 이 속성은 어떤 형일까? <span class="muted" style="font-weight:400;font-size:.88rem">(비만 데이터 속성 13개)</span></h3>
+    <p class="muted" style="margin-top:0">속성 이름과 값의 예를 보고 수치형인지 범주형인지 골라요. 13개를 모두 고르고 「확인하기」를 누르면 <b>오렌지3가 읽은 형</b>과 비교해 줘요.</p>
+    <div id="suType"></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="suTypeOk">확인하기</button><button class="btn ghost sm" id="suTypeRe">다시 고르기</button></div>
+    <div class="su-msg" id="suTypeMsg"></div>
+    <div class="memo"><label>✍️ 숫자로 적혀 있는데 범주형인 속성 하나를 골라, 왜 범주형인지 적어요. <small>그 속성의 평균을 구하면 무엇이 이상한지도 생각해 봐요.</small></label><textarea data-memo="typeWhy" rows="2"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 기초 통계량 -->
+<section class="page" data-name="기초 통계량" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>기초 통계량은 무엇을 알려 줄까?</h2><p>교과서 68쪽 · 분포 · 평균 · 중앙값 · 흩어진 정도(Dispersion) · 최솟값 · 최댓값 · 결측치</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>기초 통계량은 많은 값을 <b>몇 개의 숫자로 요약</b>한 것이에요. 값이 어디에 많이 모였는지, 가운데는 어디인지, 얼마나 퍼져 있는지, 빠진 값은 없는지 한눈에 알 수 있어요.</span></div>
+  <div class="card">
+    <h3>📊 기초 통계량 관련 용어</h3>
+    <p style="margin-top:0">기초 통계량을 확인하면 수집한 데이터를 쉽게 이해하고 설명할 수 있어요. 기초 통계량에는 빈도수로 나타낸 데이터의 <b>분포</b>, <b>평균값</b>, 평균값을 기준으로 값들이 모여 있거나 퍼져 있는 정도 등이 들어 있고, <b>결측치</b>가 있는지도 알려 줘요.</p>
+    <div class="su-terms">
+      <div style="--k:#e0702b"><b>분포 <i>Distribution</i></b><span>값의 범위를 일정한 크기의 구간으로 나누어 빈도수를 나타낸 그래프</span></div>
+      <div style="--k:#d64535"><b>평균 <i>Mean</i></b><span>데이터의 모든 값의 총합을 데이터의 개수로 나눈 값</span></div>
+      <div style="--k:#2f6fd0"><b>중앙값 <i>Median</i></b><span>데이터의 값을 정렬한 뒤, 전체 데이터 가운데 있는 수</span></div>
+      <div style="--k:#9b4fc4"><b>흩어진 정도 <i>Dispersion</i></b><span>값들이 평균값 가까이 모여 있는지, 퍼져 있는지를 나타내는 척도</span></div>
+      <div style="--k:#1f9d74"><b>최솟값 <i>Min</i> · 최댓값 <i>Max</i></b><span>데이터 가운데 가장 작은 값, 가장 큰 값</span></div>
+      <div style="--k:#5b6776"><b>결측치 <i>Missing</i></b><span>누락된 데이터</span></div>
+    </div>
+    <details class="su-det"><summary>오렌지3의 Dispersion은 분산과 같을까?</summary>
+      <p>교과서는 이 칸을 「분산」이라고 불렀지만, 오렌지3의 Dispersion은 <b>표준편차를 평균으로 나눈 값</b>이라 분산과 달라요. 그래서 이 화면에서는 「흩어진 정도(Dispersion)」라고 불러요. 값들이 평균에서 멀리 퍼질수록 커진다는 점만 기억하면 돼요. 분산과 표준편차는 「기술 통계」 시간에 배워요.</p>
+    </details>
+  </div>
+  <div class="card">
+    <h3>🧮 요약 통계량 계산기 <span class="muted" style="font-weight:400;font-size:.88rem">(15명의 나이 · 새로 만든 예시)</span></h3>
+    <p class="muted" style="margin-top:0">막대를 누르면 그 사람이 골라져요. 누른 채 위아래로 끌거나, 고른 뒤 아래 단추로 나이를 바꿔요. 값이 바뀌면 오른쪽 통계량과 아래 분포가 바로 바뀌어요. <b style="color:#d64535">빨간 선</b>은 평균, <b style="color:#2f6fd0">파란 선</b>은 중앙값이에요.</p>
+    <div class="su-calc">
+      <div class="su-plot"><svg id="suBars" role="img" aria-label="나이 막대그래프, 막대를 끌어 값을 바꿀 수 있음"></svg></div>
+      <div class="su-stats" id="suStats"></div>
+    </div>
+    <div class="row su-ctl">
+      <span class="su-sel" id="suSel">막대를 하나 눌러요</span>
+      <button class="btn ghost sm" id="suDn">−1살</button><button class="btn ghost sm" id="suUp">+1살</button><button class="btn ghost sm" id="suMiss">빈칸으로 만들기</button>
+    </div>
+    <div class="row su-ctl">
+      <button class="btn sm" id="suOld">+ 나이 많은 사람 한 명 더 (58세)</button><button class="btn ghost sm" id="suPop">마지막 사람 빼기</button><button class="btn ghost sm" id="suReset">처음 값으로</button>
+    </div>
+    <div class="su-hist"><b>분포</b> <small>10살 간격 구간의 사람 수</small><div id="suHist"></div></div>
+    <div class="su-mis" id="suMis"></div>
+    <div class="memo"><label>✍️ 나이 많은 사람을 더했을 때 <b>평균과 중앙값은 각각 얼마에서 얼마로</b> 바뀌었나요? 둘이 다르게 움직인 까닭을 평균과 중앙값의 뜻으로 설명해요. <small>빈칸을 만들었을 때 바뀐 것도 적어 보세요.</small></label><textarea data-memo="calcNote" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 오렌지3로 확인 -->
+<section class="page" data-name="오렌지3로 확인" data-acc="#c98a00">
+  <div class="head"><div class="num">03</div><div><h2>오렌지3로 2만 명을 한 번에 요약하기</h2><p>교과서 67~68쪽 · File · Column Statistics · (선택) 파이썬으로 해 보기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>02에서 15명으로 한 계산을 오렌지3가 <b>20,758명</b> 모두에 대해 한 번에 해 줘요. <b>File</b>로 불러와 속성의 형을 보고, <b>Column Statistics</b>를 이어 붙여 속성마다 기초 통계량을 읽어요. 교과서 그림과 옛 버전에서는 이 위젯 이름이 <b>Feature Statistics</b>예요.</span></div>
+  <div class="callout su-slow">🐢 <b>오렌지3가 아직 안 열렸거나 느린가요?</b> 기다리는 동안 아래 <a href="#suAsk" onclick="document.getElementById('suAsk').scrollIntoView({behavior:'smooth'});return false;">「결과 읽기 연습」</a>을 먼저 하고, 오렌지3가 열리면 흐름도로 돌아와요.</div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div class="su-flowbox"><svg id="suFlow" role="img" aria-label="File에서 Column Statistics로 이어지는 위젯 연결 흐름도"></svg></div>
+    <div class="su-legend"><span style="--k:#f2b84b">Data</span><small>색은 오렌지3 왼쪽 카테고리를 나타내요. 세 위젯 모두 Data 카테고리에 있어요.</small></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표</h3>
+    <div class="su-tw"><table class="tbl su-set" id="suSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td>폴더 단추를 눌러 내려받은 <span class="mono">obesity_level.csv</span> 열기 → 위젯을 더블 클릭</td><td>Info 칸: <span class="mono">20758 instances</span>, <span class="mono">13 features</span><br>Columns 표의 <b>Type</b> 열: <span class="su-n">N</span> numeric · <span class="su-c">C</span> categorical → 01에서 고른 답과 비교</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Column Statistics</b> (Data)<br><small>교과서: Feature Statistics</small></td><td>File →</td><td>File 위젯 오른쪽 끝을 끌어 연결 → 더블 클릭<br><small>위젯 검색 칸에 <span class="mono">feature</span>라고 쳐도 나와요.</small></td><td><b>Age</b> 줄에서 Mean · Median · Dispersion · Min. · Max. · Missing 읽기 (아래 결과 읽기 연습과 같은 값인지)</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Data Table</b> (Data) <small>(선택)</small></td><td>File →</td><td>더블 클릭해 표로 보기. 줄을 눌러 고르지 않아요.</td><td>맨 오른쪽 <b>0be1dad</b> 열(비만도 등급)의 값</td></tr>
+    </table></div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="suDone"></div>
+  </div>
+  <div class="card">
+    <h3>👀 결과 읽기 연습 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 68쪽 통계 창 그림의 값을 다시 적음 · 분포 막대는 모양만 비슷하게 그림)</span></h3>
+    <p class="muted" style="margin-top:0">오렌지3 화면의 머리글은 영어예요. 위에 나오는 낱말에 맞는 칸을 <b>Age(나이) 줄</b>에서 눌러 보세요.</p>
+    <div class="su-ask" id="suAsk"></div>
+    <div class="su-tw"><table class="su-fs" id="suFs"></table></div>
+    <p class="note">Mode 열은 「최빈값」이에요. 「기술 통계」 시간에 배우니 오늘은 넘어가요.</p>
+    <div class="memo"><label>✍️ Age 줄의 평균·중앙값·최솟값·최댓값·결측치를 근거로, 이 데이터에는 <b>어떤 나이의 사람이 많고</b> 나이가 <b>어떻게 퍼져 있는지</b> 설명해요. <small>오렌지3에서 직접 본 값과 같았는지도 적어요.</small></label><textarea data-memo="ageRead" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <details class="card su-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>위젯을 못 찾겠어요</b> → 캔버스 빈 곳을 마우스 오른쪽 단추로 누르고 위젯 이름을 입력해요. 왼쪽 목록 위의 검색 칸을 써도 돼요. 교과서의 Feature Statistics는 지금 버전에서 <b>Column Statistics</b>라서, 검색 칸에 <span class="mono">feature</span>나 <span class="mono">column</span>이라고 쳐도 나와요.</li>
+      <li><b>연결선을 어떻게 만들어요?</b> → File 위젯 오른쪽의 둥근 끝을 끌어 Column Statistics의 왼쪽에 놓아요.</li>
+      <li><b>File 창에 파일이 안 보여요</b> → 폴더 단추를 눌러 내려받은 위치(보통 「다운로드」 폴더)에서 고르고, 안 되면 <b>Reload</b>를 눌러요.</li>
+      <li><b>Missing이나 Dispersion 열이 안 보여요</b> → Column Statistics 창을 옆으로 넓혀요.</li>
+      <li><b>오렌지3가 안 열리거나 너무 느려요</b> → 위의 결과 읽기 연습과 02의 계산기로 같은 내용을 확인하고 메모를 채워요.</li>
+    </ul>
+  </details>
+  <details class="card su-help">
+    <summary>🐍 (선택) 파이썬으로 해 보기 · 코랩</summary>
+    <p>File 위젯으로 불러온 뒤 Column Statistics로 기초 통계량을 확인하는 작업은 다음 파이썬 코드로도 할 수 있어요.</p>
+    <ol class="su-steps">
+      <li>선생님이 알려 주는 노트북을 열고 <b>「드라이브에 사본 저장」</b>으로 내 사본을 만들어요.</li>
+      <li>코랩 왼쪽 <b>파일 창</b>(📁)을 열고 <span class="mono">obesity_level.csv</span>를 끌어다 놓아 올려요. 런타임이 끝나면 올린 파일이 사라지니, 다시 열 때마다 새로 올려요.</li>
+      <li>코드 셀을 차례로 실행(▶)해요.</li>
+    </ol>
+    <pre class="su-code"><span class="k">import</span> pandas <span class="k">as</span> pd
+data = pd.read_csv(<span class="s">'/content/obesity_level.csv'</span>)  <span class="c"># 데이터 불러오기</span>
+data.info()      <span class="c"># 데이터 요약 정보 ❶</span>
+data.describe()  <span class="c"># 기초 통계량 ❷</span></pre>
+    <div class="su-tw"><table class="tbl su-desc">
+      <tr><th>describe 결과의 줄</th><th>뜻</th></tr>
+      <tr><td><span class="mono">count</span></td><td>값이 들어 있는 개수 · 20758보다 작으면 그만큼 결측치가 있다는 뜻</td></tr>
+      <tr><td><span class="mono">mean</span></td><td>평균 · Age는 23.841804</td></tr>
+      <tr><td><span class="mono">50%</span></td><td>중앙값 · Age는 22.815416</td></tr>
+      <tr><td><span class="mono">min</span> · <span class="mono">max</span></td><td>최솟값 · 최댓값</td></tr>
+      <tr><td><span class="mono">std</span> · <span class="mono">25%</span> · <span class="mono">75%</span></td><td>다음 시간들에 배워요</td></tr>
+    </table></div>
+    <p class="note">❶ <span class="mono">info()</span>에서는 행의 개수와 열마다 빠지지 않은 값(Non-Null Count)의 개수를 볼 수 있어요. family_history_with_overweight와 FAVC는 숫자(0·1)라서 describe 표에도 나오지만, 01에서 본 것처럼 <b>범주형</b>이라 평균을 나이처럼 읽지 않아요.</p>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 함께 해결하기 -->
+<section class="page" data-name="함께 해결하기" data-acc="#9b4fc4">
+  <div class="head"><div class="num">04</div><div><h2>함께 해결하기 · 우리 학교 문제를 데이터로</h2><p>교과서 69쪽 · 문제 정하기 · 가설 · 편향 없는 수집 · 데이터 특성 분석</p></div></div>
+  <div class="easy"><b class="t">이렇게 해요</b><span>모둠이 함께 <b>1~3</b>에서 우리 학교 문제와 가설, 수집 계획을 정해요. <b>4</b>의 특성 분석은 실제로 모을 시간이 없으니, 선생님이 주는 <b>예시 데이터</b>(서울시 모기 활동 지수와 기상 기록)를 오렌지3로 열어 연습해요.</span></div>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>1 해결할 문제 · 2 가설</h3>
+      <div class="memo"><label>1. 우리 학교에서 데이터로 해결할 수 있는 문제 <small>예: 점심시간 매점 줄이 너무 길다</small></label><textarea data-memo="myProblem" rows="2"></textarea><div class="saved"></div></div>
+      <div class="memo"><label>2. 문제를 해결하기 위한 가설 <small>「○○이면 △△할 것이다」 꼴로. 종속 변수와 독립 변수가 보이게</small></label><textarea data-memo="myHypo" rows="2"></textarea><div class="saved"></div></div>
+    </div>
+    <div class="card">
+      <h3>3 수집 방법과 편향 점검</h3>
+      <div class="memo"><label>3. 어떤 방법으로 모을지, 편향되지 않도록 무엇을 점검할지 <small>지난 시간의 점검 항목(무작위·일관성·대표성 등)을 떠올려요</small></label><textarea data-memo="myCollect" rows="5"></textarea><div class="saved"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>4 수집된 데이터의 특성 분석 <span class="muted" style="font-weight:400;font-size:.88rem">(예시 데이터 · 오렌지3로 직접 읽어 채우기)</span></h3>
+    <p style="margin-top:0">03과 같은 흐름(File → Column Statistics)에서 File 위젯의 파일만 <span class="mono">Mosquito Activity Index.csv</span>로 바꿔요. File 창의 Info 칸과 Columns 표, Column Statistics에서 값을 읽어 표를 채워요. 이 데이터는 서울 열린데이터 광장의 모기 활동 지수와 기상 관측값을 합친 것이에요.</p>
+    <div class="su-tw"><table class="su-mq">
+      <tr><th>크기</th><td>행 <input class="su-in" data-c="rows" inputmode="numeric"></td><td>열 <input class="su-in" data-c="cols" inputmode="numeric"></td></tr>
+      <tr><th>속성</th><td>수치형 <input class="su-in" data-c="num" inputmode="numeric"></td><td>범주형 <input class="su-in" data-c="cat" inputmode="numeric"></td></tr>
+    </table></div>
+    <div class="su-tw"><table class="su-mq su-mq2">
+      <tr><th>속성명</th><th>분포 모양</th><th>평균</th><th>중앙값</th><th>흩어진 정도</th><th>최솟값</th><th>최댓값</th><th>결측치</th></tr>
+      <tr><td class="l"><b>Average Mosquito Activity Index</b><br><small>평균 모기 활동 지수</small></td><td><input class="su-in w" data-c="a_shape" placeholder="막대 모양을 말로"></td><td><input class="su-in" data-c="a_mean"></td><td><input class="su-in" data-c="a_med"></td><td><input class="su-in" data-c="a_disp"></td><td><input class="su-in" data-c="a_min"></td><td><input class="su-in" data-c="a_max"></td><td><input class="su-in" data-c="a_miss"></td></tr>
+      <tr><td class="l"><input class="su-in w" data-c="b_name" placeholder="고른 속성 이름"></td><td><input class="su-in w" data-c="b_shape"></td><td><input class="su-in" data-c="b_mean"></td><td><input class="su-in" data-c="b_med"></td><td><input class="su-in" data-c="b_disp"></td><td><input class="su-in" data-c="b_min"></td><td><input class="su-in" data-c="b_max"></td><td><input class="su-in" data-c="b_miss"></td></tr>
+    </table></div>
+    <div class="saved" id="suMqSaved"></div>
+    <details class="su-det"><summary>막혔을 때 · 속성 수를 셀 때</summary>
+      <p><b>date</b> 열은 오렌지3가 날짜(<b>datetime</b>)로 읽어요. Columns 표의 Type 열을 보고 numeric과 categorical이 각각 몇 개인지 세어요. 아래쪽 속성은 average temperature(평균 기온), daily precipitation(일 강수량), average relative humidity(평균 상대 습도)처럼 기상 관측값이에요.</p>
+    </details>
+    <div class="memo"><label>💬 결과를 서로 이야기 나누기 · 평균과 중앙값을 비교해 알 수 있는 것, 모기 활동과 함께 살펴보고 싶은 기상 속성과 그 까닭</label><textarea data-memo="mosqTalk" rows="3"></textarea><div class="saved"></div></div>
+  </div>
+  <div class="card">
+    <h3>✅ 성취도 평가</h3>
+    <p style="margin-top:0">편향을 최소화하기 위해 데이터를 비판적 사고로 탐색할 수 있나요? 할 수 있게 된 것을 모두 골라 보세요.</p>
+    <div id="suSelf"></div>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">비만 데이터의 FAVC처럼 0과 1로 적혀 있어도 「자주 먹는다·아니다」를 나누는 값이면 <b>범주형</b>이고, 나이·몸무게처럼 재거나 센 값이면 <b>수치형</b>이다. 속성의 형을 먼저 알아야 요약 통계량을 바르게 읽는다.</div>
+    <div style="--k:#e0702b">15명의 나이에 58세 한 명을 더하면 <b>평균</b>은 크게 오르지만 <b>중앙값</b>은 조금만 움직인다. 평균과 중앙값, 최솟값·최댓값, 분포를 함께 보면 값이 어디에 모이고 어떻게 퍼졌는지 알 수 있고, <b>결측치</b>는 빠진 값이 있는지 알려 준다.</div>
+    <div style="--k:#c98a00">오렌지3에서 <b>File</b>로 데이터를 불러 규모와 속성의 형을 보고, <b>Column Statistics</b>를 이어 속성마다 기초 통계량을 읽으면 2만 명의 데이터도 몇 줄로 요약된다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 적은 생각을 다시 보고, 오늘 배운 낱말(규모, 수치형·범주형, 평균·중앙값, 결측치)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">수집한 데이터는 어떤 특성이 있을까? 그 특성은 어떻게 파악할 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li><b>숫자로 적혀 있는데 범주형</b>인 속성을 예로 들어, 속성의 형을 어떻게 판단하는지 설명하기</li>
+      <li>계산기에서 <b>나이 많은 사람을 더했을 때</b> 평균과 중앙값이 어떻게 달라졌는지와 그 까닭 쓰기</li>
+      <li>비만 데이터 <b>Age 줄의 기초 통계량</b>을 근거로 이 데이터의 나이 특성 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

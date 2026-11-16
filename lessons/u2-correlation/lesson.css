@@ -1,0 +1,78 @@
+
+  /* u2-correlation 전용 (co-) */
+  .co-vote{grid-template-columns:1fr;gap:6px}
+  .co-kcsvg{width:84px;height:auto;display:block}
+  .co-vote button{padding:8px 12px;text-align:left}
+  /* 01 상관계수 눈금 */
+  .co-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 4px}
+  @media (max-width:760px){.co-scale{grid-template-columns:1fr 1fr}}
+  .co-scale>div{background:#fbfaf7;border-radius:10px;padding:8px 10px;font-size:.86rem;border-top:4px solid #ccc}
+  .co-scale>div:nth-child(1){border-top-color:#3b4cc0}.co-scale>div:nth-child(2){border-top-color:#8da0e0}
+  .co-scale>div:nth-child(4){border-top-color:#e58a8a}.co-scale>div:nth-child(5){border-top-color:#b40426}
+  .co-scale b{display:block;font-size:.95rem}
+  .co-scale span{color:var(--muted)}
+  /* 탐색기 */
+  .co-ex{align-items:start}
+  .co-plotbox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;overflow-x:auto}
+  .co-plotbox svg{display:block;width:100%;min-width:320px;max-width:520px;height:auto;margin:0 auto;user-select:none}
+  .co-plotbox svg .co-pt{cursor:grab}
+  .co-plotbox svg.co-del .co-pt{cursor:not-allowed}
+  .co-plotbox svg .bg{cursor:crosshair}
+  .btn.sm.on{background:var(--red);color:#fff;border-color:var(--red)}
+  .co-rbox{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .co-rbox b{font-size:2.4rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--acc);line-height:1.1}
+  .co-rbox small{color:var(--muted)}
+  .co-gauge{position:relative;height:16px;border-radius:999px;margin-top:8px;background:linear-gradient(90deg,#3b4cc0,#dddddd 50%,#b40426)}
+  .co-gauge i{position:absolute;top:-6px;width:6px;height:28px;margin-left:-3px;background:var(--navy);border-radius:3px;transition:left .15s}
+  .co-gl{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-top:4px}
+  .co-word{min-height:1.6em;margin:8px 0 0;font-size:.95rem}
+  .co-mis{list-style:none;padding:0;margin:0 0 8px;font-size:.92rem}
+  .co-mis li{padding:5px 8px;border-radius:8px;margin:3px 0;background:#fbfaf7}
+  .co-mis li.ok{background:#e7f6ef;color:#13684d;font-weight:700}
+  .co-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin-top:10px;line-height:1.6}
+  /* 02 인과관계 */
+  .co-fan{background:#fbfaf7;border-left:5px solid var(--acc);border-radius:10px;padding:10px 14px;font-size:.93rem;line-height:1.7}
+  .co-fan b:first-child{display:block;margin-bottom:2px}
+  .co-tri{max-width:340px;width:100%;height:auto;display:block;margin:0 auto}
+  .co-tri text{fill:#16202c}
+  /* 03 오렌지3 흐름도 */
+  .co-flowbox{overflow-x:auto}
+  .co-flowbox svg{display:block;width:100%;min-width:640px;max-width:860px;height:auto}
+  .co-flowbox .fe{fill:none;stroke:#8a94a3;stroke-width:2}
+  .co-flowbox .fn{cursor:pointer}
+  .co-flowbox .fb{fill:#fff;stroke-width:2}
+  .co-flowbox .fn.on .fb{fill:#fff4d6;stroke-width:4}
+  .co-flowbox .fn:focus{outline:none}
+  .co-flowbox .fn:focus .fb{stroke-width:4}
+  .co-flowbox .fnum{font-size:14px;font-weight:900;fill:#fff;text-anchor:middle}
+  .co-flowbox .ft{font-size:13px;font-weight:700;fill:#16202c}
+  .co-flowbox .fs{font-size:11px;fill:#5b6776}
+  .co-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;font-size:.85rem}
+  .co-legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--k);margin-right:5px;vertical-align:-2px}
+  .co-legend small{color:var(--muted)}
+  .co-tw{overflow-x:auto}
+  .co-set{min-width:860px;margin:0}
+  .co-set th{text-align:left;background:#fbfaf7;white-space:nowrap}
+  .co-set td{border-top:1px solid #eef0f3;font-size:.92rem}
+  .co-set td:first-child{font-weight:900;color:var(--acc);text-align:center;width:44px}
+  .co-set tr[data-s]{cursor:pointer;transition:background .3s}
+  .co-set tr.hl td{background:#fff4d6}
+  .co-warn,.co-z{font-size:.9rem}
+  .co-rt{min-width:420px;margin:0}
+  .co-rt th{background:#fbfaf7}
+  .co-rt td:first-child{font-weight:700;white-space:nowrap}
+  .co-rt input{width:100%;max-width:180px}
+  .co-rt .saved{display:inline-block;margin-left:6px}
+  .co-help summary{cursor:pointer;font-weight:900;font-size:1rem}
+  .co-help ul{margin:10px 0 0;padding-left:20px;font-size:.92rem}
+  .co-help li{margin:6px 0}
+  .co-jobs{grid-template-columns:repeat(3,1fr)}
+  /* 04 히트맵 */
+  .co-heatbox{overflow-x:auto}
+  .co-heat{border-collapse:separate;border-spacing:2px;margin:6px 0;font-variant-numeric:tabular-nums}
+  .co-heat th{background:none;font-size:.78rem;font-weight:700;color:var(--ink);padding:2px 6px}
+  .co-heat th.r{text-align:right;white-space:nowrap}
+  .co-heat th.v{height:118px;vertical-align:bottom;padding:0}
+  .co-heat th.v span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;padding:4px 0}
+  .co-heat td{width:58px;height:40px;text-align:center;font-size:.84rem;font-weight:700;border-radius:6px;cursor:pointer;padding:0;border:2px solid transparent}
+  .co-heat td.on{border-color:#16202c}
