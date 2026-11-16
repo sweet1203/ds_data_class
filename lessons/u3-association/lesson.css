@@ -1,0 +1,57 @@
+
+  /* u3-association 전용 (as-) */
+  .btn.ghost.sm.on{background:var(--acc);color:#fff}
+  .btn.ghost.sm:disabled{opacity:.35;cursor:not-allowed}
+  /* 01 연관 규칙 */
+  .as-rule{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fbfaf7;border-radius:12px;padding:12px 14px}
+  .as-rule span{background:#fff;border:2px solid var(--acc);border-radius:999px;padding:4px 14px;font-weight:700}
+  .as-rule i{font-style:normal;font-size:1.4rem;font-weight:900;color:var(--acc)}
+  .as-rule small{flex-basis:100%;color:var(--muted)}
+  /* 02 지표 */
+  .as-f{font-size:.95rem;margin:4px 0 8px}
+  .as-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.9em;line-height:1.25}
+  .as-frac b{font-weight:700;padding:0 4px}
+  .as-frac b:first-child{border-bottom:1.5px solid currentColor}
+  .as-lift{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 4px}
+  @media (max-width:760px){.as-lift{grid-template-columns:1fr}}
+  .as-lift>div{background:#fbfaf7;border-radius:10px;padding:8px 12px;border-left:5px solid var(--k);font-size:.9rem}
+  .as-lift b{display:block}
+  .as-self{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  @media (max-width:760px){.as-self{grid-template-columns:1fr}}
+  .as-self .memo{margin:0}
+  .as-self input{width:100%}
+  .as-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin-top:10px;line-height:1.6}
+  .as-chk{list-style:none;padding:0;margin:6px 0}
+  .as-chk li,.as-log li{padding:4px 8px;border-radius:8px;margin:3px 0;background:#fff}
+  .as-chk li.ok,.as-log li.ok{background:#e7f6ef;color:#13684d}
+  .as-chk li.ng{background:#fdecea;color:#a32d22}
+  .as-calc{align-items:start}
+  .as-calc .mt td{min-width:2.6em}
+  .as-calc tr.as-ab td{background:#ffe2a8}
+  .as-calc tr.as-a td{background:#e6eefb}
+  .as-calc tr.as-b td{background:#fbe3ef}
+  .as-calc th.as-hd{background:#16202c;color:#fff}
+  .as-key{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.82rem;margin-top:6px;color:var(--muted)}
+  .as-key span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+  .as-key .ab::before{background:#ffe2a8}.as-key .a::before{background:#e6eefb}.as-key .b::before{background:#fbe3ef}
+  .as-pick{margin-bottom:8px}
+  .as-pick>b{display:block;font-size:.88rem;margin-bottom:4px}
+  .as-pick .row{gap:5px}
+  .as-out{background:#fbfaf7;border-radius:12px;padding:10px 12px;font-size:.92rem;line-height:2}
+  .as-rl{font-size:1.1rem}
+  .as-v{border-left:5px solid var(--k);padding-left:8px;margin:4px 0}
+  .as-v>span{display:inline-block;min-width:4.2em;font-weight:900;color:var(--k)}
+  .as-v>b{font-size:1.15rem}
+  .as-w{margin:4px 0 0;line-height:1.6}
+  .as-log{list-style:none;padding:0;margin:8px 0;font-size:.9rem}
+  /* 03 Apriori 따라가기 */
+  .as-ap{align-items:start}
+  .as-cd{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;margin:3px 0;background:#fbfaf7}
+  .as-cd.sel{outline:2px solid var(--acc)}
+  .as-cd.ok{background:#e7f6ef}
+  .as-cd.ng{background:#fdecea}
+  .as-nm{flex:1;text-align:left;font:inherit;font-weight:700;background:none;border:0;cursor:pointer;padding:4px;color:var(--ink)}
+  .as-nm:hover{text-decoration:underline}
+  .as-g{width:34px;height:30px;border-radius:8px;border:2px solid var(--line);background:#fff;font:inherit;font-weight:900;cursor:pointer}
+  .as-g.on{background:var(--acc);border-color:var(--acc);color:#fff}
+  .as-ct{min-width:7.5em;font-size:.85rem;color:var(--muted)}

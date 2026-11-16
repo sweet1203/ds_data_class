@@ -1,0 +1,244 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 2. 군집 분석과 연관분석</span>
+      <h1>정답이 없는 데이터,<br>비슷한 것끼리<br>묶어 볼까?</h1>
+      <div class="story"><b>파스타와 함께 어떤 음식을 먹어 볼까?</b><br>◯◯이는 마트에서 크림소스와 파스타 면을 고른 뒤 스테이크용 고기를 사러 정육 판매대에 갔어요. 그런데 그곳에도 파스타 소스와 면이 놓여 있었어요. 데이터 분석가인 엄마는 「이 마트 사장님은 데이터 분석을 잘하시는구나.」 하고 말했어요.</div>
+      <p>크림소스를 좋아하는 사람, 토마토소스를 좋아하는 사람처럼 소비자는 취향에 따라 여러 그룹으로 나눌 수 있어요. 오늘은 정답(레이블)이 없는 데이터를 <b>비슷한 것끼리 묶는 군집 분석</b>을 배우고, 컴퓨터가 묶는 방법(k-평균)과 묶은 결과를 평가하는 방법(실루엣 계수)을 직접 움직여 봐요.</p>
+      <ol>
+        <li>군집 분석이란</li><li>k-평균 군집의 절차</li><li>군집 분석의 평가</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🎨</i><div><b>손으로 묶어 보기</b><small>우리 반 친구들을 몇 그룹으로?</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✕</i><div><b>k-평균 한 걸음씩</b><small>할당 → 중심점 업데이트 → 반복</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📏</i><div><b>실루엣 계산기</b><small>잘 묶였는지 −1~1의 숫자로</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간까지는 정답(결과 값)이 있는 데이터로 회귀 모델을 만들었어요. 오늘은 <b>정답이 주어지지 않은 데이터</b>에서 비슷한 특징을 가진 것끼리 그룹으로 묶고, 각 그룹이 어떤 특징을 가지는지 해석해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>마트 사장님은 데이터에서 무엇을 알아냈기에 정육 판매대에도 파스타 재료를 놓았을까요?</b></p>
+        <div class="vote cu-vote" id="pastaVote"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>군집 분석과 연관분석</b> · 데이터에 명확한 레이블이 주어지지 않았을 때 우리는 데이터를 어떻게 분석할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 군집 분석은 데이터를 어떻게 묶고, 묶은 결과는 어떻게 평가할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터의 속성에 대한 유사성을 측정하고 분석하여 군집을 형성할 수 있다.</li>
+          <li>군집 분석 결과의 의미를 해석할 수 있다.</li>
+        </ul>
+        <div class="memo" style="margin-top:8px"><label>나의 계획 <small>이 단원(군집 분석)에서 배우고 싶은 것을 적어 보세요.</small></label><input type="text" data-memo="plan" placeholder="예: 비슷한 사람끼리 묶는 기준을 컴퓨터는 어떻게 정할까?"><div class="saved"></div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 군집 분석이란부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 군집 분석이란 -->
+<section class="page" data-name="군집 분석이란" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>군집 분석이란 무엇일까?</h2><p>교과서 144~145쪽 · 군집 분석 · 비지도학습과 지도학습 · 비계층적 군집과 계층적 군집 · 군집 분석의 목적</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>교실에서 조용한 친구들, 활발한 친구들처럼 성향이 비슷한 친구들이 자연스럽게 그룹을 이루듯, <b>정답(레이블)이 없는 데이터</b>를 특징이 비슷한 것끼리 묶어 주는 방법이 <b>군집 분석</b>이에요. 묶은 뒤에는 그룹마다 어떤 특징이 있는지 살펴봐요.</span></div>
+  <div class="card">
+    <h3>🧩 군집 분석의 개념</h3>
+    <div class="callout" style="margin-top:4px"><b>군집 분석</b>(cluster analysis)은 미리 정해 둔 분류 기준이나 레이블(정답)이 없는 데이터에서, 특성이 비슷한 데이터끼리 하나의 군집으로 묶어 분석하는 기법이에요. 데이터 안에 숨어 있는 패턴이나 특성을 찾아내 비슷한 것끼리 모아요.</div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="kc" style="--k:#2f6fd0"><h4>군집 분석 = 비지도학습</h4><p>레이블(정답)이 <b>없는</b> 상태에서 데이터를 그룹으로 묶어요(unsupervised learning). 그룹 이름도 분석한 뒤에 사람이 붙여요.</p></div>
+      <div class="kc" style="--k:#e0702b"><h4>분류 = 지도학습</h4><p>이미 정해진 레이블(정답)을 바탕으로 특정 기준에 따라 데이터를 구분해요(supervised learning). 예를 들어 「스팸 / 스팸 아님」이 붙은 메일로 배워 새 메일을 나눠요.</p></div>
+    </div>
+    <h4 style="margin:14px 0 6px">일반적인 군집 분석 방법</h4>
+    <div class="grid2">
+      <div class="kc" style="--k:#1f9d74"><h4>비계층적 군집 <span class="muted" style="font-weight:400">(예: k-means)</span></h4><p>군집 수를 <b>미리 정하고</b>, 데이터를 계층 구조 없이 그 수만큼의 군집에 되풀이해 나누어 담으며 알맞은 군집을 만들어요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>계층적 군집 <span class="muted" style="font-weight:400">(병합적 · 분할적 군집)</span></h4><p>데이터 사이의 계층적 관계를 바탕으로 묶어요. <b>병합적 군집</b>은 데이터 하나하나를 각각의 군집으로 보고 시작해, 비슷한 군집끼리 조금씩 합쳐 가요(상향식).</p></div>
+    </div>
+    <h4 style="margin:14px 0 6px">군집 분석의 목적 · 데이터의 내재적 구조를 파악하고 이해하기</h4>
+    <div class="cards4">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🔍</div><h4>패턴 발견</h4><p>비슷한 데이터를 묶어 의미 있는 패턴과 데이터 구조를 찾아요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">⚖️</div><h4>그룹 간 비교 및 차이 분석</h4><p>군집끼리 특성과 차이를 비교해 쓸모 있는 정보를 얻어요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">🎁</div><h4>추천 시스템 개발</h4><p>관심사가 비슷한 사용자를 묶어 맞춤 추천을 해요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🎯</div><h4>고객 세분화 및 타깃 마케팅</h4><p>고객을 여러 그룹으로 나눠 그룹별 마케팅 전략을 세워요.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🎨 스스로 해결하기 · 손으로 묶어 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(우리 반 18명은 연습용 예시예요)</span></h3>
+    <p class="muted" style="margin-top:0">점 하나가 친구 한 명이에요. 아래에서 그룹 색을 고른 뒤 점을 누르면 그 색으로 칠해져요. 비슷하다고 생각하는 친구끼리 같은 색으로 묶어 보세요. 몇 그룹으로 묶을지도 스스로 정해요.</p>
+    <div class="grid2">
+      <div><div class="sp-wrap"><svg id="cuHand" role="img" aria-label="우리 반 친구 18명의 활발한 정도와 공부를 좋아하는 정도 산점도, 점을 눌러 색칠"></svg></div></div>
+      <div>
+        <div class="row cu-brush" id="cuBrush"></div>
+        <div class="cu-say" id="cuHandSay">그룹 색을 고르고 점을 눌러 보세요.</div>
+        <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="cuHandClr">색 모두 지우기</button></div>
+        <div class="memo">
+          <label>✍️ 나는 몇 그룹으로 묶었나요? 그룹마다 어떤 친구들인지 특징을 한 줄씩 적어 보세요. <small>질문폼 3번에 써요.</small></label>
+          <textarea data-memo="myGroups" rows="3" placeholder="예: 3그룹 — 1그룹은 ○○한 친구들, 2그룹은 …"></textarea><div class="saved"></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">사람이 묶으면 사람마다 그룹 수와 경계가 조금씩 달라요. 다음 화면에서는 컴퓨터가 정해진 규칙(k-평균)으로 같은 친구들을 묶어요.</p>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 k-평균 절차 -->
+<section class="page" data-name="k-평균 군집의 절차" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>군집 분석 알고리즘의 절차는 무엇일까?</h2><p>교과서 146쪽 · k-평균(k-means) 군집 알고리즘 · 장점과 단점 · 절차 ➊~➏</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>k-평균은 데이터를 <b>k개의 군집</b>으로 묶어요. 중심점 k개를 먼저 찍고, 점마다 <b>가장 가까운 중심점</b>의 군집에 넣은 뒤, 중심점을 그 군집 점들의 <b>평균 위치</b>로 옮겨요. 이 두 가지를 중심점이 더 움직이지 않을 때까지 되풀이해요.</span></div>
+  <div class="card">
+    <h3>✕ k-평균 군집 알고리즘</h3>
+    <p style="margin-top:0">k-평균 군집 알고리즘은 주어진 데이터를 k개의 군집으로 묶는 방법으로, 각 군집 안의 데이터와 중심점 사이의 거리를 가장 작게 만드는 방식이에요. 고객을 그룹화해 취향에 맞는 광고를 보여 주는 <b>타깃 광고</b>에도 많이 써요.</p>
+    <p class="cu-pc">👍 <b>장점</b> 원리가 간단하고 직관적이며, 계산이 빨라 데이터가 많아도 효율적이에요.<br>👀 <b>주의할 점</b> 군집의 개수(k)를 미리 정해야 하고, <b>초기 중심점에 민감</b>해 처음 중심점에 따라 결과가 달라지기도 해요. 데이터가 둥근(구형) 모양으로 모여 있지 않거나 이상치가 있으면 결과가 나빠질 수 있어요.</p>
+  </div>
+  <div class="card">
+    <h3>👣 k-평균 한 걸음씩 <span class="muted" style="font-weight:400;font-size:.88rem">(01의 우리 반 예시 18명)</span></h3>
+    <p class="muted" style="margin-top:0">① k를 고르고 ② 시작점을 고른 뒤(번호 버튼 또는 「직접 찍기」로 그래프를 눌러 중심점 놓기), 「➌ 데이터 할당」과 「➍ 중심점 업데이트」를 번갈아 눌러요. 중심점이 더 움직이지 않으면 끝나고 결과가 아래에 기록돼요.</p>
+    <div class="grid2">
+      <div>
+        <div class="sp-wrap"><svg id="cuKm" role="img" aria-label="k-평균 군집을 한 단계씩 실행하는 산점도, 중심점은 X 표시"></svg></div>
+        <div class="sp-read"><div>반복 <b id="cuIt">0</b>번</div><div>점–중심점 거리 제곱의 합 <b id="cuSse">—</b></div></div>
+        <p class="note">「거리 제곱의 합」은 점마다 자기 중심점까지 거리를 제곱해 더한 값이에요. 작을수록 군집 안의 점들이 중심점 가까이 모여 있어요. 결과를 비교하려고 이 화면에서 보여 주는 값이에요.</p>
+      </div>
+      <div>
+        <div class="cu-ctl"><span>➊ k</span><div class="row" id="cuKBtns"></div></div>
+        <div class="cu-ctl"><span>➋ 시작점</span><div class="row" id="cuSBtns"></div></div>
+        <div class="row" style="margin:10px 0 6px">
+          <button class="btn sm" id="cuAssign">➌ 데이터 할당</button>
+          <button class="btn sm" id="cuMove">➍ 중심점 업데이트</button>
+          <button class="btn ghost sm" id="cuAuto">끝까지 한 번에</button>
+        </div>
+        <ol class="cu-steps" id="cuSteps">
+          <li>➊ 군집 개수(k) 설정</li><li>➋ 초기 중심점 선택</li><li>➌ 데이터 할당 · 점마다 가장 가까운 중심점의 군집에 넣기</li><li>➍ 중심점 업데이트 · 그 군집 점들의 평균 위치(좌표의 평균)로 옮기기</li><li>➎ 반복 수행 · ➌과 ➍를 되풀이</li><li>➏ 군집 형성 · 중심점이 더 움직이지 않으면 끝</li>
+        </ol>
+        <div class="cu-say" id="cuKmSay">k를 고르고 시작점을 골라 보세요.</div>
+      </div>
+    </div>
+    <h4 style="margin:14px 0 6px">끝까지 돌린 결과 기록 <span class="muted" style="font-weight:400;font-size:.85rem">(같은 k에서 시작점을 바꿔 두 번 이상 돌려 비교해요)</span></h4>
+    <ul class="cu-log" id="cuLog"></ul>
+    <button class="btn ghost sm" id="cuLogClr">기록 지우기</button>
+    <p class="note">교과서 146쪽 ➍는 「거리 평균으로 업데이트」라고 썼지만, k-평균은 중심점을 그 군집에 속한 데이터들의 <b>좌표 평균(평균 위치)</b>으로 옮겨요. 이 화면도 그렇게 계산해요.</p>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 군집 분석의 평가 -->
+<section class="page" data-name="군집 분석의 평가" data-acc="#9b4fc4">
+  <div class="head"><div class="num">03</div><div><h2>군집 분석은 어떻게 평가할까?</h2><p>교과서 147쪽 · 거리 척도(유클리드·맨해튼·코사인) · 실루엣 계수 · 군집 내 유사성과 군집 간 상이성</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>잘 묶였다는 것은 <b>같은 군집끼리는 가깝게</b> 모여 있고, <b>다른 군집과는 멀리</b> 떨어져 있다는 뜻이에요. 이것을 점마다 −1에서 1 사이의 숫자로 나타낸 것이 <b>실루엣 계수</b>예요.</span></div>
+  <div class="card">
+    <h3>📏 다양한 거리 척도</h3>
+    <div class="grid2">
+      <svg viewBox="0 0 300 170" class="cu-dist" role="img" aria-label="두 점 사이의 유클리드 거리(직선)와 맨해튼 거리(격자를 따라 꺾인 길), 원점에서 두 화살표 사이의 각도(코사인 유사도)">
+        <g stroke="#eceae4">
+          <path d="M20 20V150M50 20V150M80 20V150M110 20V150M140 20V150M170 20V150M20 20H170M20 50H170M20 80H170M20 110H170M20 150H170"/>
+        </g>
+        <path d="M35 135H155V35" fill="none" stroke="#e0702b" stroke-width="3" stroke-dasharray="6 4"/>
+        <path d="M35 135L155 35" stroke="#2f6fd0" stroke-width="3"/>
+        <circle cx="35" cy="135" r="6" fill="#16202c"/><circle cx="155" cy="35" r="6" fill="#16202c"/>
+        <text x="72" y="74" font-size="12" font-weight="700" fill="#2f6fd0">유클리드</text>
+        <text x="160" y="95" font-size="12" font-weight="700" fill="#e0702b">맨해튼</text>
+        <path d="M200 150L290 120M200 150L270 50" stroke="#9b4fc4" stroke-width="3"/>
+        <path d="M232 139A34 34 0 0 0 219 124" fill="none" stroke="#9b4fc4" stroke-width="2"/>
+        <text x="240" y="112" font-size="12" font-weight="700" fill="#9b4fc4">코사인</text>
+        <circle cx="200" cy="150" r="4" fill="#16202c"/>
+      </svg>
+      <ul class="cu-dl">
+        <li><b style="color:#2f6fd0">유클리드 거리</b> · 두 점 사이의 <b>직선거리</b>. 두 점 사이의 가장 짧은 거리라 직관적이에요. 군집 분석에서 대표적으로 써요.</li>
+        <li><b style="color:#e0702b">맨해튼 거리</b> · 직선이 아니라 <b>축을 따라 움직인 거리</b>를 더해요. 도로망, 로봇 경로 탐색처럼 격자 모양 데이터에 알맞아요.</li>
+        <li><b style="color:#9b4fc4">코사인 유사도</b> · 크기보다 <b>방향이 얼마나 비슷한지</b>를 봐요. 문서 유사도 분석처럼 텍스트 데이터에서 많이 써요.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧮 실루엣 계수</h3>
+    <div class="grid2">
+      <div>
+        <div class="cu-formula">s(i) = <span class="cu-frac"><span>b(i) − a(i)</span><span>max(a(i), b(i))</span></span></div>
+        <ul class="cu-dl">
+          <li><b>i</b> · 개별 데이터(데이터 포인트)</li>
+          <li><b style="color:#1f9d74">a(i)</b> · i와 <b>같은 군집</b>의 다른 데이터들과의 평균 거리 → 작을수록 <b>군집 내 유사성</b>이 높아요.</li>
+          <li><b style="color:#d64535">b(i)</b> · i와 <b>가장 가까운 다른 군집</b>의 데이터들과의 평균 거리 → 클수록 <b>군집 간 상이성</b>이 커요.</li>
+        </ul>
+      </div>
+      <div class="cu-scale">
+        <div><b>1에 가까움</b><span>자기 군집과 촘촘히 모여 있고 다른 군집과 잘 떨어져 있어요. 잘 묶였어요.</span></div>
+        <div><b>0에 가까움</b><span>두 군집의 경계쯤에 있는 데이터예요.</span></div>
+        <div><b>−1에 가까움</b><span>잘못된 군집에 들어갔을 가능성이 커요.</span></div>
+      </div>
+    </div>
+    <p class="note">실루엣 계수는 군집 결과의 품질을 평가할 뿐 아니라, 데이터 전체의 평균 실루엣 계수를 비교해 <b>알맞은 군집 수(k)</b>를 고르는 데에도 써요.</p>
+  </div>
+  <div class="card">
+    <h3>🔦 실루엣 계산기 <span class="muted" style="font-weight:400;font-size:.88rem">(01·02의 우리 반 예시 18명)</span></h3>
+    <p class="callout cu-note">💡 이 계산기는 k마다 <b>여러 시작점으로 돌려 가장 잘 모인 결과</b>를 보여 줘요. 그래서 02에서 시작점 ③으로 얻은 결과(3·3·12)와 달라 보일 수 있어요.</p>
+    <p class="muted" style="margin-top:0">k를 고르면 k-평균으로 묶은 결과가 색으로 보여요. <b>점을 누르면</b> 같은 군집의 점까지 선(실선, a(i))과 가장 가까운 다른 군집의 점까지 선(점선, b(i))이 그려지고 s(i)가 계산돼요. 군집 경계 근처의 점과 한가운데 점을 비교해 보세요.</p>
+    <div class="row" id="cuSilK" style="margin-bottom:8px"></div>
+    <div class="grid2">
+      <div><div class="sp-wrap"><svg id="cuSil" role="img" aria-label="점을 눌러 a(i)와 b(i) 거리를 선으로 보는 산점도"></svg></div></div>
+      <div>
+        <div class="cu-say" id="cuSilSay">점을 하나 눌러 보세요.</div>
+        <h4 style="margin:12px 0 4px">k에 따른 평균 실루엣 계수</h4>
+        <div class="sp-wrap"><svg id="cuSilBars" role="img" aria-label="k가 2부터 5일 때의 평균 실루엣 계수 막대그래프"></svg></div>
+      </div>
+    </div>
+    <div class="memo">
+      <label>✍️ 실루엣 계수 해석하기 · ① 내가 누른 점 하나의 a(i), b(i), s(i)를 적고, 그 점이 잘 묶였는지 설명해요. ② 평균 실루엣 계수가 가장 큰 k는 몇이고, 01에서 내가 손으로 묶은 그룹 수와 같았나요? <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="silRead" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">우리 반 친구들을 성향에 따라 나눌 때처럼 <b>정답이 붙어 있지 않은</b> 데이터도 특징이 비슷한 것끼리 묶어 볼 수 있다. 이렇게 묶은 그룹을 비교하면 고객 세분화, 추천처럼 쓸모 있는 정보가 나온다.</div>
+    <div style="--k:#1f9d74">k-평균은 k를 정하고 중심점을 찍은 뒤 <b>가까운 중심점에 할당 → 평균 위치로 이동</b>을 중심점이 멈출 때까지 되풀이한다. 시작점을 바꾸면 다른 결과에서 멈출 수도 있어 여러 번 돌려 비교한다.</div>
+    <div style="--k:#9b4fc4">점 하나의 실루엣 계수는 자기 군집까지의 평균 거리 <b>a(i)</b>와 가장 가까운 이웃 군집까지의 평균 거리 <b>b(i)</b>로 구한다. 평균 실루엣 계수가 가장 큰 k를 군집 수로 고를 수 있다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 생각(<span id="cuVoteShow">아직 고르지 않음</span>)도 떠올리며, 오늘 배운 낱말(레이블, 비지도학습, k-평균, 중심점, 실루엣 계수)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">군집 분석은 데이터를 어떻게 묶고, 묶은 결과는 어떻게 평가할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>k-평균 한 걸음씩의 <b>결과 기록</b>을 바탕으로 k-평균의 절차를 설명하고, 시작점에 따라 결과가 달라지는 까닭 쓰기</li>
+      <li>실루엣 계산기에서 고른 점의 <b>a(i)·b(i)·s(i)</b>를 해석하고, 어떤 k를 고를지 근거와 함께 쓰기</li>
+      <li>손으로 묶은 <b>우리 반 그룹</b>을 바탕으로 군집 분석과 분류의 차이, 군집 분석을 쓸 곳 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

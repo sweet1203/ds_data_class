@@ -1,0 +1,220 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#0f8b8d">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 2. 군집 분석과 연관분석</span>
+      <h1>텐트를 사는 사람은<br>랜턴도<br>함께 살까?</h1>
+      <div class="story"><b>캠핑 코너는 어떻게 생겼을까?</b><br>휴가철 마트의 아웃도어 용품 코너에서 데이터 분석가 「연관이」는 <b>텐트, 랜턴, 그릴</b>이 자주 함께 팔린다는 것을 발견했어요. 세 제품을 한곳에 모아 캠핑 전문 코너를 만들었더니 손님은 물건을 더 쉽게 찾았고, 매출도 눈에 띄게 올랐어요.</div>
+      <p>오늘은 이렇게 <b>함께 자주 나타나는 항목</b>을 찾는 연관분석을 배우고, 규칙이 얼마나 쓸모 있는지 숫자(지표)로 직접 계산해 봐요.</p>
+      <ol>
+        <li>연관분석이란</li><li>연관분석 지표 계산하기</li><li>Apriori 알고리즘 따라가기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧾</i><div><b>거래 데이터</b><small>고객마다 한 번에 산 물건 목록</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>A→B</i><div><b>연관 규칙</b><small>A를 사면 B도 살 가능성이 높다</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>%</i><div><b>지지도 · 신뢰도 · 향상도</b><small>규칙이 얼마나 쓸모 있는지 재기</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🔁</i><div><b>Apriori 알고리즘</b><small>자주 나오는 묶음만 남기며 찾기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간에는 비슷한 데이터끼리 <b>그룹으로 묶는</b> 군집 분석을 배웠어요. 오늘은 고객이 물건을 살 때 <b>무엇과 무엇이 함께 팔리는지</b>, 그 숨은 규칙을 찾는 방법을 알아봐요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">먼저 떠올리기</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>장을 볼 때 우리 집에서 자주 함께 사는 물건은?</b> 해당하는 것을 모두 눌러 보세요.</p>
+        <div id="pairPick"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>군집 분석과 연관분석</b> · 데이터에 명확한 레이블이 주어지지 않았을 때 우리는 데이터를 어떻게 분석할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 연관분석이란 무엇이고, 연관 규칙은 어떤 지표로 평가할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 간의 관계를 분석할 수 있다.</li>
+          <li>데이터 간의 상호 연관성을 파악하여 결과의 의미를 해석할 수 있다.</li>
+        </ul>
+        <div class="memo" style="margin-top:8px"><label>나의 계획 <small>이 단원(연관분석)에서 배우고 싶은 것을 한두 가지 적어요. 다음 시간 끝에 다시 점검해요.</small></label><textarea data-memo="plan" rows="2" placeholder="예: 쇼핑몰 추천이 어떻게 만들어지는지 알고 싶다"></textarea><div class="saved"></div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 연관분석이란부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 연관분석이란 -->
+<section class="page" data-name="연관분석이란" data-acc="#0f8b8d">
+  <div class="head"><div class="num">01</div><div><h2>연관분석이란 무엇일까?</h2><p>교과서 155~156쪽 · 거래 데이터 · 장바구니 분석 · 서열 분석 · 추천 서비스 · 연관 규칙</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>고객이 <b>한 번에 산 물건 목록</b>(거래 데이터)을 많이 모아 보면, 「이것을 사는 사람은 저것도 산다」는 규칙이 보여요. 이 숨은 규칙을 찾아 진열·추천·묶음 판매에 쓰는 방법이 <b>연관분석</b>이에요.</span></div>
+  <div class="card">
+    <h3>🛒 연관분석의 개념과 목표</h3>
+    <div class="callout" style="margin-top:4px"><b>연관분석</b>(association analysis)은 데이터 내에서 항목 간의 숨겨진 규칙을 발견하고 연관성을 분석하는 방법이에요. 주로 <b>거래 데이터</b>(transaction data)를 이용해요.</div>
+    <p>목표는 서로 연관된 항목 간의 관계를 탐색해서 <b>자주 발생하는 항목의 조합</b>을 찾아내는 것이에요. 고객이 어떤 상품을 살 때 함께 살 가능성이 높은 다른 상품을 찾는 데 써서 <b>장바구니 분석</b>이라고도 불러요.</p>
+    <p class="note">분류·회귀·군집 분석에 쓰는 데이터는 주로 객체의 특성(키, 나이, 소득 …)을 담고 있어요. 연관분석의 데이터는 고객이 <b>특정 시점에 어떤 상품을 샀는지</b>에 대한 거래 정보예요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#0f8b8d"><div class="ic">🧺</div><h4>장바구니 분석</h4><p><small>market basket analysis</small><br><b>동시에</b> 구매된 항목이 중요해요. 함께 사는 상품을 찾아 진열·추천·묶음 판매에 활용해요.</p></div>
+      <div class="kc" style="--k:#e0702b"><div class="ic">⏩</div><h4>서열 분석</h4><p><small>sequential pattern analysis</small><br>시간의 흐름에 따라 항목이 <b>어떤 순서로</b> 발생하는지가 중요해요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🎬</div><h4>추천 서비스</h4><p><small>recommendation service</small><br>사용자의 <b>과거 행동과 선호도</b>를 분석해 맞춤형 상품이나 서비스를 추천해요.</p></div>
+    </div>
+    <p class="note">표 Ⅲ-5(교과서 155쪽)의 세 종류를 정리했어요. 교과서 표의 영어 이름 「marker basket analysis」는 <b>market basket analysis</b>(장바구니 분석)를 잘못 쓴 것이라 바로잡았어요.</p>
+  </div>
+  <div class="card">
+    <h3>➡️ 연관 규칙 (A 상품) → (B 상품)</h3>
+    <p style="margin-top:0"><b>연관 규칙</b>(association rule)은 연관분석의 결과로 얻은 규칙이에요. 「만약 A를 구매했다면(if A), B도 구매할 가능성이 높다(then B)」처럼 두 항목의 관계를 나타내요.</p>
+    <div class="grid2">
+      <div class="as-rule"><span>삼겹살</span><i>→</i><span>상추</span><small>삼겹살을 구매하는 고객은 상추를 함께 구매한다.</small></div>
+      <div class="as-rule"><span>휴대폰</span><i>→</i><span>휴대폰 케이스</span><small>휴대폰을 구매하는 고객은 휴대폰 케이스를 함께 구매한다.</small></div>
+    </div>
+    <p class="note">화살표 왼쪽(A)이 조건, 오른쪽(B)이 결과예요. 「삼겹살 → 상추」와 「상추 → 삼겹살」은 서로 다른 규칙이에요(02에서 확인해요). 표 Ⅲ-6(교과서 156쪽)의 예시예요.</p>
+    <h4 style="margin:14px 0 6px">🗂️ 어떤 연관분석일까? <span class="muted" style="font-weight:400;font-size:.85rem">(새로 만든 사례 7장)</span></h4>
+    <div id="kindSort"></div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 연관분석 지표 -->
+<section class="page" data-name="연관분석 지표" data-acc="#e0702b">
+  <div class="head"><div class="num">02</div><div><h2>연관분석의 지표는 무엇일까?</h2><p>교과서 157~159쪽 · 지지도 · 신뢰도 · 향상도 · 표 Ⅲ-7·8 고객의 구매 내역</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>규칙을 찾았다고 다 쓸모 있는 건 아니에요. <b>얼마나 자주</b> 함께 팔리는지(지지도), A를 산 사람 중 <b>얼마나 많이</b> B도 샀는지(신뢰도), 그 비율이 <b>우연보다 얼마나 높은지</b>(향상도)를 함께 따져 봐요.</span></div>
+  <div class="card">
+    <h3>📏 세 가지 지표 <span class="muted" style="font-weight:400;font-size:.88rem">(규칙 「A → B」, U = 전체 거래 수)</span></h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#0f8b8d"><h4>지지도 (support)</h4><p class="as-f">P(A∩B) = <span class="as-frac"><b>A와 B를 함께 산 거래 수</b><b>전체 거래 수</b></span></p><p>전체 거래 중에서 A, B가 <b>함께 나타나는 비율</b>. 얼마나 자주 동시에 구매하는지 평가해요.</p></div>
+      <div class="kc" style="--k:#e0702b"><h4>신뢰도 (confidence)</h4><p class="as-f">P(B|A) = <span class="as-frac"><b>P(A∩B)</b><b>P(A)</b></span></p><p>A를 구매한 거래 중에서 <b>B도 함께</b> 구매된 거래의 비율. A의 구매가 B의 구매를 얼마나 잘 예측하는지 평가해요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>향상도 (lift)</h4><p class="as-f"><span class="as-frac"><b>신뢰도</b><b>P(B)</b></span> = <span class="as-frac"><b>P(A∩B)</b><b>P(A)·P(B)</b></span></p><p>신뢰도를 B의 구매 비율로 나눈 값. 두 상품의 연관성이 <b>우연인지, 실제 관계인지</b> 평가해요.</p></div>
+    </div>
+    <div class="as-lift">
+      <div style="--k:#1f9d74"><b>향상도 &gt; 1</b><span>A를 산 사람이 전체보다 B를 <b>더 자주</b> 사요. 함께 사는 경향이 있어요. 1에 얼마나 가까운지도 함께 봐요.</span></div>
+      <div style="--k:#5b6776"><b>향상도 = 1</b><span>A를 사든 안 사든 B를 사는 비율이 같아요. 연관성이 없어요.</span></div>
+      <div style="--k:#d64535"><b>향상도 &lt; 1</b><span>A를 산 사람이 오히려 B를 <b>덜</b> 사요. A 구매가 B 구매를 줄일 수 있어요.</span></div>
+    </div>
+    <p class="note">향상도가 특히 유용하지만, 향상도만 보면 얼마나 자주 나타나는지(지지도), 얼마나 강하게 이어지는지(신뢰도)를 놓칠 수 있어요. 그래서 세 지표를 <b>함께</b> 봐요.</p>
+  </div>
+  <div class="card">
+    <h3>✏️ 스스로 해결하기 · 「삼겹살 → 쌈장」 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 159쪽)</span></h3>
+    <p style="margin-top:0">아래 <b>고객의 구매 내역</b> 표를 보고 직접 세어서 계산해요. 분수(예: <span class="mono">3/7</span>)나 소수(예: <span class="mono">0.43</span>)로 적고 「확인」을 눌러요. 다 맞힌 다음 계산기로 다시 확인해 봐요.</p>
+    <div class="as-self">
+      <div class="memo"><label>지지도</label><input type="text" data-memo="selfS" placeholder="예: 0/7" autocomplete="off"><div class="saved"></div></div>
+      <div class="memo"><label>신뢰도</label><input type="text" data-memo="selfC" placeholder="예: 0/0" autocomplete="off"><div class="saved"></div></div>
+      <div class="memo"><label>향상도</label><input type="text" data-memo="selfL" placeholder="예: 0.00" autocomplete="off"><div class="saved"></div></div>
+    </div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="selfCheck">확인</button></div>
+    <div class="as-say" id="selfSay">세 칸을 채우고 「확인」을 눌러요.</div>
+  </div>
+  <div class="card">
+    <h3>🧮 연관분석 지표 계산기 <span class="muted" style="font-weight:400;font-size:.88rem">(표 Ⅲ-7·8, 교과서 158쪽)</span></h3>
+    <div class="grid2 as-calc">
+      <div>
+        <p class="muted" style="margin:0 0 6px">○는 그 고객이 산 상품이에요. 규칙을 고르면 해당 고객 줄이 색으로 표시돼요.</p>
+        <div id="asTbl"></div>
+        <div class="as-key"><span class="ab">A와 B를 함께 산 고객</span><span class="a">A만 산 고객</span><span class="b">B만 산 고객</span></div>
+      </div>
+      <div>
+        <div class="as-pick"><b>조건 A</b><div class="row" id="asA"></div></div>
+        <div class="as-pick"><b>결과 B</b><div class="row" id="asB"></div></div>
+        <div class="as-out" id="asOut"></div>
+        <div class="sp-wrap" style="margin-top:8px"><svg id="asBar" role="img" aria-label="전체 중 B를 산 비율과 A를 산 고객 중 B를 산 비율을 비교한 막대그래프"></svg></div>
+        <p class="note">두 막대의 길이를 비교한 값이 향상도예요. 아래 막대가 더 길면 향상도 &gt; 1이에요.</p>
+        <p class="note">교과서 159쪽은 「삼겹살 → 콜라」의 향상도 1.05를 「연관성이 높다」고 해석했지만, 1보다 아주 조금 큰 값이라 <b>약하게 관련이 있다</b> 정도로 읽는 것이 알맞아요. 향상도가 1보다 크면 함께 사는 경향이 있다는 뜻이고, 1에 얼마나 가까운지도 함께 봐요.</p>
+        <div class="row" style="gap:6px"><button class="btn ghost sm" id="asSave">이 규칙 기록하기</button><button class="btn ghost sm" id="asClear">기록 지우기</button></div>
+        <ul class="as-log" id="asLog"></ul>
+      </div>
+    </div>
+    <div class="memo">
+      <label>✍️ 계산기로 <b>향상도가 1보다 큰 규칙</b>과 <b>1보다 작은 규칙</b>을 하나씩 찾아 기록하고, 두 규칙이 각각 무엇을 뜻하는지 가게 주인에게 설명하듯 적어 보세요. <small>교과서의 「삼겹살 → 콜라」(향상도 1.05)는 어느 쪽에 가까운지도 함께 적어요. 질문폼 1·2번에 써요.</small></label>
+      <textarea data-memo="liftNote" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 Apriori 알고리즘 -->
+<section class="page" data-name="Apriori 알고리즘" data-acc="#2f6fd0">
+  <div class="head"><div class="num">03</div><div><h2>연관분석 알고리즘의 절차는 무엇일까?</h2><p>교과서 160쪽 · Apriori 알고리즘 · 최소 지지도 · 후보 집합 · 빈번 집합</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>상품이 많으면 가능한 묶음이 너무 많아요. <b>Apriori</b>(아프리오리) 알고리즘은 정해 둔 기준(<b>최소 지지도</b>)보다 적게 나온 묶음을 버리고, 남은 것끼리만 더 큰 묶음을 만들어 가며 <b>함께 자주 나타나는 항목</b>을 찾아요.</span></div>
+  <div class="card">
+    <h3>🔁 Apriori 알고리즘의 절차</h3>
+    <p style="margin-top:0">가장 널리 쓰이는 연관 규칙 알고리즘이에요. 실행하려면 <b>거래 데이터</b>와 <b>최소 지지도</b>가 필요해요. 최소 지지도는 항목들이 함께 나타나는 횟수(또는 비율)의 기준이에요.</p>
+    <ol class="vsteps">
+      <li><b>1단계 · 거래 데이터 준비</b><p>거래별로 구매한 항목(item)을 정리해요.</p></li>
+      <li><b>2~3단계 · 1-항목 후보 집합 → 1-항목 빈번 집합</b><p>항목 하나짜리 집합마다 등장 횟수(지지도)를 세어 최소 지지도를 만족하면 ○, 아니면 ×. ○만 <b>1-항목 빈번 집합</b>으로 확정해요.</p></li>
+      <li><b>4~5단계 · 2-항목 후보 집합 → 2-항목 빈번 집합</b><p>1-항목 빈번 집합의 요소 두 개씩 조합해 후보를 만들고, 다시 세어 ○만 남겨요.</p></li>
+      <li><b>6~7단계 · 3-항목 후보 집합 → 최종 선택</b><p>2-항목 빈번 집합의 요소 세 개씩 조합해 후보를 만들고, 세어서 ○인 집합을 최종으로 골라요.</p></li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>🧭 Apriori 따라가기 <span class="muted" style="font-weight:400;font-size:.88rem">(후보마다 ○/×를 먼저 예상한 뒤 확인해요)</span></h3>
+    <div class="row" style="gap:6px;margin-bottom:6px"><span class="muted">거래 데이터</span><button class="btn ghost sm" data-ds="0">문구점 (예시)</button><button class="btn ghost sm" data-ds="1">교과서 160쪽 예</button>
+      <span class="muted" style="margin-left:10px">최소 지지도</span><button class="btn ghost sm" data-ms="2">2번 이상</button><button class="btn ghost sm" data-ms="3">3번 이상</button></div>
+    <div class="grid2 as-ap">
+      <div>
+        <div id="apTbl"></div>
+        <p class="note">후보 이름을 누르면 그 항목이 모두 들어 있는 거래가 표에서 강조돼요. 강조된 줄을 세면 지지도(등장 횟수)예요.</p>
+      </div>
+      <div>
+        <h4 style="margin:0 0 6px" id="apStage"></h4>
+        <div id="apCand"></div>
+        <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" id="apCheck">확인</button><button class="btn sm" id="apNext" disabled>다음 단계 →</button><button class="btn ghost sm" id="apReset">처음부터 다시</button></div>
+        <div class="as-say" id="apSay"></div>
+        <div class="sp-wrap" style="margin-top:8px"><svg id="apBar" role="img" aria-label="후보 집합별 등장 횟수 막대그래프"></svg></div>
+      </div>
+    </div>
+    <ul class="as-log" id="apLogView"></ul>
+    <div class="memo">
+      <label>✍️ 문구점(예시) 데이터로 <b>최소 지지도 2</b>와 <b>3</b>을 모두 해 보세요. 두 경우를 ① <b>최종 선택</b>된 집합과 ② <b>모든 단계의 빈번 집합을 합친 개수</b>로 나누어 적고, 최소 지지도를 높이면 ②가 어떻게 바뀌는지 그 까닭과 함께 적어요. <small>아래 기록에 두 값이 함께 남아요. 질문폼 3번에 써요.</small></label>
+      <textarea data-memo="apNote" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#0f8b8d">마트가 영수증을 모아 「텐트를 산 손님은 랜턴도 산다」 같은 <b>연관 규칙</b>을 찾으면, 두 상품을 가까이 두거나 묶어 팔 수 있다. 함께 산 물건이 중요하면 장바구니 분석, 사는 순서가 중요하면 서열 분석이다.</div>
+    <div style="--k:#e0702b">「삼겹살 → 콜라」는 일곱 거래 중 세 번 함께 팔렸고(<b>지지도</b>), 삼겹살 손님 다섯 중 셋이 콜라를 샀다(<b>신뢰도</b>). 이 비율이 전체 손님의 콜라 구매 비율과 거의 같아 <b>향상도</b>는 1에 가깝다.</div>
+    <div style="--k:#2f6fd0">문구점 영수증에서 Apriori 알고리즘은 <b>최소 지지도</b>에 못 미치는 묶음을 먼저 버리고, 남은 항목끼리 2개, 3개짜리 후보를 만들어 다시 센다. 기준을 높이면 단계마다 걸러지는 후보가 많아져, 모든 단계의 빈번 집합을 합친 수가 줄어든다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">오늘 배운 낱말(거래 데이터, 연관 규칙, 지지도, 신뢰도, 향상도, 최소 지지도)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">연관분석이란 무엇이고, 연관 규칙은 어떤 지표로 평가할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>지표 계산기에서 기록한 규칙 하나로 <b>지지도·신뢰도·향상도</b>를 어떻게 구했는지, 각각이 무엇을 뜻하는지 설명하기</li>
+      <li>향상도가 <b>1보다 큰 규칙과 작은 규칙</b>을 비교하고, 지지도·신뢰도까지 함께 봐야 하는 까닭 쓰기</li>
+      <li>Apriori 따라가기에서 <b>최소 지지도</b>를 바꿨을 때 모든 단계의 빈번 집합을 합친 개수가 어떻게 달라졌는지 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

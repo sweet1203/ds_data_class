@@ -1,0 +1,24 @@
+  /* u3-regression 전용 (rg-) */
+  .rg-tw{overflow-x:auto}
+  .rg-t2{min-width:480px;margin:0;text-align:center}
+  .rg-t2 th,.rg-t2 td{text-align:center}
+  .rg-t2 th.rg-x{background:#e7f0fc;color:#2f6fd0}
+  .rg-t2 th.rg-y{background:#fdecea;color:#d64535}
+  .rg-t2 tr.rg-lab td{font-size:.86rem;color:var(--muted);background:#fbfaf7}
+  .rg-ex{align-items:start}
+  .rg-data .btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .rg-sl{display:grid;grid-template-columns:72px 1fr 52px;align-items:center;gap:8px;margin-top:8px;font-size:.92rem;font-weight:700}
+  .rg-sl input{width:100%;accent-color:#d64535}
+  .rg-sl b{font-variant-numeric:tabular-nums;color:#d64535;text-align:right}
+  .rg-eq{font-size:1.25rem;font-weight:900;background:#fbfaf7;border-radius:12px;padding:8px 14px;font-variant-numeric:tabular-nums}
+  .rg-eq b{color:#d64535}
+  .btn.sm.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .rg-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin-top:10px;line-height:1.6}
+  .rg-mis{list-style:none;padding:0;margin:0;font-size:.9rem}
+  .rg-mis li{padding:5px 8px;border-radius:8px;margin:3px 0;background:#fbfaf7}
+  .rg-mis li.ok{background:#e7f6ef;color:#13684d;font-weight:700}
+  .rg-bub{background:#fff;border-radius:14px;border-left:6px solid var(--k);padding:10px 14px;font-size:.93rem;line-height:1.65;box-shadow:0 4px 12px rgba(15,39,66,.06)}
+  .rg-bub b:first-child{display:block;color:var(--k);margin-bottom:4px}
+  .rg-t3{min-width:620px;margin:0}
+  .rg-t3 th{background:#fbfaf7;text-align:left}
+  .rg-t3 td:first-child{font-weight:700;white-space:nowrap;background:#fbfaf7}

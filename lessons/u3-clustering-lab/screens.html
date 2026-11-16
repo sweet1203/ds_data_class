@@ -1,0 +1,261 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#2f6fd0">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 2. 군집 분석과 연관분석</span>
+      <h1>고객 200명,<br>몇 무리로<br>나눠 볼까?</h1>
+      <div class="story"><b>군집 분석을 해 볼까?</b><br>쇼핑몰 고객 200명의 쇼핑 데이터가 있어요. 고객을 공통된 특성에 따라 그룹으로 나누면, 그룹마다 맞춤형 마케팅을 할 수 있어요. 고객을 어떻게 나누면 좋을까요?</div>
+      <p>지난 시간에 배운 <b>k-평균 군집</b>과 <b>실루엣 계수</b>를 오렌지3로 실제 데이터에 적용해요. 알맞은 군집 수를 실루엣 점수로 고르고, 군집을 그림으로 확인한 뒤, 군집마다 마케팅 전략을 세워요.</p>
+      <ol>
+        <li>데이터 불러오기와 역할 정하기</li><li>오렌지3 k-Means 군집 분석</li><li>함께 해결하기 · 마케팅 전략</li><li>(선택) 파이썬으로 해 보기</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📂</i><div><b>File · Data Table</b><small>속성의 역할(Role) 정하기</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>✕</i><div><b>k-Means</b><small>k = 2~8의 실루엣 점수 비교</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🎨</i><div><b>Scatter · Silhouette Plot</b><small>군집을 그림과 숫자로 확인</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>🎯</i><div><b>마케팅 전략</b><small>군집마다 다른 전략 세우기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간에는 예시 점으로 k-평균이 움직이는 과정과 실루엣 계수의 뜻을 익혔어요. 오늘은 고객 200명의 쇼핑 데이터로 직접 군집을 만들고, 그 결과를 해석해 쓸모 있는 전략으로 바꿔요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>쇼핑몰 고객을 나눈다면 무엇을 기준으로 나누고 싶나요?</b> 여러 개 골라도 돼요.</p>
+        <div id="clBy"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>군집 분석과 연관분석</b> · 데이터에 명확한 레이블이 주어지지 않았을 때 우리는 데이터를 어떻게 분석할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 고객 쇼핑 데이터를 군집으로 나누면 어떤 고객 그룹이 보이고, 그 결과를 어떻게 활용할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터의 속성에 대한 유사성을 측정하고 분석하여 군집을 형성할 수 있다.</li>
+          <li>군집 분석 결과의 의미를 해석할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 불러오기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 불러오기 -->
+<section class="page" data-name="데이터 불러오기" data-acc="#c98a00">
+  <div class="head"><div class="num">01</div><div><h2>데이터 불러오기와 속성 확인하기</h2><p>교과서 148쪽 · 고객 쇼핑 데이터셋 · Role(역할) · feature를 두 속성으로 정한 까닭 · Visualize numeric values</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3에 파일을 불러오면 속성마다 <b>역할(Role)</b>을 정해야 해요. 군집을 나누는 데 쓸 속성은 <b>feature</b>, 쓰지 않고 참고로만 볼 속성은 <b>meta</b>로 정해요. 오늘은 <b>연간 소득</b>과 <b>지출 점수</b> 두 속성으로만 고객을 묶어요.</span></div>
+  <div class="card">
+    <h3>📂 준비 · 고객 쇼핑 데이터셋</h3>
+    <p style="margin-top:0">선생님이 알려 주는 폴더에서 <span class="mono">Mall_Customers.csv</span>를 내려받아요. 캐글에서 「Mall Customer Segmentation Data」라는 이름으로 공개된 고객 200명의 쇼핑 데이터예요.</p>
+    <div class="cl-tw"><table class="tbl cl-attr">
+      <tr><th>속성</th><th>뜻</th><th>값의 모습</th></tr>
+      <tr><td class="mono">CustomerID</td><td>고객 ID</td><td>1부터 200까지 고객마다 붙인 번호</td></tr>
+      <tr><td class="mono">Gender</td><td>성별</td><td>Male, Female</td></tr>
+      <tr><td class="mono">Age</td><td>나이</td><td>18~70세</td></tr>
+      <tr><td class="mono">Annual Income (k$)</td><td>연간 소득</td><td>천 달러 단위, 15~137</td></tr>
+      <tr><td class="mono">Spending Score (1-100)</td><td>지출 점수</td><td>쇼핑몰이 매긴 1~100점, 클수록 많이 쓰는 고객</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h3>🏷️ Role(역할) 종류</h3>
+    <div class="cards4">
+      <div class="kc" style="--k:#5b6776"><h4>meta</h4><p>분석에 쓰지는 않지만, 참고하려고 표에 보여 주는 속성</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>feature</h4><p>분석에 영향을 주는 원인이 되는 속성</p></div>
+      <div class="kc" style="--k:#d64535"><h4>target</h4><p>예측하고자 하는 결과가 되는 속성</p></div>
+      <div class="kc" style="--k:#8a94a3"><h4>ignore</h4><p>무시해도 되는 속성. 오렌지3 3.40의 Role 목록에서는 <b>skip</b>이라는 이름이에요.</p></div>
+    </div>
+    <div class="callout" style="margin-top:12px">💡 <b>연간 소득과 지출 점수만 feature로 정한 까닭</b> · 고객의 쇼핑 패턴을 비교적 뚜렷하게 나누어 보려고, 두 속성으로 <b>2차원 그림</b>을 그려 확인하기로 했어요. 나이(Age) 같은 다른 속성을 feature에 더하면 군집 결과는 지금과 달라져요.</div>
+    <h4 style="margin:14px 0 6px">🗂️ 역할 정하기 <span class="muted" style="font-weight:400;font-size:.85rem">(5장 · 속성을 보고 역할 고르기)</span></h4>
+    <div id="clRoleSort"></div>
+  </div>
+  <div class="card">
+    <h3>🔎 데이터 속성 확인하기</h3>
+    <ol class="vsteps">
+      <li><b>File 위젯에 Data 카테고리의 Data Table 위젯을 연결해요.</b><p>데이터가 표로 보여요. 왼쪽 Info에서 데이터 개수와 결측치가 있는지 확인해요.</p></li>
+      <li><b>「Visualize numeric values」를 체크해요.</b><p>feature로 정한 숫자 칸에 값의 크기만큼 막대가 그려져, 고객끼리 값의 크기를 쉽게 비교할 수 있어요.</p></li>
+    </ol>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 오렌지3 k-Means -->
+<section class="page" data-name="오렌지3 k-Means" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>군집 수 정하고 군집 확인하기</h2><p>교과서 149~150쪽 · 오렌지3 실습 · k-Means · Scatter Plot · Silhouette Plot · Data Table</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>k-Means 위젯이 k를 2부터 8까지 바꿔 가며 묶어 보고 <b>실루엣 점수</b>를 알려 줘요. 점수가 가장 큰 k를 골라 군집을 만든 뒤, <b>산점도</b>로 모양을 보고 <b>Silhouette Plot</b>으로 군집마다 얼마나 잘 묶였는지 확인해요.</span></div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div><svg id="clFlow" role="img" aria-label="고객 쇼핑 데이터 k-평균 군집 분석 위젯 연결 흐름도"></svg></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표</h3>
+    <div class="of-tw"><table class="tbl" id="clSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">Mall_Customers.csv</span> 열기<br>Role: <b>CustomerID · Gender · Age → meta</b>, <b>Annual Income (k$) · Spending Score (1-100) → feature</b>로 바꾸고 <b>Apply</b></td><td>200개의 데이터, feature 2개, meta 3개</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>왼쪽 <b>Visualize numeric values</b> 체크</td><td>Info에서 결측치가 없는지(no missing data). 소득·지출 점수 칸에 막대가 보이는지</td></tr>
+      <tr data-s="3"><td>3</td><td><b>k-Means</b> (Unsupervised)</td><td>Data Table →</td><td>Number of Clusters: <b>From 2 to 8</b> 선택<br>Normalize columns 체크, Initialize with KMeans++, Re-runs 10, Maximum iterations 300(기본값 그대로)</td><td>오른쪽 <b>Silhouette Scores</b> 목록에서 가장 큰 값을 찾아 그 줄이 골라져 있는지(교과서: k = 5, 0.555). <b>Data Table에서 줄을 눌러 고르지 마세요</b> — 고른 줄만 k-Means로 넘어가요.</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Scatter Plot</b> (Visualize)</td><td>k-Means →</td><td>Axis x: <b>Annual Income (k$)</b>, Axis y: <b>Spending Score (1-100)</b>, Color: <b>Cluster</b></td><td>다섯 무리가 색으로 나뉘는지. 소득이 낮은데 지출 점수가 높은 무리, 소득이 높은데 지출 점수가 낮은 무리를 찾아요.</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Silhouette Plot</b> (Visualize)</td><td>k-Means →</td><td>Distance: <b>Euclidean</b>, Grouping: <b>Cluster</b>. (선택) Bars의 <b>Bar width</b>로 막대 두께 조절</td><td>군집 이름 옆 괄호 안의 값이 그 군집의 실루엣 계수(0.5~0.6쯤). 막대가 가장 많은 군집이 사람이 가장 많은 군집이에요.</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Data Table (1)</b> (Data)</td><td>k-Means →</td><td>오른쪽 끝 <b>Cluster</b> · <b>Silhouette</b> 열 확인. 열 이름을 눌러 지출 점수(또는 연간 소득)로 정렬</td><td>CustomerID <b>18</b>과 <b>188</b>: 지출 점수는 비슷한데 연간 소득은 크게 달라 서로 다른 군집이에요. Silhouette 열은 오렌지3가 0~1 사이로 바꾸어 보여 주는 값이라 Silhouette Plot의 숫자와 달라요.</td></tr>
+    </table></div>
+    <div class="callout cl-warn">💡 <b>군집 이름(C1~C5)은 교과서와 다를 수 있어요.</b> 오렌지3 버전이나 실행에 따라 같은 무리에 다른 이름이 붙어요. 이름 대신 「소득은 낮고 지출 점수는 높은 무리」처럼 <b>위치</b>로 말해요. 교과서는 이 무리를 C2, 소득도 지출 점수도 높은 무리를 C3이라고 불렀어요.</div>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="clDone"></div>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기</h3>
+    <div class="of-tw"><table class="tbl cl-rt">
+      <tr><th>무엇을</th><th>내 결과</th></tr>
+      <tr><td>실루엣 점수가 가장 큰 k와 그 점수</td><td><input type="text" data-memo="kmBest" placeholder="예: k = ?, 0.???"><div class="saved"></div></td></tr>
+      <tr><td>(선택) 군집별 실루엣 계수(Silhouette Plot 괄호 안)</td><td><input type="text" data-memo="kmEach" placeholder="예: C1 0.??, C2 0.?? …"><div class="saved"></div></td></tr>
+      <tr><td>(선택) 사람이 가장 많은 군집의 이름과 위치</td><td><input type="text" data-memo="kmBig" placeholder="예: C? — 소득도 지출 점수도 중간쯤"><div class="saved"></div></td></tr>
+      <tr><td>CustomerID 18과 188의 군집 · (연간 소득, 지출 점수)<br><small class="muted">+ Age(나이)를 feature에 더하면 어떨지 내 생각 한 줄 · 질문폼 2번에 써요.</small></td><td><textarea data-memo="km18" rows="3" placeholder="예: 18 → C? (?, ?) / 188 → C? (?, ?)&#10;Age를 더하면 …"></textarea><div class="saved"></div></td></tr>
+    </table></div>
+    <div class="memo">
+      <label>✍️ 스스로 해결하기(150쪽) · k-Means에서 Silhouette Scores의 다른 줄(k = 3, k = 8 등)을 눌러 보세요. Scatter Plot과 Silhouette Plot이 어떻게 달라졌나요? 왜 k = 5를 고르는지 실루엣 점수로 설명해요. <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="kmRec" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card cl-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>k-Means에 Silhouette Scores 목록이 안 보여요</b> → Number of Clusters에서 <b>Fixed</b>가 아니라 <b>From 2 to 8</b>을 골랐는지 확인해요.</li>
+      <li><b>Scatter Plot의 Color에 Cluster가 없어요</b> → Scatter Plot을 File이 아니라 <b>k-Means</b> 뒤에 이었는지 확인해요. Cluster 열은 k-Means가 만들어요.</li>
+      <li><b>점이 몇 개뿐이에요</b> → Data Table에서 줄을 눌러 골랐을 수 있어요. Data Table에서 빈 곳을 누르거나 선택을 지우고 다시 확인해요.</li>
+      <li><b>오렌지3가 안 열리거나 너무 느려요</b> → 아래 화면 안 체험으로 같은 과정을 해 보고, 결과 기록 칸에는 체험에서 본 값을 「(체험)」이라고 적어요.</li>
+    </ul>
+    <h4 style="margin:12px 0 6px">화면 안 체험 · 고객 군집 체험 <span class="muted" style="font-weight:400;font-size:.85rem">(실제 고객 데이터가 아니라 모양을 닮게 새로 만든 예시 고객 52명)</span></h4>
+    <div class="row" id="clK" style="margin-bottom:8px"></div>
+    <div class="grid2">
+      <div><div class="sp-wrap"><svg id="clPlot" role="img" aria-label="예시 고객의 연간 소득과 지출 점수 산점도, 군집별 색"></svg></div></div>
+      <div>
+        <h4 style="margin:0 0 4px">k에 따른 평균 실루엣 점수</h4>
+        <div class="sp-wrap"><svg id="clBars" role="img" aria-label="k가 2부터 8일 때의 평균 실루엣 점수 막대그래프"></svg></div>
+        <div class="cl-say" id="clSay"></div>
+      </div>
+    </div>
+  </details>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 함께 해결하기 -->
+<section class="page" data-name="함께 해결하기" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>함께 해결하기 · 군집별 마케팅 전략</h2><p>교과서 151쪽 · 군집의 특성 파악 · 마케팅 전략 세우기 · 친구 전략과 비교</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>군집을 나눴다면 이제 <b>각 군집이 어떤 고객인지</b> 말로 풀고, 그 고객에게 맞는 <b>전략</b>을 세워요. 같은 군집에도 친구마다 다른 전략이 나올 수 있으니 서로 비교해요.</span></div>
+  <div class="card">
+    <h3>📰 사례 · 카드 회사의 소비 분류</h3>
+    <p style="margin-top:0">한 카드 회사는 고객의 소비 데이터를 군집 분석으로 여러 무리로 나눈 뒤, 무리마다 좋아할 만한 상품과 혜택을 따로 골라 알리는 <b>타깃 마케팅</b>에 썼어요.</p>
+    <p class="note">교과서 151쪽 사례의 줄거리만 짧게 옮겼어요.</p>
+  </div>
+  <div class="card">
+    <h3>🗺️ 오늘 찾은 다섯 무리 <span class="muted" style="font-weight:400;font-size:.88rem">(위치로 말하기 · 군집 이름은 내 오렌지3 화면에서 확인)</span></h3>
+    <div class="grid2">
+      <svg viewBox="0 0 320 240" class="cl-map" role="img" aria-label="연간 소득과 지출 점수에 따라 다섯 무리가 놓인 위치 그림">
+        <rect x="40" y="10" width="270" height="190" fill="#fbfaf7"/>
+        <path d="M40 10V200H310" fill="none" stroke="#16202c" stroke-width="2"/>
+        <text x="175" y="232" text-anchor="middle" font-size="12" font-weight="700">연간 소득 →</text>
+        <text x="14" y="105" text-anchor="middle" font-size="12" font-weight="700" transform="rotate(-90 14 105)">지출 점수 →</text>
+        <g font-size="11.5" font-weight="700" text-anchor="middle">
+          <ellipse cx="80" cy="50" rx="34" ry="26" fill="#2f6fd0" fill-opacity=".18" stroke="#2f6fd0"/><text x="80" y="47">소득 낮음</text><text x="80" y="62">지출 높음</text>
+          <ellipse cx="80" cy="165" rx="34" ry="26" fill="#d64535" fill-opacity=".18" stroke="#d64535"/><text x="80" y="162">소득 낮음</text><text x="80" y="177">지출 낮음</text>
+          <ellipse cx="160" cy="108" rx="58" ry="30" fill="#1f9d74" fill-opacity=".18" stroke="#1f9d74"/><text x="160" y="105">둘 다 중간</text><text x="160" y="120">(사람이 가장 많음)</text>
+          <ellipse cx="250" cy="50" rx="44" ry="28" fill="#f2a516" fill-opacity=".2" stroke="#f2a516"/><text x="250" y="47">소득 높음</text><text x="250" y="62">지출 높음</text>
+          <ellipse cx="250" cy="165" rx="44" ry="28" fill="#9b4fc4" fill-opacity=".18" stroke="#9b4fc4"/><text x="250" y="162">소득 높음</text><text x="250" y="177">지출 낮음</text>
+        </g>
+      </svg>
+      <div>
+        <p style="margin-top:0">교과서 149쪽 Scatter Plot처럼 다섯 무리는 대체로 이렇게 놓여요. 무리를 고를 때는 오렌지3 <b>Data Table (1)</b>에서 그 군집의 나이(Age)·성별(Gender)도 함께 훑어보면 특성을 더 풍부하게 쓸 수 있어요.</p>
+        <ul class="cl-tips">
+          <li><b>특성</b> · 소득과 지출 점수가 어떤지, 나이·성별에 눈에 띄는 점이 있는지</li>
+          <li><b>전략</b> · 이 고객들이 무엇을 더 하게(또는 계속하게) 하고 싶은지, 그러려면 무엇을 해 줄지</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>✍️ 마케팅 전략 세우기</h3>
+    <p class="muted" style="margin-top:0">① 내가 고른 군집 하나의 특성과 전략을 쓰고, ② 다른 군집을 고른 친구의 전략을 듣고 적어 비교해요. 교과서의 예와 다른 나만의 전략을 써 보세요.</p>
+    <div class="memo">
+      <label>내가 고른 군집 · 특성 · 마케팅 전략 / 친구가 고른 군집 · 특성 · 마케팅 전략 <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="plan2" rows="6" placeholder="① 나: 군집 C?(위치: … ) / 특성: … / 전략: …&#10;② 친구: 군집 C?(위치: … ) / 특성: … / 전략: …&#10;③ 비교: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) 파이썬 -->
+<section class="page" data-name="(선택) 파이썬으로 해 보기" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>(선택) 파이썬으로 해 보기</h2><p>교과서 152~153쪽 · KMeans · silhouette_score · silhouette_samples · 군집 시각화</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3로 한 분석을 파이썬 코드로 똑같이 해 볼 수 있어요. 시간이 남거나 집에서 더 해 봐요.</span></div>
+  <div class="card">
+    <h3>🐍 코랩에서 실행하기</h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>교과서 노트북을 수업에 맞게 고친 사본이에요.</p></li>
+      <li><b>➊ 데이터 업로드하기</b><p>업로드 셀을 실행해 <span class="mono">Mall_Customers.csv</span>를 고르거나, 왼쪽 파일 창에 먼저 끌어다 놓았다면 바로 아래 <span class="mono">/content/Mall_Customers.csv</span>를 읽는 셀만 실행해요.</p></li>
+      <li><b>➋ 실루엣 계수로 군집의 수(k) 정하기</b><p>k를 2부터 10까지 바꾸며 묶고 실루엣 점수가 가장 큰 k를 찾아요. <span class="mono">np.argmax()</span>는 목록에서 가장 큰 값의 위치를 알려 줘요.</p></li>
+      <li><b>➌ 실루엣 계수 시각화하기 → ➍ 군집 위치 확인하기 → ➎ 결과 시각화하기</b><p>k마다 점수를 꺾은선으로 그리고, k = 5로 묶어 고객마다 군집 번호를 붙인 뒤 산점도를 그려요. 오렌지3 Scatter Plot과 모양을 비교해요.</p></li>
+      <li><b>➏ 실루엣 계수 계산하기</b><p>전체 실루엣 점수와 군집별 평균 실루엣 계수를 구해, 오렌지3 Silhouette Plot의 괄호 안 값과 비교해요.</p></li>
+    </ol>
+    <details class="cl-help" style="margin-top:8px">
+      <summary>교과서 코드와 달라진 점 · 비교할 때 주의할 점</summary>
+      <ul>
+        <li><b>파일 읽기 셀 추가</b>: 파일 창에 먼저 올린 경우를 위한 셀을 넣었어요. 업로드 셀과 둘 중 하나만 실행해요.</li>
+        <li><b>변수 이름</b>: ➏에서 실루엣 점수를 <span class="mono">silhouette_k5</span>에 담아, ➋의 점수 목록을 덮어쓰지 않게 했어요. ➌ 그래프를 다시 실행해도 오류가 나지 않아요.</li>
+        <li><b>범례 순서</b>: ➎에서 군집 번호를 작은 것부터 그려요.</li>
+        <li><b>군집 번호</b>: 파이썬은 0~4, 오렌지3는 C1~C5로 이름을 붙이고, 같은 무리라도 번호가 서로 달라요. 위치로 비교해요.</li>
+        <li><b>점수 차이</b>: 오렌지3 k-Means는 열을 정규화(Normalize columns)한 뒤 묶어서 0.555, 파이썬 코드는 원래 값으로 묶어서 0.5539가 나와요.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#c98a00">고객 쇼핑 데이터에서 고객 번호·성별·나이는 <b>meta</b>로 두고 <b>연간 소득과 지출 점수</b>만 feature로 정해, 두 속성으로 그린 그림에서 고객 무리를 찾았다.</div>
+    <div style="--k:#1f9d74">k-Means가 k = 2~8의 <b>실루엣 점수</b>를 비교해 주어 가장 큰 k = 5를 골랐다. Scatter Plot의 색과 Silhouette Plot의 군집별 값으로 다섯 무리가 얼마나 또렷한지 확인했다.</div>
+    <div style="--k:#e0702b">군집 이름보다 <b>위치</b>(소득·지출 점수의 높고 낮음)로 고객 무리의 특성을 말하고, 무리마다 다른 <b>마케팅 전략</b>을 세워 친구와 비교했다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 기준(<span id="clByShow">아직 고르지 않음</span>)도 떠올리며, 오늘 쓴 낱말(feature, meta, k-Means, 실루엣 점수, 군집, 마케팅 전략)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">고객 쇼핑 데이터를 군집으로 나누면 어떤 고객 그룹이 보이고, 그 결과를 어떻게 활용할 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>k-Means의 <b>실루엣 점수</b> 기록과 k를 바꿔 본 결과로, 군집 수를 어떻게 골랐는지 설명하기</li>
+      <li>Scatter Plot과 Data Table에서 본 것으로, <b>지출 점수가 비슷한 두 고객이 다른 군집</b>이 된 까닭 설명하기</li>
+      <li>내가 고른 군집의 <b>특성과 마케팅 전략</b>을 쓰고 친구의 전략과 비교하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

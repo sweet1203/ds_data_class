@@ -1,0 +1,293 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#0f8b8d">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 2. 군집 분석과 연관분석</span>
+      <h1>규칙을<br>사람이 다<br>셀 수 있을까?</h1>
+      <div class="story"><b>연관분석은 어떻게 할까?</b><br>지난 시간에는 일곱 고객의 구매 내역으로 「삼겹살 → 콜라」 규칙 하나의 지지도·신뢰도·향상도를 손으로 계산했어요. 그런데 상품이 여섯 가지만 되어도 만들 수 있는 규칙은 아주 많아요. 이제 도구에게 맡겨 봐요.</div>
+      <p>오늘은 구매 내역을 <b>0과 1로 된 표</b>로 만들고, 오렌지3의 <b>Association Rules</b> 위젯으로 규칙을 한꺼번에 찾아 지표로 평가해요.</p>
+      <ol>
+        <li>데이터 만들기</li><li>오렌지3로 연관분석</li><li>(선택) 파이썬으로 해 보기</li><li>군집 분석과 연관분석 정리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧾</i><div><b>구매 내역</b><small>고객별로 산 상품 목록</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>0/1</i><div><b>표로 바꾸기</b><small>샀으면 1, 안 샀으면 0</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🍊</i><div><b>Association Rules</b><small>최소 지지도·신뢰도로 규칙 찾기</small></div></div>
+      <div class="ar" style="animation-delay:1.8s">↓</div>
+      <div class="st" style="animation-delay:2s"><i>📊</i><div><b>평가하기</b><small>supp · conf · lift 읽기</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간에 배운 지표와 Apriori 알고리즘을 <b>도구로 실행</b>해요. 같은 데이터라도 최소 지지도와 최소 신뢰도를 어떻게 정하느냐에 따라 찾는 규칙이 달라지는 것을 확인해요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">먼저 예상하기</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>상품이 6가지인 가게에서 「A → B」 꼴의 규칙은 모두 몇 개나 만들 수 있을까요?</b> (A와 B는 상품 한 개 이상, 서로 겹치지 않게)</p>
+        <div class="vote al-vote" id="guessVote"></div>
+        <div class="al-say" id="guessSay" style="display:none"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>군집 분석과 연관분석</b> · 데이터에 명확한 레이블이 주어지지 않았을 때 우리는 데이터를 어떻게 분석할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 연관분석은 어떻게 할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 간의 관계를 분석할 수 있다.</li>
+          <li>데이터 간의 상호 연관성을 파악하여 결과의 의미를 해석할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 만들기부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 만들기 -->
+<section class="page" data-name="데이터 만들기" data-acc="#1f9d74">
+  <div class="head"><div class="num">01</div><div><h2>연관분석 데이터 만들기</h2><p>교과서 161쪽 · 고객별 구매 상품 → 0/1 표 · association_rules.csv</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>「고객 1: 삼겹살, 쌈장, 콜라」 같은 목록은 사람이 읽기 좋지만 도구는 다루기 어려워요. 상품마다 열을 하나씩 만들고, 그 고객이 <b>샀으면 1, 안 샀으면 0</b>을 적으면 도구가 바로 셀 수 있는 표가 돼요.</span></div>
+  <div class="card">
+    <h3>🔁 구매 목록을 0/1 표로 바꾸기 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 158쪽 표 Ⅲ-7 → 표 Ⅲ-8)</span></h3>
+    <div class="grid2 al-bin">
+      <div>
+        <h4 style="margin:0 0 6px">고객별 구매 상품</h4>
+        <div id="alList"></div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 6px">0/1 표 <span class="muted" style="font-weight:400;font-size:.85rem">(칸에 1 또는 0을 적어요)</span></h4>
+        <div id="alBin"></div>
+        <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" id="binCheck">확인</button><button class="btn ghost sm" id="binZero">빈칸을 0으로</button><button class="btn ghost sm" id="binClear">모두 지우기</button></div>
+        <div class="al-say" id="binSay">왼쪽 목록을 보고 산 상품 칸에 1을 적은 뒤 「빈칸을 0으로」와 「확인」을 눌러요.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>💾 스프레드시트로 association_rules.csv 만들기</h3>
+    <ol class="vsteps">
+      <li><b>스프레드시트에서 새 시트를 만들고 이름을 <span class="mono">association_rules</span>로 해요.</b><p>첫 줄에 열 이름 <span class="mono">고객, 삼겹살, 식빵, 쌈장, 콜라, 우유, 상추</span>를 한 칸씩 적어요.</p></li>
+      <li><b>위에서 확인한 0/1 표를 그대로 7줄 입력해요.</b><p>고객 열에는 1~7을 적어요.</p></li>
+      <li><b>CSV 형식으로 내려받아 <span class="mono">association_rules.csv</span>로 저장해요.</b><p>시간이 모자라면 선생님이 알려 주는 폴더의 같은 이름 파일을 써도 돼요.</p></li>
+    </ol>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 오렌지3 연관분석 -->
+<section class="page" data-name="오렌지3 연관분석" data-acc="#9b4fc4">
+  <div class="head"><div class="num">02</div><div><h2>오렌지3로 연관분석 하기</h2><p>교과서 161~162쪽 · File · Data Table · Associate 애드온 · Association Rules · supp · conf · lift</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>만든 파일을 오렌지3로 불러와 <b>Association Rules</b> 위젯에 연결하고, 최소 지지도와 최소 신뢰도를 정한 뒤 <b>Find Rules</b>를 누르면 기준을 넘는 규칙이 모두 나와요. 기준을 바꿔 가며 결과를 비교해요.</span></div>
+  <div class="card">
+    <h3>🧩 먼저 · Associate 애드온 설치</h3>
+    <p style="margin-top:0">Association Rules 위젯은 오렌지3에 처음부터 들어 있지 않아요. 왼쪽에 <b>Associate</b> 카테고리가 이미 보이면 건너뛰어요.</p>
+    <ol class="vsteps">
+      <li><b>메뉴 <span class="mono">Options → Add-ons…</span>를 눌러요.</b></li>
+      <li><b>검색 칸에 <span class="mono">Associate</span>를 입력하고 체크한 뒤 <span class="mono">OK</span>를 눌러요.</b><p>인터넷이 필요하고, 설치가 끝나면 오렌지3를 다시 시작해요.</p></li>
+    </ol>
+    <p class="note">학교 노트북에서 설치가 막히면 선생님께 알리고, 이 화면 아래의 <b>연관 규칙 찾기 체험</b>으로 같은 실습을 해요.</p>
+  </div>
+  <div class="card">
+    <h3>🔀 위젯 연결 흐름도 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <div><svg id="alFlow" role="img" aria-label="연관분석 위젯 연결 흐름도"></svg></div>
+  </div>
+  <div class="card">
+    <h3>⚙️ 위젯 설정 표</h3>
+    <div class="of-tw"><table class="tbl" id="alSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">association_rules.csv</span> 열기<br><b>고객</b>의 Role을 <b>meta</b>로, 상품 여섯 열(삼겹살·식빵·쌈장·콜라·우유·상추)은 <b>feature</b> 그대로 두고 <b>Apply</b></td><td>상품 열의 Type이 <b>categorical</b>인지 봐요(값 0, 1). numeric이면 categorical로 바꿔요. 고객 번호는 분석에 필요 없어서 meta로 빼요.</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>열어서 값 확인</td><td>7줄인지, 값이 01 화면의 0/1 표와 같은지</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Association Rules</b> (Associate)</td><td>File →</td><td><b>Min. supp.</b> 3 %, <b>Min. conf.</b> 70 %, <b>Max. rules</b> 10000, 조건(Antecedent)·결과(Consequent)의 항목 수 <b>min 1 · max 1000</b> → <b>Find Rules</b> 누르기</td><td>교과서 파일의 설정값이에요(162쪽 설명의 예는 2 %). 결과 표의 <b>Lift</b> 열 이름을 눌러 큰 순서로 정렬해요. 찾은 규칙 수는 창 아래쪽에서 읽어요.</td></tr>
+      <tr data-s="3"><td>3′</td><td><b>Association Rules</b> 다시</td><td>같은 위젯</td><td><b>Min. supp.</b>을 <b>30 %</b>로 바꾸고 다시 <b>Find Rules</b></td><td>규칙 수와, Lift가 가장 큰 규칙(아래 「고르는 기준」)을 기록해요</td></tr>
+    </table></div>
+    <p class="note">거래가 7개뿐이라 Min. supp. 3 %는 「한 번이라도 함께 나오면」이라는 뜻이에요(7 × 0.03 ≈ 0.2번). 그래서 규칙이 아주 많이 나와요.</p>
+    <h4 style="margin:14px 0 6px">진행 체크</h4>
+    <div id="alDone"></div>
+  </div>
+  <div class="card">
+    <h3>🔍 규칙 읽는 법</h3>
+    <div class="al-rule"><span>상추=1</span><i>→</i><span>삼겹살=1, 식빵=0</span><small>Antecedent(조건) → Consequent(결과)</small></div>
+    <p>오렌지3는 상품 열을 범주(0, 1)로 읽어서 <b>「상품=1」(샀음)</b>뿐 아니라 <b>「상품=0」(사지 않음)</b>도 하나의 항목으로 다뤄요. 위 규칙은 「상추를 산 고객은 삼겹살을 사고 식빵은 사지 않았다」는 뜻이에요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#0f8b8d"><h4>Supp (지지도)</h4><p>조건과 결과의 항목이 모두 들어 있는 거래가 전체에서 차지하는 비율</p></div>
+      <div class="kc" style="--k:#e0702b"><h4>Conf (신뢰도)</h4><p>조건을 만족한 거래 가운데 결과도 만족한 거래의 비율</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>Lift (향상도)</h4><p>신뢰도를 결과의 비율로 나눈 값. 1보다 크면 조건이 결과를 더 자주 나타나게 해요</p></div>
+    </div>
+    <p class="note">결과 창에는 다른 지표 열도 함께 보일 수 있지만 오늘은 Supp, Conf, Lift만 읽어요.</p>
+  </div>
+  <div class="card">
+    <h3>📋 결과 기록하기</h3>
+    <div class="of-tw"><table class="tbl al-rt">
+      <tr><th></th><th>Min. supp. 3 % · Min. conf. 70 %</th><th>Min. supp. 30 % · Min. conf. 70 %</th></tr>
+      <tr><td>찾은 규칙 수</td><td><div class="memo"><input type="text" data-memo="arN1" placeholder="예: 0개"><div class="saved"></div></div></td><td><div class="memo"><input type="text" data-memo="arN2" placeholder="예: 0개"><div class="saved"></div></div></td></tr>
+      <tr><td>Lift가 가장 큰 규칙과 그 Lift · Supp</td><td class="muted">(3 %에서는 Lift가 같은 규칙이 아주 많아 적지 않아요)</td><td><div class="memo"><input type="text" data-memo="arTop2" placeholder="예: ○○=1 → △△=1 (Lift 0.00 · Supp 0.00)"><div class="saved"></div></div></td></tr>
+    </table></div>
+    <p class="note"><b>고르는 기준</b> Lift가 가장 큰 값 가운데 Supp가 가장 큰 규칙을 적어요. 그래도 같은 규칙이 여럿이면 아무거나 하나를 골라요. Lift가 같은 규칙이 여러 개 나오는 일이 많아요.</p>
+    <div class="memo">
+      <label>✍️ 해석하기 · 30 %에서 고른 규칙을 「○○을 산 고객은 …」 문장으로 풀고, Supp·Conf·Lift를 보고 쓸 만한 규칙인지 판단해 보세요. 3 %보다 규칙 수가 왜 줄었는지도 한 줄 덧붙여요. <small>질문폼 1·2번에 써요.</small></label>
+      <textarea data-memo="arMean" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧪 연관 규칙 찾기 체험 <span class="muted" style="font-weight:400;font-size:.88rem">(화면 안에서 같은 계산을 해요 · 오렌지3가 안 될 때도 여기서)</span></h3>
+    <p class="muted" style="margin-top:0">규칙 표는 향상도가 큰 순서, 같으면 지지도가 큰 순서예요. 표의 0/1을 고치거나 고객을 늘리고, 최소 지지도·최소 신뢰도를 움직이면 규칙 목록이 바로 다시 계산돼요. 처음 설정(지지도 0.30, 신뢰도 0.20, 산 것만)은 교과서 164쪽 파이썬 결과와 같은 조건이에요.</p>
+    <div class="grid2 al-find">
+      <div>
+        <div id="alTbl"></div>
+        <div class="row" style="gap:6px;margin-top:8px"><button class="btn ghost sm" id="alAdd">고객 한 명 더</button><button class="btn ghost sm" id="alDel">마지막 고객 빼기</button><button class="btn ghost sm" id="alBack">교과서 표로 되돌리기</button></div>
+        <p class="note" id="alWarn"></p>
+      </div>
+      <div>
+        <label class="al-sl">최소 지지도 <b id="alMsV"></b><input type="range" id="alMs" min="0.01" max="0.8" step="0.01" value="0.3"></label>
+        <label class="al-sl">최소 신뢰도 <b id="alMcV"></b><input type="range" id="alMc" min="0.1" max="1" step="0.05" value="0.2"></label>
+        <label class="al-ck"><input type="checkbox" id="alZero"> 안 산 것(=0)도 항목으로 보기 (오렌지3 방식)</label>
+        <div class="sp-read"><div>빈번 항목 집합 <b id="alNf"></b></div><div>규칙 <b id="alNr"></b></div></div>
+        <div class="row" style="gap:6px"><button class="btn ghost sm" id="alSave">이 결과 기록하기</button><button class="btn ghost sm" id="alClr">기록 지우기</button></div>
+        <ul class="al-log" id="alLog"></ul>
+      </div>
+    </div>
+    <div class="of-tw"><table class="tbl al-rules" id="alRules"></table></div>
+    <p class="note" id="alMore"></p>
+    <div class="memo">
+      <label>✍️ 스스로 해결하기 · 고객 한 명의 구매 항목을 바꾸거나 고객을 늘려 보세요. 무엇을 바꾸었고, 어떤 규칙의 지표가 어떻게 달라졌나요? <small>「이 결과 기록하기」로 바꾸기 전과 후를 남긴 뒤 적어요. 질문폼 3번에 써요.</small></label>
+      <textarea data-memo="ruleNote" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card al-help">
+    <summary>🆘 막혔을 때 펼쳐 보기</summary>
+    <ul>
+      <li><b>Association Rules 위젯이 안 보여요</b> → 애드온을 설치한 뒤 오렌지3를 다시 시작했는지 확인해요. 왼쪽에 <b>Associate</b> 카테고리가 생겨요.</li>
+      <li><b>규칙이 하나도 안 나와요</b> → <b>Find Rules</b>를 눌렀는지 봐요. Min. supp.이나 Min. conf.가 너무 높아도 규칙이 없어요.</li>
+      <li><b>규칙에 「=1」, 「=0」이 안 보이고 이상한 값이 나와요</b> → File 위젯에서 상품 열의 Type이 categorical인지 다시 확인해요.</li>
+      <li><b>고객 번호가 규칙에 나와요</b> → File 위젯에서 고객의 Role을 meta로 바꾸고 Apply를 눌러요.</li>
+      <li><b>오렌지3가 안 열리거나 애드온을 설치할 수 없어요</b> → 위의 연관 규칙 찾기 체험에서 「안 산 것(=0)도 항목으로 보기」를 켜고, 최소 지지도 0.03 · 최소 신뢰도 0.70으로 맞추면 오렌지3 교과서 파일 설정과 같은 조건이에요. 결과 기록 표는 체험 값으로 채워요.</li>
+    </ul>
+  </details>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 (선택) 파이썬 -->
+<section class="page" data-name="(선택) 파이썬으로" data-acc="#c98a00">
+  <div class="head"><div class="num">03</div><div><h2>(선택) 파이썬으로 해 보기</h2><p>교과서 163~165쪽 · TransactionEncoder · apriori · association_rules · 함께 해결하기</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>오렌지3에서 한 연관분석을 파이썬의 <b>mlxtend</b> 라이브러리로 똑같이 해 볼 수 있어요. 거래 목록을 True/False 표로 바꾸고, 최소 지지도로 빈번 항목 집합을 찾은 뒤, 신뢰도와 향상도로 규칙을 만들어요. 시간이 남거나 집에서 해 봐요.</span></div>
+  <div class="card">
+    <h3>🐍 코랩에서 실행하기 · 고객 구매 데이터 (163~164쪽)</h3>
+    <ol class="vsteps">
+      <li><b>선생님이 알려 주는 노트북을 열어 「사본 만들기」를 해요.</b><p>데이터가 코드 안에 들어 있어서 파일을 올리지 않아도 돼요.</p></li>
+      <li><b>➊ 라이브러리 불러오기 · 데이터 입력</b><p>일곱 고객의 구매 상품을 <span class="mono">dataset</span>에 목록으로 넣어요. 처음 줄에 mlxtend 버전이 나와요.</p></li>
+      <li><b>➋ 이진 행렬로 바꾸기</b><p><span class="mono">TransactionEncoder</span>가 01 화면의 0/1 표처럼, 샀으면 True, 안 샀으면 False인 표를 만들어요.</p></li>
+      <li><b>➌ 지지도 구하기</b><p><span class="mono">apriori(df, min_support = 0.3, use_colnames = True)</span> — 전체 거래의 30% 이상에 나오는 항목 집합만 남겨요. 1-항목·2-항목·3-항목 빈번 집합이 몇 개인지 세어 봐요.</p></li>
+      <li><b>➍ 신뢰도와 향상도 구하기</b><p><span class="mono">association_rules</span>로 신뢰도 0.2 이상인 규칙을 만들고 향상도(lift) 순서로 정렬해요. 02의 연관 규칙 찾기 체험 처음 설정과 결과가 같은지 비교해요.</p></li>
+    </ol>
+    <details class="al-help" style="margin-top:8px">
+      <summary>교과서 코드와 달라진 점</summary>
+      <ul>
+        <li><b>버전 문제</b>: 교과서 코드의 <span class="mono">num_itemsets = len(frequent_itemsets)</span>는 mlxtend 버전에 따라 오류가 나기도 해요. 고친 노트북은 버전에 맞게 알아서 고르는 <span class="mono">make_rules()</span>를 써요.</li>
+        <li><b>읽기 쉬운 표</b>: <span class="mono">frozenset({'쌈장'})</span>을 <span class="mono">쌈장</span>처럼 보여 주는 <span class="mono">show()</span>를 덧붙였어요.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="card">
+    <h3>🤝 함께 해결하기 (165쪽)</h3>
+    <p style="margin-top:0">거래 4개(A, C, D / B, C, E / A, B, C, E / B, E)로 같은 분석을 하는 두 번째 노트북이에요. 지난 시간 Apriori 따라가기의 「교과서 160쪽 예」와 같은 데이터예요. 아래 「변경」 가운데 하나를 골라 실행하고 결과를 발표해요.</p>
+    <div class="cards3">
+      <div class="kc" style="--k:#1f9d74"><h4>거래 늘리기</h4><p><span class="mono">dataset2</span>에 대괄호 한 줄을 더 넣어 실행해요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>min_support 0.35</h4><p>0.3일 때와 결과가 같을까요, 다를까요? 실행하기 전에 예상해 봐요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>min_threshold 0.8</h4><p>신뢰도 기준을 올리면 남는 규칙이 몇 개일까요?</p></div>
+    </div>
+    <div class="memo">
+      <label>(선택) 고른 변경과 실행 결과, 그리고 결과가 그렇게 나온 까닭을 적어요.</label>
+      <textarea data-memo="pyNote" rows="2"></textarea><div class="saved"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 정리 -->
+<section class="page" data-name="군집 분석과 연관분석 정리" data-acc="#e0702b">
+  <div class="head"><div class="num">04</div><div><h2>「군집 분석과 연관분석」 정리</h2><p>교과서 166~167쪽 · 역량 키우기 · 내 실력 점검하기 · 선택 활동</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>레이블(정답)이 없는 데이터를 분석하는 두 방법을 돌아봐요. <b>군집 분석</b>은 비슷한 데이터끼리 묶고, <b>연관분석</b>은 함께 나타나는 항목의 규칙을 찾아요.</span></div>
+  <div class="card">
+    <h3>👥 군집 분석 돌아보기</h3>
+    <p class="callout" style="margin-top:0">💡 기억하기 · 군집 분석은 레이블 없이 데이터를 비슷한 특성에 따라 그룹으로 묶어요. k-평균 군집분석에서 <b>k는 묶을 군집의 수</b>예요.</p>
+    <div class="memo">
+      <label>✍️ 지난 시간에 배운 군집 분석을 동생에게 설명하듯 한두 문장으로 적고, 우리 반을 묶는다면 <b>어떤 특성(속성)</b>을 기준으로 삼을지, 그렇게 나눈 그룹을 어디에 쓸 수 있을지 적어 보세요. <small>친구가 고른 기준과 비교해 보고, 다른 점도 한 줄 덧붙여요.</small></label>
+      <textarea data-memo="clusterNote" rows="3"></textarea><div class="saved"></div>
+    </div>
+    <h4 style="margin:14px 0 6px">내 실력 점검하기 <span class="muted" style="font-weight:400;font-size:.85rem">(할 수 있다고 생각하는 것을 모두 눌러요)</span></h4>
+    <div id="skillChk"></div>
+    <p class="note">세 가지를 모두 눌렀다면 아래 심화, 아직 자신 없는 것이 있다면 보충 활동이 알맞아요.</p>
+  </div>
+  <details class="card al-help">
+    <summary>📈 (선택) 광고 매체 데이터로 해 보기 · 보충 / 심화</summary>
+    <p>선생님이 알려 주는 폴더에서 <span class="mono">advertising.csv</span>를 내려받아요. TV·Radio·Newspaper(매체별 광고비)와 Sales(판매 수익) 네 속성이 있어요.</p>
+    <div class="grid2">
+      <div class="kc" style="--k:#1f9d74"><h4>보충 · 회귀분석</h4><p>Sales를 종속 변수(target)로 정하고 회귀분석을 해 봐요. 독립 변수를 무엇으로 할지, 회귀 차시에서 여러 모델을 어떻게 비교했는지 떠올려요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>심화 · 군집 분석</h4><p>같은 데이터로 k-평균 군집을 해 봐요. 군집의 개수를 몇으로 정할지 실루엣 점수로 판단해 봐요.</p></div>
+    </div>
+    <div class="memo">
+      <label>(선택) 고른 활동 · 사용한 위젯 · 모델링 결과 · 결과를 어떻게 활용할지 적어요.</label>
+      <textarea data-memo="extraNote" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </details>
+  <div class="quiz" data-quiz="4"></div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 나의 계획 점검 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#1f9d74">「고객 3: 삼겹살, 쌈장, 콜라, 상추」 같은 목록은 상품마다 열을 두고 <b>샀으면 1, 안 샀으면 0</b>으로 바꿔야 도구가 함께 나온 횟수를 셀 수 있다.</div>
+    <div style="--k:#9b4fc4">오렌지3 <b>Association Rules</b>에서 최소 지지도를 3 %로 두면 일곱 거래 중 한 번만 함께 나온 묶음까지 규칙이 되어 목록이 길어지고, 30 %로 올리면 자주 나온 규칙만 남는다.</div>
+    <div style="--k:#e0702b">Lift가 가장 큰 규칙이라도 Supp가 낮으면 우연일 수 있어서, 진열이나 추천에 쓰기 전에 <b>Supp · Conf · Lift</b>를 함께 보고 고른다.</div>
+  </div>
+  <div class="card">
+    <h3>나의 계획 점검하기</h3>
+    <div class="grid2">
+      <div class="al-plan"><b>군집 분석 시간에 쓴 나의 계획</b><p id="planCl"></p></div>
+      <div class="al-plan"><b>연관분석 시간에 쓴 나의 계획</b><p id="planAs"></p></div>
+    </div>
+    <div class="memo">
+      <label>✍️ 계획한 것 가운데 이룬 것과 아직 남은 것, 그리고 이 단원에서 <b>새롭게 알게 된 점</b>을 적어요.</label>
+      <textarea data-memo="planCheck" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">오늘 해 본 순서(0/1 표 만들기 → 위젯 연결 → 기준 정하기 → 규칙 평가)를 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">연관분석은 어떻게 할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>최소 지지도 3 %와 30 %에서 찾은 <b>규칙 수</b>를 비교하고 <b>왜 달라졌는지</b> 설명하기</li>
+      <li>30 %에서 기준대로 고른 규칙(Lift가 가장 크고, 그 가운데 Supp가 가장 큰 규칙)을 문장으로 풀고 <b>Supp · Conf · Lift</b>로 평가하기</li>
+      <li>연관 규칙 찾기 체험에서 <b>구매 항목을 바꾸었을 때</b> 규칙이 어떻게 달라졌는지 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

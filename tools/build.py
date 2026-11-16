@@ -58,7 +58,7 @@ def build_lesson(c, unit, l):
     head = rd(FW / 'shell_head.html').replace('{{TITLE}}', html.escape(title))
     head = head.replace('<meta name="viewport"', '<meta name="robots" content="noindex">\n<meta name="viewport"', 1)
     widgets = 'widgets.css' if meta.get('widgetsCss', True) else 'widgets_min.css'
-    css = ''.join(rd(FW / n) for n in ['base.css', widgets, 'track.css', 'guard.css'])
+    css = ''.join(rd(FW / n) for n in ['base.css', widgets, 'charts.css', 'track.css', 'guard.css'])
     if (d / 'lesson.css').exists():
         css += rd(d / 'lesson.css')
     top = rd(FW / 'shell_top.html').replace(
@@ -70,7 +70,7 @@ def build_lesson(c, unit, l):
     pre = f"const LESSON='{l['id']}', PEP='{pep}';\n" + rd(FW / 'track_pre.js')
     keys = f"const QK='ds-{l['id']}-quiz'+WHO.sfx;\nconst MK='ds-{l['id']}-memo'+WHO.sfx;\n"
     extra = rd(d / 'pre.js') if (d / 'pre.js').exists() else ''
-    js = (rd(FW / 'core_head.js') + extra + pre + quiz + '\n' + keys + rd(FW / 'core.js') + rd(FW / 'widgets.js')
+    js = (rd(FW / 'core_head.js') + extra + pre + quiz + '\n' + keys + rd(FW / 'core.js') + rd(FW / 'widgets.js') + rd(FW / 'charts.js')
           + rd(d / 'lesson.js') + rd(FW / 'track.js').replace('__TEACH_H__', c.get('teacherHash', '')).replace('__CLASSES__', json.dumps(c.get('classes', []), ensure_ascii=False)) + INIT)
     out = head + css + top + sub(rd(d / 'screens.html')) + rd(FW / 'shell_foot.html') + js
     out += rd(FW / 'guard.html') + '</body>\n</html>\n'

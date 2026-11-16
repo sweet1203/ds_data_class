@@ -1,0 +1,276 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#9b4fc4">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 1. 데이터 모델과 회귀분석</span>
+      <h1>아이스크림,<br>내일은 몇 개<br>주문할까?</h1>
+      <div class="story"><b>아이스크림 가게 냉장고의 비밀</b><br>학교 앞 아이스크림 가게 주인은 학생들이 좋아하는 가수의 광고 포스터를 붙이고, 일기예보를 본 뒤 아이스크림을 평소의 <b>2배</b>로 주문했어요. 결과는 대성공! 주인은 무엇을 보고 이렇게 정했을까요?</div>
+      <p>오늘은 데이터를 보고 예측하거나 묶는 방법인 <b>데이터 모델</b>을 알아보고, 같은 데이터를 <b>노코딩 도구</b>와 <b>코딩 도구</b>로 각각 분석해 비교해요.</p>
+      <ol>
+        <li>데이터 모델이란</li><li>데이터 분석 도구</li><li>모델 평가 지표</li><li>(선택) 붓꽃 데이터로 두 도구 비교</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>🧭</i><div><b>데이터 모델 고르기</b><small>정답이 있나? 무엇을 알고 싶나?</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🛠️</i><div><b>분석 도구</b><small>스프레드시트 · 오렌지3 · 파이썬 · R</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>📏</i><div><b>평가 지표</b><small>모델마다 다른 「잘했나?」 숫자</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>Ⅱ단원에서는 데이터를 모으고 다듬어 특징과 관계를 살펴보았어요. Ⅲ단원에서는 그 데이터로 <b>미래를 예측하고, 비슷한 것끼리 묶고, 함께 나타나는 규칙</b>을 찾아요. 오늘은 그 첫걸음이에요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>내가 가게 주인이라면 내일 주문량을 정할 때 어떤 데이터를 볼까요?</b> 여러 개 골라도 돼요.</p>
+        <div id="orderPick"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>단원 질문</b> · 데이터 모델과 회귀분석을 통해 어떻게 데이터를 분석하여 문제를 해결할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 데이터를 분석할 때 어떤 모델과 도구를 골라야 할까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>데이터 모델 개념을 설명할 수 있다.</li>
+          <li>데이터 분석에 활용 가능한 도구를 탐색할 수 있다.</li>
+        </ul>
+        <div class="memo" style="margin-top:8px"><label>📝 나의 계획 <small>나는 이 단원에서 이런 내용을 배우고 싶다. (단원 끝에 다시 봐요)</small></label><textarea data-memo="plan" rows="2" placeholder="예: 내가 모은 데이터로 무언가를 예측해 보고 싶다"></textarea><div class="saved"></div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 데이터 모델이란부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 데이터 모델이란 -->
+<section class="page" data-name="데이터 모델이란" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>데이터 모델이란 무엇일까?</h2><p>교과서 124~125쪽 · 데이터 모델 · 데이터 모델링 · 정답(레이블) · 표 Ⅲ-1</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>데이터 모델은 데이터 속 <b>패턴·관계·구조</b>를 찾아 <b>예측하거나 묶어 주는 방법</b>이에요. 어떤 모델을 쓸지는 「데이터에 <b>정답(레이블)</b>이 있나?」와 「알아내고 싶은 값이 <b>숫자</b>인가 <b>범주</b>인가?」로 정해요.</span></div>
+  <div class="card">
+    <h3>🧩 데이터 모델과 데이터 모델링</h3>
+    <div class="cards2">
+      <div class="kc" style="--k:#2f6fd0"><h4>데이터 모델</h4><p>데이터를 이해하고 그 안에서 정보를 뽑아낼 때 쓰는 여러 방법이나 기술이에요. 데이터의 패턴, 관계, 구조를 나타내고, 이것으로 <b>예측·군집·연관분석</b> 같은 일을 해요.</p></div>
+      <div class="kc" style="--k:#1f9d74"><h4>데이터 모델링</h4><p>데이터를 잘 이해한 뒤 <b>알맞은 모델을 골라 만드는 과정</b>이에요. 데이터와 분석 목적에 맞는 모델을 고르고 적용해야 쓸모 있는 결과가 나와요.</p></div>
+    </div>
+    <p class="note">모델마다 쓰는 데이터의 종류, 분석 목적, 결과를 평가하는 방법이 달라요(교과서 125쪽). 그래서 데이터의 특성과 문제에 맞는 모델을 골라야 해요.</p>
+  </div>
+  <div class="card">
+    <h3>🧭 어떤 모델을 고를까? <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 124쪽 내용을 길잡이 그림으로 새로 그림)</span></h3>
+    <div class="md-guide">
+      <div class="md-q">데이터에 <b>정답(레이블)</b>이 들어 있나요?</div>
+      <div class="md-br">
+        <div class="md-col">
+          <div class="md-yes">예 · 정답이 있어요</div>
+          <div class="md-q2">알아내려는 값은?</div>
+          <div class="md-leaf" style="--k:#2f6fd0"><b>연속형</b> (판매량·가격처럼 이어지는 수)<span>→ 회귀분석</span><small>예: 아이스크림 판매량 예측</small></div>
+          <div class="md-leaf" style="--k:#c98a00"><b>범주형</b> (예/아니요처럼 나뉜 값)<span>→ 분류</span><small>예: 합격 여부 예측</small></div>
+        </div>
+        <div class="md-col">
+          <div class="md-no">아니요 · 정답이 없어요</div>
+          <div class="md-q2">무엇을 찾고 싶나요?</div>
+          <div class="md-leaf" style="--k:#1f9d74"><b>비슷한 데이터끼리 묶기</b><span>→ 군집 분석</span><small>뒤에서 배워요(교과서 145쪽)</small></div>
+          <div class="md-leaf" style="--k:#9b4fc4"><b>항목 사이의 관계 찾기</b><span>→ 연관분석</span><small>뒤에서 배워요(교과서 155쪽)</small></div>
+        </div>
+      </div>
+    </div>
+    <h4 style="margin:16px 0 6px">표 Ⅲ-1 데이터 모델의 종류 <span class="muted" style="font-weight:400;font-size:.85rem">(교과서 125쪽)</span></h4>
+    <div class="md-tw"><table class="tbl md-t1">
+      <tr><th>모델</th><th>목적</th><th>지표 예시</th><th>사례</th></tr>
+      <tr><td><b>회귀분석</b></td><td>연속형 종속 변수를 예측</td><td>평균 제곱 오차(MSE)</td><td>부동산 데이터로 집값 예측</td></tr>
+      <tr><td><b>군집 분석</b></td><td>비슷한 특성을 가진 그룹 생성</td><td>실루엣 계수</td><td>구매 패턴으로 고객 그룹을 나눠 맞춤형 프로모션</td></tr>
+      <tr><td><b>연관분석</b></td><td>항목 사이의 관계·연관성 발견</td><td>지지도 · 신뢰도 · 향상도</td><td>함께 사는 상품을 파악해 진열 전략 세우기</td></tr>
+    </table></div>
+    <p class="note">지표는 모델이 얼마나 잘 만들어졌는지 재는 측정 항목이에요. 자세한 내용은 03에서 봐요.</p>
+  </div>
+  <div class="card">
+    <h3>🗂️ 모델 고르기 <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 상황 8장)</span></h3>
+    <p class="muted" style="margin-top:0">상황을 읽고 알맞은 데이터 모델을 골라요. 위의 길잡이처럼 ① 정답(레이블)이 있는지 ② 알아내려는 것이 무엇인지 차례로 따져 봐요.</p>
+    <div id="modelSort"></div>
+    <div class="memo">
+      <label>✍️ 헷갈렸던 상황을 하나 골라, 어떤 모델이 맞는지 <b>정답(레이블)이 있는지</b>와 <b>알아내려는 값의 종류</b>로 설명해 보세요. 몇 장을 바로 맞혔는지도 적어요. <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="modelWhy" rows="3" placeholder="예: 8장 중 6장. ○○ 상황은 정답이 … 이고 알아내려는 값이 … 라서 … 이다."></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 분석 도구 -->
+<section class="page" data-name="데이터 분석 도구" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>데이터 분석 도구에는 무엇이 있을까?</h2><p>교과서 126~127쪽 · 노코딩 도구(스프레드시트·오렌지) · 코딩 도구(파이썬·R) · GUI</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span><b>노코딩 도구</b>는 프로그래밍 언어를 몰라도 메뉴를 누르거나 끌어다 놓아 분석하는 프로그램이고, <b>코딩 도구</b>는 프로그래밍 언어로 코드를 써서 분석하는 프로그램이에요. 오늘은 같은 데이터를 네 가지 도구로 그려 보고 무엇이 같고 다른지 비교해요.</span></div>
+  <div class="card">
+    <h3>🛠️ 네 가지 도구</h3>
+    <div class="cards4">
+      <div class="kc" style="--k:#1f9d74"><div class="ic">📊</div><h4>스프레드시트</h4><p>비전문가도 쓰기 쉬운 프로그램. 데이터를 차트·추세선으로 시각화하고 차트 속성을 바꿀 수 있어요.</p><small>노코딩 도구</small></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🍊</div><h4>오렌지</h4><p>마우스로 끌어다 놓는 GUI 기반 분석 프로그램. 위젯을 연결하고, 위젯을 두 번 누르면 결과를 볼 수 있어요.</p><small>노코딩 도구</small></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">🐍</div><h4>파이썬</h4><p>데이터 분석·기계학습에 가장 널리 쓰는 언어. Numpy·Pandas·Matplotlib 같은 라이브러리가 있고, 코랩처럼 온라인에서도 써요.</p><small>코딩 도구</small></div>
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">📐</div><h4>R</h4><p>통계와 데이터 분석에 특화된 언어. 통계·시각화 라이브러리가 풍부하고 R, RStudio를 설치해 써요.</p><small>코딩 도구</small></div>
+    </div>
+    <p class="note"><b>GUI</b>(Graphical User Interface)는 아이콘·버튼·창 같은 그림 요소로 컴퓨터와 주고받는 화면 방식이에요.</p>
+  </div>
+  <div class="card">
+    <h3>🔁 같은 데이터, 네 가지 도구 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 126쪽 예제의 연도별 사용량)</span></h3>
+    <div class="grid2 md-ex">
+      <div>
+        <div id="useTbl"></div>
+        <p class="note">사용량 칸의 숫자(0~16)를 바꿔 보세요. 범위를 벗어나면 0이나 16으로 봐요. 데이터를 다르게 넣으면 그림과 추세선도 달라져요(교과서 126쪽 말풍선).</p>
+        <button class="btn ghost sm" id="useReset">교과서 값으로 되돌리기</button>
+      </div>
+      <div>
+        <div class="sp-wrap"><svg id="usePlot" role="img" aria-label="연도별 사용량 산점도와 추세선"></svg></div>
+        <div class="sp-read"><div>추세선 기울기 <b id="useB">–</b></div><div>1년에 약 <b id="useB2">–</b>씩 변해요</div></div>
+      </div>
+    </div>
+    <p style="margin:14px 0 6px"><b>도구마다 이 그림을 어떻게 만들까요?</b> 버튼을 눌러 비교해 보세요.</p>
+    <div class="apps md-apps4" id="toolTabs"></div>
+    <div class="md-view" id="toolView"></div>
+  </div>
+  <div class="card">
+    <h3>🍊 오렌지3로 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(위젯을 누르면 아래 설정 표의 그 줄이 강조돼요)</span></h3>
+    <p class="muted" style="margin-top:0">선생님이 알려 주는 폴더에서 <span class="mono">126쪽_오렌지_데이터.csv</span>(연도·사용량 5줄)를 내려받아 오렌지3에서 열어요. <b>(선택)</b> 시간이 있으면 스프레드시트에 위 표처럼 <b>연도</b>, <b>사용량</b> 두 열을 입력해 차트·추세선을 넣고, CSV 파일로 저장해 그 파일을 열어도 돼요.</p>
+    <div><svg id="useFlow" role="img" aria-label="연도별 사용량 시각화 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw"><table class="tbl" id="useSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">126쪽_오렌지_데이터.csv</span>(또는 내가 저장한 CSV) 열기</td><td>5개의 데이터, 연도·사용량이 숫자형(N)으로 읽혔는지</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>File →</td><td>두 번 눌러 내용 확인</td><td>스프레드시트에 넣은 값과 같은지</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Scatter Plot</b> (Visualize)</td><td>File →</td><td>X축 <b>연도</b>, Y축 <b>사용량</b><br><b>Show regression line</b> 체크</td><td>오른쪽 위로 올라가는 직선이 그려지는지. 스프레드시트 추세선과 비교해요.</td></tr>
+    </table></div>
+    <p class="note">교과서 그림은 Data Table 뒤에 Scatter Plot을 이어요. 그렇게 이었다면 <b>Data Table에서 줄을 눌러 고르지 마세요</b>. 고른 줄만 Scatter Plot으로 넘어가요.</p>
+    <h4 style="margin:12px 0 6px">진행 체크</h4>
+    <div id="toolDone"></div>
+    <details class="md-help">
+      <summary>🆘 막혔을 때 펼쳐 보기</summary>
+      <ul>
+        <li><b>한글 열 이름이 깨져요</b> → 스프레드시트에서 저장할 때 「CSV UTF-8」 형식을 골라요.</li>
+        <li><b>Scatter Plot에 연도가 안 보여요</b> → File 위젯 표에서 연도의 Type이 <b>numeric</b>인지 확인해요. text면 numeric으로 바꾸고 Apply를 눌러요.</li>
+        <li><b>Show regression line이 안 보여요</b> → Scatter Plot 창 왼쪽 아래 설정 영역에 있어요.</li>
+        <li><b>오렌지3가 열리지 않아요</b> → 위의 「오렌지3 흐름」 탭과 산점도로 결과를 확인하고 아래 메모를 써요.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="card">
+    <h3>✍️ 노코딩 도구와 코딩 도구, 무엇이 다를까?</h3>
+    <div class="memo">
+      <label>직접 써 보거나 탭으로 비교한 것을 바탕으로 적어요. ① 두 종류 도구에서 <b>같았던 것</b> ② <b>달랐던 것</b> ③ 나라면 어떤 상황에 어느 도구를 고를지. <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="toolDiff" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 모델 평가 지표 -->
+<section class="page" data-name="모델 평가 지표" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>데이터 분석에 필요한 지표</h2><p>교과서 128쪽 · 더 알아보기 · 평균 제곱 오차 · 정확도 · 실루엣 계수 · 지지도·신뢰도·향상도</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>모델을 만든 뒤에는 「분석이 제대로 되었나?」를 숫자로 확인해요. 이 숫자가 <b>평가 지표</b>예요. 모델마다 목적이 다르니 쓰는 지표도 달라요. 어떤 지표는 <b>작을수록</b>, 어떤 지표는 <b>1에 가까울수록</b> 좋아요.</span></div>
+  <div class="card">
+    <h3>📏 모델별 대표 지표 <span class="muted" style="font-weight:400;font-size:.88rem">(카드를 눌러 뒤집어 보세요)</span></h3>
+    <div class="tcards" id="metricCards"></div>
+    <p class="note">교과서 128쪽은 회귀분석을 「인과관계를 찾기 위한 방법」이라고 써요. 하지만 Ⅱ단원에서 배운 것처럼 두 값이 함께 변한다고 원인과 결과라고 단정할 수는 없어요. 이 화면에서는 회귀분석을 <b>변수 사이의 관계를 찾고 값을 예측하는 방법</b>이라고 써요.</p>
+  </div>
+  <div class="card">
+    <h3>🔍 오차를 눈으로 보기 <span class="muted" style="font-weight:400;font-size:.88rem">(02의 연도별 사용량)</span></h3>
+    <div class="grid2 md-ex">
+      <div class="sp-wrap"><svg id="msePlot" role="img" aria-label="실젯값과 추세선 사이의 오차를 점선으로 나타낸 그래프"></svg></div>
+      <div>
+        <p style="margin-top:0">빨간 점선이 <b>오차</b>(실젯값 − 예측값)예요. 오차를 제곱해 평균 낸 값이 <b>평균 제곱 오차(MSE)</b>예요.</p>
+        <div class="md-tw" id="mseTbl"></div>
+        <div class="sp-read"><div>MSE <b id="mseV">–</b></div></div>
+        <p class="note">02에서 사용량을 바꿨다면 그 값으로 계산돼요. 점들이 직선에 가까울수록 MSE가 작아져요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 (선택) 함께 해결하기 -->
+<section class="page" data-name="(선택) 붓꽃 데이터 비교" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>(선택) 함께 해결하기 · 붓꽃 데이터로 두 도구 비교</h2><p>교과서 129쪽 · Linear Regression · Data Sampler · Test and Score · scikit-learn</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>붓꽃(iris) 데이터에서 <b>꽃잎 너비</b>로 <b>꽃받침 길이</b>를 예측하는 선형 회귀 모델을 오렌지3와 파이썬으로 각각 만들어 보고, 두 도구를 비교해요. 시간이 남는 모둠이 해요.</span></div>
+  <div class="card">
+    <h3>🍊 오렌지3 흐름 <span class="muted" style="font-weight:400;font-size:.88rem">(오렌지3에 들어 있는 데이터라 파일이 필요 없어요)</span></h3>
+    <div><svg id="irisFlow" role="img" aria-label="붓꽃 데이터 선형 회귀 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw"><table class="tbl" id="irisSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>Datasets</b> (Data)</td><td>처음 위젯</td><td>목록에서 <b>Iris</b>를 골라 불러오기</td><td>150개의 데이터</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Data Table</b> (Data)</td><td>Datasets →</td><td>두 번 눌러 내용 확인</td><td>열 이름: sepal length · sepal width · petal length · petal width · iris</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Select Columns</b> (Transform)</td><td>Datasets →</td><td>Features에 <b>petal width</b>만, Target에 <b>sepal length</b>만 두고 나머지는 Ignored로</td><td>교과서의 feature = petal_width, target = sepal_length</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Data Sampler</b> (Transform)</td><td>Select Columns →</td><td><b>Fixed proportion of data</b> 70%</td><td>훈련용 105개, 나머지 45개</td></tr>
+      <tr data-s="5"><td>5</td><td><b>Linear Regression</b> (Model)</td><td>(따로 둠)</td><td>기본 설정 그대로</td><td>Test and Score에 이어요</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Test and Score</b> (Evaluate)</td><td>Data Sampler 두 줄 + Linear Regression →</td><td>Data Sample → <b>Data</b>, Remaining Data → <b>Test Data</b>로 잇고, 왼쪽에서 <b>Test on test data</b> 고르기</td><td>MSE · RMSE · MAE · R2 값</td></tr>
+    </table></div>
+    <p class="note">Data Sampler와 Test and Score를 이을 때 뜨는 창에서 선을 두 개(Data Sample→Data, Remaining Data→Test Data) 만들어요.</p>
+  </div>
+  <div class="card">
+    <h3>🐍 파이썬 코드 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 129쪽 코드를 줄여 옮김)</span></h3>
+    <pre class="md-code">from sklearn.datasets import load_iris
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+
+iris = load_iris()
+X = iris.data[:, 3].reshape(-1, 1)   # petal_width (꽃잎 너비)
+y = iris.data[:, 0]                  # sepal_length (꽃받침 길이)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print('R2 :', r2_score(y_test, y_pred))
+print('MSE:', mean_squared_error(y_test, y_pred))</pre>
+    <p class="note">코랩 새 노트북에 붙여 넣어 실행해요. 교과서 129쪽에는 R² 0.7383, MSE 0.1742로 나와 있어요. 오렌지3는 훈련용·테스트용을 무작위로 나누므로 값이 조금 다를 수 있어요.</p>
+    <div class="md-tw"><table class="tbl md-rt">
+      <tr><th></th><th>MSE</th><th>R2</th></tr>
+      <tr><td>오렌지3</td><td><div class="memo"><input type="text" data-memo="irisOr" placeholder="예: 0.00"><div class="saved"></div></div></td><td rowspan="2"><div class="memo"><label>(선택) 두 도구의 결과·쓰기 편한 점 비교</label><textarea data-memo="irisNote" rows="3"></textarea><div class="saved"></div></div></td></tr>
+      <tr><td>파이썬</td><td><div class="memo"><input type="text" data-memo="irisPy" placeholder="예: 0.00"><div class="saved"></div></div></td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- 5 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">05</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">「내일 아이스크림이 몇 개 팔릴까?」처럼 지난 판매 기록이라는 정답이 있고 알고 싶은 값이 개수라면 <b>회귀분석</b>을, 정답 없이 손님들을 비슷한 무리로 나누고 싶다면 <b>군집 분석</b>을 고른다. 문제와 데이터가 모델을 정한다.</div>
+    <div style="--k:#1f9d74">연도별 사용량 다섯 개를 스프레드시트·오렌지3로는 <b>눌러서</b>, 파이썬·R로는 <b>코드로</b> 그려도 추세선은 똑같다. 도구는 목적과 익숙함, 다시 쓸 일까지 생각해 고른다.</div>
+    <div style="--k:#e0702b">모델을 만든 뒤에는 <b>평가 지표</b>로 확인한다. 예측 오차를 보는 MSE는 작을수록, 정확도와 실루엣 계수는 1에 가까울수록 좋고, 연관 규칙은 지지도·신뢰도·향상도로 따진다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 데이터(<span id="orderShow">아직 고르지 않음</span>)를 떠올리며, 오늘 배운 낱말(정답(레이블), 연속형·범주형, 회귀·분류·군집·연관, 노코딩·코딩 도구, 평가 지표)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터를 분석할 때 어떤 모델과 도구를 골라야 할까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="5"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>모델 고르기에서 헷갈렸던 상황을 예로, <b>정답(레이블)과 알아내려는 값의 종류</b>로 모델을 고르는 방법 설명하기</li>
+      <li>노코딩 도구와 코딩 도구를 비교해 <b>같은 점·다른 점</b>과 내가 고를 도구 쓰기</li>
+      <li>아이스크림 가게 주인이 내일 주문량을 정한다면 <b>어떤 모델</b>을 쓰고 <b>무엇을 넣어 예측</b>할지 설명하기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

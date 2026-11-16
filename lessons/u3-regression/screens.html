@@ -1,0 +1,201 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#9b4fc4">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 1. 데이터 모델과 회귀분석</span>
+      <h1>이 영화,<br>흥행할까?</h1>
+      <div class="story"><b>영화 제작사의 큰 고민</b><br>흥행에 실패하면 손해가 커요. 그래서 제작사들은 과거 영화 데이터로 <b>주연 배우의 인기, 감독의 인지도, 예산, 개봉일, 홍보 비용, 장르</b>가 흥행에 어떤 영향을 주는지 분석해요. 이때 쓰는 핵심 도구가 <b>회귀분석</b>이에요.</div>
+      <p>오늘은 데이터에 <b>직선을 맞춰</b> 예측하는 회귀분석의 원리를 직접 해 보고, 같은 회귀분석이라도 <b>통계학</b>과 <b>기계학습</b>이 무엇을 더 중요하게 여기는지 비교해요.</p>
+      <ol>
+        <li>회귀분석의 개념과 모델</li><li>통계학과 기계학습</li><li>두 회귀 모델의 차이</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📈</i><div><b>직선 맞추기</b><small>y = wx + b, 오차가 가장 작은 직선</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>📜</i><div><b>통계학 · 기계학습</b><small>인구 조사부터 질병 예측까지</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>⚖️</i><div><b>두 회귀 모델 고르기</b><small>해석이 중요할까, 정확도가 중요할까?</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>지난 시간에 정답이 있고 알고 싶은 값이 연속형이면 <b>회귀분석</b>을 고른다고 배웠어요. 오늘은 회귀분석이 결과를 어떻게 예측하는지 들여다봐요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">처음 생각</span>
+        <p style="margin:0 0 6px;font-size:.92rem"><b>내가 제작사라면 흥행을 예측할 때 어떤 요소를 넣을까요?</b> 여러 개 골라도 돼요.</p>
+        <div id="hitPick"></div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>단원 질문</b> · 데이터 모델과 회귀분석을 통해 어떻게 데이터를 분석하여 문제를 해결할 수 있을까?</li>
+          <li><b>오늘의 질문</b> · 회귀분석에서 통계적 회귀 모델과 기계학습을 통한 회귀 모델의 차이점은 무엇일까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">배우고 나면 할 수 있는 것</span>
+        <ul class="can">
+          <li>통계적 회귀 모델과 기계학습을 통한 회귀 모델을 비교할 수 있다.</li>
+          <li>데이터를 분석하여 결과를 해석할 수 있다.</li>
+        </ul>
+        <div class="memo" style="margin-top:8px"><label>📝 나의 계획 <small>나는 회귀분석에서 이런 내용을 배우고 싶다.</small></label><textarea data-memo="plan" rows="2" placeholder="예: 내 공부 시간으로 점수를 예측해 보고 싶다"></textarea><div class="saved"></div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 회귀분석의 개념부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 회귀분석의 개념 -->
+<section class="page" data-name="회귀분석의 개념" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>회귀분석이란 무엇일까?</h2><p>교과서 131쪽 · 종속 변수 · 독립 변수 · 표 Ⅲ-2 · 선형 회귀 · 비선형 회귀 · y = wx + b</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>회귀분석은 여러 변수 사이의 관계를 <b>수식</b>으로 나타내어, 알고 있는 값으로 <b>결과를 예측</b>하는 방법이에요. 관계가 직선 모양이면 <b>선형 회귀</b>, 곡선 모양이면 <b>비선형 회귀</b> 모델을 써요.</span></div>
+  <div class="card">
+    <h3>🎯 예측하고 싶은 결과와 영향을 줄 것 같은 변수</h3>
+    <p style="margin-top:0">학생의 시험 점수를 예측한다면 공부 시간, 수면 시간, 게임 시간이 점수에 영향을 줄 수 있어요.</p>
+    <div class="rg-tw"><table class="tbl rg-t2">
+      <tr><th class="rg-x">공부 시간 (x₁)</th><th class="rg-x">수면 시간 (x₂)</th><th class="rg-x">게임 시간 (x₃)</th><th class="rg-y">시험 점수 (y)</th></tr>
+      <tr><td>10</td><td>7</td><td>2</td><td>90.5</td></tr>
+      <tr><td>5</td><td>8</td><td>5</td><td>75.5</td></tr>
+      <tr class="rg-lab"><td colspan="3">결과에 영향을 줄 것 같은 변수 → <b>독립 변수</b></td><td>예측하고 싶은 결과 → <b>종속 변수</b></td></tr>
+    </table></div>
+    <p class="note">표 Ⅲ-2 학생 데이터 예시(교과서 131쪽).</p>
+  </div>
+  <div class="card">
+    <h3>📐 회귀분석에 쓰는 모델</h3>
+    <div class="cards2">
+      <div class="kc" style="--k:#2f6fd0"><h4>선형 회귀 모델</h4><p>독립 변수와 종속 변수의 관계가 <b>직선 형태</b>일 때 알맞아요. 독립 변수가 종속 변수에 주는 영향을 <b>계수(w)</b>로 추정해, 데이터에 가장 잘 맞는 직선 방정식을 구해 예측해요.</p>
+        <p><b>단순 선형 회귀</b>(독립 변수 1개) <span class="mono">y = wx + b</span><br><b>다중 선형 회귀</b>(2개 이상) <span class="mono">y = w₁x₁ + w₂x₂ + w₃x₃ + b</span></p>
+        <small>w는 각 독립 변수가 종속 변수에 미치는 영향력(계수), b는 절편</small></div>
+      <div class="kc" style="--k:#e0702b"><h4>비선형 회귀 모델</h4><p>관계가 <b>곡선 형태</b>일 때 써요. 선형 회귀로 설명할 수 없는 복잡한 패턴을 곡선이나 여러 수학 함수로 나타내요.</p>
+        <p><b>앙상블 모델</b> 여러 예측 모델을 결합(예: 의사결정트리 여럿을 조합한 랜덤 포레스트)<br><b>신경망</b> 사람의 뇌 신경 구조를 흉내 낸 알고리즘<br>그 밖에 2차 다항 회귀, 지수 회귀, 로그 회귀 등</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📈 직선 맞추기 <span class="muted" style="font-weight:400;font-size:.88rem">(점의 값은 연습용 예시예요)</span></h3>
+    <p class="muted" style="margin-top:0">슬라이더로 <b>기울기 w</b>와 <b>절편 b</b>를 움직여 점들에 가장 잘 맞는 직선을 찾아요. 빨간 점선은 점마다의 <b>오차</b>(실젯값 − 예측값)이고, 오차를 제곱해 평균 낸 <b>MSE</b>가 작을수록 잘 맞아요.</p>
+    <div class="row rg-data" style="gap:6px;margin-bottom:8px">
+      <button class="btn ghost sm on" id="dataA">데이터 A · 공부 시간과 점수</button>
+      <button class="btn ghost sm" id="dataB">데이터 B · 곡선 모양</button>
+    </div>
+    <div class="grid2 rg-ex">
+      <div>
+        <div class="sp-wrap"><svg id="fitPlot" role="img" aria-label="점들과 내가 움직이는 직선, 오차를 보여 주는 산점도"></svg></div>
+        <label class="rg-sl"><span>기울기 w</span><input type="range" id="slW" min="-10" max="15" step="0.5" value="0"><b id="slWv">0</b></label>
+        <label class="rg-sl"><span>절편 b</span><input type="range" id="slB" min="-20" max="120" step="1" value="50"><b id="slBv">50</b></label>
+      </div>
+      <div>
+        <div class="rg-eq">내 직선 &nbsp; y = <b id="eqW">0</b> x + <b id="eqB">50</b></div>
+        <div class="sp-read"><div>내 직선 MSE <b id="myMse">–</b></div><div>가장 잘 맞는 직선 MSE <b id="bestMse">?</b></div></div>
+        <div class="row" style="gap:6px">
+          <button class="btn ghost sm on" id="resBtn">오차 보기: 켜짐</button>
+          <button class="btn sm" id="bestBtn">가장 잘 맞는 직선 보기</button>
+          <button class="btn ghost sm" id="fitReset">다시 하기</button>
+        </div>
+        <div class="rg-say" id="fitSay"></div>
+        <h4 style="margin:12px 0 6px">미션 <span class="muted" style="font-weight:400;font-size:.85rem">(이루면 ✓가 붙고 기록돼요)</span></h4>
+        <ul class="rg-mis" id="fitMis"></ul>
+        <button class="btn ghost sm" id="misReset">미션 기록 지우기</button>
+      </div>
+    </div>
+    <div class="memo">
+      <label>✍️ 데이터 A에서 내가 찾은 w·b·MSE와 가장 잘 맞는 직선의 값을 적고, w와 b가 각각 무엇을 뜻하는지 써 보세요. 데이터 B에서는 직선이 어땠나요? <small>질문폼 1·2번에 써요.</small></label>
+      <textarea data-memo="fitW" rows="3" placeholder="예: 내 직선 w = ○, b = ○, MSE = ○ / 가장 잘 맞는 직선 … / w는 …, b는 … / B는 …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 통계학과 기계학습 -->
+<section class="page" data-name="통계학과 기계학습" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>통계학과 기계학습</h2><p>교과서 132쪽 · 통계학의 역사적 사례 · 기계학습의 활용 사례</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>통계학과 기계학습은 둘 다 <b>데이터에서 정보를 뽑아 예측 모델을 만든다</b>는 같은 목표를 가져요. 통계학은 인구 조사에서 시작해 오랫동안 쓰였고, 기계학습은 텍스트·이미지·영상·센서 데이터가 폭발적으로 늘면서 통계학과 달라지고 있어요.</span></div>
+  <div class="card">
+    <h3>🃏 통계학일까, 기계학습일까? <span class="muted" style="font-weight:400;font-size:.88rem">(앞면을 보고 먼저 떠올린 뒤 눌러 뒤집어요)</span></h3>
+    <div class="tcards" id="histCards"></div>
+    <div class="cards2" style="margin-top:12px">
+      <div class="kc" style="--k:#c98a00"><h4>통계학</h4><p>데이터를 모으고 분석해 <b>규칙성과 불규칙성</b>을 찾고, 이를 바탕으로 예측과 의사 결정을 돕는 학문. 인구 조사에서 시작해 보험·의학·경제·사회학으로 넓어졌어요.</p></div>
+      <div class="kc" style="--k:#2f6fd0"><h4>기계학습</h4><p>디지털 기술이 발전하며 늘어난 <b>다양한 형태의 대용량 데이터</b>를 학습해 예측해요. 실시간으로 데이터를 모아 분석하는 일에도 쓰여요.</p></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 두 회귀 모델의 차이 -->
+<section class="page" data-name="두 회귀 모델의 차이" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>통계적 회귀 모델과 기계학습 회귀 모델의 차이</h2><p>교과서 133쪽 · 표 Ⅲ-3 · 가설과 검정 · white box · black box</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span><b>통계적 회귀 모델</b>은 「왜 그런지」를 설명하는 데 강하고, <b>기계학습 회귀 모델</b>은 「얼마나 정확히 맞히는지」에 강해요. 어느 쪽이 더 좋다기보다 <b>목적과 데이터</b>에 맞게 골라요.</span></div>
+  <div class="card">
+    <h3>💬 두 친구의 대화 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 133쪽 대화를 줄여 씀)</span></h3>
+    <div class="cards2 rg-talk">
+      <div class="rg-bub" style="--k:#c98a00"><b>통계적 회귀 모델 편</b>가설을 세우고, 데이터가 통계적 가정을 만족하는지 확인한 뒤 가설검정으로 믿을 만한 결론을 내려. 관계가 우연이 아닌지 따지지. 결과를 해석하기 쉬워서, 원인을 알아야 근본적으로 해결할 수 있는 문제에 좋아.</div>
+      <div class="rg-bub" style="--k:#2f6fd0"><b>기계학습 회귀 모델 편</b>가설이나 검정보다 학습한 데이터로 <b>얼마나 정확하게 예측하는지</b>가 중요해. 텍스트·이미지·영상처럼 복잡하고 큰 데이터도 다뤄. 이유보다 빠르고 정확한 결정이 중요한 상황이 많거든. 대신 해석이 어려워.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📋 한눈에 비교 <span class="muted" style="font-weight:400;font-size:.88rem">(표 Ⅲ-3, 교과서 133쪽을 쉬운 말로 정리)</span></h3>
+    <div class="rg-tw"><table class="tbl rg-t3">
+      <tr><th>구분</th><th style="color:#c98a00">통계적 회귀 모델</th><th style="color:#2f6fd0">기계학습 회귀 모델</th></tr>
+      <tr><td>목표</td><td>변수 사이 관계를 해석하고, 그 관계가 통계적으로 의미 있는지 검정</td><td>예측의 정확도를 가장 높게</td></tr>
+      <tr><td>데이터</td><td>비교적 적은 양의 데이터</td><td>대용량 데이터도 효과적으로 처리</td></tr>
+      <tr><td>가설과 전제 조건</td><td>가설을 세우고 통계적 가정을 만족해야 함</td><td>가설·가정을 세우지 않고, 덜 민감함</td></tr>
+      <tr><td>쓰는 모델</td><td>주로 선형 회귀처럼 해석이 쉬운 모델</td><td>주로 인공신경망·랜덤 포레스트 같은 복잡한 비선형 모델</td></tr>
+      <tr><td>결과 해석</td><td>원인을 설명하기 쉬움 → <b>white box model</b></td><td>예측 성능은 높지만 원인 설명이 어려운 경우가 많음 → <b>black box model</b></td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h3>🗂️ 어느 모델이 알맞을까? <span class="muted" style="font-weight:400;font-size:.88rem">(새로 만든 상황 8장)</span></h3>
+    <p class="muted" style="margin-top:0">상황마다 <b>목적</b>(관계를 설명하고 싶은가, 정확히 맞히고 싶은가)과 <b>데이터</b>(양과 종류)를 따져 골라요.</p>
+    <div id="chooseSort"></div>
+    <div class="memo">
+      <label>✍️ 헷갈렸던 상황 하나를 골라, 어느 모델을 고를지와 그 까닭을 <b>목적·데이터·결과 해석</b> 가운데 두 가지 이상을 넣어 적어요. 그리고 카드에 없던 <b>새 상황</b>도 하나 만들어 어느 모델이 알맞을지 적어요. <small>질문폼 3번에 써요.</small></label>
+      <textarea data-memo="choose" rows="3"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">04</div><div><h2>마무리</h2><p>핵심 문장 · 오늘의 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">공부 시간으로 점수를 예측할 때 <b>y = wx + b</b>의 w는 「1시간 더 공부하면 몇 점 오르나」, b는 「출발점」이다. w와 b를 바꿔 가며 오차 제곱의 평균(MSE)이 가장 작아지는 직선이 그 데이터에 가장 잘 맞는 직선이다.</div>
+    <div style="--k:#e0702b">수면 시간과 집중도처럼 점들이 <b>산 모양</b>으로 놓이면 어떤 직선을 그어도 오차가 크게 남는다. 이럴 때는 곡선으로 나타내는 <b>비선형 회귀</b> 모델이 필요하다.</div>
+    <div style="--k:#c98a00">「원인이 무엇인지 설명해야 하는」 동네 정책 자료에는 해석이 쉬운 <b>통계적 회귀 모델</b>을, 「수많은 위성 사진으로 올해 쌀 수확량을 맞혀야 하는」 일에는 <b>기계학습 회귀 모델</b>을 고른다.</div>
+  </div>
+  <div class="card">
+    <h3>오늘의 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">시작 화면에서 고른 흥행 요소(<span id="hitShow">아직 고르지 않음</span>)를 떠올리며, 오늘 배운 낱말(종속·독립 변수, 선형·비선형, 가설검정, 예측 정확도, white box·black box)을 넣어 답해 보세요.</p>
+    <b style="font-size:.93rem">통계적 회귀 모델과 기계학습을 통한 회귀 모델은 무엇이 다를까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="4"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>직선 맞추기에서 w·b를 움직이며 MSE가 어떻게 변했는지 바탕으로, <b>가장 잘 맞는 직선</b>과 w·b의 뜻 설명하기</li>
+      <li>곡선 모양 데이터에서 직선이 잘 맞지 않은 까닭과 <b>비선형 회귀</b>가 필요한 경우 설명하기</li>
+      <li>새로운 상황 하나에서 <b>통계적 회귀 모델</b>과 <b>기계학습 회귀 모델</b> 가운데 무엇을 고를지 까닭과 함께 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>

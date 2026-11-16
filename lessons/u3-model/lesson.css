@@ -1,0 +1,37 @@
+  /* u3-model 전용 (md-) */
+  /* 01 모델 고르기 길잡이 */
+  .md-guide{background:#fbfaf7;border-radius:14px;padding:14px;text-align:center}
+  .md-q{display:inline-block;background:var(--navy);color:#fff;border-radius:12px;padding:8px 16px;font-size:.98rem}
+  .md-br{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+  @media (max-width:640px){.md-br{grid-template-columns:1fr}}
+  .md-col{display:flex;flex-direction:column;gap:8px}
+  .md-yes,.md-no{font-weight:900;border-radius:999px;padding:4px 12px;align-self:center;font-size:.92rem}
+  .md-yes{background:#e7f0fc;color:#2f6fd0}
+  .md-no{background:#e7f6ef;color:#13684d}
+  .md-q2{font-size:.88rem;color:var(--muted)}
+  .md-leaf{background:#fff;border-left:6px solid var(--k);border-radius:10px;padding:8px 12px;text-align:left;font-size:.92rem;box-shadow:0 3px 10px rgba(15,39,66,.06)}
+  .md-leaf span{display:block;font-weight:900;color:var(--k);font-size:1rem}
+  .md-leaf small{display:block;color:var(--muted);font-size:.8rem}
+  .md-tw{overflow-x:auto}
+  .md-t1{min-width:620px;margin:0}
+  .md-t1 th{background:#fbfaf7;text-align:left}
+  /* 02 도구 */
+  .md-ex{align-items:start}
+  .md-apps4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:640px){.md-apps4{grid-template-columns:1fr 1fr}}
+  .md-view{background:#fbfaf7;border-radius:12px;padding:10px 14px;margin-top:10px;min-height:120px}
+  .md-code{background:#16202c;color:#e8edf3;border-radius:10px;padding:12px 14px;font-size:.84rem;line-height:1.55;overflow-x:auto;white-space:pre;margin:6px 0}
+  .md-help{margin-top:10px}
+  .md-help summary{cursor:pointer;font-weight:900}
+  .md-help ul{margin:8px 0 0;padding-left:20px;font-size:.92rem}
+  .md-help li{margin:5px 0}
+  /* 03 오차 표 */
+  .md-mt{margin:0;min-width:320px;font-variant-numeric:tabular-nums}
+  .md-mt th{background:#fbfaf7}
+  .md-mt td,.md-mt th{text-align:center;padding:4px 8px}
+  /* 04 결과 기록 */
+  .md-rt{min-width:520px;margin:0}
+  .md-rt th{background:#fbfaf7}
+  .md-rt td:first-child{font-weight:700;white-space:nowrap}
+  .md-rt input{width:100%;max-width:140px}
+  .md-rt .memo{margin:0}

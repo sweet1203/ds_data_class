@@ -1,0 +1,34 @@
+  /* u3-regression-ml 전용 (rm-) */
+  .rm-vote{grid-template-columns:1fr;gap:6px}
+  .rm-vote button{padding:8px 12px;text-align:left}
+  .rm-off{opacity:.55}
+  .rm-off b{text-decoration:line-through}
+  .rm-prev{margin-top:10px;background:#fbfaf7;border-left:5px solid var(--acc);border-radius:10px;padding:8px 12px;font-size:.9rem}
+  .rm-prev p{margin:4px 0;white-space:pre-wrap}
+  .rm-prev small{color:var(--muted)}
+  .rm-ol{margin:0;padding-left:22px}
+  .rm-ol li{margin:4px 0}
+  .rm-f{font-weight:700;text-align:center}
+  .rm-tw{overflow-x:auto}
+  .rm-sc{margin:0;min-width:320px}
+  .rm-sc td,.rm-sc th{font-size:.9rem;padding:4px 8px}
+  .rm-sc tr.rm-mm td{color:var(--muted);font-size:.84rem}
+  .rm-cell{position:relative;display:block;min-width:90px;height:22px;background:#eef0f3;border-radius:6px;overflow:hidden}
+  .rm-cell i{position:absolute;left:0;top:0;bottom:0;background:var(--acc);opacity:.35;transition:width .2s}
+  .rm-cell b{position:relative;display:block;text-align:center;line-height:22px;font-variant-numeric:tabular-nums}
+  .rm-say{background:var(--acc-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;margin-top:10px;line-height:1.6}
+  .rm-code{margin:0;min-width:560px}
+  .rm-code td,.rm-code th{text-align:left;font-size:.9rem}
+  .rm-tabs{grid-template-columns:repeat(3,1fr)}
+  .rm-ex{align-items:start}
+  .rm-big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .rm-big b{font-size:2.4rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}
+  .rm-help summary{cursor:pointer;font-weight:700}
+  .rm-help li{margin:4px 0;font-size:.92rem}
+  .rm-warn{font-size:.9rem}
+  .rm-rt{margin:0;min-width:360px}
+  .rm-rt td,.rm-rt th{font-size:.92rem}
+  .rm-rt .memo{margin:0}
+  .rm-rt input{width:7em}
+  .rm-plan{background:#fbfaf7;border-radius:10px;padding:8px 12px;font-size:.9rem}
+  .rm-plan p{margin:4px 0 0;white-space:pre-wrap;color:var(--ink)}

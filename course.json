@@ -180,7 +180,7 @@
      "title": "데이터 모델과 분석 도구",
      "pages": "120~129",
      "form": "data-u3-model",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "20",
@@ -188,7 +188,7 @@
      "title": "회귀분석: 통계적 모델과 기계학습 모델",
      "pages": "130~133",
      "form": "data-u3-regression",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "21",
@@ -196,7 +196,7 @@
      "title": "통계적 회귀 모델 실습",
      "pages": "134~137",
      "form": "data-u3-regression-stat",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "22",
@@ -204,7 +204,7 @@
      "title": "기계학습 회귀 모델 실습 · 정리",
      "pages": "138~141",
      "form": "data-u3-regression-ml",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "23",
@@ -212,7 +212,7 @@
      "title": "군집분석의 개념과 목적",
      "pages": "142~147",
      "form": "data-u3-clustering",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "24",
@@ -220,7 +220,7 @@
      "title": "k-평균 군집분석 실습",
      "pages": "148~153",
      "form": "data-u3-clustering-lab",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "25",
@@ -228,7 +228,7 @@
      "title": "연관분석의 개념과 지표",
      "pages": "154~160",
      "form": "data-u3-association",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "26",
@@ -236,7 +236,7 @@
      "title": "연관분석 실습 · 정리",
      "pages": "161~167",
      "form": "data-u3-association-lab",
-     "status": "todo"
+     "status": "ready"
     },
     {
      "no": "27",
@@ -244,7 +244,7 @@
      "title": "협력적 창의·융합 활동 · Ⅲ단원 정리",
      "pages": "168~171",
      "form": "data-u3-review",
-     "status": "todo"
+     "status": "ready"
     }
    ]
   },

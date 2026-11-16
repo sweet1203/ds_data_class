@@ -1,0 +1,291 @@
+<!-- 0 시작 -->
+<section class="page" data-name="시작" data-acc="#9b4fc4">
+  <div class="cover">
+    <div class="in">
+      <span class="tag">데이터 과학 · Ⅲ. 데이터 모델링과 평가 · 협력적 창의·융합 활동 · 단원 정리</span>
+      <h1>우리 반 성적,<br>데이터로<br>분석하기</h1>
+      <div class="story"><b>협력적 창의·융합 활동</b><br>고교학점제로 같은 반 친구들도 시간표가 조금씩 달라요. 친구들이 고른 선택 과목과 성적 데이터가 있다면 무엇을 알아낼 수 있을까요? 모둠이 함께 <b>문제 정의 → 데이터 처리 → 모델링 → 평가 → 발표</b>까지 해 봐요.</div>
+      <p>Ⅲ단원에서 배운 <b>회귀분석·군집 분석·연관분석</b> 가운데 하나를 골라 직접 써 보고, 단원 전체를 정리해요.</p>
+      <ol>
+        <li>문제 정의</li><li>데이터 처리</li><li>모델링과 평가</li><li>성찰·발표</li><li>Ⅲ단원 정리</li><li>마무리 · 질문폼</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" style="background:var(--amber);color:var(--navy);box-shadow:none" onclick="go(1)">시작하기 →</button>
+        <button class="btn" style="background:transparent;border:2px solid rgba(255,255,255,.5);box-shadow:none" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">오늘 할 일 보기 ↓</button>
+      </div>
+    </div>
+    <div class="route" aria-hidden="true">
+      <div class="st" style="animation-delay:.2s"><i>📈</i><div><b>회귀분석</b><small>점수로 점수를 예측할 수 있을까?</small></div></div>
+      <div class="ar" style="animation-delay:.6s">↓</div>
+      <div class="st" style="animation-delay:.8s"><i>🫧</i><div><b>군집 분석</b><small>성적이 비슷한 학생끼리 묶으면?</small></div></div>
+      <div class="ar" style="animation-delay:1.2s">↓</div>
+      <div class="st" style="animation-delay:1.4s"><i>🛒</i><div><b>연관분석</b><small>함께 고르는 선택 과목이 있을까?</small></div></div>
+    </div>
+  </div>
+
+  <div id="intro" class="today">
+    <div class="today-lead">
+      <span class="kicker">오늘 우리는</span>
+      <p>3명 내외로 모둠을 만들어 역할을 나눠요. <b>팀장</b>은 진행과 시간 관리, <b>기술자</b>는 오렌지3 작업, <b>기록자</b>는 화면 메모와 발표 자료를 맡아요.</p>
+    </div>
+    <div class="why3">
+      <div class="why">
+        <span class="kicker">나의 역할</span>
+        <p style="margin:0 0 6px;font-size:.92rem">모둠에서 내가 맡은 역할을 골라요.</p>
+        <div id="myRole"></div>
+        <div class="callout rv-warn" style="margin-top:10px">🔒 <b>성적은 민감한 정보예요.</b> 이 활동은 실제 친구 성적을 모으지 않고, 이 화면의 <b>가상 성적표(예시)</b>나 선생님이 주는 <b>가상 파일</b>로 해요.</div>
+      </div>
+      <div class="why">
+        <span class="kicker">핵심 질문</span>
+        <ul class="uses">
+          <li><b>데이터 모델과 회귀분석</b> · 데이터 모델과 회귀분석을 통해 어떻게 데이터를 분석하여 문제를 해결할 수 있을까?</li>
+          <li><b>군집 분석과 연관분석</b> · 데이터에 명확한 레이블이 주어지지 않았을 때 우리는 데이터를 어떻게 분석할 수 있을까?</li>
+        </ul>
+      </div>
+      <div class="why">
+        <span class="kicker">오늘 할 수 있는 것</span>
+        <ul class="can">
+          <li>문제에 알맞은 분석 방법을 골라 데이터를 처리할 수 있다.</li>
+          <li>분석 모델에 맞는 평가 지표로 결과를 평가하고 해석할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" style="background:var(--navy)" onclick="go(1)">01 문제 정의부터 시작하기 →</button></div>
+  </div>
+</section>
+
+<!-- 1 문제 정의 -->
+<section class="page" data-name="문제 정의" data-acc="#2f6fd0">
+  <div class="head"><div class="num">01</div><div><h2>문제 정의 · 분석 방법 고르기</h2><p>교과서 168쪽 · 수행 계획서 · 모둠 구성 · 문제 정의</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>먼저 「성적표로 <b>무엇을 알고 싶은지</b>」를 한 문장 질문으로 정해요. 질문에 따라 쓸 분석 방법이 달라져요.</span></div>
+  <div class="card">
+    <h3>🧭 세 가지 분석 방법 다시 보기</h3>
+    <div class="cards3">
+      <div class="kc" style="--k:#2f6fd0"><div class="ic">📈</div><h4>회귀분석</h4><p>정답(종속 변수)이 있고 알고 싶은 값이 <b>연속형</b>일 때. 한 점수로 다른 점수를 <b>예측</b>해요.</p><small>평가 지표: 평균 제곱 오차(MSE), 결정 계수(R²)</small></div>
+      <div class="kc" style="--k:#1f9d74"><div class="ic">🫧</div><h4>군집 분석</h4><p>레이블 없이 <b>비슷한 학생끼리 묶어</b> 무리마다 어떤 특징이 있는지 봐요. k-평균은 군집 수 k를 먼저 정해요.</p><small>평가 지표: 실루엣 계수</small></div>
+      <div class="kc" style="--k:#9b4fc4"><div class="ic">🛒</div><h4>연관분석</h4><p>함께 나타나는 항목 사이의 <b>규칙(A → B)</b>을 찾아요. 선택 과목을 「장바구니」처럼 봐요.</p><small>평가 지표: 지지도 · 신뢰도 · 향상도</small></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>✏️ 우리 모둠의 문제</h3>
+    <p class="muted" style="margin-top:0">모둠이 쓸 분석 방법을 하나 골라요. 아래 질문 틀을 참고해 우리 모둠의 문제를 한 문장으로 써요.</p>
+    <div id="method"></div>
+    <div class="rv-tw" style="margin-top:10px"><table class="tbl rv-frame">
+      <tr><th>분석 방법</th><th>질문 틀 (○○, △△를 바꿔 써요)</th></tr>
+      <tr><td>회귀분석</td><td>○○ 점수가 높을수록 △△ 점수도 높을까? ○○ 점수로 △△ 점수를 얼마나 잘 예측할 수 있을까?</td></tr>
+      <tr><td>군집 분석</td><td>두 과목 점수로 보면 우리 반은 몇 무리로 나뉠까? 무리마다 어떤 특징이 있을까?</td></tr>
+      <tr><td>연관분석</td><td>어떤 선택 과목들이 한 학생에게 함께 묶여 선택될까? 그 규칙은 얼마나 믿을 만할까?</td></tr>
+    </table></div>
+    <div class="memo">
+      <label>✍️ 우리 모둠의 분석 방법과 문제 <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="problem" rows="2" placeholder="분석 방법: … / 문제: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- 2 데이터 처리 -->
+<section class="page" data-name="데이터 처리" data-acc="#1f9d74">
+  <div class="head"><div class="num">02</div><div><h2>데이터 수집과 처리</h2><p>교과서 168~169쪽 · 데이터 수집하기 · 데이터 분석하기 · 빈칸은 0점이 아님</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>성적표의 <b>선택 과목 빈칸</b>은 0점이 아니라 「그 과목을 고르지 않았다」는 뜻이에요. 그래서 회귀분석·군집 분석에는 모든 학생의 점수가 있는 <b>공통 과목</b>을 쓰고, 선택 과목은 <b>골랐으면 1, 안 골랐으면 0</b>으로 바꿔 연관분석에 써요.</span></div>
+  <div class="card">
+    <h3>📋 가상 성적표 일부 <span class="muted" style="font-weight:400;font-size:.88rem">(지어낸 예시 · 1~5번 학생)</span></h3>
+    <div id="rawTbl"></div>
+    <div class="cards2" style="margin-top:12px">
+      <div class="kc" style="--k:#2f6fd0"><h4>회귀분석 · 군집 분석</h4><p>공통 과목1, 공통 과목2처럼 <b>모든 칸에 점수가 있는 열</b>만 골라요. 빈칸을 0으로 채우면 「0점 받은 학생」이 생겨 결과가 틀어져요.</p></div>
+      <div class="kc" style="--k:#9b4fc4"><h4>연관분석</h4><p>선택 과목은 <b>점수 대신 선택 여부</b>를 써요. 점수가 있으면 1, 빈칸이면 0으로 바꿔요. (오렌지3에서는 0 대신 비워 두어도 돼요.)</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🔁 연관분석용 표로 바꾸기</h3>
+    <p class="muted" style="margin-top:0">위 성적표를 보고 칸마다 <b>1</b>(선택함) 또는 <b>0</b>(선택 안 함)을 넣은 뒤 「확인」을 눌러요.</p>
+    <div id="binTbl"></div>
+    <div class="row" style="gap:6px;margin-top:8px">
+      <button class="btn sm" id="binCheck">확인</button>
+      <button class="btn ghost sm" id="binReset">다시 하기</button>
+    </div>
+    <div class="rv-say" id="binSay">20칸을 모두 채우고 확인을 눌러 보세요.</div>
+    <div class="memo">
+      <label>✍️ 우리 모둠이 고른 방법에 쓸 <b>열</b>은 무엇이고, 선택 과목의 <b>빈칸</b>은 어떻게 처리하나요? 그 까닭도 적어요. <small>질문폼 1번에 써요.</small></label>
+      <textarea data-memo="prep" rows="2" placeholder="쓸 열: … / 빈칸 처리: … / 까닭: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+<!-- 3 모델링과 평가 -->
+<section class="page" data-name="모델링과 평가" data-acc="#e0702b">
+  <div class="head"><div class="num">03</div><div><h2>데이터 모델링과 모델 평가</h2><p>교과서 169쪽 · 데이터 모델링 · 모델 평가 · 분석 모델에 따른 평가 지표</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>같은 성적표라도 분석 방법마다 <b>목적이 달라서 평가하는 지표도 달라요</b>. 아래에서 세 분석을 모두 해 보고, 우리 모둠이 고른 방법의 결과를 지표로 해석해요.</span></div>
+  <div class="card">
+    <h3>🔭 세 분석 한눈에 <span class="muted" style="font-weight:400;font-size:.88rem">(지어낸 가상 성적 20명)</span></h3>
+    <div class="apps rv-apps3" id="anaTabs"></div>
+    <div class="rv-say" id="anaSay"></div>
+
+    <div class="rv-pn" id="pnReg">
+      <div class="grid2 rv-ex">
+        <div class="sp-wrap"><svg id="regPlot" role="img" aria-label="공통 과목1과 공통 과목2 점수 산점도와 회귀 직선"></svg></div>
+        <div>
+          <div class="rv-eq" id="regEq"></div>
+          <div class="sp-read"><div>R² <b id="regR2">–</b></div><div>MSE <b id="regMse">–</b></div></div>
+          <label class="rv-sl"><span>공통 과목1</span><input type="range" id="regX" min="40" max="100" step="1" value="75"><b id="regXv">75</b></label>
+          <p class="rv-pred" id="regPred"></p>
+          <p class="note">✕ 표시가 회귀 직선으로 예측한 공통 과목2 점수예요. R²(결정 계수)는 1에 가까울수록 직선이 데이터를 잘 설명하고, MSE는 작을수록 예측 오차가 작아요.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv-pn" id="pnClu">
+      <div class="row" style="gap:6px;margin-bottom:8px" id="kBtns"></div>
+      <div class="grid2 rv-ex">
+        <div class="sp-wrap"><svg id="cluPlot" role="img" aria-label="k-평균으로 묶은 학생들의 산점도"></svg></div>
+        <div>
+          <div class="sp-read"><div>k <b id="cluK">–</b></div><div>평균 실루엣 계수 <b id="cluSil">–</b></div></div>
+          <p style="margin:6px 0 4px;font-size:.9rem"><b>k별 평균 실루엣 계수</b></p>
+          <div class="sp-wrap"><svg id="silBars" role="img" aria-label="군집 수 k별 평균 실루엣 계수 막대그래프"></svg></div>
+          <div class="rv-grp" id="cluGrp"></div>
+        </div>
+      </div>
+      <p class="note">k-평균은 이 화면에서 정해진 시작 중심으로 계산해요. ✕는 군집의 중심(그 군집 학생들 점수의 평균)이에요.</p>
+    </div>
+
+    <div class="rv-pn" id="pnAsc">
+      <div class="grid2 rv-ex">
+        <div>
+          <label class="rv-sl"><span>최소 지지도</span><input type="range" id="minS" min="0.05" max="0.5" step="0.05" value="0.1"><b id="minSv">0.10</b></label>
+          <label class="rv-sl"><span>최소 신뢰도</span><input type="range" id="minC" min="0.1" max="1" step="0.05" value="0.7"><b id="minCv">0.70</b></label>
+          <p class="note">교과서 오렌지3 흐름의 Association Rules는 최소 지지도 2%, 최소 신뢰도 70%로 되어 있어요. 기준을 올리고 내리며 남는 규칙을 봐요.</p>
+          <div class="rv-say" id="ascSay"></div>
+        </div>
+        <div id="ruleTbl"></div>
+      </div>
+    </div>
+
+    <details class="rv-data">
+      <summary>📄 가상 성적표 20명 전체 보기 (선택 과목은 1/0으로 바꾼 표)</summary>
+      <div id="allTbl"></div>
+    </details>
+    <div class="memo">
+      <label>✍️ 우리 모둠이 고른 방법의 결과를 해석해요. ① 어떤 결과가 나왔나요? ② 평가 지표 값은 얼마이고 무엇을 뜻하나요? ③ 그래서 우리 모둠의 문제에 어떻게 답할 수 있나요? <small>질문폼 2번에 써요.</small></label>
+      <textarea data-memo="result" rows="4"></textarea><div class="saved"></div>
+    </div>
+  </div>
+  <details class="card rv-lab">
+    <summary>🍊 (모둠 기술자) 오렌지3로 해 보기 <span class="muted" style="font-weight:400;font-size:.88rem">— 모둠이 고른 방법의 줄만 만들어요 · 위젯을 누르면 설정 표의 그 줄이 강조돼요</span></summary>
+    <p class="muted" style="margin-top:0">선생님이 알려 주는 폴더에서 <span class="mono">score.csv</span>(교과서의 가상 성적 7명)를 내려받아요. 이 화면의 가상 성적 20명과는 다른 데이터라 결과 값은 달라요.</p>
+    <div><svg id="labFlow" role="img" aria-label="성적 데이터 회귀·군집·연관 분석 위젯 연결 흐름도"></svg></div>
+    <div class="of-tw"><table class="tbl" id="labSet">
+      <tr><th>번호</th><th>위젯 (카테고리)</th><th>어디에 연결</th><th>설정 · 할 일</th><th>확인할 것</th></tr>
+      <tr data-s="1"><td>1</td><td><b>File</b> (Data)</td><td>처음 위젯</td><td><span class="mono">score.csv</span> 열기. 학생 번호 열(이름 없는 첫 열)은 Role을 <b>meta</b>로</td><td>7개의 데이터, 공통과목1·2, 선택과목1~6</td></tr>
+      <tr data-s="2"><td>2</td><td><b>Select Columns</b> (Transform)<br>이름: 회귀분석</td><td>File →</td><td>Features <b>공통과목1</b>, Target <b>공통과목2</b>, 나머지는 Ignored</td><td>회귀분석 줄</td></tr>
+      <tr data-s="3"><td>3</td><td><b>Data Sampler</b> (Transform)</td><td>회귀분석 →</td><td>Fixed proportion of data <b>70%</b></td><td>훈련용 5개, 나머지 2개</td></tr>
+      <tr data-s="4"><td>4</td><td><b>Linear Regression</b> (Model)</td><td>Data Sampler →(Data Sample)</td><td>기본 설정. 교과서 흐름처럼 Gradient Boosting·AdaBoost를 함께 이어 비교해도 돼요</td><td></td></tr>
+      <tr data-s="5"><td>5</td><td><b>Predictions</b> (Evaluate)</td><td>Linear Regression + Data Sampler →(Remaining Data)</td><td>위젯을 더블클릭해 열고 예측값과 실젯값을 비교</td><td>MSE · R2</td></tr>
+      <tr data-s="6"><td>6</td><td><b>Scatter Plot</b> (Visualize)</td><td>회귀분석 →</td><td>X축 공통과목1, Y축 공통과목2, <b>Show regression line</b> 체크</td><td>직선이 오른쪽 위로 올라가는지</td></tr>
+      <tr data-s="7"><td>7</td><td><b>Select Columns</b> (Transform)<br>이름: 군집분석</td><td>File →</td><td>Features <b>공통과목1·공통과목2</b>, Target은 비워 둠</td><td>군집 분석 줄(레이블 없음)</td></tr>
+      <tr data-s="8"><td>8</td><td><b>k-Means</b> (Unsupervised)</td><td>군집분석 →</td><td><b>From 2 to 4</b>를 골라 k마다 실루엣 점수 비교</td><td>실루엣 점수가 가장 큰 k</td></tr>
+      <tr data-s="9"><td>9</td><td><b>Scatter Plot</b> (Visualize)</td><td>k-Means →</td><td>X축 공통과목1, Y축 공통과목2, Color <b>Cluster</b></td><td>군집별 색</td></tr>
+      <tr data-s="10"><td>10</td><td><b>Silhouette Plot</b> (Visualize)</td><td>k-Means →</td><td>기본 설정</td><td>학생마다 실루엣 값(막대가 왼쪽으로 가면 잘못 묶였을 수 있음)</td></tr>
+      <tr data-s="11"><td>11</td><td><b>Select Columns</b> (Transform)<br>이름: 연관분석</td><td>File →</td><td>Features <b>선택과목1~6</b>만</td><td>연관분석 줄</td></tr>
+      <tr data-s="12"><td>12</td><td><b>Edit Domain</b> (Data)</td><td>연관분석 →</td><td>선택과목마다 Type을 <b>categorical</b>로 바꾸고, 점수 값들의 이름을 모두 <b>1</b>로 바꾸기(빈칸은 그대로) → Apply</td><td>점수가 「선택함(1)」으로 바뀌었는지</td></tr>
+      <tr data-s="13"><td>13</td><td><b>Frequent Itemsets</b> (Associate)</td><td>Edit Domain →</td><td>Find Itemsets</td><td>자주 함께 나타나는 과목 묶음</td></tr>
+      <tr data-s="14"><td>14</td><td><b>Association Rules</b> (Associate)</td><td>Edit Domain →</td><td>Minimal support <b>2%</b>, Minimal confidence <b>70%</b> → Find Rules</td><td>Supp · Conf · Lift가 큰 규칙</td></tr>
+    </table></div>
+    <p class="note">Associate 카테고리(Frequent Itemsets·Association Rules)는 애드온이라 Options → Add-ons에서 <b>Associate</b>를 설치해야 보여요. 설치가 안 되면 위 「세 분석 한눈에」의 연관 탭으로 대신해요.</p>
+    <h4 style="margin:12px 0 6px">진행 체크</h4>
+    <div id="labDone"></div>
+  </details>
+  <div class="quiz" data-quiz="3"></div>
+</section>
+
+<!-- 4 성찰·발표 -->
+<section class="page" data-name="성찰·발표" data-acc="#c98a00">
+  <div class="head"><div class="num">04</div><div><h2>성찰 및 발표</h2><p>교과서 169쪽 · 성찰 및 발표 · 자기 평가와 동료 평가</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>모둠 활동을 돌아보고 발표해요. 발표는 <b>문제 → 데이터 처리 → 분석 방법 → 평가 지표 → 해석</b> 순서로 하면 듣는 사람이 따라오기 쉬워요.</span></div>
+  <div class="card">
+    <h3>🗣️ 발표 순서 (2분)</h3>
+    <p class="muted" style="margin-top:0">시간이 모자라면 몇 모둠만 발표해요. 발표하지 않는 모둠은 아래 돌아보기를 먼저 써요.</p>
+    <ol class="vsteps">
+      <li><b>우리 모둠의 문제</b><p>성적표로 무엇을 알고 싶었나요?</p></li>
+      <li><b>데이터 처리</b><p>어떤 열을 골랐고, 빈칸은 어떻게 처리했나요?</p></li>
+      <li><b>분석 방법과 결과</b><p>회귀 직선·군집·규칙 가운데 우리가 얻은 결과를 보여 줘요.</p></li>
+      <li><b>평가 지표와 해석</b><p>지표 값이 얼마였고 그것이 무엇을 뜻하나요? 결과를 믿을 만한가요?</p></li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>🪞 돌아보기</h3>
+    <p class="muted" style="margin-top:0">스스로 잘했다고 생각하는 것을 골라요(여럿).</p>
+    <div id="selfCheck"></div>
+    <div class="callout rv-warn">🔒 <b>민감한 데이터를 다룰 때</b> 실제 성적처럼 개인 정보가 담긴 데이터는 되도록 <b>가상 데이터</b>로 연습하고, 실제 데이터를 써야 한다면 <b>동의</b>를 받고 이름·번호를 지워 <b>누구인지 알 수 없게</b> 처리해요. 이름만 지워도 다른 정보로 누구인지 짐작될 수 있는지 살펴요.</div>
+    <div class="memo">
+      <label>✍️ ① 아쉬운 점 ② 앞으로의 계획 ③ 실제 우리 반 성적으로 이 분석을 한다면 지켜야 할 점 <small>데이터가 더 많았다면, 다른 방법을 썼다면 어땠을지도 좋아요. ③은 질문폼 3번에 써요.</small></label>
+      <textarea data-memo="reflect" rows="4" placeholder="아쉬운 점: … / 앞으로의 계획: … / 지킬 점: …"></textarea><div class="saved"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 단원 정리 -->
+<section class="page" data-name="Ⅲ단원 정리" data-acc="#9b4fc4">
+  <div class="head"><div class="num">05</div><div><h2>Ⅲ단원 정리 · 데이터 모델링과 평가</h2><p>교과서 120~171쪽 · 회귀분석 · 군집 분석 · 연관분석 · 데이터 과학에 도전하는 사람들</p></div></div>
+  <div class="easy"><b class="t">쉽게 말하면</b><span>Ⅲ단원에서는 데이터로 <b>예측하고(회귀)</b>, <b>묶고(군집)</b>, <b>함께 나타나는 규칙을 찾는(연관)</b> 방법과, 그 결과를 지표로 평가하는 법을 배웠어요.</span></div>
+  <div class="card">
+    <h3>🗺️ 세 분석 한눈에 정리</h3>
+    <div class="rv-tw"><table class="tbl rv-sum">
+      <tr><th></th><th style="color:#2f6fd0">회귀분석</th><th style="color:#1f9d74">군집 분석</th><th style="color:#9b4fc4">연관분석</th></tr>
+      <tr><td>정답(레이블)</td><td>있음 (연속형 종속 변수)</td><td>없음</td><td>없음 (거래 데이터)</td></tr>
+      <tr><td>하는 일</td><td>독립 변수로 종속 변수 값 예측</td><td>비슷한 데이터끼리 그룹으로 묶기</td><td>항목 사이의 규칙 A → B 찾기</td></tr>
+      <tr><td>오늘 성적표에서</td><td>공통 과목1 → 공통 과목2 예측</td><td>두 공통 과목 점수로 학생 묶기</td><td>함께 고르는 선택 과목 찾기</td></tr>
+      <tr><td>대표 방법</td><td>선형 회귀 y = wx + b · 통계적/기계학습 회귀</td><td>k-평균(k 정하기 → 할당 → 중심 이동 반복)</td><td>Apriori(최소 지지도로 빈번 항목 찾기)</td></tr>
+      <tr><td>평가 지표</td><td>MSE(작을수록) · R²(1에 가까울수록)</td><td>실루엣 계수(1에 가까울수록)</td><td>지지도 · 신뢰도 · 향상도(1보다 크면 관련)</td></tr>
+      <tr><td>지표 읽는 법</td><td>MSE = 오차 제곱의 평균</td><td>실루엣: 1 잘 묶임 · 0 경계 · −1 잘못 묶임</td><td>신뢰도 = A를 산 거래 중 B도 산 비율</td></tr>
+      <tr><td>오렌지3 위젯</td><td>Linear Regression · Predictions</td><td>k-Means · Silhouette Plot</td><td>Frequent Itemsets · Association Rules</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h3>📝 단원을 시작할 때 쓴 나의 계획</h3>
+    <div class="rv-plan" id="planBack"></div>
+    <p class="note">배우고 싶었던 것을 배웠는지, 더 알고 싶은 것은 무엇인지 떠올려 보세요.</p>
+  </div>
+  <div class="card">
+    <h3>🧑‍🏫 데이터 과학에 도전하는 사람들 · 데이터로 교육을 혁신하다 <span class="muted" style="font-weight:400;font-size:.88rem">(교과서 170쪽)</span></h3>
+    <p style="margin-top:0">한 토익 강사는 학생들의 영어 성적 데이터를 분석해 <b>각자의 약한 부분</b>을 찾고 <b>맞춤형 학습 전략</b>을 알려 주는 코칭으로 성과를 내고 있어요. 이 일에는 영어와 수업 능력이 기본이고, 학습 데이터로 <b>학생의 성향을 파악하는 능력은 필수</b>라고 말해요. 그리고 앞으로는 데이터를 활용한 <b>학습 성과 분석</b>과 <b>교재 개발 능력</b>이 더 중요해질 것으로 내다봐요. 오늘 우리가 성적 데이터로 한 분석도 같은 생각에서 출발해요.</p>
+  </div>
+  <div class="quiz" data-quiz="5"></div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="page" data-name="마무리 · 질문폼" data-acc="#0f2742">
+  <div class="head"><div class="num">06</div><div><h2>마무리</h2><p>핵심 문장 · 단원 질문 · 마무리 퀴즈 · 생각 정리 질문폼</p></div></div>
+  <div class="key3">
+    <div style="--k:#2f6fd0">가상 성적표에서 공통 과목1 점수로 공통 과목2 점수를 예측하면 <b>회귀 직선</b>이 생기고, 그 직선이 얼마나 잘 맞는지는 R²와 MSE가 알려 준다.</div>
+    <div style="--k:#1f9d74">같은 두 점수로 학생들을 k-평균으로 묶어 보면 k마다 평균 <b>실루엣 계수</b>가 달라진다. 값이 가장 큰 k가 우리 반을 가장 또렷하게 나누는 군집 수다.</div>
+    <div style="--k:#9b4fc4">선택 과목은 빈칸을 0점이 아닌 「안 고름(0)」으로 바꿔야 <b>연관 규칙</b>을 찾을 수 있다. 물리학과 화학처럼 향상도가 1보다 큰 짝은 함께 고르는 경향이 있다는 뜻이다.</div>
+  </div>
+  <div class="card">
+    <h3>단원 질문에 답하기</h3>
+    <p class="muted" style="margin-top:0">오늘 활동과 Ⅲ단원에서 배운 것을 바탕으로, 두 질문 가운데 하나를 골라 답해 보세요.</p>
+    <b style="font-size:.93rem">데이터에 명확한 레이블이 있을 때와 없을 때, 우리는 데이터를 어떻게 분석하여 문제를 해결할 수 있을까?</b>
+    <textarea data-memo="keyQ" rows="3"></textarea><div class="saved"></div>
+  </div>
+  <div class="card" style="--acc:#0f2742">
+    <h3>마무리 퀴즈</h3>
+    <div class="quiz" data-quiz="6"></div>
+  </div>
+  <div class="card">
+    <h3>개념 퀴즈 결과</h3>
+    <table id="result"></table>
+    <button class="btn ghost" id="quizReset">퀴즈 다시 풀기</button>
+  </div>
+  <div class="formgo">
+    <span class="kicker">생각 정리 과제</span>
+    <h3>질문폼에 내 생각 쓰기</h3>
+    <ol>
+      <li>우리 모둠의 <b>분석 방법과 문제</b>, 성적표를 그 방법에 맞게 <b>어떻게 처리했는지</b> 설명하기</li>
+      <li>세 분석 한눈에서 얻은 결과를 <b>평가 지표 값</b>으로 해석하기</li>
+      <li>세 방법마다 성적표로 답할 수 있는 <b>질문</b>을 하나씩 만들고, 성적 같은 <b>민감한 데이터</b>를 다룰 때 지킬 점 쓰기</li>
+    </ol>
+    <p>질문폼에는 붙여넣기가 되지 않아요. 아래 메모를 보면서 직접 다시 써 주세요.</p>
+    <a class="go" href="{{FORM_URL}}" target="_blank" rel="noopener">질문폼 열기 →</a>
+    <div class="msum" id="msum"></div>
+  </div>
+</section>
