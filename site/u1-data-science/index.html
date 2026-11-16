@@ -605,7 +605,7 @@
   <p class="callout sci-today">🏛️ <b>오늘날에는?</b> <span class="muted" style="font-size:.86rem">(14쪽)</span> 브라헤는 맨눈으로 직접 관측해 데이터를 모았지만, 지금은 공공 기관이 쓰던 데이터가 <b>데이터 공유 사이트</b>로 공개되어 누구나 활용할 수 있어요. 기상청 단기 예보 데이터와 농업 기상 관측 데이터로 만든 「작물의 최적 환경 분석을 위한 데이터 분석 플랫폼」은 공공 데이터 공모전에서 나온 사례예요.</p>
   <div class="card">
     <h3>📘 데이터 과학이란? <span class="muted" style="font-weight:400;font-size:.88rem">(15쪽)</span></h3>
-    <p class="sci-def" id="defText"><b>데이터 과학(data science)</b>이란 과학적 방법으로 데이터를 분석하여 보편적 진리나 법칙을 발견하고 유의미한 지식과 통찰을 얻어 미래를 예측하는 학문이다.</p>
+    <p class="sci-def" id="defText"><b>데이터 과학(data science)</b>은 데이터를 과학적 방법으로 분석해 보편적인 진리나 법칙을 찾아내고, 쓸모 있는 지식과 통찰을 얻어 앞으로 일어날 일을 예측하는 학문이에요.</p>
     <p class="note">데이터 과학과 융합한 분야로는 통계학, 컴퓨터 과학, 인공지능 등이 있어요.</p>
   </div>
   <div class="card">
@@ -1131,9 +1131,9 @@ function sciOrder(box,cfg){
   B.innerHTML=`<button class="btn sm">정의를 가리고 시작하기</button>`; B.firstChild.onclick=start;
 }
 sciOrder('defGame',{
-  parts:['과학적 방법으로','데이터를 분석하여','보편적 진리나 법칙을 발견하고','유의미한 지식과 통찰을 얻어','미래를 예측하는','학문'],
+  parts:['데이터를','과학적 방법으로 분석해','보편적인 진리나 법칙을 찾아내고','쓸모 있는 지식과 통찰을 얻어','앞으로 일어날 일을 예측하는','학문'],
   decoys:['느낌과 경험에 따라','데이터를 보관만 하여'],
-  hints:['어떤 방법으로?','무엇을 하여?','무엇을 발견하고?','무엇을 얻어?','무엇을 하는?','데이터 과학은 무엇일까?'],
+  hints:['무엇을?','어떤 방법으로 하여?','무엇을 찾아내고?','무엇을 얻어?','무엇을 하는?','데이터 과학은 무엇일까?'],
   onStart:()=>$('defText').classList.add('sci-hide'),
   onDone:()=>$('defText').classList.remove('sci-hide'),
   done:'케플러는 데이터를 분석해 <b>법칙</b>을 발견했어요. 데이터 과학은 여기서 더 나아가 <b>지식과 통찰</b>을 얻고 <b>미래를 예측</b>하는 데까지 이어져요.'
